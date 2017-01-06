@@ -23,7 +23,6 @@
 </link>
 
 <title>
-  arcoiris blog: 
   <xsl:value-of select="/registration/resources/msg[@key='label.regtitle']/@value" />
 </title>
 
@@ -243,7 +242,7 @@
                 </td>
               </tr>
               
-              <tr><td colspan="2" style="height:16px"></td></tr>
+              <tr><td colspan="2" style="height:10px"></td></tr>
               
               <tr>
                 <td align="left" class="formButton">

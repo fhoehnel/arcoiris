@@ -29,10 +29,7 @@
     <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/servlet?command=getResourceBundle&amp;lang=<xsl:value-of select="/registration/language" /></xsl:attribute>
   </script>
 
-  <title>
-    arcoiris blog: 
-    <span resource="label.regtitle" />
-  </title>
+  <title resource="label.regtitle"></title>
 
 </head>
 

@@ -57,10 +57,24 @@ public class ActivateUserRequestHandler extends UserRequestHandler {
         } catch (UserMgmtException ex) {
             Logger.getLogger(getClass()).warn("user activation attempt failed", ex);
 
+            // the hotmail web client fetches the activation link automatically when opening the registration e-mail
+            // the user's click on the activation link is the second one - and fails
+            // what a bullshit!
+            /*
             try {
                 resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             } catch (Exception ioex) {
             }
+            */
+
+            String redirectUrl = req.getContextPath() + "/servlet?command=loginForm";
+
+            try {
+                resp.sendRedirect(redirectUrl);
+            } catch (IOException ex2) {
+                Logger.getLogger(getClass()).warn("redirect failed", ex2);
+            }
+            
         }
     }
 }
