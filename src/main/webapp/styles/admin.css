@@ -1,0 +1,54 @@
+@font-face {
+  font-family: 'Kite One';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Kite One'), local('KiteOne-Regular'), url(../fonts/GoogleKiteOne.woff) format('woff');
+}
+
+
+#validationErrorCont {
+    clear: both;
+}
+
+#validationErrorList {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li.validationError {
+    color: red;
+}
+
+input.validationError, select.validationError {
+    border: 1px solid red;
+}
+
+td.formParm2 input[type="text"], 
+td.formParm2 input[type="email"],
+td.formParm2 input[type="password"],
+td.formParm2 select {
+    width: 260px;
+}
+
+th.datahead {
+    background-color:lavender;
+}
+
+td.tableData {
+    background-color: ivory;
+    font-size: 13px;    
+    vertical-align: top;
+    padding: 4px;
+}
+
+table.adminMenu td a {
+    font-family: 'Kite One';
+    font-size: 20px;
+    font-weight: bold;
+    color: #a05000;
+    text-decoration: none;
+}
+
+table.adminMenu td a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,88 @@
+arcoiris blog installation instructions
+=======================================
+
+arcoiris blog is a standard Java web application that can be deployed
+in any servlet container/Java application server running Java 1.5 or higher.
+
+Step 1: UTF-8 enable the servlet container
+------------------------------------------
+
+Configure the servlet container to use the UTF-8 character encoding for decoding
+URLs.
+If your servlet container is tomcat, you have to edit the conf/server.xml file and add
+the attribute 
+URIEncoding="UTF-8"
+to the HTTP connector.
+The Connector definition should look like this:
+
+<Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443" />
+
+If you have an apache server in front of the tomcat server, you have to add the 
+URIEncoding attribute to the AJP connector too:
+
+<Connector port="8009" protocol="AJP/1.3" URIEncoding="UTF-8"/>
+
+If you are using the SSL connector you have to add the URIEncoding attribute
+to the SSL connector definition.
+
+It might be a good idea to set the default file encoding for the Java VM
+in catalina.bat/catalina.sh to UTF-8 by adding the following CATALINA_OPTS
+  
+  -Dfile.encoding=UTF-8
+
+If you are using a different servlet engine than tomcat, read the corresponding documentation
+to find out how to configure the UTF-8 character encoding for the server.
+
+Step 2:
+-------
+
+Unzip the arcoiris-blog-xxx.zip archive to a new directory.
+
+Step 3:
+-------
+
+Deploy the webfilesys webapp contained in the arcoiris-blog.war installation package
+to the servlet container/application server following the instructions in the
+admin documentation of the servlet container/application server.
+
+The war package of the arcoiris blog webapp must be expanded on the application server
+during deployment. arcoiris blog cannot be run directly from the unexploded .war file.
+In tomcat, for example, the unpackWARs="true" attribute of the Host element
+in the server.xml configuration file tells the server to unpack newly deployed
+war archives (which is the default setting).
+
+Step 4:
+-------
+
+After deployment start the web application 
+(if not started automatically by the servlet container).
+
+Now you can access the arcoiris blog application via the URL
+
+http(s)://<server-dns-name>:<server-port>/<arcoiris-context-root>
+
+with <arcoiris-context-root> is the context root of the webapp specified at deployment time.
+
+Example:
+
+http://www.webfilesys.de:8080/arcoiris
+
+The default admin account is
+  userid: admin
+  password: topsecret
+  
+Don't forget to change the admin password via the user administration GUI.
+
+To prevent OutOfMemory errors while processing large uploaded picture files it is recommended to
+increase the maximum memory size allowed to get allocated by the Java VM.
+For tomcat you can do this by inserting the following line near the top
+of the catalina.bat (catalina.sh) file:
+
+SET JAVA_OPTS=-Xmx512m
+
+This allows the Java VM to allocate 512 MBytes of memory.
+
+See the readme.html file for more information on how to configure WebFileSys.
+
+
+ 

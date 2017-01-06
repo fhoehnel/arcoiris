@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+  <user id="admin">
+    <role>admin</role>
+    <email>nobody@nowhere.com</email>
+    <language>English</language>
+    <css>default</css>
+    <pageSize>12</pageSize>
+    <password encryption="SHA-256">UzNqZ2xkwTllU7K3yS84EmdognyTtk2RQgacEO2npyE=</password>
+  </user>
+</users>

@@ -1,0 +1,12 @@
+Willkommen,
+
+neuer Nutzer $USERNAME beim arcoiris Blog.
+Danke für deine Registrierung.
+
+Dein Login-Name: $LOGIN
+
+Um die Registrierung abzuschliessen, klicke bitte innerhalb von 5 Tagen auf den folgenden Aktivierungs-Link:
+
+$ACTIVATIONLINK
+
+Viel Spass beim Bloggen!

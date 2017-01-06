@@ -1,0 +1,280 @@
+# arcoiris resource file for international customization 
+#
+# version for German language
+#
+# Save a copy of the unchanged file for further reference !
+
+
+# common labels
+label.login.title=arcoiris blog login
+label.userid=Nutzername
+label.password=Passwort
+label.passwd=Passwort
+label.logon=Anmelden
+
+# common buttons
+button.create=Anlegen
+button.cancel=Abbrechen
+button.closewin=Fenster schliessen
+button.return=Zurück
+button.save=Speichern
+button.ok=OK
+button.next=Weiter
+button.previous=Zurück
+button.reload=Neu laden
+button.close=Abbrechen
+button.closeMap=Schliessen
+
+# upload parameter window labels
+label.uploadfile=Datei-Upload
+label.upload.localFile=Datei für Upload
+label.upload.serverFileName=Dateiname auf dem Server
+label.upload.description=Datei-Beschreibung
+upload.selected.pictures=Bilder selektiert für Upload
+upload.dropZone=Drag and drop Dateien für Upload hier!
+upload.lastSent=zuletzt hochgeladene Datei
+upload.selectedFiles=Zum Upload ausgewählte Dateien
+upload.selectFilePrompt=Datei(en) auswählen
+upload.button.done=Fertig
+label.uploadStatus=Upload-Status
+upload.file.too.large=Die Datei ist zu gross für die erweiterte Upload-Funktion. Nutzen Sie den Upload-Basisdialog für besonders grosse Dateien!
+upload.file.exists=eine Datei mit diesem Namen existiert bereits - überschreiben?
+uploadTargetFileNameExt=Die Dateinamen-Erweiterung der lokalen Datei wird auch für den Dateinamen auf dem Server verwendet. Fortfahren?
+upload.total.status=Gesamt-Status
+upload.error=Fehler beim Upload der Datei
+
+# picture album invitation and publish folders/files
+label.invitehead=Bilder freigeben/Einladung zur Diashow
+label.picturedir=Bilder-Directory
+label.receiver=Empfänger (e-mail Adressen, durch Komma getrennt)
+label.subject=Betreff
+label.invitationtext=Einladungs-Text
+label.expiration=Gültigkeit in Tagen
+button.invite=Freigabe
+button.publish=Freigeben
+alt.openpicture=in Originalgrösse anzeigen
+alert.noreceiver=Bitte mindestens einen Empfänger eingeben
+alert.emailsyntax=ungültige e-mail Adresse
+alert.nomsgtext=kein Einladungstext eingegeben
+alert.expinvalid=Gültigkeit in Tagen muss eine Zahl sein
+alert.pageSizeInvalid=Bilder/Seite muss eine Zahl sein
+label.expires=gültig bis
+label.accesscode=URL mit Zugriffscode
+label.picture=Bild
+
+# user comments
+label.commentList=Kommentare von Nutzern
+confirm.delcomments=Alle Kommentare für diesen Eintrag löschen?
+label.nocomments=Zu diesem Eintrag existieren noch keine Kommentare
+label.addcomment=Kommentar hinzufügen
+button.addComment=Speichern
+button.delComments=Kommentare löschen
+label.allowcomments=Besucher dürfen Kommentare hinzufügen
+label.comments=Kommentare
+label.guestuser=Gast
+label.commentAuthor=Dein Name
+comments.unread=neu
+
+# user self-registration
+label.registerself=Als neuer Nutzer registrieren
+label.regtitle=Registrierung als neuer Nutzer
+label.login=Nutzername
+label.passwordconfirm=Passwort-Bestätigung
+label.firstname=Vorname
+label.lastname=Nachname
+label.email=e-mail Adresse
+label.phone=Telefon
+label.language=Sprache
+label.settings=Einstellungen
+label.oldpassword=Altes Passwort
+label.newpassword=Neues Passwort
+label.css=Layout
+label.selectLanguage=- bitte auswählen -
+label.userRole=Nutzer-Rolle
+button.register=Anmelden
+registrationConfirmation=Der erste Schritt der Registrierung war erfolgreich. Eine e-mail mit Informationen zum Beenden des Registrierungsvorganges wurde an die angegebene Adresse gesendet.
+button.registrationToLogin=Zum Login
+activationSuccessful=Die Aktivierung des Nutzerkontos war erfolgreich.
+error.missinglogin=Der Login-Name muss mindestens 3 Zeichen lang sein
+error.spacesinlogin=Der Login-Name darf keine Leerzeichen enthalten
+error.invalidUserid=Der Login-Name enthält ungültige Zeichen. Erlaubte Zeichen sind: a-z, A-Z, 0-9, Minus und Punkt.
+error.passwordlength=Das Passwort muss mindestens 5 Zeichen lang sein
+error.spacesinpw=Das Passwort darf keine Leerzeichen enthalten
+error.pwmissmatch=Passwort und Bestätigung stimmen nicht überein
+error.duplicatelogin=Ein Nutzer mit diesem Namen existiert bereits
+error.createHomeDir=Fehler beim Anlegen des Home Directory für den neuen Nutzer.
+error.createUser=Fehler beim Anlegen des neuen Nutzers
+error.email=eine gültige e-mail Adresse ist erforderlich
+error.invalidpassword=Das alte Passwort ist falsch
+error.missingLanguage=Sprache ist ein Pflichtfeld
+
+# disk quota labels
+label.accountSize=Speicherplatznutzung
+label.user=Nutzer
+label.diskQuota=zugewiesener Speicherplatz
+label.spaceUsed=genutzter Speicherplatz
+
+# e-mail subjects
+subject.welcome=Willkomen beim arcoiris blog
+subject.diskquota=Speicherplatz-Limit überschritten
+
+# Google Maps, Google Earth
+button.googleMap=Lokation auf Landkarte
+label.geoMapLink=Geographische Lokation auf Karte anzeigen
+geoMapLinkShort=Landkarte
+selectMapType=- Kartentyp wählen -
+mapTypeOSM=Open Street Maps
+mapTypeGoogleMap=Google Maps
+mapTypeGoogleEarth=Google Earth
+label.googleEarthAllFiles=Geographische Position aller Bilder in Google Earth anzeigen
+label.OSMapAllFiles=Geographische Position aller Bilder in Open Street Maps anzeigen
+label.googleMapAllFiles=Geographische Position aller Bilder in Google Maps anzeigen
+label.geoTag=Geo-Tag Daten
+label.latitude=geogr. Breite in Dezimalgrad (Beispiel: 51.05 für Dresden)
+label.longitude=geogr. Länge in Dezimalgrad (Beispiel: 13.75 für Dresden)
+label.zoomFactor=Zoom Factor (1 = weit weg, 16 = ganz nah)
+label.geoTagInfoText=Text für Info-Fenster auf der Karte
+alert.missingLatitude=geogr. Breite ist ein Pflichtfeld
+alert.missingLongitude=geogr. Länge ist ein Pflichtfeld
+button.preview=Vorschau Karte
+button.selectFromMap=auf Karte auswählen
+label.hintGoogleMapSelect=Klick wählt geografische Lokation aus
+noFilesWithGeoData=Dieser Ordner enthält keine Bilder mit geografischen Koordinaten!
+button.hideMapInfo=Info-Text ausblenden
+button.showMapInfo=Info-Text einblenden
+
+# alert messages
+alert.regsuccess=Der neue Nutzer wurde erfolgreich registriert.
+alert.invalidlogin=Userid oder Passwort falsch!
+alert.sessionexpired=Die Sitzung ist abgelaufen. Bitte neu anmelden!
+alert.outOfMemory=Es steht nicht genügend virtueller Speicher zur Verfügung.
+alert.descriptionTooLong=Der Beschreibungs-Text ist zu lang (max 1024 Zeichen erlaubt)!
+alert.enablePopups=Diese Funktion erfordert die Freischaltung von Popup-Windows in den Browser-Einstellungen! 
+alert.communicationFailure=Kommunikationsfehler
+
+blog.empty=Es existieren noch keine Blog-Einträge.
+blog.dateRangeEmpty=Es existieren keine Blog-Einträge in diesem Datumsbereich.
+blog.createPostHeadline=Neuen Blog-Eintrag erstellen
+blog.editPostHeadline=Blog-Eintrag bearbeiten
+blog.uploadDropZone=Drag and drop Bilddatei für Upload hier!
+blog.uploadFileNames=ausgewählte Bilder
+blog.sendPostButton=Senden
+blog.cancelButton=Abbrechen
+blog.calendarTitle=Datum im Kalender auswählen
+blog.selectDate=Datum
+blog.dateInFuture=Das ausgewählte Datum liegt in der Zukunft!
+blog.uploadFileTooLarge=Die ausgewählte Datei ist zu gross für den Upload!
+blog.emptyPost=Es wurde kein Bild ausgewählt und kein Text eingegeben!
+blog.confirmSendEmptyText=Es wurde kein Text eingegeben. Trotzdem senden?
+blog.listHeadline=arcoiris blog
+blog.buttonCreate=Neuer Eintrag
+blog.buttonPublish=Blog publizieren
+blog.buttonPublicLink=Öffentlicher Link
+blog.buttonUnpublish=Publizierung beenden
+blog.buttonlogout=Logout
+blog.confirmCancel=Änderungen verwerfen?
+blog.confirmUnpublish=Publizierung des Blog wirklich beenden?\\nDer öffentliche Link wird damit ungültig.\\nBei späterer erneuter Publizierung wird ein anderer öffentlicher Link generiert, der an die Leser kommuniziert werden muss.
+blog.pagingNewer=neuere Einträge
+blog.pagingOlder=ältere Einträge
+blog.deleteError=Fehler beim Löschen eines Blog-Eintrages
+blog.confirmDelete=Soll der Blog-Eintrag wirklich gelöscht werden?
+blog.textTooLong=Der Text dieses Blog-Eintrages ist zu lang!
+blog.publishTitle=Blog publizieren
+blog.publicLink=Öffentlicher Link
+blog.daysPerPage=Tage je Seite
+blog.invalidDaysPerPageValue=Der Wert für Tage je Seite ist ungültig!
+blog.invalidExpirationDays=Der Wert für Gültigkeit ist ungültig!
+blog.newCommentEmpty=Bitte geben Sie einen Kommentartext ein!
+blog.settingsHeadline=Einstellungen
+blog.titleText=Titel-Text des Blog
+blog.daysPerPage=Tage je Seite
+blog.newPassword=neues Passwort
+blog.newPasswdConfirm=neues Passwort (Wiederholung) 
+blog.invalidDaysPerPage=Der Wert für Tage je Seite muss eine Zahl zwischen 1 und 64 sein!
+blog.moveUp=nach oben verschieben
+blog.moveDown=nach unten verschieben
+blog.makeTitlePic=dieses Bild als Titelbild des Blog setzen
+blog.confirmSetTitlePic=Dieses Bild als Titelbild des Blog setzen?
+blog.unsetTitlePic=Titelbild des Blog entfernen
+blog.confirmUnsetTitlePic=Titelbild des Blog entfernen?
+blog.setTitlePicError=Fehler beim Setzen eines neuen Titelbildes
+blog.like=dieser Eintrag gefällt mir
+blog.likeTitle=Personen gefällt dieser Eintrag
+blog.confirmLike=Dieser Einträg gefällt Ihnen?
+blog.likeAdded=Bewertung wurde gespeichert
+blog.rotateLeft=Bild nach links drehen
+blog.rotateRight=Bild nach rechts drehen
+blog.showFullSize=Bild in voller Grösse ansehen
+blog.moveError=Fehler beim Verschieben des Blog-Eintrages
+blog.rotateError=Fehler beim Drehen des Bildes
+blog.commentAdded=der Kommentar wurde hinzugefügt
+blog.search=Suchen
+blog.subscribe=Abonnieren
+blog.subscribeButton=Abonnieren
+blog.subscribePrompt=Abonnieren Sie diesen Blog, um über Änderungen per e-mail informiert zu werden. Geben Sie Ihre e-mail Adresse ein:
+blog.unsubscribeHint=Zum Beenden des Abonnements klicken Sie auf den Link in einer der e-mails, die Sie als Benachrichtigung erhalten. 
+blog.invalidSubscriberEmail=Die e-mail Adresse ist ungültig!
+blog.subscribeSuccess=Der Blog wurde erfolgreich abonniert.
+blog.subscribeError=Das Abonnement konnte nicht akzeptiert werden!
+blog.unsubscribeSuccess=Das Abonnement für diesen Blog wurde beendet.
+blog.unsubscribeFailure=Das Abonnement für den Blog konnte nicht beendet werden (ungültige Parameter).
+blog.subjectChangeNotification=Neue Einträge im Blog
+blog.showSubscribers=Abonnenten
+blog.headlineSubscribers=Abonnenten
+blog.noSubscribers=Der Blog wurde noch nicht abonniert.
+blog.insertEmoji=diese Emoticon an der Cursorposition einfügen
+blog.showEmojis=show emoticons
+blog.mapAll=alle Orte auf Landkarte anzeigen
+blog.buttonMapAll=Landkarte
+blog.labelSearchArg=suchen nach:
+blog.searchButton=Suche starten
+blog.searchArgMinLength=Bitte geben Sie mindestens 2 Zeichen als Suchbegriff ein!
+blog.searchHitCount=Anzahl Suchtreffer
+blog.searchResultArg=Suchbegriff
+blog.searchAgain=neue Suche
+blog.searchIncludeComments=auch Kommentare durchsuchen
+blog.stagedPublication=neue Einträge explizit freigeben
+blog.entryUnpublished=(nicht freigegeben)
+blog.publishNewEntries=neue Einträge freigeben
+blog.confirmPublishNewEntries=Sollen die neuen Einträge wirklich freigegeben werden?
+blog.mapMarkerTitle=Bild zu dieser geografischen Lokation anzeigen
+blog.skinList=Layout
+
+error.latitudeInvalid=geografische Breite muss zwischen -90 und 90 liegen
+error.longitudeInvalid=geografische Länge muss zwischen -180.0 und 180.0 liegen
+
+# calendar
+calendar.titleMonth=Kalendermonat
+calendar.titleYear=Kalender Jahr
+calendar.monday=Montag
+calendar.tuesday=Dienstag
+calendar.wednesday=Mittwoch
+calendar.thursday=Donnerstag
+calendar.friday=Freitag
+calendar.saturday=Sonnabend
+calendar.sunday=Sonntag
+calendar.mon=Mo
+calendar.tue=Di
+calendar.wed=Mi
+calendar.thu=Do
+calendar.fri=Fr
+calendar.sat=Sa
+calendar.sun=So
+calendar.january=Januar
+calendar.february=Februar
+calendar.march=März
+calendar.april=April
+calendar.may=Mai
+calendar.june=Juni
+calendar.july=Juli
+calendar.august=August
+calendar.september=September
+calendar.october=Oktober
+calendar.november=November
+calendar.december=Dezember
+calendar.year=Jahr
+calendar.today=heute
+calendar.week=Woche
+calendar.to=bis
+calendar.prevYear=Jahr zurück
+calendar.nextYear=nächstes Jahr

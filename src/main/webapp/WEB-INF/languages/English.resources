@@ -1,0 +1,280 @@
+# arcoiris resource file for international customization 
+#
+# version for English language
+#
+# Save a copy of the unchanged file for further reference !
+
+
+# common labels
+label.login.title=arcoiris blog login
+label.userid=Userid
+label.password=Password
+label.passwd=password
+label.logon=Login
+
+# common buttons
+button.create=Create
+button.cancel=Cancel
+button.closewin=Close Window
+button.return=Return
+button.save=Save
+button.ok=OK
+button.next=Next
+button.previous=Previous
+button.reload=Reload
+button.close=Cancel
+button.closeMap=Close
+
+# upload parameter window labels
+label.uploadfile=Upload File
+label.upload.localFile=file to be uploaded
+label.upload.serverFileName=file name on server
+label.upload.description=file description
+upload.selected.pictures=pictures selected for upload
+upload.dropZone=Drag and drop files for upload here!
+upload.lastSent=last uploaded file
+upload.selectedFiles=files selected for upload
+upload.selectFilePrompt=select file(s)
+upload.button.done=Done
+label.uploadStatus=Upload Status
+upload.file.too.large=The file is too large for uploading with the extended upload function. Use the basic upload dialog for really big files!
+upload.file.exists=a file with this name already exists - overwrite?
+uploadTargetFileNameExt=The filename extension of the local file will be appended to the filename on the target server. Continue?
+upload.total.status=total status
+upload.error=failed to upload file
+
+# picture album invitation and publish folders/files
+label.invitehead=Publish Pictures
+label.picturedir=Picture directory
+label.receiver=Receiver(s) (comma-separated list of e-mail addresses)
+label.subject=Subject
+label.invitationtext=The invitation text
+label.expiration=Expires after days
+button.invite=Publish/Invite
+button.publish=Publish
+alt.openpicture=view picture in original size
+alert.noreceiver=Enter at least one receiver
+alert.emailsyntax=invalid e-mail address
+alert.nomsgtext=Please enter the invitation text
+alert.expinvalid=Expiration must be a number
+alert.pageSizeInvalid=page size must be a number
+label.expires=expires
+label.accesscode=URL with access code
+label.picture=Picture
+
+# user comments
+label.commentList=User Comments
+confirm.delcomments=Delete all comments for this entry?
+label.nocomments=There are no comments for this entry.
+label.addcomment=Add your comment
+button.addComment=Add Comment
+button.delComments=Delete Comments
+label.allowcomments=allow visitors to add comments
+label.comments=Comments
+label.guestuser=Guest
+label.commentAuthor=your name
+comments.unread=new
+
+# user self-registration
+label.registerself=I am a new user
+label.regtitle=new user registration
+label.login=userid/login
+label.passwordconfirm=confirm password
+label.firstname=first name
+label.lastname=last name
+label.email=e-mail address
+label.phone=phone
+label.language=language
+label.settings=Settings
+label.oldpassword=current password
+label.newpassword=new password
+label.css=layout
+label.selectLanguage=- select language -
+label.userRole=user role
+button.register=Register
+registrationConfirmation=The first step of the registration process was successful. An e-mail containing information about how to complete the registration has been sent to the provided e-mail address.
+button.registrationToLogin=Goto Login
+activationSuccessful=Your account has been activated successfully.
+error.missinglogin=the minimum length of the login name is 3 characters
+error.spacesinlogin=the login name must not contain spaces
+error.invalidUserid=The userid contains illegal characters. Allowed characters are: a-z, A-Z, 0-9, dash and dot.
+error.passwordlength=the minimum password length is 5 characters
+error.spacesinpw=the password must not contain spaces
+error.pwmissmatch=password and password confirmation do not match
+error.duplicatelogin=an user with this name already exists
+error.createHomeDir=failed to create the home directory for the new user
+error.createUser=failed to create new user
+error.email=a valid e-mail address is required
+error.invalidpassword=the current password is invalid
+error.missingLanguage=language is required
+
+# disk quota labels
+label.accountSize=Account Size Usage
+label.user=User
+label.diskQuota=disk quota
+label.spaceUsed=space used
+
+# e-mail subjects
+subject.welcome=Welcome to the arcoiris blog
+subject.diskquota=Disk quota exceeded
+
+# Google Maps, Google Earth, Open street Maps
+button.googleMap=show location on map
+label.geoMapLink=Show geographic location on map
+geoMapLinkShort=location on map
+selectMapType=- select map type -
+mapTypeOSM=Open Street Maps
+mapTypeGoogleMap=Google Maps
+mapTypeGoogleEarth=Google Earth
+label.googleEarthAllFiles=Show geographic location of all pictures in Google Earth
+label.OSMapAllFiles=Show geographic location of all pictures in Open Street Map
+label.googleMapAllFiles=Show geographic location of all pictures in Google Maps
+label.geoTag=Geo-Tag Data
+label.latitude=latitude in decimal degrees (example: 51.05 for Dresden)
+label.longitude=longitude in decimal degrees (example: 13.75 for Dresden)
+label.zoomFactor=zoom factor (1 = far away view, 16 = closest view)
+label.geoTagInfoText=Text for info window on the map
+alert.missingLatitude=latitude is a required field
+alert.missingLongitude=longitude is a required field
+button.preview=Preview Map
+button.selectFromMap=Select on map
+label.hintGoogleMapSelect=Click to select geographic coordinates!
+noFilesWithGeoData=This folder does not contain pictures with geographic coordinates!
+button.hideMapInfo=Hide Info Text
+button.showMapInfo=Show Info Text
+
+# alert messages
+alert.regsuccess=New user has been registered successfully.
+alert.invalidlogin=userid or password invalid
+alert.sessionexpired=Your session has expired.\\nYou have to re-logon now!
+alert.outOfMemory=insufficient memory to perform the requested operation
+alert.descriptionTooLong=The description text is too long (max 1024 characters allowed)!
+alert.enablePopups=This function requires that you allow popup windows in your browser settings! 
+alert.communicationFailure=communication failure
+
+blog.empty=This blog is still empty.
+blog.dateRangeEmpty=There are no blog entries for this date range!
+blog.createPostHeadline=post a new blog entry
+blog.editPostHeadline=edit blog entry
+blog.uploadDropZone=Drag and drop picture file for upload here!
+blog.uploadFileNames=selected pictures
+blog.sendPostButton=Send
+blog.cancelButton=Cancel
+blog.calendarTitle=select date from calendar
+blog.selectDate=date
+blog.dateInFuture=The selected day is in the future!
+blog.uploadFileTooLarge=The selected file is too large for upload!
+blog.emptyPost=Select a picture for upload and/or enter any text!
+blog.confirmSendEmptyText=You have not entered any text. Submit anyway?
+blog.listHeadline=arcoiris blog
+blog.buttonCreate=Create new Entry
+blog.buttonPublish=Publish Blog
+blog.buttonPublicLink=Show Public Link
+blog.buttonUnpublish=Unpublish Blog
+blog.buttonlogout=Logout
+blog.confirmCancel=Discard changes?
+blog.confirmUnpublish=Are you sure you want to stop the publication of the blog?\\nThe public link will be invalidated.\\nIn case of future re-publishing a different public link will be generated which has to be communicated to the blog readers.
+blog.pagingNewer=newer entries
+blog.pagingOlder=older entries
+blog.deleteError=failed to delete blog entry
+blog.confirmDelete=Are you sure you want to delete this blog entry?
+blog.textTooLong=The text of this blog entry ist too long.
+blog.publishTitle=Publish Blog
+blog.publicLink=public link
+blog.daysPerPage=days per page
+blog.invalidDaysPerPageValue=The value for day per page is invalid!
+blog.invalidExpirationDays=The value for the expiration days is invalid!
+blog.newCommentEmpty=Please enter a comment text!
+blog.settingsHeadline=blog settings
+blog.titleText=blog title text
+blog.daysPerPage=days per page
+blog.newPassword=new password
+blog.newPasswdConfirm=confirm new password 
+blog.invalidDaysPerPage=The value for days per page muste be a number between 1 and 64!
+blog.moveUp=move up
+blog.moveDown=move down
+blog.makeTitlePic=make this picture the blog title pic
+blog.confirmSetTitlePic=Set this picture as the blog's title pic?
+blog.unsetTitlePic=unset the blog's title pic
+blog.confirmUnsetTitlePic=Unset the blog's title pic?
+blog.setTitlePicError=failed to set new title picture
+blog.like=like this post
+blog.likeTitle=persons like this post
+blog.confirmLike=You like this post?
+blog.likeAdded=You have liked this post.
+blog.rotateLeft=rotate picture left
+blog.rotateRight=rotate picture right
+blog.showFullSize=show picture in full size
+blog.moveError=failed to move blog entry
+blog.rotateError=failed to rotate picture
+blog.commentAdded=the new comment has been saved
+blog.search=search
+blog.subscribe=subscribe
+blog.subscribeButton=Subscribe
+blog.subscribePrompt=Subscribe to this blog to get notified via e-mail when new blog entries are created. Enter your e-mail address below:
+blog.unsubscribeHint=To unsubcribe from this blog click the link in one of the notification e-mails you receive.
+blog.invalidSubscriberEmail=The e-mail addess is invalid!
+blog.subscribeSuccess=You have successfully subscribed to this blog!
+blog.subscribeError=The subscription could not be activated.
+blog.unsubscribeSuccess=The subscription to the blog has been removed.
+blog.unsubscribeFailure=Failed to remove the blog subscription (invalid parameters).
+blog.subjectChangeNotification=New entries in the Blog
+blog.showSubscribers=Subscribers
+blog.headlineSubscribers=Subscribers watching this Blog
+blog.noSubscribers=Your blog has no subscribers yet.
+blog.insertEmoji=insert this emoticon into the text at the cursor position
+blog.showEmojis=show Emoticons
+blog.mapAll=show all locations on map
+blog.buttonMapAll=Locations on Map
+blog.labelSearchArg=enter search term:
+blog.searchButton=start search
+blog.searchArgMinLength=Please enter at least 2 characters as search term!
+blog.searchHitCount=search hit count
+blog.searchResultArg=search term
+blog.searchAgain=new search
+blog.searchIncludeComments=include comments in search
+blog.stagedPublication=staged publication of new entries
+blog.entryUnpublished=(unpublished)
+blog.publishNewEntries=Publish new entries
+blog.confirmPublishNewEntries=Are you sure you want to publish the new entries?
+blog.mapMarkerTitle=Show picture associated with this location
+blog.skinList=layout
+
+error.latitudeInvalid=latitude must be a number between -90.0 and 90.0
+error.longitudeInvalid=longitude must be a number between -180.0 and 180.0
+
+# calendar
+calendar.titleMonth=Calendar Month
+calendar.titleYear=Calendar Year
+calendar.monday=Monday
+calendar.tuesday=Tuesday
+calendar.wednesday=Wednesday
+calendar.thursday=Thursday
+calendar.friday=Friday
+calendar.saturday=Saturday
+calendar.sunday=Sunday
+calendar.mon=Mon
+calendar.tue=Tue
+calendar.wed=Wed
+calendar.thu=Thu
+calendar.fri=Fri
+calendar.sat=Sat
+calendar.sun=Sun
+calendar.january=January
+calendar.february=February
+calendar.march=March
+calendar.april=April
+calendar.may=May
+calendar.june=June
+calendar.july=July
+calendar.august=August
+calendar.september=September
+calendar.october=October
+calendar.november=November
+calendar.december=December
+calendar.year=year
+calendar.today=today
+calendar.week=week
+calendar.to=to
+calendar.prevYear=previous year
+calendar.nextYear=next year

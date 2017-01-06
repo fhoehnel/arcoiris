@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      function forwardToBlog() {
+	      var srcUrl = window.location.href;
+	      
+	      var lastSepIdx = srcUrl.lastIndexOf('/');
+	      
+	      var blogUrl = srcUrl.substring(0, lastSepIdx) + "/servlet";
+	      
+	      window.location.href = blogUrl;
+      }
+    </script>
+  </head>
+  <body onload="forwardToBlog()">
+  </body>
+</html>

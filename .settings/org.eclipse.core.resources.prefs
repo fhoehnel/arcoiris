@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/languages/blogChangeNotification_English.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/blogChangeNotification_German.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/diskquota_English.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/diskquota_German.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/diskquota_Spanish.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/registration_English.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/registration_German.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/registration_Spanish.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/welcome_German.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/welcome_Spanish.template=UTF-8
+encoding//src/main/webapp/javascript/admin.js=UTF-8

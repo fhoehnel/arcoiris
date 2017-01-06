@@ -1,0 +1,117 @@
+html.blog {
+    font-size: 15px;
+}
+
+body.blog {
+    background-color: #ffe0a0;
+}
+
+div.blogDateRange {
+    color: #603000;
+}
+
+span.storyDescr {
+    color: #603000;
+}
+
+div.blogHeadline {
+    color: #800000;
+    border-bottom: 1px solid #800000;
+}
+
+div.blogDate {
+    background-color: #d04000;
+    color: #ffffff;
+    border-bottom: 1px solid #400000;
+    border-top: 1px solid #400000;    
+}
+
+a.blogCalender::before, 
+a.blogMenu::before, 
+a.blogSubscribe, 
+a.blogMapAll, 
+a.blogSearch, 
+a.blogEmojiSel::before {
+    color: #b04000;
+}
+
+.icon-blog-edit::before, 
+.icon-blog-delete::before, 
+.icon-blog-rotate::before, 
+.icon-blog-move::before, 
+.icon-blog-titlePic::before, 
+.icon-blog-like::before {
+    color: #b04000;
+}
+
+body.blog input[type="submit"], 
+body.blog input[type="button"], 
+.blogPublishForm input[type="button"], 
+.blogGeoMapFrame input[type="button"], 
+.blogCommentForm input[type="button"], 
+.blogSettingsForm input[type="button"], 
+input.blogUploadFileSelButton, 
+#subscribeCont input[type="button"], 
+#searchResultCont input[type="button"], 
+#searchFormCont input[type="button"] {
+    background: rgba(0, 0, 0, 0) linear-gradient(#e0c0a0, #ffefdf) repeat scroll 0 0;
+    border-color: #604020;
+    color: #400000;
+}
+
+div.blogEmpty {
+    color: maroon;
+}
+
+body.blog a.icon-paging:before {
+    color: #b04000;
+}
+
+span.newComment {
+    color: #007020;
+}
+
+div.uploadStatus {
+    background-color: ivory;
+}
+
+th.headline {
+    background-color: lavender;
+}
+
+span.descrText {
+    color: maroon;
+}
+
+a.comments:hover {
+    color: #b04000;
+}
+
+.blogGeoTagLink span:hover {
+    color: #ffffff;
+}
+
+div.commentContHead, 
+div.blogSettingsHead {
+    background-color: #e0c0a0;
+}
+
+div.commentContHead span, 
+div.blogSettingsHead span {
+    color:#404040;
+}
+
+span.unpublished {
+    color: #008080;
+}
+
+span.likeCount {
+    color: #004040;
+}
+
+div.blogEditHead {
+    color: #400000;
+    background-color: #e0c0a0;
+    border-top-color: #808080;
+    border-bottom-color: #808080;
+}

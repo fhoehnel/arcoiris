@@ -1,0 +1,189 @@
+html.blog {
+    font-size: 15px;
+}
+
+body.blog {
+    background-color: #001030;
+}
+
+div.blogHeadline {
+    color: #c0a040;
+    border-bottom: 1px solid #c0a040;
+}
+
+img.storyPicture {
+    border: 2px solid ivory;
+    border-radius: 16px;
+    box-shadow: none;
+}
+
+a.pictureBookComent {
+    color: #ffffff;
+}
+
+a.blogCalender::before, 
+a.blogMenu::before, 
+a.blogSubscribe, 
+a.blogMapAll, 
+a.blogSearch, 
+a.blogEmojiSel::before {
+    color: #c08000;
+}
+
+.icon-blog-edit::before, 
+.icon-blog-delete::before, 
+.icon-blog-rotate::before, 
+.icon-blog-move::before, 
+.icon-blog-titlePic::before, 
+.icon-blog-like::before {
+    color: #c08000;
+}
+
+div.blogDate {
+    background-color: #a08000;
+    border-bottom: 1px solid ivory;
+    border-top: 1px solid ivory;
+    box-shadow: none;
+    color: ivory;
+}
+
+div.blogTitlePic {
+    box-shadow: none;
+}
+
+body.blog input[type="submit"], 
+body.blog input[type="button"], 
+.blogPublishForm input[type="button"], 
+.blogGeoMapFrame input[type="button"], 
+.blogCommentForm input[type="button"], 
+.blogSettingsForm input[type="button"], 
+input.blogUploadFileSelButton, 
+#subscribeCont input[type="button"], 
+#searchResultCont input[type="button"], 
+#searchFormCont input[type="button"] {
+    background: rgba(0, 0, 0, 0) linear-gradient(#a06000, #c08000) repeat scroll 0 0;
+    border-color: ivory;
+    color: ivory;
+}
+
+div.commentContHead, 
+div.blogSettingsHead,
+div.promptHead {
+    background-color: #c08000;
+    color: #ffffff;
+}
+
+div.blogPublishCont {
+    background-color: #002060;
+}
+
+html.blog td.formParm1, 
+html.blog td.formParm2 {
+	color: ivory;
+}
+
+div.blogEditHead {
+    background-color: #a08000;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+div.blogFormCont {
+    background-color: #002060;
+}
+
+html.blog form span, 
+html.blog form label {
+    color: ivory;
+}
+
+div.subscriberList span {
+    color: ivory;
+}
+
+html.blog input, 
+html.blog select, 
+html.blog textarea {
+    background-color: ivory;
+    border: 1px solid ivory;
+    border-radius: 5px;
+    color: #803000;
+}
+
+div.blogPicCont img {
+    border: 2px solid ivory;
+    border-radius: 16px;
+}
+
+div.blogSubscribeCont,
+div.blogSettingsCont,
+div.blogCommentCont,
+div.blogSearchFormCont,
+div.searchResultCont {
+    background-color: #002060;
+}
+
+table.blogCommentForm {
+    background-color: #002060;
+}
+
+span.newComment {
+    color: #00ffff;
+}
+
+li.selectedForUpload {
+    color: #ffffff;
+}
+
+div.uploadStatus {
+    background-color: ivory;
+}
+
+th.headline {
+    background-color: lavender;
+}
+
+.poweredBy {
+    color: #c0c0c0;
+    border-top: 1px solid #c0a040;
+}
+
+.poweredBy a {
+    color: #80ffff;
+}
+
+.blogGeoTagLink span {
+    color: #80ffff;
+}
+
+a.comments {
+    color: #80ffff;
+}
+
+a.comments:hover {
+    color: #c0c0c0;
+}
+
+span.likeCount {
+    color: #a08000;
+}
+
+div.searchResultCont label {
+    color: #ffffff;
+}
+
+div.subscriberList li {
+    color: #ffffff;
+}
+
+span.searchHitDate {
+    color: #c08000;
+}
+
+.searchHitsList span {
+    color: #80ffff;
+}
+
+.searchHitComment span {
+    color: #ffff80;
+}
