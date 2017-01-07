@@ -842,11 +842,13 @@ public class InvitationManager extends Thread {
     }
 
     public synchronized void run() {
+        boolean shutdownFlag = false;
+        
         int counter = 1;
 
         int sleepHours = 1;
 
-        while (true) {
+        while (!shutdownFlag) {
             try {
                 this.wait(60000);
 
@@ -868,7 +870,10 @@ public class InvitationManager extends Thread {
                     sleepHours = 24;
                 }
             } catch (InterruptedException e) {
-                Logger.getLogger(getClass()).debug(e);
+                shutdownFlag = true;
+                if (Logger.getLogger(getClass()).isDebugEnabled()) {
+                    Logger.getLogger(getClass()).debug("shutting down InvitationManager");
+                }
             }
         }
     }

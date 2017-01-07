@@ -5,6 +5,10 @@
   src: local('Kite One'), local('KiteOne-Regular'), url(../fonts/GoogleKiteOne.woff) format('woff');
 }
 
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
 html {
     font-family: Arial,Helvetica,sans-serif;
 }
@@ -129,7 +133,20 @@ a.registrationLink {
 
 a.registrationLink:hover {
     text-decoration: underline;
-    color: green;
+    color: #ffffff;
+}
+
+a.aboutLink {
+    font-family: 'Kite One';
+    font-size: 13px;
+    color: #606060;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a.aboutLink:hover {
+    text-decoration: underline;
+    color: #ffffff;
 }
 
 div.msgBox {
@@ -235,9 +252,9 @@ div.driveUsageBar {
 
 div.registrationBox {
     width: 520px;
-    height: 340px;
+    height: 400px;
     position: relative;
-    top: -170px;
+    top: -200px;
     left: -260px;
     background-color: #ffffe0;
     border-style: solid;
@@ -507,13 +524,29 @@ font.fixed {
     font-family: monospace;
 }
 
-input,select,textarea {
+input, select, textarea {
     font-size:13px;
     color:navy;
     background-color:white;
     border: 1px solid #808080;
     border-radius: 5px 5px 5px 5px;
     padding: 2px;    
+}
+
+input {
+    height: 23px;
+}
+
+select {
+    height: 25px;
+}
+
+input[type="checkbox"] {
+    vertical-align: middle;
+}
+
+input[type="checkbox"] + label {
+    margin-left: 10px;
 }
 
 td.story {
@@ -863,23 +896,23 @@ table.formSection {
 }
   
 td.formParm1 {
-    color:black;
-    font-size:13px;
-    text-align:left;
-    vertical-align:top;
-    padding:8px;
-    padding-top:4px;
-    padding-bottom:4px;
+    color: black;
+    font-size: 13px;
+    text-align: left;
+    vertical-align: top;
+    padding: 8px;
+    padding-top: 6px;
+    padding-bottom: 2px;
 }
 
 td.formParm2 {
-    color:navy;
-    font-size:13px;
-    vertical-align:top;
-    padding:8px;
-    padding-top:4px;
-    padding-bottom:4px;
-    text-align:left;
+    color: navy;
+    font-size: 13px;
+    vertical-align: top;
+    padding: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
 }
 
 td.formButton {

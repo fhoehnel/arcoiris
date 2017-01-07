@@ -1117,6 +1117,10 @@ public class XmlUserManager extends UserManagerBase {
 
                 readyForShutdown = true;
 
+                if (Logger.getLogger(getClass()).isDebugEnabled()) {
+                    Logger.getLogger(getClass()).debug("XmlUserManager ready for shuwdown");
+                }
+                
                 exitFlag = true;
             }
         }

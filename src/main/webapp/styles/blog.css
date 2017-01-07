@@ -470,6 +470,10 @@ form.blogSettingsForm {
     padding: 16px;
 }
 
+div.blogSettings input[type="checkbox"] {
+    background-color: #ffffe0;
+}
+
 div.blogSubscribeCont {
     position: absolute;
     right: 10px;

@@ -148,7 +148,7 @@
               </tr>
               <tr>
                 <td colspan="2" style="text-align:right;padding-right:10px;">
-                  <a class="dir" href="javascript:about()" resource="label.about"></a>
+                  <a class="aboutLink" href="javascript:about()" resource="label.about"></a>
                 </td>
               </tr>
             </table>

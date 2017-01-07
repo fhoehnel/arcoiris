@@ -19,7 +19,7 @@
 </link>
 
 <link rel="shortcut icon">
-  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/images/favicon.ico</xsl:attribute>
+  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/images/arcoiris-icon.png</xsl:attribute>
 </link>
 
 <title>

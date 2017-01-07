@@ -101,6 +101,10 @@ div.blogSettingsHead span {
     color:#404040;
 }
 
+div.blogSettings input[type="checkbox"] {
+    background-color: #ffffe0;
+}
+
 span.unpublished {
     color: #008080;
 }

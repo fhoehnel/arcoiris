@@ -73,6 +73,10 @@ div.promptHead {
     color: #ffffff;
 }
 
+div.blogSettings input[type="checkbox"] {
+    background-color: #002060;
+}
+
 div.blogPublishCont {
     background-color: #002060;
 }

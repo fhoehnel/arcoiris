@@ -11,6 +11,7 @@ label.userid=Nutzername
 label.password=Passwort
 label.passwd=Passwort
 label.logon=Anmelden
+label.about=arcoiris blog info
 
 # common buttons
 button.create=Anlegen
