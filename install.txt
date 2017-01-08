@@ -11,16 +11,18 @@ Configure the servlet container to use the UTF-8 character encoding for decoding
 URLs.
 If your servlet container is tomcat, you have to edit the conf/server.xml file and add
 the attribute 
-URIEncoding="UTF-8"
+
+  URIEncoding="UTF-8"
+
 to the HTTP connector.
 The Connector definition should look like this:
 
-<Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443" />
+  <Connector port="8080" protocol="HTTP/1.1" connectionTimeout="20000" URIEncoding="UTF-8" redirectPort="8443" />
 
 If you have an apache server in front of the tomcat server, you have to add the 
 URIEncoding attribute to the AJP connector too:
 
-<Connector port="8009" protocol="AJP/1.3" URIEncoding="UTF-8"/>
+  <Connector port="8009" protocol="AJP/1.3" URIEncoding="UTF-8"/>
 
 If you are using the SSL connector you have to add the URIEncoding attribute
 to the SSL connector definition.
@@ -54,24 +56,15 @@ war archives (which is the default setting).
 Step 4:
 -------
 
-After deployment start the web application 
-(if not started automatically by the servlet container).
+Customize the WebApp by editing the configuration file located in
 
-Now you can access the arcoiris blog application via the URL
+<webapp-deploy-dir>/WEB-INF/blog.conf
 
-http(s)://<server-dns-name>:<server-port>/<arcoiris-context-root>
+There are some properties that should not keep their default values. 
+See the comments above each property for detailed explanation and valid values.
 
-with <arcoiris-context-root> is the context root of the webapp specified at deployment time.
-
-Example:
-
-http://www.webfilesys.de:8080/arcoiris
-
-The default admin account is
-  userid: admin
-  password: topsecret
-  
-Don't forget to change the admin password via the user administration GUI.
+Step 5:
+-------
 
 To prevent OutOfMemory errors while processing large uploaded picture files it is recommended to
 increase the maximum memory size allowed to get allocated by the Java VM.
@@ -82,7 +75,53 @@ SET JAVA_OPTS=-Xmx512m
 
 This allows the Java VM to allocate 512 MBytes of memory.
 
-See the readme.html file for more information on how to configure WebFileSys.
+Step 6:
+-------
+
+Start the web application. 
+Check the console output of your servlet container to confirm successful startup of the blog WebApp.
+
+Now you can access the arcoiris blog application via the URL
+
+http(s)://<server-dns-name>:<server-port>/<arcoiris-context-root>
+
+with <arcoiris-context-root> is the context root of the webapp specified at deployment time.
+
+Example:
+
+http://www.mydomain.de:8080/arcoiris
+
+The default admin account is
+  userid: admin
+  password: topsecret
+  
+Don't forget to change the admin password via the user administration GUI.
 
 
- 
+Troubleshooting:
+----------------
+
+If the WebApp does not work as expected, search the log file of the blog webapp located in
+
+<webapp-deploy-dir>/WEB-INF/log/system.log
+
+for messages of severity error and warning.
+
+
+License:
+--------
+
+arcoiris blog is distributed under the GPL 3.0 license, see license-gpl-3.0.html.
+
+Additional license restriction:
+The link "about arcoiris blog" the login screen, which shows an info window linking to the arcoiris homepage, 
+must not be removed!
+
+
+Contact and Feedback:
+---------------------
+
+If you run into problems or have suggestions for improvements, contact me at 
+  frank_hoehnel (at) hotmail.com
+  
+

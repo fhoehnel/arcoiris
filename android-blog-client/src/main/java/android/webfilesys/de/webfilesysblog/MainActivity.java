@@ -92,7 +92,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final String PREF_SERVER_URL = "serverUrl";
     private static final String PREF_USERID = "userid";
 
-    private static final String SERVER_URL_DEFAULT = "http://www.webfilesys.de";
+    // URL of the blog server (incl. context root path of the blog webapp)
+    private static final String SERVER_URL_DEFAULT = "http://www.webfilesys.de/blog";
     // private static final String SERVER_URL_DEFAULT = "http://192.168.2.102:8080";
 
     private static final int POPUP_ABOUT_WIDTH = 280;
@@ -714,7 +715,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             String encodedAuthToken = createBasicAuthToken();
 
             try {
-                URL url = new URL(serverUrl + "/webfilesys/blogpost/authenticate");
+                URL url = new URL(serverUrl + "/blogpost/authenticate");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000);
@@ -817,7 +818,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             EditText descrText = (EditText) findViewById(R.id.description);
 
             try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/webfilesys/blogpost/description/" + destFileName);
+                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/description/" + destFileName);
 
                 OutputStream os = null;
                 BufferedWriter out = null;
@@ -875,7 +876,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         private boolean sendPicture(String destFileName) {
             String response = "";
             try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/webfilesys/blogpost/picture/" + destFileName);
+                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/picture/" + destFileName);
 
                 OutputStream os = null;
                 BufferedOutputStream buffOut = null;
@@ -940,7 +941,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         private boolean sendPublishRequest(String destFileName) {
             String response = "";
             try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/webfilesys/blogpost/publish/" + destFileName);
+                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/publish/" + destFileName);
 
                 OutputStream os = null;
                 BufferedWriter out = null;

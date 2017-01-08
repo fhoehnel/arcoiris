@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WebFileSys Blog</string>
+    <string name="app_name">arcoiris blog</string>
     <string name="action_settings">Einstellungen</string>
     <string name="buttonClose">Schliessen</string>
     <string name="buttonPickImage">Bild wählen</string>
@@ -9,10 +9,10 @@
     <string name="buttonSendPublish">Senden &amp; Publizieren</string>
     <string name="noImageSelected">kein Bild ausgewählt</string>
 
-    <string name="labelPassword">WebFileSys Passwort:</string>
-    <string name="labelServerUrl">WebFileSys Server URL</string>
-    <string name="labelUserid">WebFileSys Userid:</string>
-    <string name="optionMenuAbout">Über WebFileSys Blog App</string>
+    <string name="labelPassword">arcoiris Passwort:</string>
+    <string name="labelServerUrl">arcoiris Server URL</string>
+    <string name="labelUserid">arcoiris Userid:</string>
+    <string name="optionMenuAbout">Über arcoiris blog App</string>
     <string name="optionMenuExit">Beenden</string>
     <string name="optionMenuSettings">Einstellungen</string>
 
@@ -35,7 +35,7 @@
     <string name="buttonMapSelectionOk">OK</string>
 
     <string name="authenticationFailed">Das Login am Server ist fehlgeschlagen wegen ungültigem Nutzer oder Passwort.</string>
-    <string name="communicationFailure">Das Login am Server ist fehlgeschlagen wegen Kommunikations-Problemen. Bitte überprüfen Sie die URL des WebFileSys Servers!</string>
+    <string name="communicationFailure">Das Login am Server ist fehlgeschlagen wegen Kommunikations-Problemen. Bitte überprüfen Sie die URL des arcoiris blog Servers!</string>
     <string name="connecting">verbinde zum Server ...</string>
 
 </resources>
