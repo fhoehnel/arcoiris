@@ -19,7 +19,7 @@
   </link>
 
   <link rel="stylesheet" type="text/css">
-    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
+    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/geoData/skin" />.css</xsl:attribute>
   </link>
   
   <title>
@@ -43,7 +43,7 @@
     <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>
   </script>
   <script type="text/javascript">
-    <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/servlet?command=getResourceBundle&amp;lang=<xsl:value-of select="/blog/language" /></xsl:attribute>
+    <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/servlet?command=getResourceBundle&amp;lang=<xsl:value-of select="/geoData/language" /></xsl:attribute>
   </script>
 
   <script language="javascript">

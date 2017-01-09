@@ -68,6 +68,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
         doc.insertBefore(xslRef, blogElement);
 
+        XmlUtil.setChildText(blogElement, "language", language, false);
         XmlUtil.setChildText(blogElement, "skin", userMgr.getCSS(uid), false);
 
         if (readonly) {

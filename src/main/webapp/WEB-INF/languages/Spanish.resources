@@ -12,6 +12,8 @@ label.password=Contraseña
 label.passwd=contraseña
 label.logon=Iniciar sesión
 label.about=sobre arcoiris blog
+label.of=de
+label.file=archivo
 
 # common buttons
 button.create=Crear

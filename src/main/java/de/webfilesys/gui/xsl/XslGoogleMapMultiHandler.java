@@ -48,6 +48,7 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
 
         doc.insertBefore(xslRef, geoDataElement);
 
+        XmlUtil.setChildText(geoDataElement, "language", language, false);
         XmlUtil.setChildText(geoDataElement, "skin", userMgr.getCSS(uid), false);
 
         Element mapDataElement = doc.createElement("mapData");

@@ -466,7 +466,7 @@
       
       <div class="poweredBy">
         powered by arcoiris blog
-        <a href="http://www.webfilesys.de/blog" target="_blank"> (www.webfilesys.de/arcoiris)</a>
+        <a href="http://www.webfilesys.de/arcoiris" target="_blank"> (www.webfilesys.de/arcoiris)</a>
       </div>
     
       <script type="text/javascript">

@@ -27,6 +27,7 @@ public class BlogPostHandler extends XslRequestHandlerBase {
 
         doc.insertBefore(xslRef, blogElement);
 
+        XmlUtil.setChildText(blogElement, "language", language, false);
         XmlUtil.setChildText(blogElement, "skin", userMgr.getCSS(uid), false);
 
         Element geoTagElement = doc.createElement("geoTag");
