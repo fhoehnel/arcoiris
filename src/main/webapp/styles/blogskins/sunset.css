@@ -101,7 +101,8 @@ div.blogSettingsHead span {
     color:#404040;
 }
 
-div.blogSettings input[type="checkbox"] {
+div.blogSettings input[type="checkbox"],
+#blogGeoDataSwitcher {
     background-color: #ffffe0;
 }
 

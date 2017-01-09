@@ -73,7 +73,8 @@ div.promptHead {
     color: #ffffff;
 }
 
-div.blogSettings input[type="checkbox"] {
+div.blogSettings input[type="checkbox"],
+#blogGeoDataSwitcher {
     background-color: #002060;
 }
 
