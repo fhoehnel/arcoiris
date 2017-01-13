@@ -112,6 +112,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private String password;
 
     private Uri pictureUri = null;
+
+    private Uri picUriFromIntent = null;
+
     private String picturePath = null;
 
     private PopupWindow aboutPopup = null;
@@ -153,6 +156,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET}, MY_PERMISSIONS_REQUEST_ACCESS_INTERNET);
             Log.d("webfilesysblog", "missing permissions granted for internet access");
+        }
+
+        Intent intent = getIntent();
+        String intentAction = intent.getAction();
+        String intentType = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(intentAction) && intentType != null) {
+            if (intentType.startsWith("image/")) {
+                picUriFromIntent = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            }
         }
 
         latLongFormat = new DecimalFormat(LAT_LONG_FORMAT);
@@ -258,6 +271,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             EditText descrText = (EditText) findViewById(R.id.description);
             descrText.setHorizontallyScrolling(false);
             descrText.setMaxLines(40);
+
+            if (picUriFromIntent != null) {
+                handlePictureSelection(picUriFromIntent);
+                picUriFromIntent = null;
+            }
         }
     }
 
@@ -442,97 +460,109 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 if (RESULT_OK == resultCode) {
                     blogPicImageView.setImageDrawable(null);
 
-                    pictureUri = intent.getData();
-                    Log.d("webfilesysblog", "image Uri: " + pictureUri);
-
-                    picturePath = null;
-
-                    Bitmap bitmap;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-
-                        int rotation = 0;
-                        Cursor mediaCursor = getContentResolver().query(pictureUri, new String[] { "orientation", "date_added" },null, null,"date_added desc");
-
-                        if ((mediaCursor != null) && (mediaCursor.getCount() != 0)) {
-                            Log.d("webfilesysblog", "mediaCursor not empty");
-                            while (mediaCursor.moveToNext()){
-                                rotation = mediaCursor.getInt(0);
-                                Log.d("webfilesysblog", "rotation: " + rotation);
-                                break;
-                            }
-                        } else {
-                            Log.d("webfilesysblog", "mediaCursor EMPTY");
-                        }
-                        mediaCursor.close();
-
-                        if (rotation != 0) {
-                            try {
-                                Matrix matrix = new Matrix();
-                                matrix.postRotate(rotation);
-                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                                Log.d("webfilesysblog", "bitmap rotated by " + rotation + " degrees");
-                                // bitmap.recycle();
-                            } catch (Throwable ex) {
-                                Log.e("webfilesysblog", "failed to rotate image " + pictureUri, ex);
-
-                                // bitmap = lowMemoryRotation(bitmap);
-                            }
-                        }
-
-                        // blogPicImageView.setImageBitmap(bitmap);
-
-                        Bitmap scaledBitmap = PictureUtils.getResizedBitmap(bitmap, MAX_IMG_SIZE);
-
-                        bitmap.recycle();
-
-                        blogPicImageView.setImageBitmap(scaledBitmap);
-
-                        saveScaledImage(scaledBitmap);
-
-                        String origImgPath = CommonUtils.getFilePathByUri(this, pictureUri);
-
-                        // Log.d("webfilesysblog", "orig img file path: " + origImgPath);
-
-                        ExifData exifData = new ExifData(origImgPath);
-                        LatLng gpsFromExif = exifData.getGpsLocation();
-
-                        if (gpsFromExif != null) {
-                            Button selectLocationButton = (Button) findViewById(R.id.select_geo_location);
-                            selectLocationButton.setVisibility(View.GONE);
-
-                            TextView latitudeText = (TextView) findViewById(R.id.selectedLocLatitude);
-                            latitudeText.setText(latLongFormat.format(gpsFromExif.latitude));
-
-                            TextView longitudeText = (TextView) findViewById(R.id.selectedLocLongitude);
-                            longitudeText.setText(latLongFormat.format(gpsFromExif.longitude));
-
-                            View selectedLocationView = (View) findViewById(R.id.selectedLocation);
-                            selectedLocationView.setVisibility(View.VISIBLE);
-
-                            changeLocationButton = (Button) findViewById(R.id.change_geo_location);
-                            changeLocationButton.setOnClickListener(mButtonListener);
-
-                            clearLocationButton = (Button) findViewById(R.id.clear_geo_location);
-                            clearLocationButton.setOnClickListener(mButtonListener);
-
-                            selectedLocation = gpsFromExif;
-                        }
-
-                        pictureUri = null;
-                    } catch (FileNotFoundException e) {
-                        Log.e("webfilesysblog", "failed to read image data of selected picture", e);
-                    } catch (IOException e) {
-                        Log.e("webfilesysblog", "failed to read image data of selected picture", e);
+                    Uri selectedPicUri = intent.getData();
+                    if (selectedPicUri != null) {
+                        handlePictureSelection(selectedPicUri);
                     }
-
-                    showPictureLayout();
-
-                    sendPostButton.setVisibility(View.VISIBLE);
-                    sendPublishButton.setVisibility(View.VISIBLE);
                 }
                 break;
         }
+    }
+
+    private void handlePictureSelection(Uri selectedPicUri) {
+        pictureUri = selectedPicUri;
+        Log.d("webfilesysblog", "selected image Uri: " + pictureUri);
+
+        picturePath = null;
+
+        Bitmap bitmap;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+
+            int rotation = 0;
+            Cursor mediaCursor = getContentResolver().query(pictureUri, new String[] { "orientation", "date_added" },null, null,"date_added desc");
+
+            if ((mediaCursor != null) && (mediaCursor.getCount() != 0)) {
+                while (mediaCursor.moveToNext()){
+                    rotation = mediaCursor.getInt(0);
+                    Log.d("webfilesysblog", "rotation: " + rotation);
+                    break;
+                }
+            } else {
+                Log.d("webfilesysblog", "mediaCursor EMPTY");
+            }
+
+            if (mediaCursor != null) {
+                mediaCursor.close();
+            }
+
+            if (rotation != 0) {
+                try {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(rotation);
+                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    Log.d("webfilesysblog", "bitmap rotated by " + rotation + " degrees");
+                    // bitmap.recycle();
+                } catch (Throwable ex) {
+                    Log.e("webfilesysblog", "failed to rotate image " + pictureUri, ex);
+
+                    // bitmap = lowMemoryRotation(bitmap);
+                }
+            }
+
+            // blogPicImageView.setImageBitmap(bitmap);
+
+            Bitmap scaledBitmap = PictureUtils.getResizedBitmap(bitmap, MAX_IMG_SIZE);
+
+            if (scaledBitmap != bitmap) {
+                // if scaledBitmap is the same size as original bitmap, a new instance is NOT created, so we must not recylcle the orig image
+                bitmap.recycle();
+            }
+
+            blogPicImageView.setImageBitmap(scaledBitmap);
+
+            saveScaledImage(scaledBitmap);
+
+            String origImgPath = CommonUtils.getFilePathByUri(this, pictureUri);
+
+            // Log.d("webfilesysblog", "orig img file path: " + origImgPath);
+
+            ExifData exifData = new ExifData(origImgPath);
+            LatLng gpsFromExif = exifData.getGpsLocation();
+
+            if (gpsFromExif != null) {
+                Button selectLocationButton = (Button) findViewById(R.id.select_geo_location);
+                selectLocationButton.setVisibility(View.GONE);
+
+                TextView latitudeText = (TextView) findViewById(R.id.selectedLocLatitude);
+                latitudeText.setText(latLongFormat.format(gpsFromExif.latitude));
+
+                TextView longitudeText = (TextView) findViewById(R.id.selectedLocLongitude);
+                longitudeText.setText(latLongFormat.format(gpsFromExif.longitude));
+
+                View selectedLocationView = (View) findViewById(R.id.selectedLocation);
+                selectedLocationView.setVisibility(View.VISIBLE);
+
+                changeLocationButton = (Button) findViewById(R.id.change_geo_location);
+                changeLocationButton.setOnClickListener(mButtonListener);
+
+                clearLocationButton = (Button) findViewById(R.id.clear_geo_location);
+                clearLocationButton.setOnClickListener(mButtonListener);
+
+                selectedLocation = gpsFromExif;
+            }
+
+            pictureUri = null;
+        } catch (FileNotFoundException e) {
+            Log.e("webfilesysblog", "failed to read image data of selected picture", e);
+        } catch (IOException e) {
+            Log.e("webfilesysblog", "failed to read image data of selected picture", e);
+        }
+
+        showPictureLayout();
+
+        sendPostButton.setVisibility(View.VISIBLE);
+        sendPublishButton.setVisibility(View.VISIBLE);
     }
 
     private boolean checkNetworkConnection() {
