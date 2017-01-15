@@ -200,9 +200,30 @@ function CalendarPopup() {
 	c.offsetY = 25;
 	c.autoHide();
 	// Calendar-specific properties
-	c.monthNames = new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+	// c.monthNames = new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+	c.monthNames = new Array(
+	    resourceBundle["calendar.january"],
+	    resourceBundle["calendar.february"],
+	    resourceBundle["calendar.march"],
+	    resourceBundle["calendar.april"],
+	    resourceBundle["calendar.may"],
+	    resourceBundle["calendar.june"],
+	    resourceBundle["calendar.july"],
+	    resourceBundle["calendar.august"],
+	    resourceBundle["calendar.september"],
+	    resourceBundle["calendar.october"],
+	    resourceBundle["calendar.november"],
+	    resourceBundle["calendar.december"]);
 	c.monthAbbreviations = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-	c.dayHeaders = new Array("S","M","T","W","T","F","S");
+	// c.dayHeaders = new Array("S","M","T","W","T","F","S");
+	c.dayHeaders = new Array(
+	    resourceBundle["calendar.sun"],
+	    resourceBundle["calendar.mon"],
+	    resourceBundle["calendar.tue"],
+	    resourceBundle["calendar.wed"],
+	    resourceBundle["calendar.thu"],
+	    resourceBundle["calendar.fri"],
+	    resourceBundle["calendar.sat"]);
 	c.returnFunction = "CP_tmpReturnFunction";
 	c.returnMonthFunction = "CP_tmpReturnMonthFunction";
 	c.returnQuarterFunction = "CP_tmpReturnQuarterFunction";
@@ -214,7 +235,7 @@ function CalendarPopup() {
 	c.disabledDatesExpression = "";
 	c.yearSelectStartOffset = 2;
 	c.currentDate = null;
-	c.todayText="Today";
+	c.todayText = resourceBundle["calendar.today"];
 	c.cssPrefix="";
 	c.isShowNavigationDropdowns=false;
 	c.isShowYearNavigationInput=false;
