@@ -728,6 +728,7 @@ public class BlogWebServlet extends ServletBase {
                     if (role.equals("blog")) {
                         try {
                             resp.sendRedirect(req.getContextPath() + "/servlet?command=blog");
+                            return;
                         } catch (IOException ex) {
                             Logger.getLogger(getClass()).warn("failed to redirect to blog handler", ex);
                         }

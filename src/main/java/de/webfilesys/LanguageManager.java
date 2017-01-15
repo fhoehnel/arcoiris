@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -26,7 +27,7 @@ public class LanguageManager {
 
     private Hashtable resourceTable;
 
-    private Vector<String> availableLanguages;
+    private ArrayList<String> availableLanguages;
 
     private String defaultLanguage;
 
@@ -41,7 +42,7 @@ public class LanguageManager {
 
         resourceTable = new Hashtable(5);
 
-        availableLanguages = new Vector();
+        availableLanguages = new ArrayList<String>();
 
         defaultLanguage = defaultLang;
 
@@ -96,7 +97,7 @@ public class LanguageManager {
         }
     }
 
-    public Vector<String> getAvailableLanguages() {
+    public ArrayList<String> getAvailableLanguages() {
         return (availableLanguages);
     }
 
@@ -210,12 +211,9 @@ public class LanguageManager {
     }
 
     public void listAvailableLanguages() {
-        LanguageManager langMgr = LanguageManager.getInstance();
 
-        Vector languageNames = langMgr.getAvailableLanguages();
-
-        for (int i = 0; i < languageNames.size(); i++) {
-            Logger.getLogger(getClass()).info("available language: " + (String) languageNames.elementAt(i));
+        for (String availableLang : availableLanguages) {
+            Logger.getLogger(getClass()).info("available language: " + availableLang);
         }
     }
 

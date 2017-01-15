@@ -254,7 +254,7 @@ public class AdminEditUserRequestHandler extends AdminRequestHandler {
             userLanguage = LanguageManager.DEFAULT_LANGUAGE;
         }
 
-        Vector<String> languages = LanguageManager.getInstance().getAvailableLanguages();
+        ArrayList<String> languages = LanguageManager.getInstance().getAvailableLanguages();
 
         output.println("<tr>");
         output.println("<td class=\"formParm1\"><b>language</b></td>");

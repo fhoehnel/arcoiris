@@ -3,6 +3,7 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.w3c.dom.Element;
 
+import de.webfilesys.LanguageManager;
 import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.CSSManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -69,6 +71,27 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
 
         XmlUtil.setChildText(settingsElement, "activeSkin", userMgr.getCSS(uid), false);
 
+        LanguageManager langMgr = LanguageManager.getInstance();
+
+        Element languagesElement = doc.createElement("languages");
+
+        settingsElement.appendChild(languagesElement);
+        
+        ArrayList<String> languageList = langMgr.getAvailableLanguages();
+
+        for (String availableLanguage : languageList) {
+        
+            Element languageElement = doc.createElement("language");
+
+            XmlUtil.setElementText(languageElement, availableLanguage);
+
+            if (availableLanguage.equals(language)) {
+                languageElement.setAttribute("selected", "true");
+            }
+
+            languagesElement.appendChild(languageElement);
+        }
+        
         processResponse();
     }
 }

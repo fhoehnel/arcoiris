@@ -71,6 +71,25 @@
       </tr>
 
       <tr>
+        <td class="formParm1">
+          <label for="newLanguage" resource="label.language" />:
+        </td>
+        <td class="formParm2">
+          <select id="newLanguage" name="newLanguage">
+            <xsl:for-each select="/settings/languages/language">
+              <option>
+                <xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+                <xsl:if test="@selected">
+                  <xsl:attribute name="selected">true</xsl:attribute>
+                </xsl:if>
+                <xsl:value-of select="." />
+              </option>
+            </xsl:for-each>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
         <td class="formParm1" colspan="2" nowrap="nowrap">
 	      <input type="checkbox" id="stagedPublication" name="stagedPublication">
 	        <xsl:if test="/settings/stagedPublication">

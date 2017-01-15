@@ -131,6 +131,30 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             }
         }
 
+        boolean languageChanged = false;
+        
+        String newLanguage = getParameter("newLanguage");
+        
+        if (!CommonUtils.isEmpty(newLanguage)) {
+            if (!newLanguage.equals(language)) {
+                TransientUser changedUser = userMgr.getUser(uid);
+                changedUser.setLanguage(newLanguage);
+                try {
+                    userMgr.updateUser(changedUser);
+                    languageChanged = true;
+
+                    if (virtualUser == null) {
+                        virtualUser = getVirtualUser();
+                    }
+                    if (virtualUser != null) {
+                        virtualUser.setLanguage(newLanguage);
+                    }
+                } catch (UserMgmtException ex) {
+                    Logger.getLogger(getClass()).error("failed to update language for user " + uid, ex);
+                }
+            }
+        }
+        
         String newPassword = req.getParameter("newPassword");
         String newPasswdConfirm = req.getParameter("newPasswdConfirm");
 
@@ -167,6 +191,7 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
         XmlUtil.setChildText(resultElement, "blogTitleChanged", Boolean.toString(blogTitleChanged));
         XmlUtil.setChildText(resultElement, "stagingChanged", Boolean.toString(stagingChanged));
         XmlUtil.setChildText(resultElement, "skinChanged", Boolean.toString(skinChanged));
+        XmlUtil.setChildText(resultElement, "languageChanged", Boolean.toString(languageChanged));
 
         doc.appendChild(resultElement);
 

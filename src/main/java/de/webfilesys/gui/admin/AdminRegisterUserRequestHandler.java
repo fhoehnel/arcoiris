@@ -172,7 +172,7 @@ public class AdminRegisterUserRequestHandler extends AdminRequestHandler {
         output.println("</select></td>");
         output.println("</tr>");
 
-        Vector<String> languages = LanguageManager.getInstance().getAvailableLanguages();
+        ArrayList<String> languages = LanguageManager.getInstance().getAvailableLanguages();
 
         output.println("<tr>");
         output.println("<td class=\"formParm1\"><b>language</b></td>");

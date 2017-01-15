@@ -247,10 +247,9 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
 
         rootElement.appendChild(languagesElement);
 
-        Vector languageList = langMgr.getAvailableLanguages();
+        ArrayList<String> languageList = langMgr.getAvailableLanguages();
 
-        for (int i = 0; i < languageList.size(); i++) {
-            String languageName = (String) languageList.elementAt(i);
+        for (String languageName : languageList) {
 
             Element languageElement = doc.createElement("language");
 
