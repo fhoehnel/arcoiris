@@ -4,6 +4,7 @@ encoding//src/main/webapp/WEB-INF/languages/blogChangeNotification_German.templa
 encoding//src/main/webapp/WEB-INF/languages/diskquota_English.template=UTF-8
 encoding//src/main/webapp/WEB-INF/languages/diskquota_German.template=UTF-8
 encoding//src/main/webapp/WEB-INF/languages/diskquota_Spanish.template=UTF-8
+encoding//src/main/webapp/WEB-INF/languages/newCommentNotification_German.template=UTF-8
 encoding//src/main/webapp/WEB-INF/languages/registration_English.template=UTF-8
 encoding//src/main/webapp/WEB-INF/languages/registration_German.template=UTF-8
 encoding//src/main/webapp/WEB-INF/languages/registration_Spanish.template=UTF-8

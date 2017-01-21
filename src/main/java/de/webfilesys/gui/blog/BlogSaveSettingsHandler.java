@@ -107,6 +107,11 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             }
         }
 
+        boolean notifyOnNewComment = (getParameter("notifyOnNewComment") != null);
+        if (metaInfMgr.isNotifyOnNewComment(currentPath) != notifyOnNewComment) {
+            metaInfMgr.setNotifyOnNewComment(currentPath, notifyOnNewComment);
+        }
+        
         boolean skinChanged = false;
 
         String skin = getParameter("skin");

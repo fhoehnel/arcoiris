@@ -31,12 +31,14 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
 
         String fileName = getParameter("fileName");
 
-        String filePath = getCwd().replace('/', File.separatorChar);
+        String normalizedPath = getCwd().replace('/', File.separatorChar);
 
-        if (filePath.endsWith(File.separator)) {
-            filePath = filePath + fileName;
+        String filePath;
+        
+        if (normalizedPath.endsWith(File.separator)) {
+            filePath = normalizedPath + fileName;
         } else {
-            filePath = filePath + File.separator + fileName;
+            filePath = normalizedPath + File.separator + fileName;
         }
 
         String commentAuthor = uid;
@@ -74,6 +76,7 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
 
             if (readonly) {
                 MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, false);
+                MetaInfManager.getInstance().setUnnotifiedComments(normalizedPath, true);
             } else {
                 MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
             }

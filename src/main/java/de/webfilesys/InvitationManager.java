@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 
 import de.webfilesys.mail.MailTemplate;
 import de.webfilesys.mail.SmtpEmail;
+import de.webfilesys.user.TransientUser;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.UTF8URLEncoder;
 import de.webfilesys.util.XmlUtil;
@@ -645,6 +646,58 @@ public class InvitationManager extends Thread {
         changed = true;
     }
 
+    private void checkNewCommentNotifications() {
+        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
+        
+        ArrayList<TransientUser> allUsers = ArcoirisBlog.getInstance().getUserMgr().getRealUsers(); 
+        
+        for (TransientUser user : allUsers) {
+            String userHomeDir = user.getDocumentRoot();
+            if (metaInfMgr.isNotifyOnNewComment(userHomeDir)) {
+                if (metaInfMgr.hasUnnotifiedComments(userHomeDir)) {
+                    sendNewCommentNotification(user);
+                    
+                    metaInfMgr.setUnnotifiedComments(userHomeDir, false);
+                }
+            }
+        }
+    }
+    
+    private void sendNewCommentNotification(TransientUser user) {
+
+        try {
+            String templateFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/languages/newCommentNotification_" + user.getLanguage() + ".template";
+
+            MailTemplate notificationTemplate = new MailTemplate(templateFilePath);
+
+            String blogTitle = MetaInfManager.getInstance().getDescription(user.getDocumentRoot(), ".");
+            if (CommonUtils.isEmpty(blogTitle)) {
+                blogTitle = user.getUserid();
+            }
+            
+            notificationTemplate.setVarValue("BLOGTITLE", blogTitle);
+
+            String baseUrl = ArcoirisBlog.getInstance().getClientUrl();
+            if (!baseUrl.endsWith("/")) {
+                baseUrl = baseUrl + "/";
+            }
+
+            String blogURL = baseUrl + "servlet";
+            notificationTemplate.setVarValue("BLOGURL", blogURL);
+
+            String mailText = notificationTemplate.getText();
+
+            String subject = LanguageManager.getInstance().getResource(user.getLanguage(), "blog.subjectNewCommentNotification", "New comments in the Blog");
+
+            (new SmtpEmail(user.getEmail(), subject, mailText)).send();
+
+            Logger.getLogger(getClass()).info("new comment notification mail sent to " + user.getEmail() + " for blog " + blogTitle);
+
+        } catch (IllegalArgumentException iaex) {
+            Logger.getLogger(getClass()).error("failed to send new comment notification e-mail", iaex);
+        }
+    }
+    
     private void checkSubscriberNotifications() {
         if (Logger.getLogger(getClass()).isDebugEnabled()) {
             Logger.getLogger(getClass()).debug("checking subscriber notifications");
@@ -758,7 +811,7 @@ public class InvitationManager extends Thread {
             Logger.getLogger(getClass()).info("blog subscriber notification mail sent to " + email + " for blog " + blogTitle);
 
         } catch (IllegalArgumentException iaex) {
-            System.out.println(iaex);
+            Logger.getLogger(getClass()).error("failed to send subscriber notification e-mail", iaex);
         }
     }
 
@@ -862,6 +915,10 @@ public class InvitationManager extends Thread {
                     checkSubscriberNotifications();
                 }
 
+                if ((counter == 30) || (counter % 240 == 0)) {
+                    checkNewCommentNotifications();
+                }
+                
                 if (++counter == (sleepHours * 60)) {
                     removeExpired();
 

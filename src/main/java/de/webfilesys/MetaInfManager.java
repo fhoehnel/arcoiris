@@ -45,7 +45,7 @@ public class MetaInfManager extends Thread {
     private Hashtable<String, Element> dirList = null;
 
     private Hashtable<String, Boolean> cacheDirty = null;
-
+    
     DocumentBuilder builder;
 
     private MetaInfManager() {
@@ -525,23 +525,59 @@ public class MetaInfManager extends Thread {
     }
 
     public void setCommentsSeenByOwner(String path, String fileName, boolean newVal) {
-        Element metaInfElement = getMetaInfElement(path, fileName);
+        synchronized (this) {
+            Element metaInfElement = getMetaInfElement(path, fileName);
 
-        if (metaInfElement == null) {
-            return;
+            if (metaInfElement == null) {
+                return;
+            }
+
+            Element commentListElement = XmlUtil.getChildByTagName(metaInfElement, "comments");
+
+            if (commentListElement == null) {
+                return;
+            }
+
+            commentListElement.setAttribute("seenByOwner", Boolean.toString(newVal));
+
+            cacheDirty.put(path, new Boolean(true));
         }
-
-        Element commentListElement = XmlUtil.getChildByTagName(metaInfElement, "comments");
-
-        if (commentListElement == null) {
-            return;
-        }
-
-        commentListElement.setAttribute("seenByOwner", Boolean.toString(newVal));
-
-        cacheDirty.put(path, new Boolean(true));
     }
 
+    public void setUnnotifiedComments(String path, boolean newVal) {
+        synchronized (this) {
+            Element metaInfElement = getMetaInfElement(path, ".");
+
+            if (metaInfElement == null) {
+                metaInfElement = createMetaInfElement(path, ".");
+            }
+            
+            Element newCommentsElem = XmlUtil.getChildByTagName(metaInfElement, "newComments");
+            if (newVal) {
+                if (newCommentsElem == null) {
+                    XmlUtil.setChildText(metaInfElement, "newComments", "true");
+                }
+            } else {
+                if (newCommentsElem != null) {
+                    metaInfElement.removeChild(newCommentsElem);
+                }
+            }
+            cacheDirty.put(path, new Boolean(true));
+        }
+    }
+    
+    public boolean hasUnnotifiedComments(String path) {
+        Element metaInfElement = getMetaInfElement(path, ".");
+
+        if (metaInfElement == null) {
+            return false;
+        }
+
+        Element newCommentsElem = XmlUtil.getChildByTagName(metaInfElement, "newComments");
+        
+        return (newCommentsElem != null);
+    }
+    
     public boolean isCommentsSeenByOwner(String absoluteFileName) {
         String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
         return isCommentsSeenByOwner(partsOfPath[0], partsOfPath[1]);
@@ -1598,6 +1634,46 @@ public class MetaInfManager extends Thread {
         }
     }
 
+    public boolean isNotifyOnNewComment(String path) {
+
+        Element metaInfElement = getMetaInfElement(path, ".");
+
+        if (metaInfElement == null) {
+            return false;
+        }
+
+        String temp = XmlUtil.getChildText(metaInfElement, "notifyOnNewComment");
+
+        if (temp == null) {
+            return false;
+        }
+
+        return Boolean.valueOf(temp);
+    }
+
+    public void setNotifyOnNewComment(String path, boolean notify) {
+        synchronized (this) {
+            Element metaInfElement = getMetaInfElement(path, ".");
+
+            if (metaInfElement == null) {
+                metaInfElement = createMetaInfElement(path, ".");
+            }
+
+            Document doc = metaInfElement.getOwnerDocument();
+
+            Element notifyElement = XmlUtil.getChildByTagName(metaInfElement, "notifyOnNewComment");
+
+            if (notifyElement == null) {
+                notifyElement = doc.createElement("notifyOnNewComment");
+                metaInfElement.appendChild(notifyElement);
+            }
+
+            XmlUtil.setElementText(notifyElement, Boolean.toString(notify));
+
+            cacheDirty.put(path, new Boolean(true));
+        }
+    }
+    
     public int getStatus(String absoluteFileName) {
         Element metaInfElement = getMetaInfElement(absoluteFileName);
 
@@ -1670,7 +1746,6 @@ public class MetaInfManager extends Thread {
 
     public synchronized void run() {
         int counter = 0;
-
         boolean stop = false;
 
         while (!stop) {

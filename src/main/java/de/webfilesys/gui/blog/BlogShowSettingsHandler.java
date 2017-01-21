@@ -58,6 +58,12 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
             XmlUtil.setChildText(settingsElement, "stagedPublication", "true", false);
         }
 
+        boolean notifyOnNewComment = metaInfMgr.isNotifyOnNewComment(currentPath);
+
+        if (notifyOnNewComment) {
+            XmlUtil.setChildText(settingsElement, "notifyOnNewComment", "true", false);
+        }
+
         Element skinsElement = doc.createElement("skins");
         settingsElement.appendChild(skinsElement);
 

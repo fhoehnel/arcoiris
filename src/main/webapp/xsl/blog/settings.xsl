@@ -96,7 +96,18 @@
 	          <xsl:attribute name="checked">checked</xsl:attribute>
 	        </xsl:if>
 	      </input>
-	      <label for="stagedPublish" resource="blog.stagedPublication" />
+	      <label for="stagedPublication" resource="blog.stagedPublication" />
+        </td>
+      </tr>
+
+      <tr>
+        <td class="formParm1" colspan="2" nowrap="nowrap">
+	      <input type="checkbox" id="notifyOnNewComment" name="notifyOnNewComment">
+	        <xsl:if test="/settings/notifyOnNewComment">
+	          <xsl:attribute name="checked">checked</xsl:attribute>
+	        </xsl:if>
+	      </input>
+	      <label for="notifyOnNewComment" resource="blog.notifyOnNewComment" />
         </td>
       </tr>
 
