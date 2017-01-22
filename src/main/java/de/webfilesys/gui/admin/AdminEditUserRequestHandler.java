@@ -66,7 +66,7 @@ public class AdminEditUserRequestHandler extends AdminRequestHandler {
         output.println("<ul id=\"validationErrorList\"></ul>");
         output.println("</div>");
 
-        output.println("<table class=\"dataForm\" width=\"100%\">");
+        output.println("<table class=\"dataForm adminForm\" width=\"100%\">");
 
         output.println("<tr>");
         output.println("<td class=\"formParm1\"><b>userid / login</b></td>");

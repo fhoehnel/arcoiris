@@ -49,7 +49,7 @@ public class BroadcastRequestHandler extends AdminRequestHandler {
         output.println("<input type=\"hidden\" name=\"command\" value=\"admin\">");
         output.println("<input type=\"hidden\" name=\"cmd\" value=\"sendEmail\">");
 
-        output.println("<table class=\"dataForm\" width=\"100%\">");
+        output.println("<table class=\"dataForm adminForm\" width=\"100%\">");
 
         output.println("<tr><td colspan=\"2\" class=\"formParm1\">&nbsp;</td></tr>");
 
@@ -59,7 +59,7 @@ public class BroadcastRequestHandler extends AdminRequestHandler {
         output.println("<select name=\"role\" size=\"1\">");
         output.println("<option value=\"all\">all roles</option>");
         output.println("<option value=\"admin\">admin</option>");
-        output.println("<option value=\"blog\">webspace</option>");
+        output.println("<option value=\"blog\">blog</option>");
         output.println("</select>");
         output.println("</td></tr>");
 

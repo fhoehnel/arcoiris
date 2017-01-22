@@ -68,3 +68,11 @@ div.diskQuotaHead span {
     color: maroon;
     text-decoration: underline;
 }
+
+.adminForm td.formParm1 {
+    min-width: 260px;
+}
+
+.adminForm td.formParm2 {
+    width: 90%;
+}

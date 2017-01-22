@@ -56,7 +56,7 @@ public class AdminRegisterUserRequestHandler extends AdminRequestHandler {
         output.println("<ul id=\"validationErrorList\"></ul>");
         output.println("</div>");
 
-        output.println("<table class=\"dataForm\" width=\"100%\">");
+        output.println("<table class=\"dataForm adminForm\" width=\"100%\">");
 
         String val = "";
         if (errorMsgs.size() > 0) {
