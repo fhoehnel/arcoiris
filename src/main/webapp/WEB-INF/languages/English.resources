@@ -116,6 +116,7 @@ label.accountSize=Account Size Usage
 label.user=User
 label.diskQuota=disk quota
 label.spaceUsed=space used
+label.usagePercent=occupied
 
 # e-mail subjects
 subject.welcome=Welcome to the arcoiris blog
@@ -283,3 +284,4 @@ calendar.week=week
 calendar.to=to
 calendar.prevYear=previous year
 calendar.nextYear=next year
+

@@ -23,6 +23,36 @@ function switchDiskQuota(checkbox) {
     }
 }
 
+function userDiskQuota(userid) {
+    var diskQuotaCont = document.getElementById("diskQuotaCont");
+        
+    if (!diskQuotaCont) {
+        return;
+    }
+        
+    var contextRoot = getContextRoot();    
+        
+    var xmlUrl = contextRoot + "/servlet?command=admin&cmd=userDiskQuota&userName=" + encodeURIComponent(userid);
+        
+    var xslUrl = contextRoot + "/xsl/userDiskQuota.xsl";    
+        
+    htmlFragmentByXslt(xmlUrl, xslUrl, diskQuotaCont, function() {
+        setBundleResources();
+        centerBox(diskQuotaCont);
+        diskQuotaCont.style.visibility = "visible";
+    });
+}
+
+function hideDiskQuota() {
+    var diskQuotaCont = document.getElementById("diskQuotaCont");
+        
+    if (!diskQuotaCont) {
+        return;
+    }
+    
+    diskQuotaCont.style.visibility = "hidden";
+}
+
 function validateUser(isEdit) {
 
     clearValidationErrors();

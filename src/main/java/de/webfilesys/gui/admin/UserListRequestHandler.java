@@ -41,8 +41,12 @@ public class UserListRequestHandler extends AdminRequestHandler {
         output.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + req.getContextPath() + "/styles/common.css\">");
         output.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + req.getContextPath() + "/styles/admin.css\">");
 
+        output.println("<script src=\"" + req.getContextPath() + "/javascript/browserCheck.js\" type=\"text/javascript\"></script>");
         output.println("<script src=\"" + req.getContextPath() + "/javascript/util.js\" type=\"text/javascript\"></script>");
+        output.println("<script src=\"" + req.getContextPath() + "/javascript/ajaxCommon.js\" type=\"text/javascript\"></script>");
         output.println("<script src=\"" + req.getContextPath() + "/javascript/admin.js\" type=\"text/javascript\"></script>");
+        output.println("<script src=\"" + req.getContextPath() + "/javascript/resourceBundle.js\" type=\"text/javascript\"></script>");
+        output.println("<script src=\"" + req.getContextPath() + "/servlet?command=getResourceBundle&lang=" + LanguageManager.getInstance().getDefaultLanguage() + "\" type=\"text/javascript\"></script>");
 
         output.println("</head>");
         output.println("<body>");
@@ -272,7 +276,7 @@ public class UserListRequestHandler extends AdminRequestHandler {
                                 + "')\"><img src=\"images/trash.gif\" alt=\"Delete User\" border=\"0\"></a>");
 
                 if (actUser.getDiskQuota() > 0) {
-                    output.print("<a href=\"javascript:diskQuota('" + actUser.getUserid() + "')\"><img src=\"images/barGraph.gif\" alt=\"Disk Quota Usage\" border=0></a>");
+                    output.print("<a href=\"javascript:userDiskQuota('" + actUser.getUserid() + "')\"><img src=\"images/barGraph.gif\" alt=\"Disk Quota Usage\" border=0></a>");
                 }
             }
 
@@ -449,7 +453,10 @@ public class UserListRequestHandler extends AdminRequestHandler {
 
         output.println("</form>");
 
-        output.println("</body></html>");
+        output.println("<div id=\"diskQuotaCont\" class=\"userDiskQuota\"></div>");
+        
+        output.println("</body>");
+        output.println("</html>");
         output.flush();
     }
 

@@ -28,19 +28,23 @@ public class ResourceBundleHandler extends UserRequestHandler {
     }
 
     protected void process() {
+        
+        String lang = getParameter("lang");
+        
+        if (CommonUtils.isEmpty(lang)) {
+            lang = language;
+        }
+        
         resp.setContentType("text/javascript");
 
         // overwrite the no chache headers already set in WebFileSysServlet
         // resp.setHeader("Cache-Control", null);
         resp.setHeader("Cache-Control", "public, max-age=36000, s-maxage=36000");
-        resp.setDateHeader("expires", System.currentTimeMillis() + (10 * 60 * 60 * 1000)); // now
-                                                                                           // +
-                                                                                           // 10
-                                                                                           // hours
+        resp.setDateHeader("expires", System.currentTimeMillis() + (10 * 60 * 60 * 1000)); // now + 10 hours
 
         output.println("var resourceBundle = {");
 
-        Properties languageResources = LanguageManager.getInstance().getLanguageResources(language);
+        Properties languageResources = LanguageManager.getInstance().getLanguageResources(lang);
 
         Enumeration keys = languageResources.propertyNames();
 

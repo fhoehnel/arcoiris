@@ -116,6 +116,7 @@ label.accountSize=Speicherplatznutzung
 label.user=Nutzer
 label.diskQuota=zugewiesener Speicherplatz
 label.spaceUsed=genutzter Speicherplatz
+label.usagePercent=belegt
 
 # e-mail subjects
 subject.welcome=Willkomen beim arcoiris blog

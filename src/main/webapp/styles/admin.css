@@ -52,3 +52,19 @@ table.adminMenu td a {
 table.adminMenu td a:hover {
     text-decoration: underline;
 }
+
+div.userDiskQuota {
+    position: absolute;
+    width: 350px;
+    height: 210px;
+    border: 2px ridge #808080;
+    border-radius: 12px;
+    background-color: #f0f0f0;
+    padding: 16px;
+    visibility: hidden;
+}
+
+div.diskQuotaHead span {
+    color: maroon;
+    text-decoration: underline;
+}

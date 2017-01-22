@@ -48,6 +48,7 @@ import de.webfilesys.gui.admin.BroadcastRequestHandler;
 import de.webfilesys.gui.admin.DeleteUserRequestHandler;
 import de.webfilesys.gui.admin.LoginLogoutHistoryHandler;
 import de.webfilesys.gui.admin.SessionListHandler;
+import de.webfilesys.gui.admin.UserDiskQuotaHandler;
 import de.webfilesys.gui.admin.UserListRequestHandler;
 import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
@@ -83,7 +84,6 @@ import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
 import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
-import de.webfilesys.gui.user.DiskQuotaRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapHandler;
@@ -406,76 +406,45 @@ public class BlogWebServlet extends ServletBase {
 
             if (cmd.equals("menu")) {
                 (new AdminMenuRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("userList")) {
+            } else if (cmd.equals("userList")) {
                 (new UserListRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("editUser")) {
+            } else if (cmd.equals("editUser")) {
                 (new AdminEditUserRequestHandler(req, resp, session, output, userid, null)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("changeUser")) {
+            } else if (cmd.equals("changeUser")) {
                 (new AdminChangeUserRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("registerUser")) {
+            } else if (cmd.equals("registerUser")) {
                 (new AdminRegisterUserRequestHandler(req, resp, session, output, userid, null)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("addUser")) {
+            } else if (cmd.equals("addUser")) {
                 (new AdminAddUserRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("deleteUser")) {
+            } else if (cmd.equals("deleteUser")) {
                 (new DeleteUserRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("viewLog")) {
+            } else if (cmd.equals("viewLog")) {
                 (new ViewLogRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("broadcast")) {
+            } else if (cmd.equals("broadcast")) {
                 (new BroadcastRequestHandler(req, resp, session, output, userid, null)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("sendEmail")) {
+            } else if (cmd.equals("sendEmail")) {
                 (new AdminSendEmailRequestHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("sessionList")) {
+            } else if (cmd.equals("sessionList")) {
                 (new SessionListHandler(req, resp, session, output, userid)).handleRequest();
-
                 return true;
-            }
-
-            if (cmd.equals("loginHistory")) {
+            } else if (cmd.equals("loginHistory")) {
                 (new LoginLogoutHistoryHandler(req, resp, session, output, userid)).handleRequest();
-
+                return true;
+            } else if (cmd.equals("userDiskQuota")) {
+                (new UserDiskQuotaHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             }
-
+            
             Logger.getLogger(getClass()).info("unknown admin comamnd: " + cmd);
             return true;
         }
@@ -632,11 +601,6 @@ public class BlogWebServlet extends ServletBase {
 
         if (command.equals("googleEarthDirPlacemarks")) {
             (new GoogleEarthDirPlacemarkHandler(req, resp, session, output, userid)).handleRequest();
-            return true;
-        }
-
-        if (command.equals("diskQuota")) {
-            (new DiskQuotaRequestHandler(req, resp, session, output, userid)).handleRequest();
             return true;
         }
 

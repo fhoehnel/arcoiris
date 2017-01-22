@@ -117,6 +117,7 @@ label.accountSize=Uso de la cuota de disco
 label.user=Usuario
 label.diskQuota=cuota de disco
 label.spaceUsed=espacio usado
+label.usagePercent=ocupado
 
 # e-mail subjects
 subject.welcome=Bienvenido a arcoíris blog
