@@ -30,6 +30,8 @@ function userDiskQuota(userid) {
         return;
     }
         
+    showHourGlass();        
+        
     var contextRoot = getContextRoot();    
         
     var xmlUrl = contextRoot + "/servlet?command=admin&cmd=userDiskQuota&userName=" + encodeURIComponent(userid);
@@ -40,6 +42,7 @@ function userDiskQuota(userid) {
         setBundleResources();
         centerBox(diskQuotaCont);
         diskQuotaCont.style.visibility = "visible";
+        hideHourGlass();        
     });
 }
 
