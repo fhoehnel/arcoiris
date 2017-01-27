@@ -7,3 +7,11 @@ div.uploadStatus {
 th.headline {
     background-color: lavender;
 }
+
+div.urlInputCont {
+    background-color: #ffffe0;;
+}
+
+span.descrText a {
+    color: navy;
+}

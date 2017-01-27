@@ -1589,7 +1589,43 @@ function insertEmoji(textAreaId, emojiName) {
     if (textAreaField) {
         var emojiPlaceHolder = " {" + emojiName + "} ";
         insertAtCursor(textAreaField, emojiPlaceHolder);
+        textAreaField.focus();
     }
+}
+
+function showInsertLinkPrompt(textAreaId) {
+	var urlInputBox = document.getElementById("urlInputCont");
+	urlInputBox.style.display = "block";
+	centerBox(urlInputBox);
+	document.getElementById("urlLabel").focus();
+}
+
+function hideInsertLinkPrompt() {
+	var urlInputBox = document.getElementById("urlInputCont");
+	urlInputBox.style.display = "none";
+	document.getElementById("urlLabel").value = "";
+	document.getElementById("urlHref").value = "";
+}
+
+function insertLink(textAreaId) {
+	var urlLabel = trim(document.getElementById("urlLabel").value);
+	var urlHref = trim(document.getElementById("urlHref").value);
+	
+	if ((urlLabel.length == 0) || (urlHref.length == 0)) {
+		alert(resourceBundle["blog.emptyLinkData"]);
+		return;
+	}
+	
+	if (urlHref.indexOf("://") < 0) {
+	    urlHref = "http://" + urlHref;
+	}
+	
+    var textAreaField = document.getElementById(textAreaId);
+	var linkPlaceHolder = " [\"" + urlLabel + "\",\"" + urlHref + "\"] ";
+    insertAtCursor(textAreaField, linkPlaceHolder);
+    hideInsertLinkPrompt();
+    
+    textAreaField.focus();
 }
 
 function queryGeoData() {

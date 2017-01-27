@@ -493,11 +493,13 @@ public class BlogListHandler extends XslRequestHandlerBase {
     }
 
     private void appendDescrFragments(String description, Element descrElem) {
-        StringTokenizer descrParser = new StringTokenizer(description, "{}", true);
+        StringTokenizer descrParser = new StringTokenizer(description, "{}[]", true);
 
         boolean emojiStarted = false;
+        boolean linkStarted = false;
         String textFragment = null;
         String emojiName = null;
+        String linkData = null;
 
         while (descrParser.hasMoreTokens()) {
             String token = descrParser.nextToken();
@@ -521,9 +523,39 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     }
                     emojiStarted = false;
                 }
+            } else if (token.equals("[")) {
+                if (!linkStarted) {
+                    if (textFragment != null) {
+                        Element fragmentElem = doc.createElement("fragment");
+                        XmlUtil.setElementText(fragmentElem, textFragment);
+                        descrElem.appendChild(fragmentElem);
+                        textFragment = null;
+                    }
+                    linkStarted = true;
+                }
+            } else if (token.equals("]")) {
+                if (linkStarted) {
+                    if (linkData != null) {
+                        StringTokenizer linkParser = new StringTokenizer(linkData, "\",");
+                        if (linkParser.hasMoreTokens()) {
+                            String linkLabel = linkParser.nextToken();
+                            if (linkParser.hasMoreTokens()) {
+                                String linkUrl = linkParser.nextToken();
+                                Element linkElem = doc.createElement("link");
+                                XmlUtil.setChildText(linkElem, "label", linkLabel);
+                                XmlUtil.setChildText(linkElem, "url", linkUrl);
+                                descrElem.appendChild(linkElem);
+                            }
+                        }
+                        linkData = null;
+                    }
+                    linkStarted = false;
+                }
             } else {
                 if (emojiStarted) {
                     emojiName = token;
+                } else if (linkStarted) {
+                    linkData = token;
                 } else {
                     textFragment = token;
                 }

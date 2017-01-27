@@ -31,7 +31,8 @@ a.blogMenu::before,
 a.blogSubscribe, 
 a.blogMapAll, 
 a.blogSearch, 
-a.blogEmojiSel::before {
+a.blogEmojiSel::before,
+a.blogLinkIns::before {
     color: #b04000;
 }
 
@@ -53,7 +54,8 @@ body.blog input[type="button"],
 input.blogUploadFileSelButton, 
 #subscribeCont input[type="button"], 
 #searchResultCont input[type="button"], 
-#searchFormCont input[type="button"] {
+#searchFormCont input[type="button"],
+div.urlInput input[type="button"] {
     background: rgba(0, 0, 0, 0) linear-gradient(#e0c0a0, #ffefdf) repeat scroll 0 0;
     border-color: #604020;
     color: #400000;
@@ -81,6 +83,10 @@ th.headline {
 
 span.descrText {
     color: maroon;
+}
+
+span.descrText a {
+    color: #007020;
 }
 
 a.comments:hover {
@@ -119,4 +125,8 @@ div.blogEditHead {
     background-color: #e0c0a0;
     border-top-color: #808080;
     border-bottom-color: #808080;
+}
+
+div.urlInputCont {
+    background-color: #ffffe0;;
 }

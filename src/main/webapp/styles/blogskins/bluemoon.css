@@ -26,7 +26,8 @@ a.blogMenu::before,
 a.blogSubscribe, 
 a.blogMapAll, 
 a.blogSearch, 
-a.blogEmojiSel::before {
+a.blogEmojiSel::before,
+a.blogLinkIns::before {
     color: #c08000;
 }
 
@@ -60,7 +61,8 @@ body.blog input[type="button"],
 input.blogUploadFileSelButton, 
 #subscribeCont input[type="button"], 
 #searchResultCont input[type="button"], 
-#searchFormCont input[type="button"] {
+#searchFormCont input[type="button"],
+div.urlInput input[type="button"] {
     background: rgba(0, 0, 0, 0) linear-gradient(#a06000, #c08000) repeat scroll 0 0;
     border-color: ivory;
     color: ivory;
@@ -191,4 +193,12 @@ span.searchHitDate {
 
 .searchHitComment span {
     color: #ffff80;
+}
+
+div.urlInputCont {
+    background-color: #002060;
+}
+
+span.descrText a {
+    color: #ffffff;
 }

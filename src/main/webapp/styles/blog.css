@@ -26,7 +26,8 @@ body.blog input[type="button"],
 input.blogUploadFileSelButton,
 #subscribeCont input[type="button"],
 #searchResultCont input[type="button"],
-#searchFormCont input[type="button"] {
+#searchFormCont input[type="button"],
+div.urlInput input[type="button"] {
     height: 32px;
     background: linear-gradient(#d0d0d0, #f0f0f0);
     border-color: #404040;
@@ -114,7 +115,8 @@ a.blogMenu,
 a.blogSubscribe,
 a.blogMapAll,
 a.blogSearch,
-a.blogEmojiSel {
+a.blogEmojiSel,
+a.blogLinkIns {
     text-decoration: none;
 }
 
@@ -123,7 +125,8 @@ a.blogMenu:before,
 a.blogSubscribe,
 a.blogMapAll,
 a.blogSearch,
-a.blogEmojiSel:before {
+a.blogEmojiSel:before,
+a.blogLinkIns:before {
     color: #000060;
     font-size: 2rem;
 }
@@ -684,7 +687,8 @@ span.searchHit {
     color: #000060;
 }
 
-a.blogEmojiSel {
+a.blogEmojiSel,
+a.blogLinkIns {
     float: right;
     margin-right: 10px;
 }
@@ -760,6 +764,11 @@ span.descrText {
     font-size: 1rem;
 }
 
+span.descrText a {
+    font-size: 1rem;
+    text-decoration: underline;
+}
+
 div.storyPictureRight {
     float: right;
 }
@@ -776,6 +785,36 @@ img.storyPicture {
 span.likeCount {
     color: #004040;
     margin-left: 10px;
+}
+
+div.urlInputCont {
+	position: absolute;
+	width: 320px;
+	height: 230px;
+    border: 2px ridge #808080;
+    display: none;
+}
+
+div.urlInput {
+    padding: 16px;
+}
+
+div.urlInput input[type="text"] {
+	width: 100%;
+}
+
+div.urlInput div {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+div.urlInput span {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+div.urlInput div.buttonCont {
+	padding-top: 12px;
 }
 
 @media (max-width: 500px) {

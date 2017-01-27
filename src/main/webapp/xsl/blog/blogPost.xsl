@@ -190,6 +190,7 @@
             <input type="checkbox" id="blogGeoDataSwitcher" name="geoDataSwitcher" onchange="toggleGeoData(this)" />
             <label for="blogGeoDataSwitcher" resource="label.geoTag"></label>
             <a href="javascript:switchEmojiSelection('blogText')" class="icon-font icon-smiley blogEmojiSel" titleResource="blog.showEmojis"></a>
+            <a href="javascript:showInsertLinkPrompt('blogText')" class="icon-font icon-link blogLinkIns" titleResource="blog.insertLink"></a>
           </div>
               
           <div id="blogGeoTagCont" class="blogGeoTagCont">
@@ -353,6 +354,26 @@
       
       </div>
 
+    </div>
+    
+    <div id="urlInputCont" class="urlInputCont">
+      <div class="promptHead" resource="blog.urlHeadline" />
+      <div class="urlInput">
+        <form>
+          <div><label resource="blog.urlLabel" />:</div>
+          <div>
+            <input id="urlLabel" type="text" class="urlInput" /> 
+          </div>
+          <div><label resource="blog.urlHref" />:</div>
+          <div>
+            <input id="urlHref" type="text" class="urlInput" /> 
+          </div>
+          <div class="buttonCont">
+            <input type="button" resource="button.ok" onclick="insertLink('blogText')"/>
+            <input type="button" resource="button.cancel" onclick="hideInsertLinkPrompt()" style="float:right" />
+          </div>
+        </form>
+      </div>
     </div>
     
     <script type="text/javascript">

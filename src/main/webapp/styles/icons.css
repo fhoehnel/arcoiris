@@ -145,6 +145,10 @@ a.icon-font {
 	content: '\f014';
 }
 
+.icon-link:before {
+	content: '\f08e';
+}
+
 .icon-calender:before {
 	content: '\f073';
 }

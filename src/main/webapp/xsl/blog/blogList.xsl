@@ -295,6 +295,15 @@
                       </img>
                       <xsl:text> </xsl:text>
                     </xsl:if>
+                    <xsl:if test="local-name(.) = 'link'">
+                      <xsl:text> </xsl:text>
+                      <a target="_blank">
+                        <xsl:attribute name="href"><xsl:value-of select="./url" /></xsl:attribute>
+                        <xsl:attribute name="title"><xsl:value-of select="./url" /></xsl:attribute>
+                        <xsl:value-of select="./label" />
+                      </a>
+                      <xsl:text> </xsl:text>
+                    </xsl:if>
                     <xsl:if test="local-name(.) = 'fragment'">
                       <xsl:value-of select="." />
                     </xsl:if>
