@@ -42,7 +42,7 @@ public class FileEncodingMap {
         }
     }
 
-    public static FileEncodingMap getInstance() {
+    public synchronized static FileEncodingMap getInstance() {
         if (instance == null) {
             instance = new FileEncodingMap();
         }
