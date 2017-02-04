@@ -1678,8 +1678,6 @@ function attachScrollHandler() {
 
 function checkThumbnailsToReplace(breakOnFirstReplaced) {
 
-    console.log("checkThumbnailsToReplace start");
-
 	var replacedImages = new Array();
 	
 	for (var i = 0; i < thumbnails.length; i++) {
