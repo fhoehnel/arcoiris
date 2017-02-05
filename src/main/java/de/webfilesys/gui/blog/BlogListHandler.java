@@ -240,7 +240,15 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     Logger.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
                 }
             }
-
+            
+            if (daysOnPage.size() == 0) { 
+                // selected date is before the oldest blog entry - show the oldest entry
+                Object[] dateKeys = blogDays.keySet().toArray();
+                daysOnPage.add((String) dateKeys[dateKeys.length - 1]);
+                firstPage = (blogDays.size() < 2);
+                lastPage = true;
+            }
+            
             if (daysOnPage.size() > 0) {
                 String prevPageBefore = daysOnPage.get(0);
                 String nextPageAfter = daysOnPage.get(daysOnPage.size() - 1);
