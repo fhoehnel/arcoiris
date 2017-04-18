@@ -119,6 +119,13 @@ public class BlogAppServlet extends BlogWebServlet {
             String path = currentPath.replace('/', File.separatorChar);
             if (MetaInfManager.getInstance().isStagedPublication(path)) {
                 MetaInfManager.getInstance().setStatus(path, fileName, MetaInfManager.STATUS_BLOG_PUBLISHED);
+
+                String accessCode = InvitationManager.getInstance().getInvitationCode(userid, path);
+                if (accessCode != null) {
+                    InvitationManager.getInstance().notifySubscribers(accessCode);
+                } else {
+                    Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
+                }
             }
         } else {
             LOG.warn("invalid command in call to BlogPostServlet: " + command + ", request: " + requestPath);

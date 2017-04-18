@@ -144,7 +144,10 @@ public abstract class RequestHandler {
      *         Javascript
      */
     protected boolean isBrowserXslEnabled() {
-        return ((browserManufacturer == BROWSER_MSIE) || (browserManufacturer == BROWSER_MOZILLA)) && (browserVersion >= 6);
+        // return ((browserManufacturer == BROWSER_MSIE) || (browserManufacturer == BROWSER_MOZILLA)) && (browserVersion >= 6);
+
+        // too much trouble with strange versions of browsers - do the XSLT always on server side
+        return false;
 
         // (browserManufacturer == BROWSER_GOOGLE) || Chromium Issue 512827 xsl
         // fails to load properly in iframe

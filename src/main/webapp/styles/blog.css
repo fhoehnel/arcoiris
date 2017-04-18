@@ -528,7 +528,7 @@ div.blogSearchFormCont {
     right: 10px;
     top: 100px;
     width: 300px;
-    height: 160px;
+    height: 170px;
     border: 2px ridge #808080;
     background-color: #ffffe0;
     visibility: hidden;
@@ -539,7 +539,7 @@ div.searchResultCont {
     right: 10px;
     top: 100px;
     width: 480px;
-    height: 300px;
+    height: 320px;
     border: 2px ridge #808080;
     background-color: #ffffe0;
     padding: 10px;
