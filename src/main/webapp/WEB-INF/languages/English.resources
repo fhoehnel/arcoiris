@@ -250,6 +250,9 @@ blog.urlHeadline=Insert link at cursor position
 blog.urlLabel=link text
 blog.urlHref=link URL
 blog.emptyLinkData=Please enter a label and an URL for the link!
+blog.sortOrder=sort order
+blog.sortOrderBlog=blog (newest first)
+blog.sortOrderDiary=diary (oldest first)
 
 error.latitudeInvalid=latitude must be a number between -90.0 and 90.0
 error.longitudeInvalid=longitude must be a number between -180.0 and 180.0

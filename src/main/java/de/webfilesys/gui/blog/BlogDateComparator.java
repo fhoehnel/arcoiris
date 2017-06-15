@@ -3,7 +3,14 @@ package de.webfilesys.gui.blog;
 import java.util.Comparator;
 
 public class BlogDateComparator implements Comparator {
-    public BlogDateComparator() {
+    
+    public static final int SORT_ORDER_BLOG = 1; 
+    public static final int SORT_ORDER_DIARY = 2; 
+    
+    private int sortOrder = 0;
+    
+    public BlogDateComparator(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public int compare(Object o1, Object o2) {
@@ -26,10 +33,17 @@ public class BlogDateComparator implements Comparator {
         }
 
         if (compResult > 0) {
-            return (-1);
+            if (sortOrder == SORT_ORDER_BLOG) {
+                return (-1);
+            }
+            return 1;
         }
 
-        return 1;
+        if (sortOrder == SORT_ORDER_BLOG) {
+            return 1;
+        }
+
+        return (-1);
     }
 
     public boolean equals(Object obj) {

@@ -72,6 +72,26 @@
 
       <tr>
         <td class="formParm1">
+          <label for="sortOrder" resource="blog.sortOrder" />:
+        </td>
+        <td class="formParm2">
+          <select id="sortOrder" name="sortOrder">
+              <option value="1" resource="blog.sortOrderBlog">
+                <xsl:if test="/settings/sortOrder = '1'">
+                  <xsl:attribute name="selected">selected</xsl:attribute>
+                </xsl:if>
+              </option>
+              <option value="2" resource="blog.sortOrderDiary">
+                <xsl:if test="/settings/sortOrder = '2'">
+                  <xsl:attribute name="selected">selected</xsl:attribute>
+                </xsl:if>
+              </option>
+          </select>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="formParm1">
           <label for="newLanguage" resource="label.language" />:
         </td>
         <td class="formParm2">

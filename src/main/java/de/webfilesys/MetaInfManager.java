@@ -1674,6 +1674,46 @@ public class MetaInfManager extends Thread {
         }
     }
     
+    public int getSortOrder(String path) {
+
+        Element metaInfElement = getMetaInfElement(path, ".");
+
+        if (metaInfElement == null) {
+            return 0;
+        }
+
+        String temp = XmlUtil.getChildText(metaInfElement, "sortOrder");
+
+        if (CommonUtils.isEmpty(temp)) {
+            return 0;
+        }
+
+        return Integer.valueOf(temp);
+    }
+
+    public void setSortOrder(String path, int sortOrder) {
+        synchronized (this) {
+            Element metaInfElement = getMetaInfElement(path, ".");
+
+            if (metaInfElement == null) {
+                metaInfElement = createMetaInfElement(path, ".");
+            }
+
+            Document doc = metaInfElement.getOwnerDocument();
+
+            Element sortElement = XmlUtil.getChildByTagName(metaInfElement, "sortOrder");
+
+            if (sortElement == null) {
+                sortElement = doc.createElement("sortOrder");
+                metaInfElement.appendChild(sortElement);
+            }
+
+            XmlUtil.setElementText(sortElement, Integer.toString(sortOrder));
+
+            cacheDirty.put(path, new Boolean(true));
+        }
+    }
+    
     public int getStatus(String absoluteFileName) {
         Element metaInfElement = getMetaInfElement(absoluteFileName);
 

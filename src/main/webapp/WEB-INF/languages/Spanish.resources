@@ -251,6 +251,9 @@ blog.urlHeadline=Insertar enlace en la posición del cursor
 blog.urlLabel=texto del enlace
 blog.urlHref=URL del enlace
 blog.emptyLinkData=¡El texto y la URL del enlace pueden no estar vacías!
+blog.sortOrder=orden de clasificación
+blog.sortOrderBlog=blog (el más reciente primero)
+blog.sortOrderDiary=diario (lo más viejo primero)
 
 error.latitudeInvalid=latitude debe ser un número entre -90.0 y 90.0
 error.longitudeInvalid=longitude debe ser un número entre -180.0 y 180.0

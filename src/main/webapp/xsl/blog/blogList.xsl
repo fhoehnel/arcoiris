@@ -229,19 +229,9 @@
         <xsl:if test="/blog/blogEntries/blogDate">
     
         <xsl:if test="/blog/paging/prevPageBefore or /blog/paging/nextPageAfter">
-          <div class="blogPagingCont">
-            <xsl:if test="/blog/paging/prevPageBefore">
-              <a class="icon-font icon-paging icon-page-prev" titleResource="blog.pagingNewer">
-                <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;afterDay=<xsl:value-of select="/blog/paging/prevPageBefore" /></xsl:attribute>
-              </a>
-            </xsl:if>
-            <xsl:if test="/blog/paging/nextPageAfter">
-              <a class="icon-font icon-paging icon-page-next" titleResource="blog.pagingOlder">
-                <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/nextPageAfter" /></xsl:attribute>
-              </a>
-            </xsl:if>
-          </div>
+          <xsl:call-template name="paging" />
         </xsl:if>
+        
         <xsl:if test="not(/blog/paging/prevPageBefore) and not(/blog/paging/nextPageAfter)">
           <div style="height:12px;clear:both;"></div>
         </xsl:if>
@@ -444,20 +434,9 @@
           </xsl:for-each>
         
         </xsl:for-each>
-        
+
         <xsl:if test="/blog/paging/prevPageBefore or /blog/paging/nextPageAfter">
-          <div class="blogPagingCont">
-            <xsl:if test="/blog/paging/prevPageBefore">
-              <a class="icon-font icon-paging icon-page-prev" titleResource="blog.pagingNewer">
-                <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;afterDay=<xsl:value-of select="/blog/paging/prevPageBefore" /></xsl:attribute>
-              </a>
-            </xsl:if>
-            <xsl:if test="/blog/paging/nextPageAfter">
-              <a class="icon-font icon-paging icon-page-next" titleResource="blog.pagingOlder">
-                <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/nextPageAfter" /></xsl:attribute>
-              </a>
-            </xsl:if>
-          </div>
+          <xsl:call-template name="paging" />
         </xsl:if>
         
         </xsl:if>
@@ -574,5 +553,7 @@
   </html>
 
 </xsl:template>
+
+<xsl:include href="paging.xsl" />
 
 </xsl:stylesheet>

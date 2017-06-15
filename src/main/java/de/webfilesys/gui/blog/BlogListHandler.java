@@ -105,7 +105,14 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
         blogElement.appendChild(blogEntriesElement);
 
-        TreeMap<String, ArrayList<File>> blogDays = new TreeMap<String, ArrayList<File>>(new BlogDateComparator());
+        int sortOrder = metaInfMgr.getSortOrder(currentPath);        
+        if (sortOrder == 0) {
+            sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        }
+        
+        XmlUtil.setChildText(blogElement, "sortOrder", Integer.toString(sortOrder), false);
+        
+        TreeMap<String, ArrayList<File>> blogDays = new TreeMap<String, ArrayList<File>>(new BlogDateComparator(sortOrder));
 
         boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
 
@@ -206,27 +213,54 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     Date day = dateFormat.parse(blogDate);
 
                     if (pageBeforeDay != null) {
-                        if (day.getTime() < pageBeforeDay.getTime()) {
-                            if (daysIncluded < daysPageSize) {
+                        if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                            if (day.getTime() < pageBeforeDay.getTime()) {
+                                if (daysIncluded < daysPageSize) {
+                                    daysOnPage.add(blogDate);
+                                    daysIncluded++;
+                                } else {
+                                    lastPage = false;
+                                }
+                            } else {
+                                firstPage = false;
+                            }
+                        } else { // BlogDateComparator.SORT_ORDER_DIARY
+                            if (day.getTime() < pageBeforeDay.getTime()) {
                                 daysOnPage.add(blogDate);
                                 daysIncluded++;
+                                if (daysIncluded > daysPageSize) {
+                                    daysOnPage.remove(0);
+                                    daysIncluded--;
+                                    firstPage = false;
+                                }
                             } else {
                                 lastPage = false;
                             }
-                        } else {
-                            firstPage = false;
                         }
                     } else if (pageAfterDay != null) {
-                        if (day.getTime() > pageAfterDay.getTime()) {
-                            daysOnPage.add(blogDate);
-                            daysIncluded++;
-                            if (daysIncluded > daysPageSize) {
-                                daysOnPage.remove(0);
-                                daysIncluded--;
+                        if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                            if (day.getTime() > pageAfterDay.getTime()) {
+                                daysOnPage.add(blogDate);
+                                daysIncluded++;
+                                if (daysIncluded > daysPageSize) {
+                                    daysOnPage.remove(0);
+                                    daysIncluded--;
+                                    firstPage = false;
+                                }
+                            } else {
+                                lastPage = false;
+                            }
+                        } else { // BlogDateComparator.SORT_ORDER_DIARY
+                            if (day.getTime() > pageAfterDay.getTime()) {
+                                if (daysIncluded < daysPageSize) {
+                                    daysOnPage.add(blogDate);
+                                    daysIncluded++;
+                                } else {
+                                    lastPage = false;
+                                }
+                            } else {
                                 firstPage = false;
                             }
-                        } else {
-                            lastPage = false;
                         }
                     } else {
                         if (daysIncluded < daysPageSize) {
