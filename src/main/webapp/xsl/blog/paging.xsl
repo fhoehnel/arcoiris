@@ -16,7 +16,7 @@
               </xsl:if>
               <xsl:if test="/blog/sortOrder = '2'">
                 <a class="icon-font icon-paging icon-page-first" titleResource="blog.pagingOldest">
-                  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=1990-01-01</xsl:attribute>
+                  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/firstDay" /></xsl:attribute>
                 </a>
                 <a class="icon-font icon-paging icon-page-prev" titleResource="blog.pagingOlder">
                   <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/prevPageBefore" /></xsl:attribute>
@@ -26,7 +26,7 @@
             <xsl:if test="/blog/paging/nextPageAfter">
               <xsl:if test="/blog/sortOrder = '1'">
                 <a class="icon-font icon-paging icon-page-last" titleResource="blog.pagingOldest">
-                  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=1990-01-01</xsl:attribute>
+                  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/lastDay" /></xsl:attribute>
                 </a>
                 <a class="icon-font icon-paging icon-page-next" titleResource="blog.pagingOlder">
                   <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="/blog/paging/nextPageAfter" /></xsl:attribute>

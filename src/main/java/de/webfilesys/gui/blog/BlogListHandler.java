@@ -276,9 +276,9 @@ public class BlogListHandler extends XslRequestHandlerBase {
             }
             
             if (daysOnPage.size() == 0) { 
-                // selected date is before the oldest blog entry - show the oldest entry
                 Object[] dateKeys = blogDays.keySet().toArray();
                 if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                    // selected date is before the oldest blog entry - show the oldest entry
                     daysOnPage.add((String) dateKeys[dateKeys.length - 1]);
                     firstPage = (blogDays.size() < 2);
                     lastPage = true;
@@ -298,10 +298,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                 if (!firstPage) {
                     XmlUtil.setChildText(pagingElement, "prevPageBefore", prevPageBefore);
+                    XmlUtil.setChildText(pagingElement, "firstDay", blogDays.firstKey());
                 }
 
                 if (!lastPage) {
                     XmlUtil.setChildText(pagingElement, "nextPageAfter", nextPageAfter);
+                    XmlUtil.setChildText(pagingElement, "lastDay", blogDays.lastKey());
                 }
 
                 Date dateRangeFrom = null;
