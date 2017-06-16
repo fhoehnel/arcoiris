@@ -283,9 +283,15 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     firstPage = (blogDays.size() < 2);
                     lastPage = true;
                 } else {
-                    daysOnPage.add((String) dateKeys[0]);
-                    lastPage = (blogDays.size() < 2);
-                    firstPage = true;
+                    if (pageAfterDay != null) {
+                        daysOnPage.add((String) dateKeys[dateKeys.length - 1]);
+                        firstPage = (blogDays.size() < 2);
+                        lastPage = true;
+                    } else {
+                        daysOnPage.add((String) dateKeys[0]);
+                        lastPage = (blogDays.size() < 2);
+                        firstPage = true;
+                    }
                 }
             }
             

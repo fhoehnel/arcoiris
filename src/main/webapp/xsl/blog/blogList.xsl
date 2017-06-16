@@ -88,6 +88,7 @@
       </script>
       
       <script type="text/javascript">
+        var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
       
         function setCalendarStyles() 
         {
@@ -119,11 +120,18 @@
             selectedDate.setMonth(m - 1);
             selectedDate.setDate(d);
             
-            selectedDate.setMilliseconds(selectedDate.getMilliseconds() + (24 * 60 * 60 * 1000));
+            var dayParamName;
+            if (sortOrder == 1) {
+                selectedDate.setMilliseconds(selectedDate.getMilliseconds() + (24 * 60 * 60 * 1000));
+                dayParamName = "beforeDay";
+            } else {
+                selectedDate.setMilliseconds(selectedDate.getMilliseconds() - (24 * 60 * 60 * 1000));
+                dayParamName = "afterDay";
+            }
 
-            var beforeDay = selectedDate.getFullYear() + "-" + LZ(selectedDate.getMonth() + 1) + "-" + LZ(selectedDate.getDate());
+            var dayParamVal = selectedDate.getFullYear() + "-" + LZ(selectedDate.getMonth() + 1) + "-" + LZ(selectedDate.getDate());
 
-            window.location.href = "<xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=" + beforeDay;
+            window.location.href = "<xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;" + dayParamName + "=" + dayParamVal;
         }
 
         function scrollToCurrentEntry() {
