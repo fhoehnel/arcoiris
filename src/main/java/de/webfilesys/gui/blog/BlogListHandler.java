@@ -174,7 +174,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
             Date pageBeforeDay = null;
 
-            String beforeDay = req.getParameter("beforeDay");
+            String beforeDay = getParameter("beforeDay");
 
             if (!CommonUtils.isEmpty(beforeDay)) {
                 try {
@@ -278,9 +278,15 @@ public class BlogListHandler extends XslRequestHandlerBase {
             if (daysOnPage.size() == 0) { 
                 // selected date is before the oldest blog entry - show the oldest entry
                 Object[] dateKeys = blogDays.keySet().toArray();
-                daysOnPage.add((String) dateKeys[dateKeys.length - 1]);
-                firstPage = (blogDays.size() < 2);
-                lastPage = true;
+                if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                    daysOnPage.add((String) dateKeys[dateKeys.length - 1]);
+                    firstPage = (blogDays.size() < 2);
+                    lastPage = true;
+                } else {
+                    daysOnPage.add((String) dateKeys[0]);
+                    lastPage = (blogDays.size() < 2);
+                    firstPage = true;
+                }
             }
             
             if (daysOnPage.size() > 0) {
