@@ -165,12 +165,29 @@ a.icon-font {
 	content: '\f04a';
 }
 
+.icon-page-first:before {
+	content: '\f048';
+}
+
 .icon-page-next:before {
 	content: '\f04e';
 }
 
-.icon-page-next {
+.icon-page-next,
+.icon-page-last {
     float: right;
+}
+
+.icon-page-first {
+	margin-right: 16px;
+}
+
+.icon-page-last {
+	margin-left: 16px;
+}
+
+.icon-page-last:before {
+	content: '\f051';
 }
 
 a.icon-paging {
