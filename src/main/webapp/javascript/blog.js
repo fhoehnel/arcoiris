@@ -1383,6 +1383,7 @@ function showSaveSettingsResult(req) {
             var stagingChanged = resultElem.getElementsByTagName("stagingChanged")[0].firstChild.nodeValue;
             var skinChanged = resultElem.getElementsByTagName("skinChanged")[0].firstChild.nodeValue;
             var languageChanged = resultElem.getElementsByTagName("languageChanged")[0].firstChild.nodeValue;
+            var sortOrderChanged = resultElem.getElementsByTagName("sortOrderChanged")[0].firstChild.nodeValue;
 
             var settingsCont = document.getElementById("settingsCont");
             settingsCont.style.visibility = "hidden";
@@ -1393,6 +1394,7 @@ function showSaveSettingsResult(req) {
                 (blogTitleChanged && (blogTitleChanged == "true")) ||
                 (stagingChanged && (stagingChanged == "true")) ||
                 (languageChanged && (languageChanged == "true")) ||
+                (sortOrderChanged && (sortOrderChanged == "true")) ||
                 (skinChanged && (skinChanged == "true"))) {
                 window.location.href = getContextRoot() + "/servlet?command=blog";
             }

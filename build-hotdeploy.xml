@@ -1,4 +1,4 @@
-<project name="webfilesys-hotdeploy" default="hotdeploy" basedir=".">
+<project name="arcoiris-hotdeploy" default="hotdeploy" basedir=".">
   <description>
     deploy changed classes and webcontent to the development server
   </description>

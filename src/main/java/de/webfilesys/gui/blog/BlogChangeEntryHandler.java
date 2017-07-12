@@ -2,6 +2,8 @@ package de.webfilesys.gui.blog;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -174,6 +176,16 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
             }
         }
 
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date beforeDate = dateFormat.parse(fileNamePrefixFromDate);
+            beforeDate.setTime(beforeDate.getTime() + (24l * 60l * 60l * 1000l));
+            setParameter("beforeDay", dateFormat.format(beforeDate));
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).warn("invalid date format", ex);
+        }
+        
         (new BlogListHandler(req, resp, session, output, uid)).handleRequest();
     }
 

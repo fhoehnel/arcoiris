@@ -2,6 +2,7 @@ package de.webfilesys.gui.blog;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,6 +145,16 @@ public class BlogSetDescrHandler extends UserRequestHandler {
         session.removeAttribute(BlogListHandler.SESSION_KEY_BEFORE_DAY);
         session.removeAttribute(BlogListHandler.SESSION_KEY_AFTER_DAY);
 
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            Date beforeDate = dateFormat.parse(firstUploadFileName.substring(0, 10));
+            beforeDate.setTime(beforeDate.getTime() + (24l * 60l * 60l * 1000l));
+            setParameter("beforeDay", dateFormat.format(beforeDate));
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).warn("invalid date format", ex);
+        }
+        
         (new BlogListHandler(req, resp, session, output, uid)).handleRequest();
     }
 

@@ -112,6 +112,20 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             metaInfMgr.setNotifyOnNewComment(currentPath, notifyOnNewComment);
         }
         
+        boolean sortOrderChanged = false;
+        
+        String sortOrderParam = getParameter("sortOrder");
+        if (sortOrderParam != null) {
+            try {
+                int sortOrder = Integer.parseInt(sortOrderParam);
+                if (metaInfMgr.getSortOrder(currentPath) != sortOrder) {
+                    sortOrderChanged = true;
+                }
+                metaInfMgr.setSortOrder(currentPath, sortOrder);
+            } catch (NumberFormatException ex) {
+            }
+        }
+        
         boolean skinChanged = false;
 
         String skin = getParameter("skin");
@@ -197,7 +211,8 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
         XmlUtil.setChildText(resultElement, "stagingChanged", Boolean.toString(stagingChanged));
         XmlUtil.setChildText(resultElement, "skinChanged", Boolean.toString(skinChanged));
         XmlUtil.setChildText(resultElement, "languageChanged", Boolean.toString(languageChanged));
-
+        XmlUtil.setChildText(resultElement, "sortOrderChanged", Boolean.toString(sortOrderChanged));
+        
         doc.appendChild(resultElement);
 
         processResponse();

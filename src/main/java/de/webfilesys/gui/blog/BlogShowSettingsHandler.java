@@ -63,7 +63,13 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
         if (notifyOnNewComment) {
             XmlUtil.setChildText(settingsElement, "notifyOnNewComment", "true", false);
         }
-
+        
+        int sortOrder = metaInfMgr.getSortOrder(currentPath);
+        if (sortOrder == 0) {
+            sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        }
+        XmlUtil.setChildText(settingsElement, "sortOrder", Integer.toString(sortOrder), false);
+        
         Element skinsElement = doc.createElement("skins");
         settingsElement.appendChild(skinsElement);
 
