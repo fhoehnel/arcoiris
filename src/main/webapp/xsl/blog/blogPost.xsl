@@ -112,7 +112,9 @@
 
     </head>
 
-    <body class="blog" onload="setCalendarStyles();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode();">
+    <body class="blog">
+    
+      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/geoTag/googleMapsAPIKey" />')</xsl:attribute>
     
       <div class="blogEditHead" resource="blog.createPostHeadline"></div>    
       

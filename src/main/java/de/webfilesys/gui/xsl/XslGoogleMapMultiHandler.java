@@ -141,6 +141,18 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
             }
         }
 
+        String googleMapsAPIKey = null;
+        if (req.getScheme().equalsIgnoreCase("https")) {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+        } else {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+        }
+        
+        if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+            XmlUtil.setChildText(geoDataElement, "googleMapsAPIKey", googleMapsAPIKey, false);
+        }
+        
+        
         // when XSLT processing is done by the browser, the Firefox browser and
         // MSIE 7.0 hang up forever
         // when loading the Google maps API Javascript functions from the Google

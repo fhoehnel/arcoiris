@@ -114,7 +114,7 @@
     </head>
 
     <body class="blog">
-      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();loadGoogleMapsAPIScriptCode();replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
+      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/blogEntry/geoTag/googleMapsAPIKey" />');replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
       
       <div class="blogEditHead" resource="blog.editPostHeadline"></div>    
       

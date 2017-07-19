@@ -119,6 +119,9 @@ public class ArcoirisBlog {
     private int diskQuotaCheckHour = 3;
 
     private long uploadLimit = DEFAULT_UPLOAD_LIMIT;
+    
+    private String googleMapsAPIKeyHTTP;
+    private String googleMapsAPIKeyHTTPS;
 
     private SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -339,6 +342,16 @@ public class ArcoirisBlog {
             }
         }
 
+        googleMapsAPIKeyHTTP = config.getProperty("GoogleMapsAPIKeyHTTP");
+        if (CommonUtils.isEmpty(googleMapsAPIKeyHTTP)) {
+            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTP (missing config property GoogleMapsAPIKeyHTTP)");
+        }
+        
+        googleMapsAPIKeyHTTPS = config.getProperty("GoogleMapsAPIKeyHTTPS");
+        if (CommonUtils.isEmpty(googleMapsAPIKeyHTTPS)) {
+            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTPS (missing config property GoogleMapsAPIKeyHTTPS)");
+        }
+        
         primaryLanguage = config.getProperty("primaryLanguage", LanguageManager.DEFAULT_LANGUAGE);
 
         contextRoot = config.getProperty("contextRoot", "/blog");
@@ -563,4 +576,13 @@ public class ArcoirisBlog {
     public String getContextRoot() {
         return contextRoot;
     }
+    
+    public String getGoogleMapsAPIKeyHTTP() {
+        return googleMapsAPIKeyHTTP;
+    }
+
+    public String getGoogleMapsAPIKeyHTTPS() {
+        return googleMapsAPIKeyHTTPS;
+    }
+    
 }

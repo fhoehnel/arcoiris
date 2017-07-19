@@ -575,10 +575,15 @@ function moveBlogEntry(fileName, direction, posInPage) {
     });
 }
 
-function loadGoogleMapsAPIScriptCode() {
+function loadGoogleMapsAPIScriptCode(googleMapsAPIKey) {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=handleGoogleMapsApiReady";
+
+    if (window.location.href.indexOf("https") == 0) {
+        script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&key=" + googleMapsAPIKey;
+    } else {
+        script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&key=" + googleMapsAPIKey;
+    }        
     document.body.appendChild(script);
 }
   
