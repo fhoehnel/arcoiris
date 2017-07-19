@@ -1746,6 +1746,7 @@ div.picOnMap {
 	width: 400px;
 	height: 430px;
 	padding: 10px;
+	box-sizing: content-box;
 }
 
 img.picOnMap {
