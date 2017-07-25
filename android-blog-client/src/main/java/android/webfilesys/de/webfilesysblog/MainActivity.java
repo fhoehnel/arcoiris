@@ -1,6 +1,7 @@
 package android.webfilesys.de.webfilesysblog;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -99,13 +101,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final int POPUP_ABOUT_WIDTH = 280;
     private static final int POPUP_ABOUT_HEIGHT = 220;
 
+    private static final int POPUP_SEND_STATUS_WIDTH = 280;
+    private static final int POPUP_SEND_STATUS_HEIGHT = 260;
+
     private Button sendPostButton;
     private Button sendPublishButton;
     private Button geoLocationButton;
     private Button changeLocationButton;
     private Button clearLocationButton;
     private ImageView blogPicImageView;
-    private ProgressBar progressBar;
 
     private String serverUrl;
     private String userid;
@@ -119,6 +123,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private PopupWindow aboutPopup = null;
 
+    private PopupWindow sendStatusPopup = null;
+
     private LatLng selectedLocation = null;
 
     SupportMapFragment mMapFragment = null;
@@ -130,6 +136,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private View blogFormLayout = null;
 
     private View mapLayout = null;
+
+    private View sendStatusView = null;
 
     private DecimalFormat latLongFormat;
 
@@ -264,9 +272,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             geoLocationButton = (Button) findViewById(R.id.select_geo_location);
             geoLocationButton.setOnClickListener(mButtonListener);
-
-            progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-            progressBar.setVisibility(View.INVISIBLE);
 
             EditText descrText = (EditText) findViewById(R.id.description);
             descrText.setHorizontallyScrolling(false);
@@ -626,6 +631,35 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 (int) (POPUP_ABOUT_HEIGHT * densityFactor));
     }
 
+    private void showSendStatus() {
+        sendStatusView = getLayoutInflater().inflate(R.layout.popup_send_progress, null);
+
+        sendStatusPopup = new PopupWindow(sendStatusView);
+
+        Button closeButton = (Button) sendStatusView.findViewById(R.id.statusCloseButton);
+
+        closeButton.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sendStatusPopup.dismiss();
+            }
+        });
+
+        View parentView = findViewById(R.id.scene_layout);
+
+        float densityFactor = getResources().getDisplayMetrics().density;
+
+        sendStatusPopup.showAtLocation(parentView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+
+        // aboutPopup.update(20, parentView.getHeight() - POPUP_ABOUT_HEIGHT - 20, POPUP_ABOUT_WIDTH, POPUP_ABOUT_HEIGHT);
+
+        sendStatusPopup.update(0, 0,
+                (int) (POPUP_SEND_STATUS_WIDTH * densityFactor),
+                (int) (POPUP_SEND_STATUS_HEIGHT * densityFactor));
+    }
+
+
     private void showSettings() {
         setContentView(R.layout.settings);
 
@@ -790,9 +824,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
             sendPostButton.setVisibility(View.GONE);
             sendPublishButton.setVisibility(View.GONE);
+
+            showSendStatus();
         }
 
         protected String doInBackground(String... params) {
@@ -817,12 +852,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
 
         protected void onPostExecute(String result) {
-            progressBar.setVisibility(View.INVISIBLE);
+            View sendProgressBar = sendStatusView.findViewById(R.id.sendProgressBar);
+            sendProgressBar.setVisibility(View.INVISIBLE);
+
+            TextView sendResultText  = (TextView) sendStatusView.findViewById(R.id.sendResult);
 
             if (success) {
-                Toast toast = Toast.makeText(view.getContext(), R.string.postSuccess, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                sendResultText.setText(R.string.postSuccess);
+
                 EditText descriptionInput = (EditText) findViewById(R.id.description);
                 descriptionInput.getText().clear();
                 blogPicImageView.setImageDrawable(null);
@@ -834,12 +871,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 View selectedLocationView = (View) findViewById(R.id.selectedLocation);
                 selectedLocationView.setVisibility(View.GONE);
             } else {
-                Toast toast = Toast.makeText(view.getContext(), R.string.postFailed, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                sendResultText.setText(R.string.postFailed);
+
                 sendPostButton.setVisibility(View.VISIBLE);
                 sendPublishButton.setVisibility(View.VISIBLE);
             }
+
+            sendResultText.setVisibility(View.VISIBLE);
+
+            View statusCloseButton = sendStatusView.findViewById(R.id.statusCloseButton);
+            statusCloseButton.setVisibility(View.VISIBLE);
         }
 
         private boolean sendDescription(String destFileName) {

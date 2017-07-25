@@ -38,4 +38,9 @@
     <string name="communicationFailure">Das Login am Server ist fehlgeschlagen wegen Kommunikations-Problemen. Bitte überprüfen Sie die URL des arcoiris blog Servers!</string>
     <string name="connecting">verbinde zum Server ...</string>
 
+    <string name="sendStatusTitle">Sende neuen Eintrag zum Server ...</string>
+
+    <string name="sendErrorTitle">Fehler beim Senden</string>
+    <string name="sendErrorDetail">Der neue Blog-Eintrag konnte nicht zum Server gesendet werden.</string>
+
 </resources>
