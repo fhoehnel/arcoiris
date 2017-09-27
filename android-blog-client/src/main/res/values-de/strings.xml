@@ -7,6 +7,8 @@
     <string name="buttonSaveSettings">Weiter</string>
     <string name="buttonSendPost">Senden</string>
     <string name="buttonSendPublish">Senden &amp; Publizieren</string>
+    <string name="buttonSaveOffline">Speichern</string>
+    <string name="buttonSavePublish">Speichern &amp; Publ. </string>
     <string name="noImageSelected">kein Bild ausgewählt</string>
 
     <string name="labelPassword">arcoiris Passwort:</string>
@@ -15,6 +17,10 @@
     <string name="optionMenuAbout">Über arcoiris blog App</string>
     <string name="optionMenuExit">Beenden</string>
     <string name="optionMenuSettings">Einstellungen</string>
+    <string name="optionMenuSendQueued">Senden</string>
+
+    <string name="youAreOffline">Keine Netzwerkverbindung!</string>
+    <string name="workOffline">offline arbeiten</string>
 
     <string name="missingParameters">Bitte füllen Sie die Pflichtfelder aus!</string>
 
@@ -23,6 +29,15 @@
 
     <string name="postSuccess">erfolgreich gesendet</string>
     <string name="postFailed">Senden ist fehlgeschlagen!</string>
+    <string name="saveSuccess">Der Blog-Eintrag wurde offline gespeichert.</string>
+
+    <string name="notLoggedIn">Sie sind auf keinem Blog-Server eingeloggt.</string>
+
+    <string name="sendingQueuedEntries">Offline gespeicherte Einträge werden versandt.</string>
+    <string name="queuedEntriesSent">offline gespeicherte Einträge wurden versandt.</string>
+
+    <string name="wentOffline">Die Netzwerkverbindung ist unterbrochen. Sie arbeiten jetzt offline.</string>
+    <string name="backOnline">Eine Netzwerkverbinfdung ist jetz verfügbar. Um online zu gehen, loggen Sie sich unter Einstellungen im Hauptmenü ein.</string>
 
     <string name="buttonSelectGeoLocation">Lokation auf Karte auswählen</string>
     <string name="buttonChangeGeoLocation">Lokation ändern</string>

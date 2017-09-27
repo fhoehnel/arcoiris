@@ -1,7 +1,6 @@
 package android.webfilesys.de.webfilesysblog;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.location.Location;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -57,6 +55,7 @@ import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -111,6 +110,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private Button clearLocationButton;
     private ImageView blogPicImageView;
 
+    private boolean offline = false;
+
     private String serverUrl;
     private String userid;
     private String password;
@@ -147,6 +148,18 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     float latitudeFromExif;
     float longitudeFromExif;
+
+    private boolean networkAvailabilityThreadRunning = false;
+
+    private boolean currentNetworkStatus = false;
+
+    private boolean stopNetworkQueryThread;
+
+    /**
+     * key: serverURL + '~' + userid
+     * value: password
+     */
+    private HashMap<String, String> checkedLogins = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +199,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     .build();
         }
 
+        if (checkedLogins == null) {
+            checkedLogins = new HashMap<String, String>();
+        }
+
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
 
         serverUrl = prefs.getString("serverUrl", null);
@@ -209,12 +226,26 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onStart() {
         googleApiClient.connect();
+        stopNetworkQueryThread = false;
+
+        if (!networkAvailabilityThreadRunning) {
+            Button saveSettingsButton = (Button) findViewById(R.id.save_settings_button);
+            if (saveSettingsButton != null) {
+                new QueryNetworkAvailabilityTask(saveSettingsButton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else if (sendPostButton != null) {
+                new QueryNetworkAvailabilityTask(sendPostButton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                Log.w("webfilesysblog", "QueryNetworkAvailabilityTask not started because view not found");
+            }
+        }
+
         super.onStart();
     }
 
     @Override
     protected void onStop() {
         googleApiClient.disconnect();
+        stopNetworkQueryThread = true;
         super.onStop();
     }
 
@@ -282,6 +313,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 picUriFromIntent = null;
             }
         }
+
+        if (offline) {
+            sendPostButton.setText(R.string.buttonSaveOffline);
+            sendPublishButton.setText(R.string.buttonSavePublish);
+        } else {
+            sendPostButton.setText(R.string.buttonSendPost);
+            sendPublishButton.setText(R.string.buttonSendPublish);
+        }
     }
 
     private View.OnClickListener mButtonListener = new View.OnClickListener() {
@@ -292,16 +331,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             switch (v.getId()) {
 
                 case R.id.pick_image_button:
-                    if (checkNetworkConnection()) {
-                        Intent pickImageIntent = new Intent(
-                                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
-                    } else {
-                        Log.e("webfilesysblog", "not connected to the internet");
-                        Toast toast = Toast.makeText(getApplicationContext(), R.string.offline, Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }
+                    Intent pickImageIntent = new Intent(
+                            Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
                     break;
                 case R.id.send_publish_button:
                 case R.id.send_post_button:
@@ -312,9 +344,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         toast.show();
                     } else {
                         if (v.getId() == R.id.send_publish_button) {
-                            new PostToBlogTask(v, true).execute();
+                            if (offline) {
+                                queueEntryOffline(true);
+                            } else {
+                                new PostToBlogTask(v, true).execute();
+                            }
                         } else {
-                            new PostToBlogTask(v, false).execute();
+                            if (offline) {
+                                queueEntryOffline(false);
+                            } else {
+                                new PostToBlogTask(v, false).execute();
+                            }
                         }
                     }
                     break;
@@ -566,6 +606,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         showPictureLayout();
 
+        if (offline) {
+            sendPostButton.setText(R.string.buttonSaveOffline);
+            sendPublishButton.setText(R.string.buttonSavePublish);
+        } else {
+            sendPostButton.setText(R.string.buttonSendPost);
+            sendPublishButton.setText(R.string.buttonSendPublish);
+        }
+
         sendPostButton.setVisibility(View.VISIBLE);
         sendPublishButton.setVisibility(View.VISIBLE);
     }
@@ -573,6 +621,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private boolean checkNetworkConnection() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
         return (networkInfo != null) && networkInfo.isConnected();
     }
 
@@ -596,6 +645,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             case R.id.optionExit:
                 System.exit(0);
+                return true;
+
+            case R.id.optionSendQueued:
+                new SendQueuedOfflineEntriesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
 
             default:
@@ -688,7 +741,22 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             passwordInput.setText(password, TextView.BufferType.EDITABLE);
         }
 
+        TextView offlineMsg = (TextView) findViewById(R.id.offlineMsg);
         Button saveSettingsButton = (Button) findViewById(R.id.save_settings_button);
+
+        offline = false;
+
+        if (!checkNetworkConnection()) {
+            saveSettingsButton.setText(R.string.workOffline);
+            offlineMsg.setVisibility(View.VISIBLE);
+            offline = true;
+        } else {
+            saveSettingsButton.setText(R.string.buttonSaveSettings);
+            offlineMsg.setVisibility(View.GONE);
+        }
+
+        currentNetworkStatus = !offline;
+
         saveSettingsButton.setVisibility(View.VISIBLE);
 
         saveSettingsButton.setOnClickListener(new View.OnClickListener() {
@@ -708,21 +776,37 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         EditText passwordInput = (EditText) findViewById(R.id.password);
                         password = passwordInput.getText().toString();
 
-                        if ((serverUrl != null) && (!serverUrl.trim().isEmpty()) &&
-                            (userid != null) && (!userid.trim().isEmpty()) &&
-                            (password != null) && (!password.trim().isEmpty())) {
+                        boolean missingParameters = false;
 
+                        if ((serverUrl == null) || serverUrl.trim().isEmpty() ||
+                            (userid == null) || userid.trim().isEmpty()) {
+                            missingParameters = true;
+                        } else {
+                            if (!offline) {
+                                if ((password == null) || password.trim().isEmpty()) {
+                                    missingParameters = true;
+                                }
+                            }
+                        }
+
+                        if (missingParameters) {
+                            Toast toast = Toast.makeText(getApplicationContext(), R.string.missingParameters, Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                        } else {
                             if (serverUrl.endsWith("/")) {
                                 serverUrl = serverUrl.substring(0, serverUrl.length() - 1);
                             }
 
                             v.setVisibility(View.GONE);
 
-                            TextView connectingMsg = (TextView) findViewById(R.id.connecting_msg);
-                            connectingMsg.setVisibility(View.VISIBLE);
+                            if (!offline) {
+                                TextView connectingMsg = (TextView) findViewById(R.id.connecting_msg);
+                                connectingMsg.setVisibility(View.VISIBLE);
 
-                            ProgressBar authProgressBar = (ProgressBar) findViewById(R.id.authProgressBar);
-                            authProgressBar.setVisibility(View.VISIBLE);
+                                ProgressBar authProgressBar = (ProgressBar) findViewById(R.id.authProgressBar);
+                                authProgressBar.setVisibility(View.VISIBLE);
+                            }
 
                             SharedPreferences.Editor prefEditor = prefs.edit();
                             prefEditor.putString(PREF_SERVER_URL, serverUrl);
@@ -730,18 +814,128 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                             prefEditor.commit();
 
-                            new TestAuthenticationTask(v).execute();
+                            if (!networkAvailabilityThreadRunning) {
+                                new QueryNetworkAvailabilityTask(v).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            }
 
-                        } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), R.string.missingParameters, Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
+                            if (offline) {
+                                showBlogForm();
+                            } else {
+                                new TestAuthenticationTask(v).execute();
+                            }
                         }
 
                         break;
                 }
             }
         });
+    }
+
+    private void queueEntryOffline(boolean publishImmediately) {
+
+        OfflineQueueMetaDataElem metaData = new OfflineQueueMetaDataElem();
+
+        metaData.setServerUrl(serverUrl);
+
+        metaData.setUserid(userid);
+
+        metaData.setBlogDate(new Date());
+
+        EditText descrText = (EditText) findViewById(R.id.description);
+
+        metaData.setBlogText(descrText.getText().toString().replace('\n', ' ').replace('\r', ' '));
+
+        metaData.setGeoLocation(selectedLocation);
+
+        metaData.setPublishImmediately(publishImmediately);
+
+        OfflineQueueManager queueMgr = OfflineQueueManager.getInstance(getFilesDir());
+
+        queueMgr.queueBlogEntry(getApplicationContext(), metaData, pictureUri, picturePath);
+
+        // sendResultText.setText(R.string.saveSuccess);
+
+        Toast toast = Toast.makeText(getApplicationContext(), R.string.saveSuccess, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+        EditText descriptionInput = (EditText) findViewById(R.id.description);
+        descriptionInput.getText().clear();
+        blogPicImageView.setImageDrawable(null);
+        selectedLocation = null;
+        hidePictureLayout();
+
+        geoLocationButton.setVisibility(View.VISIBLE);
+
+        View selectedLocationView = (View) findViewById(R.id.selectedLocation);
+        selectedLocationView.setVisibility(View.GONE);
+    }
+
+    class QueryNetworkAvailabilityTask extends AsyncTask<String, Void, String> {
+        int authResult;
+
+        private View view;
+
+        private boolean networkStatusChanged = false;
+
+        public QueryNetworkAvailabilityTask(View v) {
+            view = v;
+        }
+
+        protected String doInBackground(String... params) {
+
+            networkAvailabilityThreadRunning = true;
+
+            do {
+                try {
+                    Thread.currentThread().sleep(30000);
+
+                    if (!stopNetworkQueryThread) {
+                        boolean newNetworkStatus = checkNetworkConnection();
+
+                        Log.d("webfilesysblog", "current network connection status: " + newNetworkStatus);
+
+                        if (newNetworkStatus) {
+                            if (!currentNetworkStatus) {
+                                networkStatusChanged = true;
+                            }
+                        } else {
+                            if (currentNetworkStatus) {
+                                offline = true;
+                                networkStatusChanged = true;
+                            }
+                        }
+
+                        currentNetworkStatus = newNetworkStatus;
+                    }
+                } catch (InterruptedException iex) {
+                }
+            } while ((!networkStatusChanged) && (!stopNetworkQueryThread));
+
+            networkAvailabilityThreadRunning = false;
+
+            return "";
+        }
+
+        protected void onPostExecute(String result) {
+            if (networkStatusChanged) {
+                int toastText;
+                if (currentNetworkStatus) {
+                    toastText = R.string.backOnline;
+                } else {
+                    toastText = R.string.wentOffline;
+                }
+                Toast toast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+
+            if (!stopNetworkQueryThread) {
+                Button saveSettingsButton = (Button) findViewById(R.id.save_settings_button);
+                new QueryNetworkAvailabilityTask(saveSettingsButton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                stopNetworkQueryThread = false;
+            }
+        }
     }
 
     class TestAuthenticationTask extends AsyncTask<String, Void, String> {
@@ -754,13 +948,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
 
         protected String doInBackground(String... params) {
-            authResult = checkAuthentication();
+            authResult = ServerCommunicator.getInstance().checkAuthentication(serverUrl, userid, password);
 
             return "";
         }
 
         protected void onPostExecute(String result) {
             if (authResult == 1) {
+                String key = serverUrl + '~' + userid;
+                checkedLogins.put(key, password);
                 showBlogForm();
             } else if (authResult == 0) {
                 Toast toast = Toast.makeText(view.getContext(), R.string.authenticationFailed, Toast.LENGTH_LONG);
@@ -774,36 +970,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 showSettings();
             }
         }
-
-        private int checkAuthentication() {
-            String encodedAuthToken = createBasicAuthToken();
-
-            try {
-                URL url = new URL(serverUrl + "/blogpost/authenticate");
-
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(15000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Authorization", encodedAuthToken);
-
-                int responseCode = conn.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    return 1;
-                } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
-                    return 0;
-                }
-                return (-1);
-            } catch (MalformedURLException urlEx) {
-                Log.w("webfilesysblog", "invalid server URL in authentication check", urlEx);
-                return (-1);
-            } catch (IOException ioEx) {
-                Log.w("webfilesysblog", "communication failure in authentication check", ioEx);
-                return (-1);
-            }
-        }
-
     }
 
     class PostToBlogTask extends AsyncTask<String, Void, String> {
@@ -816,6 +982,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         private View view;
 
+        private String blogEntryText = null;
+
         public PostToBlogTask(View v, boolean publishImmediately) {
             view = v;
             this.publishImmediately = publishImmediately;
@@ -827,6 +995,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             sendPostButton.setVisibility(View.GONE);
             sendPublishButton.setVisibility(View.GONE);
 
+            EditText descrText = (EditText) findViewById(R.id.description);
+            blogEntryText = descrText.getText().toString();
+
             showSendStatus();
         }
 
@@ -836,16 +1007,31 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             Date now = new Date();
             String destFileName = dateFormat.format(now) + "-" + now.getTime() + ".jpg";
 
-            if (sendPicture(destFileName)) {
-                if (sendDescription(destFileName)) {
-                    if (publishImmediately) {
-                        if (sendPublishRequest(destFileName)) {
+            try {
+                ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
+
+                InputStream pictureIn = null;
+                if (pictureUri != null) {
+                    pictureIn = getApplicationContext().getContentResolver().openInputStream(pictureUri);
+                } else {
+                    pictureIn = new FileInputStream(new File(picturePath));
+                }
+
+                if (serverCommunicator.sendPicture(serverUrl, userid, password, destFileName, pictureIn)) {
+
+                    if (serverCommunicator.sendDescription(serverUrl, userid, password, destFileName, blogEntryText, selectedLocation)) {
+
+                        if (publishImmediately) {
+                            if (serverCommunicator.sendPublishRequest(serverUrl, userid, password, destFileName)) {
+                                success = true;
+                            }
+                        } else {
                             success = true;
                         }
-                    } else {
-                        success = true;
                     }
                 }
+            } catch (FileNotFoundException fnfex) {
+                Log.e("webfilesysblog", "picture file for blog entry not found", fnfex);
             }
 
             return "";
@@ -882,202 +1068,51 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             View statusCloseButton = sendStatusView.findViewById(R.id.statusCloseButton);
             statusCloseButton.setVisibility(View.VISIBLE);
         }
+    }
 
-        private boolean sendDescription(String destFileName) {
-            String response = "";
+    class SendQueuedOfflineEntriesTask extends AsyncTask<String, Void, String> {
 
-            EditText descrText = (EditText) findViewById(R.id.description);
+        private Exception exception;
 
-            try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/description/" + destFileName);
+        private boolean success = false;
 
-                OutputStream os = null;
-                BufferedWriter out = null;
-                PrintWriter pout = null;
-                try {
-                    os = conn.getOutputStream();
+        private int entriesSentCount = 0;
 
-                    out = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    pout = new PrintWriter(out);
-
-                    pout.println(descrText.getText().toString().replace('\n', ' ').replace('\r', ' '));
-
-                    if (selectedLocation != null) {
-                        pout.println(latLongFormat.format(selectedLocation.latitude));
-                        pout.println(latLongFormat.format(selectedLocation.longitude));
-                    }
-
-                    os.flush();
-
-                } catch (Exception ioex) {
-                    Log.e("webfilesysblog", "failed to post description data to blog", ioex);
-                } finally {
-                    if (pout != null) {
-                        try {
-                            pout.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                }
-
-                int responseCode = conn.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    while ((line = br.readLine()) != null) {
-                        response += line;
-                    }
-                    return true;
-                }  else {
-                    response = "";
-                }
-            } catch (Exception e) {
-                Log.e("webfilesysblog", "failed to send picture via HTTP Post", e);
-            }
-            return false;
+        public SendQueuedOfflineEntriesTask() {
         }
 
-        private boolean sendPicture(String destFileName) {
-            String response = "";
-            try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/picture/" + destFileName);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-                OutputStream os = null;
-                BufferedOutputStream buffOut = null;
-                InputStream pictureIn = null;
-                BufferedInputStream buffIn = null;
-                try {
-                    if (pictureUri != null) {
-                        pictureIn = getApplicationContext().getContentResolver().openInputStream(pictureUri);
-                    } else {
-                        pictureIn = new FileInputStream(new File(picturePath));
-                    }
+            Toast toast;
 
-                    buffIn = new BufferedInputStream(pictureIn);
-
-                    os = conn.getOutputStream();
-                    buffOut = new BufferedOutputStream(os);
-
-                    byte[] buff = new byte[4096];
-
-                    int count;
-
-                    while (( count = buffIn.read(buff)) >= 0 ) {
-                        buffOut.write(buff, 0, count);
-                    }
-                    buffOut.flush();
-
-                } catch (Exception ioex) {
-                    Log.e("webfilesysblog", "failed to post picture data to blog", ioex);
-                } finally {
-                    if (buffIn != null) {
-                        try {
-                            buffIn.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                    if (buffOut != null) {
-                        try {
-                            buffOut.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                }
-
-                int responseCode = conn.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    while ((line = br.readLine()) != null) {
-                        response += line;
-                    }
-                    return true;
-                }  else {
-                    response = "";
-                }
-            } catch (Exception e) {
-                Log.e("webfilesysblog", "failed to send picture via HTTP Post", e);
+            if (checkedLogins.isEmpty()) {
+                toast = Toast.makeText(getApplicationContext(), R.string.notLoggedIn, Toast.LENGTH_LONG);
+            } else {
+                toast = Toast.makeText(getApplicationContext(), R.string.sendingQueuedEntries, Toast.LENGTH_LONG);
             }
-            return false;
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
 
-        private boolean sendPublishRequest(String destFileName) {
-            String response = "";
-            try {
-                HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/publish/" + destFileName);
+        protected String doInBackground(String... params) {
 
-                OutputStream os = null;
-                BufferedWriter out = null;
-                PrintWriter pout = null;
-                try {
-                    os = conn.getOutputStream();
-
-                    out = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    pout = new PrintWriter(out);
-
-                    pout.println("publish immediately");
-
-                    os.flush();
-
-                } catch (Exception ioex) {
-                    Log.e("webfilesysblog", "failed to post publish request", ioex);
-                } finally {
-                    if (pout != null) {
-                        try {
-                            pout.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (Exception closeEx) {
-                        }
-                    }
-                }
-
-                int responseCode = conn.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    while ((line = br.readLine()) != null) {
-                        response += line;
-                    }
-                    return true;
-                }  else {
-                    response = "";
-                }
-            } catch (Exception e) {
-                Log.e("webfilesysblog", "failed to post publish request", e);
+            if (!checkedLogins.isEmpty()) {
+                entriesSentCount = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins);
             }
-            return false;
+
+            return "";
         }
 
-        private HttpURLConnection prepareUrlConnection(String webfilesysUrl)
-        throws MalformedURLException, IOException {
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
 
-            String encodedAuthToken = createBasicAuthToken();
+            String toastText = entriesSentCount + " " + getString(R.string.queuedEntriesSent);
 
-            URL url = new URL(webfilesysUrl);
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", encodedAuthToken);
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            return conn;
+            Toast toast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
         }
     }
 

@@ -7,11 +7,22 @@
         android:enabled="true"
         android:visible="true"
         android:titleCondensed="About"
-        android:alphabeticShortcut="a"
+        android:alphabeticShortcut="t"
         android:menuCategory="system"
         android:title="@string/optionMenuSettings"
         yourapp:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_settings" />
+
+    <item
+        android:id="@+id/optionSendQueued"
+        android:enabled="true"
+        android:visible="true"
+        android:titleCondensed="Send"
+        android:alphabeticShortcut="s"
+        android:menuCategory="system"
+        android:title="@string/optionMenuSendQueued"
+        yourapp:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_send_now" />
 
     <item
         android:id="@+id/optionAbout"

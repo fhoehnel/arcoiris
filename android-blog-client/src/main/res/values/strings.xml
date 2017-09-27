@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">arcoiris blog</string>
-    <string name="appVersion" translatable="false">version 0.7.0 (25 July 2017)</string>
+    <string name="appVersion" translatable="false">version 0.8.0-beta1 (27 Sep 2017)</string>
     <string name="appAuthor" translatable="false">by Frank Hoehnel</string>
     <string name="appHomepage" translatable="false">www.webfilesys.de/arcoiris</string>
     <string name="buttonClose">Close</string>
@@ -8,17 +8,23 @@
     <string name="buttonPickImage">Pick Image from Gallery</string>
     <string name="buttonSendPost">Send</string>
     <string name="buttonSendPublish">Send &amp; Publish</string>
+    <string name="buttonSaveOffline">Save</string>
+    <string name="buttonSavePublish">Save &amp; Publish</string>
     <string name="noImageSelected">no image selected</string>
 
     <string name="optionMenuAbout">About</string>
     <string name="optionMenuExit">Exit</string>
     <string name="optionMenuSettings">Settings</string>
+    <string name="optionMenuSendQueued">Send</string>
 
     <string name="buttonSaveSettings">Continue</string>
 
     <string name="labelServerUrl">arcoiris server URL:</string>
     <string name="labelUserid">arcoiris userid:</string>
     <string name="labelPassword">arcoiris password:</string>
+
+    <string name="youAreOffline">You are offline!</string>
+    <string name="workOffline">Work offline</string>
 
     <string name="missingParameters">Please enter required parameters!</string>
 
@@ -27,6 +33,16 @@
 
     <string name="postSuccess">successfully sent</string>
     <string name="postFailed">Sending failed!</string>
+
+    <string name="saveSuccess">The blog entry has been saved offline.</string>
+
+    <string name="notLoggedIn">You are not logged in to any blog server.</string>
+
+    <string name="sendingQueuedEntries">Saved blog entries are being sent now.</string>
+    <string name="queuedEntriesSent">saved blog entries have been sent.</string>
+
+    <string name="wentOffline">The network connection has been lost. You are working offline now.</string>
+    <string name="backOnline">A network connection is available now. Go to settings in the main menue to login and work online.</string>
 
     <string name="buttonSelectGeoLocation">Select geo location on map</string>
     <string name="buttonChangeGeoLocation">Change location</string>
