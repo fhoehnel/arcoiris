@@ -1,6 +1,9 @@
 package android.webfilesys.de.webfilesysblog;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.location.Location;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -54,6 +58,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -71,7 +76,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_INTERNET = 3;
@@ -145,6 +150,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private GoogleApiClient googleApiClient;
 
     private Location lastLocation;
+
+    private Date selectedDate = null;
 
     float latitudeFromExif;
     float longitudeFromExif;
@@ -839,7 +846,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         metaData.setUserid(userid);
 
-        metaData.setBlogDate(new Date());
+        Date blogEntryDate = selectedDate;
+        if (blogEntryDate == null) {
+            blogEntryDate = new Date();
+        }
+        metaData.setBlogDate(blogEntryDate);
 
         EditText descrText = (EditText) findViewById(R.id.description);
 
@@ -1004,8 +1015,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         protected String doInBackground(String... params) {
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            if (selectedDate == null) {
+                selectedDate = new Date();
+            }
+
             Date now = new Date();
-            String destFileName = dateFormat.format(now) + "-" + now.getTime() + ".jpg";
+            selectedDate.setHours(now.getHours());
+            selectedDate.setMinutes(now.getMinutes());
+            selectedDate.setSeconds(now.getSeconds());
+
+            String destFileName = dateFormat.format(selectedDate) + "-" + selectedDate.getTime() + ".jpg";
 
             try {
                 ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
@@ -1123,4 +1143,37 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         return encodedAuthToken;
     }
+
+    public void showDatePickerDialog(View v) {
+
+        long initialDate = System.currentTimeMillis();
+        if (selectedDate != null) {
+            initialDate = selectedDate.getTime();
+        }
+
+        DialogFragment newFragment = new DatePickerFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putLong("initialDate", initialDate);
+        newFragment.setArguments(bundle);
+
+        newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar pickedDate = Calendar.getInstance();
+        pickedDate.set(Calendar.YEAR, year);
+        pickedDate.set(Calendar.MONTH, monthOfYear);
+        pickedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        selectedDate = pickedDate.getTime();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedSelectedDate = dateFormat.format(selectedDate);
+
+        Button selectDateButton = (Button) findViewById(R.id.pickDateButton);
+        selectDateButton.setText(formattedSelectedDate);
+    }
+
 }

@@ -23,15 +23,35 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
-            <Button
-                android:id="@+id/pick_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="32sp"
-                android:textColor="#202020"
-                android:textSize="16sp"
-                android:background="@drawable/button_border"
-                android:layout_marginBottom="10px"
-                android:text="@string/buttonPickImage" />
+            <LinearLayout
+                android:drawingCacheQuality="low"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/pick_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32sp"
+                    android:textColor="#202020"
+                    android:textSize="16sp"
+                    android:background="@drawable/button_border"
+                    android:layout_marginBottom="10px"
+                    android:text="@string/buttonPickImage" />
+
+                <Button
+                    android:id="@+id/pickDateButton"
+                    android:layout_width="wrap_content"
+                    android:text="@string/buttonPickDate"
+                    android:layout_height="32sp"
+                    android:textColor="#202020"
+                    android:textSize="16sp"
+                    android:background="@drawable/button_border"
+                    android:layout_marginBottom="10px"
+                    android:layout_marginLeft="20px"
+                    android:onClick="showDatePickerDialog" />
+
+            </LinearLayout>
 
             <View
                 android:background="#00000000"

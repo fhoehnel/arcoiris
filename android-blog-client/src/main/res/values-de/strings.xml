@@ -4,6 +4,7 @@
     <string name="action_settings">Einstellungen</string>
     <string name="buttonClose">Schliessen</string>
     <string name="buttonPickImage">Bild wählen</string>
+    <string name="buttonPickDate">Datum wählen</string>
     <string name="buttonSaveSettings">Weiter</string>
     <string name="buttonSendPost">Senden</string>
     <string name="buttonSendPublish">Senden &amp; Publizieren</string>

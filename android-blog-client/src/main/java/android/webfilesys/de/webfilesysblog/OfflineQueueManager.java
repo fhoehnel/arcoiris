@@ -196,7 +196,7 @@ public class OfflineQueueManager {
                 String password = checkedLogins.get(loginKey);
 
                 if (password != null) {
-                    if (sendBlogEntry(pictureFile, metaData, password)) {
+                    if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
 
                         Log.d("webfilesysblog", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
 
@@ -230,9 +230,15 @@ public class OfflineQueueManager {
         return sentCount;
     }
 
-    private boolean sendBlogEntry(File pictureFile, OfflineQueueMetaDataElem metaData, String password) {
+    private boolean sendBlogEntry(File pictureFile, OfflineQueueMetaDataElem metaData, String password, int counter) {
         Date now = new Date();
-        String destFileName = dateFormat.format(now) + "-" + now.getTime() + ".jpg";
+
+        Date blogDate = new Date(metaData.getBlogDate().getTime());
+        blogDate.setHours(now.getHours());
+        blogDate.setMinutes(now.getMinutes());
+        blogDate.setSeconds(now.getSeconds());
+
+        String destFileName = dateFormat.format(blogDate) + "-" + (blogDate.getTime() + counter)  + ".jpg";
 
         boolean success = false;
 
