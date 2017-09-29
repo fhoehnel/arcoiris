@@ -16,6 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -324,9 +325,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         if (offline) {
             sendPostButton.setText(R.string.buttonSaveOffline);
             sendPublishButton.setText(R.string.buttonSavePublish);
+            geoLocationButton.setVisibility(View.GONE);
         } else {
             sendPostButton.setText(R.string.buttonSendPost);
             sendPublishButton.setText(R.string.buttonSendPublish);
+            geoLocationButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -686,7 +689,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         // aboutPopup.update(20, parentView.getHeight() - POPUP_ABOUT_HEIGHT - 20, POPUP_ABOUT_WIDTH, POPUP_ABOUT_HEIGHT);
 
-        aboutPopup.update(0, 0,
+        int xpos = 0;
+        int ypos = 0;
+
+        if (Build.VERSION.SDK_INT == 24) {
+            xpos = (int) ((parentView.getWidth() - POPUP_ABOUT_WIDTH) / 2);
+            ypos = (int) ((parentView.getHeight() - POPUP_ABOUT_HEIGHT) / 2);
+        }
+
+        aboutPopup.update(
+                xpos,
+                ypos ,
                 (int) (POPUP_ABOUT_WIDTH * densityFactor),
                 (int) (POPUP_ABOUT_HEIGHT * densityFactor));
     }
@@ -714,7 +727,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         // aboutPopup.update(20, parentView.getHeight() - POPUP_ABOUT_HEIGHT - 20, POPUP_ABOUT_WIDTH, POPUP_ABOUT_HEIGHT);
 
-        sendStatusPopup.update(0, 0,
+        int xpos = 0;
+        int ypos = 0;
+
+        if (Build.VERSION.SDK_INT == 24) {
+            xpos = (int) ((parentView.getWidth() - POPUP_SEND_STATUS_WIDTH) / 2);
+            ypos = (int) ((parentView.getHeight() - POPUP_SEND_STATUS_HEIGHT) / 2);
+        }
+
+        sendStatusPopup.update(
+                xpos,
+                ypos,
                 (int) (POPUP_SEND_STATUS_WIDTH * densityFactor),
                 (int) (POPUP_SEND_STATUS_HEIGHT * densityFactor));
     }
@@ -876,7 +899,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         selectedLocation = null;
         hidePictureLayout();
 
-        geoLocationButton.setVisibility(View.VISIBLE);
+        if (!offline) {
+            geoLocationButton.setVisibility(View.VISIBLE);
+        }
 
         View selectedLocationView = (View) findViewById(R.id.selectedLocation);
         selectedLocationView.setVisibility(View.GONE);

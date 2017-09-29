@@ -117,18 +117,8 @@ public class ServerCommunicator {
                 }
             }
 
-            int responseCode = conn.getResponseCode();
+            return consumeResponse(conn, "sending meta data");
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    response += line;
-                }
-                return true;
-            }  else {
-                response = "";
-            }
         } catch (Exception e) {
             Log.e("webfilesysblog", "failed to send metadata via HTTP Post", e);
         }
@@ -175,18 +165,8 @@ public class ServerCommunicator {
                 }
             }
 
-            int responseCode = conn.getResponseCode();
+            return consumeResponse(conn, "sending picture");
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    response += line;
-                }
-                return true;
-            }  else {
-                response = "";
-            }
         } catch (Exception e) {
             Log.e("webfilesysblog", "failed to send picture via HTTP Post", e);
         }
@@ -210,7 +190,6 @@ public class ServerCommunicator {
                 pout.println("publish immediately");
 
                 os.flush();
-
             } catch (Exception ioex) {
                 Log.e("webfilesysblog", "failed to post publish request", ioex);
             } finally {
@@ -228,22 +207,45 @@ public class ServerCommunicator {
                 }
             }
 
-            int responseCode = conn.getResponseCode();
+            return consumeResponse(conn, "sending publish request");
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                String line;
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    response += line;
-                }
-                return true;
-            }  else {
-                response = "";
-            }
         } catch (Exception e) {
             Log.e("webfilesysblog", "failed to post publish request", e);
         }
         return false;
+    }
+
+    private boolean consumeResponse(HttpURLConnection conn, String action) {
+        boolean result = true;
+
+        BufferedReader responseReader = null;
+
+        try {
+            int responseCode = conn.getResponseCode();
+
+            Log.d("webfilesysblog", "responseCode: " + responseCode);
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String line;
+
+                responseReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line = responseReader.readLine()) != null) {
+                    Log.d("webfilesysblog", "response line: " + line);
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("webfilesysblog", "failed to read response of " + action, ex);
+            result = false;
+        } finally {
+            if (responseReader != null) {
+                try {
+                    responseReader.close();
+                } catch (Exception closeEx) {
+                }
+            }
+        }
+
+        return result;
     }
 
     private HttpURLConnection prepareUrlConnection(String webfilesysUrl, String userid, String password)
