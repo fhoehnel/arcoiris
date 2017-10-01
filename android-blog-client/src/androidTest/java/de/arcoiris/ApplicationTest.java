@@ -1,4 +1,4 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

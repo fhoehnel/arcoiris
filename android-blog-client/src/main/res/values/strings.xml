@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">arcoiris blog</string>
-    <string name="appVersion" translatable="false">version 0.8.0 (29 Sep 2017)</string>
+    <string name="appVersion" translatable="false">version 0.8.0 (01 Oct 2017)</string>
     <string name="appAuthor" translatable="false">by Frank Hoehnel</string>
     <string name="appHomepage" translatable="false">www.webfilesys.de/arcoiris</string>
     <string name="buttonClose">Close</string>

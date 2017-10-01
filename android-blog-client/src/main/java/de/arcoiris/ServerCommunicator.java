@@ -1,8 +1,7 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.util.Base64;
 import android.util.Log;
-import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -10,8 +9,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,8 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by User on 27.09.2017.
@@ -66,10 +61,10 @@ public class ServerCommunicator {
             }
             return (-1);
         } catch (MalformedURLException urlEx) {
-            Log.w("webfilesysblog", "invalid server URL in authentication check", urlEx);
+            Log.w("arcoiris", "invalid server URL in authentication check", urlEx);
             return (-1);
         } catch (IOException ioEx) {
-            Log.w("webfilesysblog", "communication failure in authentication check", ioEx);
+            Log.w("arcoiris", "communication failure in authentication check", ioEx);
             return (-1);
         }
     }
@@ -101,7 +96,7 @@ public class ServerCommunicator {
                 os.flush();
 
             } catch (Exception ioex) {
-                Log.e("webfilesysblog", "failed to post description data to blog", ioex);
+                Log.e("arcoiris", "failed to post description data to blog", ioex);
             } finally {
                 if (pout != null) {
                     try {
@@ -120,7 +115,7 @@ public class ServerCommunicator {
             return consumeResponse(conn, "sending meta data");
 
         } catch (Exception e) {
-            Log.e("webfilesysblog", "failed to send metadata via HTTP Post", e);
+            Log.e("arcoiris", "failed to send metadata via HTTP Post", e);
         }
         return false;
     }
@@ -149,7 +144,7 @@ public class ServerCommunicator {
                 buffOut.flush();
 
             } catch (Exception ioex) {
-                Log.e("webfilesysblog", "failed to post picture data to blog", ioex);
+                Log.e("arcoiris", "failed to post picture data to blog", ioex);
             } finally {
                 if (buffIn != null) {
                     try {
@@ -168,7 +163,7 @@ public class ServerCommunicator {
             return consumeResponse(conn, "sending picture");
 
         } catch (Exception e) {
-            Log.e("webfilesysblog", "failed to send picture via HTTP Post", e);
+            Log.e("arcoiris", "failed to send picture via HTTP Post", e);
         }
         return false;
     }
@@ -191,7 +186,7 @@ public class ServerCommunicator {
 
                 os.flush();
             } catch (Exception ioex) {
-                Log.e("webfilesysblog", "failed to post publish request", ioex);
+                Log.e("arcoiris", "failed to post publish request", ioex);
             } finally {
                 if (pout != null) {
                     try {
@@ -210,7 +205,7 @@ public class ServerCommunicator {
             return consumeResponse(conn, "sending publish request");
 
         } catch (Exception e) {
-            Log.e("webfilesysblog", "failed to post publish request", e);
+            Log.e("arcoiris", "failed to post publish request", e);
         }
         return false;
     }
@@ -223,18 +218,18 @@ public class ServerCommunicator {
         try {
             int responseCode = conn.getResponseCode();
 
-            Log.d("webfilesysblog", "responseCode: " + responseCode);
+            Log.d("arcoiris", "responseCode: " + responseCode);
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String line;
 
                 responseReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = responseReader.readLine()) != null) {
-                    Log.d("webfilesysblog", "response line: " + line);
+                    Log.d("arcoiris", "response line: " + line);
                 }
             }
         } catch (Exception ex) {
-            Log.e("webfilesysblog", "failed to read response of " + action, ex);
+            Log.e("arcoiris", "failed to read response of " + action, ex);
             result = false;
         } finally {
             if (responseReader != null) {

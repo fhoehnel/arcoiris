@@ -1,4 +1,4 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import com.google.android.gms.maps.model.LatLng;
 

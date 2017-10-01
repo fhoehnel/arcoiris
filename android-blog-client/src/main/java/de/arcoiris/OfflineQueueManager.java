@@ -1,9 +1,8 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.EditText;
 
 import com.google.gson.Gson;
 
@@ -14,7 +13,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,7 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.webfilesys.de.webfilesysblog.FileComparator.SORT_BY_FILENAME;
+import static de.arcoiris.FileComparator.SORT_BY_FILENAME;
 
 /**
  * Created by fho on 24.09.2017.
@@ -84,7 +82,7 @@ public class OfflineQueueManager {
 
         File queueImgFile = new File(queuePath, imgQueueFileName);
 
-        Log.d("webfilesysblog", "queue img path: " + queueImgFile.getAbsolutePath());
+        Log.d("arcoiris", "queue img path: " + queueImgFile.getAbsolutePath());
 
         BufferedOutputStream buffOut = null;
         InputStream pictureIn = null;
@@ -110,7 +108,7 @@ public class OfflineQueueManager {
             buffOut.flush();
 
         } catch (Exception ioex) {
-            Log.e("webfilesysblog", "failed to save blog picture in offline queue", ioex);
+            Log.e("arcoiris", "failed to save blog picture in offline queue", ioex);
         } finally {
             if (buffIn != null) {
                 try {
@@ -138,7 +136,7 @@ public class OfflineQueueManager {
             metaDataOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(queueInfoFile), "UTF-8"));
             metaDataOut.print(serializedMetaData);
         } catch (IOException ioex) {
-            Log.e("webfilesysblog", "failed to save blog metadata in offline queue", ioex);
+            Log.e("arcoiris", "failed to save blog metadata in offline queue", ioex);
         } finally {
             if (metaDataOut != null) {
                 try {
@@ -198,15 +196,15 @@ public class OfflineQueueManager {
                 if (password != null) {
                     if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
 
-                        Log.d("webfilesysblog", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
+                        Log.d("arcoiris", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
 
                         sentCount++;
 
                         if (!pictureFile.delete()) {
-                            Log.e("webfilesysblog", "failed to delete queued picture file " + pictureFile.getAbsolutePath());
+                            Log.e("arcoiris", "failed to delete queued picture file " + pictureFile.getAbsolutePath());
                         }
                         if (!metadataFile.delete()) {
-                            Log.e("webfilesysblog", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
+                            Log.e("arcoiris", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
                         }
                     } else {
                         errorCount++;
@@ -216,7 +214,7 @@ public class OfflineQueueManager {
                     }
                 }
             } catch (IOException ioex) {
-                Log.e("webfilesysblog", "failed to load  metadata from offline queue", ioex);
+                Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
             } finally {
                 if (metadataIn != null) {
                     try {
@@ -261,7 +259,7 @@ public class OfflineQueueManager {
                 }
             }
         } catch (FileNotFoundException fnfex) {
-            Log.e("webfilesysblog", "picture file for queued blog entry not found", fnfex);
+            Log.e("arcoiris", "picture file for queued blog entry not found", fnfex);
         }
 
         return success;

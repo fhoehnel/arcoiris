@@ -38,7 +38,7 @@
     <string name="queuedEntriesSent">offline gespeicherte Einträge wurden versandt.</string>
 
     <string name="wentOffline">Die Netzwerkverbindung ist unterbrochen. Sie arbeiten jetzt offline.</string>
-    <string name="backOnline">Eine Netzwerkverbinfdung ist jetz verfügbar. Um online zu gehen, loggen Sie sich unter Einstellungen im Hauptmenü ein.</string>
+    <string name="backOnline">Eine Netzwerkverbindung ist jetzt verfügbar. Um online zu gehen, loggen Sie sich unter Einstellungen im Hauptmenü ein.</string>
 
     <string name="buttonSelectGeoLocation">Lokation auf Karte auswählen</string>
     <string name="buttonChangeGeoLocation">Lokation ändern</string>

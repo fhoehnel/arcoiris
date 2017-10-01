@@ -1,4 +1,4 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.media.ExifInterface;
 import android.util.Log;
@@ -32,10 +32,10 @@ public class ExifData {
                 String longRef = exifData.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
 
                 if ((latStr != null) && (longStr != null) && (latRef != null) && (longRef != null)) {
-                    Log.d("webfilesysblog", "lat: " + latStr);
-                    Log.d("webfilesysblog", "long: " + longStr);
-                    Log.d("webfilesysblog", "latRef: " + latRef);
-                    Log.d("webfilesysblog", "longRef: " + longRef);
+                    Log.d("arcoiris", "lat: " + latStr);
+                    Log.d("arcoiris", "long: " + longStr);
+                    Log.d("arcoiris", "latRef: " + latRef);
+                    Log.d("arcoiris", "longRef: " + longRef);
 
                     float latitudeFromExif;
                     float longitudeFromExif;
@@ -52,17 +52,17 @@ public class ExifData {
                         longitudeFromExif = 0 - convertToDegree(longStr);
                     }
 
-                    Log.d("webfilesysblog", "latitude: " + latitudeFromExif);
-                    Log.d("webfilesysblog", "longitude: " + longitudeFromExif);
+                    Log.d("arcoiris", "latitude: " + latitudeFromExif);
+                    Log.d("arcoiris", "longitude: " + longitudeFromExif);
                     return new LatLng(latitudeFromExif, longitudeFromExif);
                 } else {
-                    Log.d("webfilesysblog", "picture contains no EXIF GPS data");
+                    Log.d("arcoiris", "picture contains no EXIF GPS data");
                 }
             } else {
-                Log.d("webfilesysblog", "picture contains no EXIF data");
+                Log.d("arcoiris", "picture contains no EXIF data");
             }
         } catch (IOException ioex) {
-            Log.e("webfilesysblog", "failed to extract EXIF data from picture " + filePath, ioex);
+            Log.e("arcoiris", "failed to extract EXIF data from picture " + filePath, ioex);
         }
         return null;
     }

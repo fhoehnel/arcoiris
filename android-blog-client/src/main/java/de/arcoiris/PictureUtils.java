@@ -1,4 +1,4 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -69,7 +69,7 @@ public class PictureUtils {
 
             return bitmap;
         } catch (final IOException e) {
-            Log.e("webfilesysblog", "low memory rotation failed", e);
+            Log.e("arcoiris", "low memory rotation failed", e);
         }
 
         return null;

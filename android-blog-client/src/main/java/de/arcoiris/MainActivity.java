@@ -1,8 +1,7 @@
-package android.webfilesys.de.webfilesysblog;
+package de.arcoiris;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.location.Location;
 import android.content.Context;
@@ -40,23 +39,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -94,13 +83,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     protected static final int REQUEST_PICK_IMAGE = 1;
     protected static final int REQUEST_PICK_CROP_IMAGE = 2;
 
-    private static final String PREFERENCES_FILE = "de.webfilesysblog";
+    private static final String PREFERENCES_FILE = "de.arcoiris";
 
     private static final String PREF_SERVER_URL = "serverUrl";
     private static final String PREF_USERID = "userid";
 
     // URL of the blog server (incl. context root path of the blog webapp)
-    private static final String SERVER_URL_DEFAULT = "http://www.webfilesys.de/blog";
+    private static final String SERVER_URL_DEFAULT = "http://www.webfilesys.de/arcoiris-blog";
     // private static final String SERVER_URL_DEFAULT = "http://192.168.2.102:8080";
 
     private static final int POPUP_ABOUT_WIDTH = 280;
@@ -178,13 +167,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE);
-            Log.d("webfilesysblog", "missing permissions for accessing storage granted");
+            Log.d("arcoiris", "missing permissions for accessing storage granted");
         }
 
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) ||
             (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET}, MY_PERMISSIONS_REQUEST_ACCESS_INTERNET);
-            Log.d("webfilesysblog", "missing permissions granted for internet access");
+            Log.d("arcoiris", "missing permissions granted for internet access");
         }
 
         Intent intent = getIntent();
@@ -243,7 +232,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             } else if (sendPostButton != null) {
                 new QueryNetworkAvailabilityTask(sendPostButton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
-                Log.w("webfilesysblog", "QueryNetworkAvailabilityTask not started because view not found");
+                Log.w("arcoiris", "QueryNetworkAvailabilityTask not started because view not found");
             }
         }
 
@@ -263,25 +252,25 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-            Log.d("webfilesysblog", "missing permissions granted for accessing location");
+            Log.d("arcoiris", "missing permissions granted for accessing location");
         }
 
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation == null) {
-            Log.d("webfilesysblog", "could not determine last location");
+            Log.d("arcoiris", "could not determine last location");
         } else {
-            Log.d("webfilesysblog", "got last location: " + lastLocation.getLatitude() + ", " + lastLocation.getLongitude());
+            Log.d("arcoiris", "got last location: " + lastLocation.getLatitude() + ", " + lastLocation.getLongitude());
         }
     }
 
     @Override
     public void onConnectionSuspended (int cause) {
-        Log.d("webfilesysblog", "location services disconneted");
+        Log.d("arcoiris", "location services disconneted");
     }
 
     @Override
     public void onConnectionFailed (ConnectionResult result) {
-        Log.d("webfilesysblog", "connection to location services failed");
+        Log.d("arcoiris", "connection to location services failed");
     }
 
     private void showBlogForm() {
@@ -372,7 +361,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     if ((ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
                             (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-                        Log.d("webfilesysblog", "missing permissions granted for accessing location");
+                        Log.d("arcoiris", "missing permissions granted for accessing location");
                     }
                     // intentionally no break here!
                 case R.id.change_geo_location:
@@ -493,7 +482,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 95, buffOut);
             buffOut.flush();
         } catch (Exception ex) {
-            Log.e("webfilesysblog", "failed to create scaled version of image", ex);
+            Log.e("arcoiris", "failed to create scaled version of image", ex);
         } finally {
             if (buffOut != null) {
                 try {
@@ -507,7 +496,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        // Log.d("webfilesysblog", "onActivityResult start");
+        // Log.d("arcoiris", "onActivityResult start");
 
         switch (requestCode) {
 
@@ -526,7 +515,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private void handlePictureSelection(Uri selectedPicUri) {
         pictureUri = selectedPicUri;
-        Log.d("webfilesysblog", "selected image Uri: " + pictureUri);
+        Log.d("arcoiris", "selected image Uri: " + pictureUri);
 
         picturePath = null;
 
@@ -540,11 +529,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             if ((mediaCursor != null) && (mediaCursor.getCount() != 0)) {
                 while (mediaCursor.moveToNext()){
                     rotation = mediaCursor.getInt(0);
-                    Log.d("webfilesysblog", "rotation: " + rotation);
+                    Log.d("arcoiris", "rotation: " + rotation);
                     break;
                 }
             } else {
-                Log.d("webfilesysblog", "mediaCursor EMPTY");
+                Log.d("arcoiris", "mediaCursor EMPTY");
             }
 
             if (mediaCursor != null) {
@@ -556,10 +545,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     Matrix matrix = new Matrix();
                     matrix.postRotate(rotation);
                     bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                    Log.d("webfilesysblog", "bitmap rotated by " + rotation + " degrees");
+                    Log.d("arcoiris", "bitmap rotated by " + rotation + " degrees");
                     // bitmap.recycle();
                 } catch (Throwable ex) {
-                    Log.e("webfilesysblog", "failed to rotate image " + pictureUri, ex);
+                    Log.e("arcoiris", "failed to rotate image " + pictureUri, ex);
 
                     // bitmap = lowMemoryRotation(bitmap);
                 }
@@ -580,7 +569,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             String origImgPath = CommonUtils.getFilePathByUri(this, pictureUri);
 
-            // Log.d("webfilesysblog", "orig img file path: " + origImgPath);
+            // Log.d("arcoiris", "orig img file path: " + origImgPath);
 
             ExifData exifData = new ExifData(origImgPath);
             LatLng gpsFromExif = exifData.getGpsLocation();
@@ -609,9 +598,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             pictureUri = null;
         } catch (FileNotFoundException e) {
-            Log.e("webfilesysblog", "failed to read image data of selected picture", e);
+            Log.e("arcoiris", "failed to read image data of selected picture", e);
         } catch (IOException e) {
-            Log.e("webfilesysblog", "failed to read image data of selected picture", e);
+            Log.e("arcoiris", "failed to read image data of selected picture", e);
         }
 
         showPictureLayout();
@@ -658,7 +647,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 return true;
 
             case R.id.optionSendQueued:
-                new SendQueuedOfflineEntriesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if (currentNetworkStatus) {
+                    new SendQueuedOfflineEntriesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.youAreOffline, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
                 return true;
 
             default:
@@ -929,7 +924,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     if (!stopNetworkQueryThread) {
                         boolean newNetworkStatus = checkNetworkConnection();
 
-                        Log.d("webfilesysblog", "current network connection status: " + newNetworkStatus);
+                        Log.d("arcoiris", "current network connection status: " + newNetworkStatus);
 
                         if (newNetworkStatus) {
                             if (!currentNetworkStatus) {
@@ -963,6 +958,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 }
                 Toast toast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 toast.show();
             }
 
@@ -1076,7 +1072,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     }
                 }
             } catch (FileNotFoundException fnfex) {
-                Log.e("webfilesysblog", "picture file for blog entry not found", fnfex);
+                Log.e("arcoiris", "picture file for blog entry not found", fnfex);
             }
 
             return "";
