@@ -111,6 +111,8 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
             metaInfMgr.setStatus(currentPath, newFileName, MetaInfManager.STATUS_BLOG_EDIT);
         }
 
+        setParameter("positionToFile", newFileName);        
+        
         String geoDataSwitcher = req.getParameter("geoDataSwitcher");
 
         if (geoDataSwitcher != null) {

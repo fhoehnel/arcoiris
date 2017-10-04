@@ -59,4 +59,11 @@
     <string name="sendErrorTitle">Fehler beim Senden</string>
     <string name="sendErrorDetail">Der neue Blog-Eintrag konnte nicht zum Server gesendet werden.</string>
 
+    <string name="noQueuedEntriesToSend">Es existieren keine offline gespeicherten Einträge für die authentifizierten Blog-Nutzer.</string>
+    <string name="confirmSendQueuedTitle">Senden gespeicherter Einträge</string>
+    <string name="confirmSendQueuedPart1">Es existieren</string>
+    <string name="confirmSendQueuedPart2">offline gespeicherte Einträge für die authentifizierten Blog-Nutzer. Sollen sie jetzt gesendet werden?</string>
+    <string name="buttonOk">Ok</string>
+    <string name="buttonCancel">Abbrechen</string>
+
 </resources>

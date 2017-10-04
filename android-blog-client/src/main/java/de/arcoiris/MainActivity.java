@@ -1,8 +1,10 @@
 package de.arcoiris;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.content.Context;
 import android.content.Intent;
@@ -647,8 +649,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 return true;
 
             case R.id.optionSendQueued:
-                if (currentNetworkStatus) {
-                    new SendQueuedOfflineEntriesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                if (checkNetworkConnection()) {
+                    int entriesToSend = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, true);
+                    if (entriesToSend == 0) {
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.noQueuedEntriesToSend, Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    } else {
+                        confirmToSendOfflineEntries(entriesToSend);
+                    }
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.youAreOffline, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -659,6 +668,35 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void confirmToSendOfflineEntries(int queuedEntriesCount) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogBuilder.setMessage(getString(R.string.confirmSendQueuedPart1) + " " + queuedEntriesCount + " " + getString(R.string.confirmSendQueuedPart2));
+
+        dialogBuilder.setTitle(getString(R.string.confirmSendQueuedTitle));
+
+        dialogBuilder.setPositiveButton(R.string.buttonOk,
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        new SendQueuedOfflineEntriesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }
+        );
+
+        dialogBuilder.setNegativeButton(R.string.buttonCancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                }
+        );
+
+        AlertDialog confirmSendDialog = dialogBuilder.create();
+
+        confirmSendDialog.show();
     }
 
     private void showAboutInfo() {
@@ -774,10 +812,12 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         if (!checkNetworkConnection()) {
             saveSettingsButton.setText(R.string.workOffline);
             offlineMsg.setVisibility(View.VISIBLE);
+            passwordInput.setEnabled(false);
             offline = true;
         } else {
             saveSettingsButton.setText(R.string.buttonSaveSettings);
             offlineMsg.setVisibility(View.GONE);
+            passwordInput.setEnabled(true);
         }
 
         currentNetworkStatus = !offline;
@@ -793,13 +833,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     case R.id.save_settings_button:
 
                         EditText serverUrlInput = (EditText) findViewById(R.id.server_url);
-                        serverUrl = serverUrlInput.getText().toString();
+                        serverUrl = serverUrlInput.getText().toString().trim();
 
                         EditText useridInput = (EditText) findViewById(R.id.userid);
-                        userid = useridInput.getText().toString();
+                        userid = useridInput.getText().toString().trim();
 
                         EditText passwordInput = (EditText) findViewById(R.id.password);
-                        password = passwordInput.getText().toString();
+                        password = passwordInput.getText().toString().trim();
 
                         boolean missingParameters = false;
 
@@ -1140,7 +1180,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         protected String doInBackground(String... params) {
 
             if (!checkedLogins.isEmpty()) {
-                entriesSentCount = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins);
+                entriesSentCount = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, false);
             }
 
             return "";

@@ -147,7 +147,7 @@ public class OfflineQueueManager {
         }
     }
 
-    public int sendQueuedEntries(HashMap<String, String> checkedLogins) {
+    public int sendQueuedEntries(HashMap<String, String> checkedLogins, boolean simulate) {
 
         File queuePathFile = new File(queuePath);
 
@@ -194,22 +194,26 @@ public class OfflineQueueManager {
                 String password = checkedLogins.get(loginKey);
 
                 if (password != null) {
-                    if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
-
-                        Log.d("arcoiris", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
-
+                    if (simulate) {
                         sentCount++;
-
-                        if (!pictureFile.delete()) {
-                            Log.e("arcoiris", "failed to delete queued picture file " + pictureFile.getAbsolutePath());
-                        }
-                        if (!metadataFile.delete()) {
-                            Log.e("arcoiris", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
-                        }
                     } else {
-                        errorCount++;
-                        if (errorCount > MAX_ERROR_COUNT) {
-                            break;
+                        if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
+
+                            Log.d("arcoiris", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
+
+                            sentCount++;
+
+                            if (!pictureFile.delete()) {
+                                Log.e("arcoiris", "failed to delete queued picture file " + pictureFile.getAbsolutePath());
+                            }
+                            if (!metadataFile.delete()) {
+                                Log.e("arcoiris", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
+                            }
+                        } else {
+                            errorCount++;
+                            if (errorCount > MAX_ERROR_COUNT) {
+                                break;
+                            }
                         }
                     }
                 }

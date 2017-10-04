@@ -76,12 +76,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
         }
 
         String posInPage = req.getParameter("posInPage");
-
+        
         if ((posInPage != null) && (!posInPage.isEmpty())) {
             XmlUtil.setChildText(blogElement, "posInPage", posInPage, false);
         }
 
-        String positionToFile = req.getParameter("positionToFile");
+        String positionToFile = getParameter("positionToFile");
 
         XmlUtil.setChildText(blogElement, "blogTitle", blogTitle, false);
 
