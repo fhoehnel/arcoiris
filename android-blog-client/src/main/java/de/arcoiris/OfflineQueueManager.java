@@ -124,6 +124,12 @@ public class OfflineQueueManager {
             }
         }
 
+        /*
+        String origPictureFileName = pictureSource.substring(pictureSource.lastIndexOf('/') + 1);
+
+        metaData.setOrigPictureFileName(origPictureFileName);
+        */
+
         Gson gson = new Gson();
         String serializedMetaData = gson.toJson(metaData);
 
@@ -230,6 +236,73 @@ public class OfflineQueueManager {
         }
 
         return sentCount;
+    }
+
+    public List<OfflineQueueEntryInfo> getQueuedFiles() {
+        File queuePathFile = new File(queuePath);
+
+        File[] filesOfDir = queuePathFile.listFiles();
+
+        HashMap<String, File> pictureFileMap = new HashMap<String, File>();
+
+        int sentCount = 0;
+
+        ArrayList<File> metadataFileList = new ArrayList<File>();
+
+        for (File file : filesOfDir) {
+            if (file.isFile()) {
+                if (file.getName().endsWith(METADATA_FILE_EXT)) {
+                    metadataFileList.add(file);
+                } else {
+                    String key = file.getName().substring(0, file.getName().lastIndexOf('.'));
+                    pictureFileMap.put(key, file);
+                }
+            }
+        }
+
+        // Collections.sort(metadataFileList, new FileComparator(SORT_BY_FILENAME));
+
+        ArrayList offlineInfoList = new ArrayList<OfflineQueueEntryInfo>();
+
+        for (File metadataFile : metadataFileList) {
+            String key = metadataFile.getName().substring(0, metadataFile.getName().lastIndexOf('.'));
+            File pictureFile = pictureFileMap.get(key);
+
+            BufferedReader metadataIn = null;
+
+            try {
+                metadataIn = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"));
+
+                Gson gson = new Gson();
+
+                OfflineQueueMetaDataElem metaData = gson.fromJson(metadataIn, OfflineQueueMetaDataElem.class);
+
+                OfflineQueueEntryInfo entryInfo = new OfflineQueueEntryInfo();
+
+                // entryInfo.setOrigPictureFileName(metaData.getOrigPictureFileName());
+
+                entryInfo.setQueueImgFile(pictureFile);
+
+                entryInfo.setMetaData(metaData);
+
+                offlineInfoList.add(entryInfo);
+            } catch (IOException ioex) {
+                Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
+            } finally {
+                if (metadataIn != null) {
+                    try {
+                        metadataIn.close();
+                    } catch (IOException ioex) {
+                    }
+                }
+            }
+        }
+
+        if (offlineInfoList.size() > 1) {
+            Collections.sort(offlineInfoList, new OfflineQueueComparator(OfflineQueueComparator.SORT_BY_DATE));
+        }
+
+        return offlineInfoList;
     }
 
     private boolean sendBlogEntry(File pictureFile, OfflineQueueMetaDataElem metaData, String password, int counter) {

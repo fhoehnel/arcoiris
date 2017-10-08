@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.location.Location;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +38,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,11 +51,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -82,6 +87,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private static final int MAX_IMG_SIZE = 1280;
 
+    private static final int THUMBNAIL_SIZE = 160;
+
+    private static final int MAX_THUMBNAIL_TEXT_LENGTH = 64;
+
     protected static final int REQUEST_PICK_IMAGE = 1;
     protected static final int REQUEST_PICK_CROP_IMAGE = 2;
 
@@ -99,6 +108,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private static final int POPUP_SEND_STATUS_WIDTH = 280;
     private static final int POPUP_SEND_STATUS_HEIGHT = 260;
+
+    private static final int POPUP_QUEUE_WIDTH = 280;
+    private static final int POPUP_QUEUE_HEIGHT = 400;
 
     private Button sendPostButton;
     private Button sendPublishButton;
@@ -120,6 +132,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private String picturePath = null;
 
     private PopupWindow aboutPopup = null;
+
+    private PopupWindow offlineQueuePopup = null;
 
     private PopupWindow sendStatusPopup = null;
 
@@ -644,6 +658,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 showAboutInfo();
                 return true;
 
+            case R.id.optionShowQueued:
+                showOfflineQueue();
+                return true;
+
             case R.id.optionExit:
                 System.exit(0);
                 return true;
@@ -735,6 +753,115 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 ypos ,
                 (int) (POPUP_ABOUT_WIDTH * densityFactor),
                 (int) (POPUP_ABOUT_HEIGHT * densityFactor));
+    }
+
+    private void showOfflineQueue() {
+        View offlineQueueView = getLayoutInflater().inflate(R.layout.popup_offline_queue_content, null);
+
+        offlineQueuePopup = new PopupWindow(offlineQueueView);
+
+        Button closeButton = (Button) offlineQueueView.findViewById(R.id.queueCloseButton);
+
+        closeButton.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                offlineQueuePopup.dismiss();
+                offlineQueuePopup = null;
+            }
+        });
+
+        LinearLayout fileListLayout = (LinearLayout) offlineQueueView.findViewById(R.id.queuedFileList);
+
+        List<OfflineQueueEntryInfo> queuedFileList = OfflineQueueManager.getInstance(getFilesDir()).getQueuedFiles();
+
+        Date prevDate = null;
+
+        DateFormat blogDateFormat = SimpleDateFormat.getDateInstance();
+
+        for (OfflineQueueEntryInfo queuedFile : queuedFileList) {
+            Date entryDate = queuedFile.getMetaData().getBlogDate();
+
+            if ((prevDate == null) || (prevDate.getDate() != entryDate.getDate())) {
+                TextView dateText = new TextView(this);
+                dateText.setTextColor(Color.rgb(255, 255, 127));
+                dateText.setBackgroundColor(Color.rgb(48, 48, 48));
+                dateText.setPadding(10, 0, 0, 0);
+                dateText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                dateText.setText(blogDateFormat.format(entryDate));
+                dateText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                fileListLayout.addView(dateText);
+            }
+
+            prevDate = entryDate;
+
+            LinearLayout queueEntryView = new LinearLayout(this);
+            queueEntryView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            queueEntryView.setPadding(10, 10, 10, 10);
+
+            ImageView queuePicView = new ImageView(this);
+
+            Bitmap bitmap;
+            try {
+                Uri pictureUri = Uri.parse("file:///" + queuedFile.getQueueImgFile().getAbsolutePath());
+
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+
+                Bitmap scaledBitmap = PictureUtils.getResizedBitmap(bitmap, THUMBNAIL_SIZE);
+
+                if (scaledBitmap != bitmap) {
+                    // if scaledBitmap is the same size as original bitmap, a new instance is NOT created, so we must not recylcle the orig image
+                    bitmap.recycle();
+                }
+
+                queuePicView.setImageBitmap(scaledBitmap);
+
+                queueEntryView.addView(queuePicView);
+
+                String shortText = queuedFile.getMetaData().getBlogText();
+                if (shortText.length() > MAX_THUMBNAIL_TEXT_LENGTH) {
+                    shortText = shortText.substring(0, MAX_THUMBNAIL_TEXT_LENGTH - 4) + " ...";
+                }
+
+                TextView blogTextView = new TextView(this);
+                blogTextView.setPadding(10, 0, 0, 0);
+                blogTextView.setTextColor(Color.BLACK);
+                blogTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                blogTextView.setSingleLine(false);
+                blogTextView.setEnabled(false);
+                blogTextView.setText(shortText);
+                blogTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                queueEntryView.addView(blogTextView);
+
+                fileListLayout.addView(queueEntryView);
+
+                pictureUri = null;
+            } catch (FileNotFoundException e) {
+                Log.e("arcoiris", "failed to read image data of queued picture", e);
+            } catch (IOException e) {
+                Log.e("arcoiris", "failed to read image data of queued picture", e);
+            }
+        }
+
+        View parentView = findViewById(R.id.scene_layout);
+
+        float densityFactor = getResources().getDisplayMetrics().density;
+
+        offlineQueuePopup.showAtLocation(parentView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+
+        int xpos = 0;
+        int ypos = 0;
+
+        if (Build.VERSION.SDK_INT == 24) {
+            xpos = (int) ((parentView.getWidth() - POPUP_QUEUE_WIDTH) / 2);
+            ypos = (int) ((parentView.getHeight() - POPUP_QUEUE_HEIGHT) / 2);
+        }
+
+        offlineQueuePopup.update(
+                xpos,
+                ypos ,
+                (int) (POPUP_QUEUE_WIDTH * densityFactor),
+                (int) (POPUP_QUEUE_HEIGHT * densityFactor));
     }
 
     private void showSendStatus() {

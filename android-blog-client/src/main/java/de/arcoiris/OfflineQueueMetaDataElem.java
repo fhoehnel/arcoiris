@@ -21,6 +21,8 @@ public class OfflineQueueMetaDataElem {
 
     private String userid;
 
+    private String origPictureFileName;
+
     public void setBlogDate(Date newVal) {
         blogDate = newVal;
     }
@@ -67,5 +69,13 @@ public class OfflineQueueMetaDataElem {
 
     public String getUserid() {
         return userid;
+    }
+
+    public void setOrigPictureFileName(String newVal) {
+        origPictureFileName = newVal;
+    }
+
+    public String getOrigPictureFileName() {
+        return origPictureFileName;
     }
 }

@@ -66,4 +66,7 @@
     <string name="buttonOk">Ok</string>
     <string name="buttonCancel">Abbrechen</string>
 
+    <string name="offlineQueueHeadline">Offline gespeicherte Einträge</string>
+    <string name="optionMenuShowQueued">Offline-Einträge anzeigen</string>
+
 </resources>

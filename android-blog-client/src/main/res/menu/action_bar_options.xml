@@ -25,6 +25,17 @@
         android:icon="@drawable/ic_action_send_now" />
 
     <item
+        android:id="@+id/optionShowQueued"
+        android:enabled="true"
+        android:visible="true"
+        android:titleCondensed="Show queued"
+        android:alphabeticShortcut="q"
+        android:menuCategory="system"
+        android:title="@string/optionMenuShowQueued"
+        yourapp:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_show_queued" />
+
+    <item
         android:id="@+id/optionAbout"
         android:enabled="true"
         android:visible="true"
