@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -87,9 +89,12 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private static final int MAX_IMG_SIZE = 1280;
 
-    private static final int THUMBNAIL_SIZE = 160;
+    private static final int MIN_SCREEN_HEIGHT_FOR_LARGE_THUMBS = 600;
 
-    private static final int MAX_THUMBNAIL_TEXT_LENGTH = 64;
+    private static final int THUMBNAIL_SIZE_SMALL = 160;
+    private static final int THUMBNAIL_SIZE_LARGE = 240;
+
+    private static final int MAX_THUMBNAIL_TEXT_LENGTH = 100;
 
     protected static final int REQUEST_PICK_IMAGE = 1;
     protected static final int REQUEST_PICK_CROP_IMAGE = 2;
@@ -109,8 +114,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final int POPUP_SEND_STATUS_WIDTH = 280;
     private static final int POPUP_SEND_STATUS_HEIGHT = 260;
 
-    private static final int POPUP_QUEUE_WIDTH = 280;
-    private static final int POPUP_QUEUE_HEIGHT = 400;
+    private static final int POPUP_QUEUE_WIDTH_SMALL = 280;
+    private static final int POPUP_QUEUE_WIDTH_LARGE = 360;
+    private static final int POPUP_QUEUE_MAX_HEIGHT = 1200;
 
     private Button sendPostButton;
     private Button sendPublishButton;
@@ -756,6 +762,25 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     private void showOfflineQueue() {
+
+        float densityFactor = getResources().getDisplayMetrics().density;
+
+        int screenHeight = (int) (getWindow().getDecorView().getHeight() / densityFactor);
+
+        int thumbnailSize = THUMBNAIL_SIZE_SMALL;
+        int windowWidth = POPUP_QUEUE_WIDTH_SMALL;
+
+        if (screenHeight > MIN_SCREEN_HEIGHT_FOR_LARGE_THUMBS) {
+            thumbnailSize = THUMBNAIL_SIZE_LARGE;
+            windowWidth = POPUP_QUEUE_WIDTH_LARGE;
+        }
+
+        int windowHeight = screenHeight - 100;
+
+        if (windowHeight > POPUP_QUEUE_MAX_HEIGHT) {
+            windowHeight = POPUP_QUEUE_MAX_HEIGHT;
+        }
+
         View offlineQueueView = getLayoutInflater().inflate(R.layout.popup_offline_queue_content, null);
 
         offlineQueuePopup = new PopupWindow(offlineQueueView);
@@ -807,7 +832,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 
-                Bitmap scaledBitmap = PictureUtils.getResizedBitmap(bitmap, THUMBNAIL_SIZE);
+                Bitmap scaledBitmap = PictureUtils.getResizedBitmap(bitmap, thumbnailSize);
 
                 if (scaledBitmap != bitmap) {
                     // if scaledBitmap is the same size as original bitmap, a new instance is NOT created, so we must not recylcle the orig image
@@ -843,9 +868,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         }
 
-        View parentView = findViewById(R.id.scene_layout);
+        // View parentView = findViewById(R.id.scene_layout);
 
-        float densityFactor = getResources().getDisplayMetrics().density;
+        View parentView = getWindow().getDecorView();
 
         offlineQueuePopup.showAtLocation(parentView, Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
 
@@ -853,15 +878,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         int ypos = 0;
 
         if (Build.VERSION.SDK_INT == 24) {
-            xpos = (int) ((parentView.getWidth() - POPUP_QUEUE_WIDTH) / 2);
-            ypos = (int) ((parentView.getHeight() - POPUP_QUEUE_HEIGHT) / 2);
+            xpos = (int) ((parentView.getWidth() - (windowWidth * densityFactor)) / 2);
+            ypos = (int) ((parentView.getHeight() - (windowHeight * densityFactor)) / 2);
         }
 
         offlineQueuePopup.update(
                 xpos,
                 ypos ,
-                (int) (POPUP_QUEUE_WIDTH * densityFactor),
-                (int) (POPUP_QUEUE_HEIGHT * densityFactor));
+                (int) (windowWidth * densityFactor),
+                (int) (windowHeight * densityFactor));
     }
 
     private void showSendStatus() {
