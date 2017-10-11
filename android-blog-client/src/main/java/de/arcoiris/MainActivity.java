@@ -115,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final int POPUP_SEND_STATUS_HEIGHT = 260;
 
     private static final int POPUP_QUEUE_WIDTH_SMALL = 280;
-    private static final int POPUP_QUEUE_WIDTH_LARGE = 360;
+    private static final int POPUP_QUEUE_WIDTH_LARGE = 356;
     private static final int POPUP_QUEUE_MAX_HEIGHT = 1200;
 
     private Button sendPostButton;
@@ -766,6 +766,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         float densityFactor = getResources().getDisplayMetrics().density;
 
         int screenHeight = (int) (getWindow().getDecorView().getHeight() / densityFactor);
+        int screenWidth = (int) (getWindow().getDecorView().getWidth() / densityFactor);
 
         int thumbnailSize = THUMBNAIL_SIZE_SMALL;
         int windowWidth = POPUP_QUEUE_WIDTH_SMALL;
@@ -802,7 +803,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         Date prevDate = null;
 
-        DateFormat blogDateFormat = SimpleDateFormat.getDateInstance();
+        SimpleDateFormat blogDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+        blogDateFormat.applyPattern("EEEE, dd MMMM yyyy");
 
         for (OfflineQueueEntryInfo queuedFile : queuedFileList) {
             Date entryDate = queuedFile.getMetaData().getBlogDate();
@@ -851,7 +853,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 TextView blogTextView = new TextView(this);
                 blogTextView.setPadding(10, 0, 0, 0);
                 blogTextView.setTextColor(Color.BLACK);
-                blogTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                blogTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 blogTextView.setSingleLine(false);
                 blogTextView.setEnabled(false);
                 blogTextView.setText(shortText);
