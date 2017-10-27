@@ -380,6 +380,11 @@
                   </a>
                 </xsl:if>
                 
+                &#160;
+                <a href="javascript:void(0)" id="attachmentIcon" class="icon-font icon-attachment icon-blog-attachment" titleResource="blog.attach">
+                  <xsl:attribute name="onClick">attachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                </a>
+                
               </xsl:if>
               
               <xsl:if test="(not(/blog/readonly) and not(staged)) or (/blog/readonly and not(ratingAllowed))">
@@ -398,7 +403,6 @@
                 </xsl:if>
 
               </xsl:if>
-              
               
               <xsl:if test="/blog/readonly and ratingAllowed">
                 &#160;
@@ -436,6 +440,13 @@
                   </select>
                 </div>  
                   
+              </xsl:if>
+              
+              <xsl:if test="attachment">
+                &#160;
+                <a href="javascript:void(0)" id="viewAttachmentIcon" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
+                  <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                </a>
               </xsl:if>
             </div>      
         
@@ -553,6 +564,46 @@
           </ul>
         </form>
     </div>
+    
+    <xsl:if test="not(/blog/readonly)">
+    
+      <div id="uploadStatus" class="uploadStatus" style="visibility:hidden">
+        <table border="0" width="100%" cellpadding="2" cellspacing="0">
+          <tr>
+            <th class="headline" style="border-width:0;border-bottom-width:1px;" resource="label.uploadStatus"></th>
+          </tr>
+        </table>
+	
+	    <div id="currentFile" class="uploadStatusCurrentFile"></div>
+  
+        <center>
+
+          <div class="uploadStatusBar">
+            <img id="done" width="1" height="20" border="0">
+              <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/bluedot.gif</xsl:attribute>
+            </img>
+            <img id="todo" width="299" height="20" border="0">  
+              <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/space.gif</xsl:attribute>
+            </img>
+          </div>
+
+          <table border="0" cellspacing="0" cellpadding="0" style="width:300px">
+            <tr>
+              <td class="fileListData">
+                <div id="statusText" class="uploadStatusText">
+                  0 
+                  <span resource="label.of"></span>
+                  0 bytes (0 %)
+                </div>
+              </td>
+            </tr>
+          </table>
+	  
+        </center>
+  
+      </div>
+    
+    </xsl:if>
     
     <script type="text/javascript">
       setBundleResources();

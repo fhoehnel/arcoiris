@@ -161,6 +161,14 @@ a.icon-font {
 	content: '\f118';
 }
 
+.icon-attachment:before {
+	content: '\f0c6';
+}
+
+.icon-file:before {
+	content: '\f016';
+}
+
 .icon-page-prev:before {
 	content: '\f04a';
 }

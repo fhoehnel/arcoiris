@@ -200,6 +200,8 @@ blog.invalidDaysPerPage=The value for days per page muste be a number between 1 
 blog.moveUp=move up
 blog.moveDown=move down
 blog.makeTitlePic=make this picture the blog title pic
+blog.attach=attach a file
+blog.viewAttach=view attachment
 blog.confirmSetTitlePic=Set this picture as the blog's title pic?
 blog.unsetTitlePic=unset the blog's title pic
 blog.confirmUnsetTitlePic=Unset the blog's title pic?
@@ -255,6 +257,9 @@ blog.emptyLinkData=Please enter a label and an URL for the link!
 blog.sortOrder=sort order
 blog.sortOrderBlog=blog (newest first)
 blog.sortOrderDiary=diary (oldest first)
+
+upload.attachment.headline=attach file
+upload.attachment.label=select file
 
 error.latitudeInvalid=latitude must be a number between -90.0 and 90.0
 error.longitudeInvalid=longitude must be a number between -180.0 and 180.0

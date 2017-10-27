@@ -469,6 +469,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                                     XmlUtil.setChildText(fileElement, "imgPathForScript", srcPathForScript);
 
+                                    ArrayList<String> attachments = metaInfMgr.getListOfAttachments(file.getAbsolutePath());
+                                    
+                                    if ((attachments != null) && (attachments.size() > 0)) {
+                                        XmlUtil.setChildText(fileElement, "attachment", attachments.get(0));
+                                    }
+                                    
                                     GeoTag geoTag = metaInfMgr.getGeoTag(file.getAbsolutePath());
 
                                     if (geoTag != null) {

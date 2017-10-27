@@ -458,7 +458,109 @@ public class MetaInfManager extends Thread {
             cacheDirty.remove(path);
         }
     }
+    
+    public void addAttachment(String absoluteFileName, String attachmentName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        addAttachment(partsOfPath[0], partsOfPath[1], attachmentName);
+    }
 
+    public void addAttachment(String path, String fileName, String attachmentName) {
+        synchronized(this) {
+            Element metaInfElement = getMetaInfElement(path,fileName);
+            
+            if (metaInfElement == null) {
+                metaInfElement = createMetaInfElement(path,fileName);
+            }
+
+            Document doc = metaInfElement.getOwnerDocument();
+
+            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "comments");
+
+            if (attachmentListElement == null) {
+                attachmentListElement = doc.createElement("attachments");
+
+                metaInfElement.appendChild(attachmentListElement);
+            }
+
+            Element attachmentElement = doc.createElement("attachment");
+
+            attachmentListElement.appendChild(attachmentElement);
+
+            XmlUtil.setElementText(attachmentElement, attachmentName, false);
+            
+            cacheDirty.put(path, Boolean.TRUE);
+        }
+    }
+
+    public void removeAttachments(String absoluteFileName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        removeComments(partsOfPath[0], partsOfPath[1]);
+    }
+
+    public void removeAttachments(String path, String fileName) {
+        synchronized(this) {
+            Element metaInfElement = getMetaInfElement(path,fileName);
+            
+            if (metaInfElement == null) {
+                return;
+            }
+        
+            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
+
+            if (attachmentListElement == null) {
+                return;
+            }
+
+            metaInfElement.removeChild(attachmentListElement);
+
+            cacheDirty.put(path, Boolean.TRUE);
+        }
+    }
+    
+    public ArrayList<String> getListOfAttachments(String absoluteFileName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        return(getListOfAttachments(partsOfPath[0], partsOfPath[1]));
+    }
+
+    public ArrayList<String> getListOfAttachments(String path, String fileName) {
+        Element metaInfElement = getMetaInfElement(path,fileName);
+
+        if (metaInfElement == null) {
+            return null;
+        }
+
+        Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
+
+        if (attachmentListElement == null) {
+            return null;
+        }
+        
+        NodeList attachmentList = attachmentListElement.getElementsByTagName("attachment");
+
+        if (attachmentList == null) {
+            return null;
+        }
+
+        int listLength = attachmentList.getLength();
+
+        if (listLength == 0) {
+            return null;
+        }
+
+        ArrayList<String> listOfAttachments = new ArrayList<String>();
+
+        for (int i = 0; i < listLength; i++)
+        {
+            Element attachmentElement = (Element) attachmentList.item(i);
+
+            String attachmentName = XmlUtil.getElementText(attachmentElement);
+
+            listOfAttachments.add(attachmentName);
+        }
+
+        return(listOfAttachments);
+    }
+    
     public void addComment(String absoluteFileName, Comment newComment) {
         String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
         addComment(partsOfPath[0], partsOfPath[1], newComment);

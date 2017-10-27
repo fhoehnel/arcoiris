@@ -1750,3 +1750,135 @@ function publishNewEntries() {
     
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
 }
+
+function attachFile(fileName, posInPage) {
+    // window.location.href = getContextRoot() + "/servlet?command=blog&cmd=attachment&fileName=" + encodeURIComponent(fileName) + "&posInPage=" + posInPage;
+    
+    var uploadCont = document.createElement("div"); 
+    uploadCont.id = "uploadCont";
+    uploadCont.setAttribute("class", "uploadCont");
+    uploadCont.setAttribute("posInPage", posInPage);
+    
+    document.body.appendChild(uploadCont);
+
+    var uploadContHead = document.createElement("div");
+    uploadContHead.setAttribute("class", "uploadContHead");
+    
+    uploadCont.appendChild(uploadContHead);
+    
+    var headlineText = document.createElement("span");
+    headlineText.innerHTML = resourceBundle["upload.attachment.headline"];
+    
+    uploadContHead.appendChild(headlineText);
+
+    var fileNameLabelCont = document.createElement("div");
+    fileNameLabelCont.setAttribute("class", "uploadLabel");
+    uploadCont.appendChild(fileNameLabelCont);
+
+    var fileNameLabelText = document.createElement("span");
+    fileNameLabelText.innerHTML = resourceBundle["upload.attachment.label"] + ":";
+    fileNameLabelCont.appendChild(fileNameLabelText);
+    
+    var uploadForm = document.createElement("form");
+    uploadForm.id = "uploadForm";
+    uploadForm.setAttribute("class", "uploadAttachmentForm");
+    uploadForm.setAttribute("enctype", "multipart/form-data");
+    uploadForm.setAttribute("method", "post");
+    uploadForm.setAttribute("action", getContextRoot() + "/servlet?command=blog&cmd=uploadAttachment"); 
+    uploadForm.setAttribute("accept-charset", "utf-8");
+    uploadCont.appendChild(uploadForm);    
+    
+    var fileInput = document.createElement("input");
+    fileInput.setAttribute("type", "file");
+    fileInput.setAttribute("name", "uploadFile");
+    fileInput.onchange = function() {
+    	uploadAttachment(this.files[0], fileName);
+    };
+    uploadForm.appendChild(fileInput);
+    
+    centerBox(uploadCont);
+}
+
+function uploadAttachment(file, blogFileName) {
+    
+    var fileName;
+    var fileSize;
+    if (browserSafari) {
+        fileName = file.fileName;
+        fileSize = file.fileSize;
+    } else {
+        fileName = file.name
+        fileSize = file.size;
+    }
+      
+    sizeOfCurrentFile = fileSize;
+	  
+    lastUploadedFile = fileName;
+      
+    document.getElementById("currentFile").innerHTML = shortText(fileName, 50);
+          
+    document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
+
+    var statusWin = document.getElementById("uploadStatus");
+    statusWin.style.visibility = 'visible';
+
+    var now = new Date();
+
+    var serverFileName = "attach-" + now.getTime() + getFileNameExt(fileName).toLowerCase();
+                         
+    var uploadUrl = getContextRoot() + "/upload/attachment/" + serverFileName + "/" + blogFileName; 
+
+    xhr = new XMLHttpRequest();  
+
+    xhr.onreadystatechange = handleAttachmentUploadState;
+    xhr.upload.addEventListener("progress", updateAttachmentUploadProgress, false);
+    xhr.upload.addEventListener("load", uploadComplete, false);
+
+    xhr.open("POST", uploadUrl, true);  
+
+    if (!browserMSIE) {
+        xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');  
+    }
+         
+    if (firefoxDragDrop) {
+        try {
+            xhr.sendAsBinary(file.getAsBinary());    
+        } catch (ex) {
+            // Chrome has no file.getAsBinary() function
+            xhr.send(file);
+        }
+    } else {
+        xhr.send(file);
+    }    
+}
+
+function handleAttachmentUploadState() {
+    if (xhr.readyState == 4) {
+        document.getElementById("uploadStatus").style.visibility = 'hidden';
+        
+        var uploadCont = document.getElementById("uploadCont");
+        uploadCont.style.visibility = "hidden";
+
+        if (xhr.status == 200) {
+        	var posInPage = uploadCont.getAttribute("posInPage");
+            var returnURL = getContextRoot() + "/servlet?command=blog&cmd=list&random=" + ((new Date()).getTime()) + "#entry-" + posInPage;
+        	window.location.href = returnURL;
+        } else {
+            alert(resourceBundle["upload.error"] + " " + lastUploadedFile);
+        }
+    }
+}
+
+function updateAttachmentUploadProgress(e) {
+    if (e.lengthComputable) {  
+        var percent = Math.round((e.loaded * 100) / e.total);  
+        document.getElementById("statusText").innerHTML = formatDecimalNumber(e.loaded) + " " + resourceBundle["label.of"] + " " + formatDecimalNumber(e.total) + " bytes (" + percent + "%)";
+        document.getElementById("done").width = 3 * percent;
+        document.getElementById("todo").width = 300 - (3 * percent);
+    }  
+}
+
+function viewAttachment(blogFileName, attachmentName) {
+    var attachmentWin = window.open(getContextRoot() + "/servlet?command=blog&cmd=viewAttachment&imgName=" + encodeURIComponent(blogFileName), "attachmentWin");
+    attachmentWin.focus();
+}

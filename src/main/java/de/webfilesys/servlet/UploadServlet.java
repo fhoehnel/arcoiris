@@ -23,6 +23,8 @@ import de.webfilesys.util.UTF8URLDecoder;
 
 public class UploadServlet extends BlogWebServlet {
     private static final long serialVersionUID = 1L;
+    
+    private static final String SUBDIR_ATTACHMENT = "attachments";
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
         // prevent caching
@@ -53,6 +55,13 @@ public class UploadServlet extends BlogWebServlet {
             throw new ServletException("write access forbidden");
         }
 
+        String requestPath = req.getRequestURI();
+
+        if (requestPath.indexOf("/attachment/") >= 0) {
+            handleAttachmentUpload(req, resp);
+            return;
+        }
+        
         handleSingleBinaryUpload(req, resp);
     }
 
@@ -181,6 +190,87 @@ public class UploadServlet extends BlogWebServlet {
         }
     }
 
+    public void handleAttachmentUpload(HttpServletRequest req, HttpServletResponse resp) 
+    throws ServletException, java.io.IOException {
+        HttpSession session = req.getSession(true);
+
+        String currentPath = (String) session.getAttribute("cwd");
+
+        if (currentPath == null) {
+            Logger.getLogger(getClass()).error("current working directory unknown");
+            return;
+        }
+
+        long uploadLimit = ArcoirisBlog.getInstance().getUploadLimit();
+
+        String requestPath = req.getRequestURI();
+
+        String[] partsOfUri = requestPath.split("/");
+
+        String blogFileName = UTF8URLDecoder.decode(partsOfUri[partsOfUri.length - 1]);
+        
+        String attachmentFileName = UTF8URLDecoder.decode(partsOfUri[partsOfUri.length - 2]);
+
+        attachmentFileName = replaceIllegalChars(attachmentFileName);
+
+        File attachmentDir = new File(currentPath, SUBDIR_ATTACHMENT);
+        
+        if (!attachmentDir.exists()) {
+            if (!attachmentDir.mkdir()) {
+                Logger.getLogger(getClass()).error("failed to create attachment dir");
+                throw new ServletException("failed to create attachment dir");
+            }
+        }
+        
+        File outFile = new File(attachmentDir.getAbsolutePath(), attachmentFileName);
+
+        if (Logger.getLogger(getClass()).isDebugEnabled()) {
+            Logger.getLogger(getClass()).debug("attachment file upload: " + outFile.getAbsolutePath());
+        }
+
+        long uploadSize = 0l;
+
+        byte[] buff = new byte[4096];
+
+        FileOutputStream uploadOut = null;
+
+        try {
+            uploadOut = new FileOutputStream(outFile);
+
+            InputStream input = req.getInputStream();
+
+            int bytesRead;
+
+            while ((bytesRead = input.read(buff)) > 0) {
+                uploadSize += bytesRead;
+                if (uploadSize > uploadLimit) {
+                    Logger.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
+                    uploadOut.flush();
+                    uploadOut.close();
+                    outFile.delete();
+                    throw new ServletException("upload limit of " + uploadLimit + " bytes exceeded");
+                }
+
+                uploadOut.write(buff, 0, bytesRead);
+            }
+
+            uploadOut.flush();
+
+        } catch (IOException ex) {
+            Logger.getLogger(getClass()).error("error in attachment upload", ex);
+            throw ex;
+        } finally {
+            if (uploadOut != null) {
+                try {
+                    uploadOut.close();
+                } catch (Exception closeEx) {
+                }
+            }
+        }
+        
+        MetaInfManager.getInstance().addAttachment(currentPath, blogFileName, attachmentFileName);
+    }
+    
     private String replaceIllegalChars(String fileName) {
         StringBuffer buff = new StringBuffer(fileName.length());
 

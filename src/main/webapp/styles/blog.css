@@ -284,6 +284,8 @@ div.blogPagingCont {
 .icon-blog-rotate:before,
 .icon-blog-move:before,
 .icon-blog-titlePic:before,
+.icon-blog-attachment:before,
+.icon-blog-file:before,
 .icon-blog-like:before {
 	color: #000060;
     font-size: 24px;
@@ -439,7 +441,8 @@ table.blogCommentForm {
 }
 
 div.commentContHead,
-div.blogSettingsHead {
+div.blogSettingsHead,
+div.uploadContHead {
     font-size: 1rem;
     font-weight: bold;
     background-color: lavender;  
@@ -815,6 +818,28 @@ div.urlInput span {
 
 div.urlInput div.buttonCont {
 	padding-top: 12px;
+}
+
+div.uploadCont {
+	width: 400px;
+	height: 160px;
+    background-color: #ffffe0;
+    border: 2px ridge #808080;
+	position: absolute;
+}
+
+div.uploadLabel {
+	padding: 20px 0 0 16px;
+}
+
+form.uploadAttachmentForm {
+	padding: 16px;
+}
+
+form.uploadAttachmentForm input {
+	height: 32px;
+	padding: 0;
+	width: 100%;
 }
 
 @media (max-width: 500px) {

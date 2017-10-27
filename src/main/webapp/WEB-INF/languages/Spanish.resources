@@ -201,6 +201,8 @@ blog.invalidDaysPerPage=El valor de días por página debe ser un número entre 1 y
 blog.moveUp=mover arriba
 blog.moveDown=mover abajo
 blog.makeTitlePic=establecer esta imagen como la imagen del título
+blog.attach=adjuntar un archivo
+blog.viewAttach=ver adjunto archivo
 blog.confirmSetTitlePic=¿Establecer esta imagen como la imagen del título?
 blog.unsetTitlePic=retirar imagen del título
 blog.confirmUnsetTitlePic=¿retirar imagen del título?
@@ -256,6 +258,9 @@ blog.emptyLinkData=¡El texto y la URL del enlace pueden no estar vacías!
 blog.sortOrder=orden de clasificación
 blog.sortOrderBlog=blog (el más reciente primero)
 blog.sortOrderDiary=diario (lo más viejo primero)
+
+upload.attachment.headline=adjuntar un archivo
+upload.attachment.label=selecciona archivo
 
 error.latitudeInvalid=latitude debe ser un número entre -90.0 y 90.0
 error.longitudeInvalid=longitude debe ser un número entre -180.0 y 180.0
