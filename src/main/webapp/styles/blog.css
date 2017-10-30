@@ -291,6 +291,13 @@ div.blogPagingCont {
     font-size: 24px;
 }
 
+.icon-remove:after {
+	content: '\2A09';
+	color: #a00000;
+	font-size: 12px;
+	font-weight: bold;
+}
+
 a.icon-blog-edit,
 a.icon-blog-move,
 a.icon-blog-delete,

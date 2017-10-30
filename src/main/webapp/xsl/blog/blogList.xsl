@@ -381,8 +381,18 @@
                 </xsl:if>
                 
                 &#160;
-                <a href="javascript:void(0)" id="attachmentIcon" class="icon-font icon-attachment icon-blog-attachment" titleResource="blog.attach">
-                  <xsl:attribute name="onClick">attachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                <a href="javascript:void(0)">
+                  <xsl:attribute name="id">attachment-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                  <xsl:if test="attachment or geoTrack">
+                    <xsl:attribute name="class">icon-font icon-attachment icon-blog-attachment icon-remove</xsl:attribute>
+                    <xsl:attribute name="titleResource">blog.detach</xsl:attribute>
+                    <xsl:attribute name="onClick">detachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="not(attachment or geoTrack)">
+                    <xsl:attribute name="class">icon-font icon-attachment icon-blog-attachment</xsl:attribute>
+                    <xsl:attribute name="titleResource">blog.attach</xsl:attribute>
+                    <xsl:attribute name="onClick">attachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </xsl:if>
                 </a>
                 
               </xsl:if>
@@ -419,35 +429,47 @@
               </xsl:if>
               
               
-              <xsl:if test="geoTag">
+              <xsl:if test="geoTag or geoTrack">
  
                 <div>
-                  <div>
-                    <xsl:attribute name="id">mapIcon-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
-                    <a class="blogGeoTagLink">
-                      <xsl:attribute name="href">javascript:showMapSelection('<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
-                      <span resource="geoMapLinkShort"></span>
-                    </a>
-                  </div>
+                  <xsl:if test="geoTag">
+                    <div>
+                      <xsl:attribute name="id">mapIcon-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                      <a class="blogGeoTagLink">
+                        <xsl:attribute name="href">javascript:showMapSelection('<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                        <span resource="geoMapLinkShort"></span>
+                      </a>
+                    </div>
                   
-                  <select class="pictureAlbum">
-                    <xsl:attribute name="id">geoLocSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
-                    <xsl:attribute name="onchange">geoMapFileSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
-                    <option value="0" resource="selectMapType" />
-                    <option value="1" resource="mapTypeOSM" />
-                    <option value="2" resource="mapTypeGoogleMap" />
-                    <option value="3" resource="mapTypeGoogleEarth" />
-                  </select>
+                    <select class="pictureAlbum">
+                      <xsl:attribute name="id">geoLocSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                      <xsl:attribute name="onchange">geoMapFileSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                      <option value="0" resource="selectMapType" />
+                      <option value="1" resource="mapTypeOSM" />
+                      <option value="2" resource="mapTypeGoogleMap" />
+                      <option value="3" resource="mapTypeGoogleEarth" />
+                    </select>
+                  </xsl:if>
+
+                  <xsl:if test="geoTrack">
+                    <!--  
+                    <a href="javascript:void(0)" id="viewAttachmentIcon" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
+                      <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                    </a>
+                    -->
+
+                    <a class="blogGeoTagLink">
+                      <xsl:attribute name="id">geoTrackLink-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                      <xsl:attribute name="href">viewGeoTrack('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                      <span resource="geoTrackLink"></span>
+                    </a>
+
+                  </xsl:if>
+
                 </div>  
                   
               </xsl:if>
               
-              <xsl:if test="attachment">
-                &#160;
-                <a href="javascript:void(0)" id="viewAttachmentIcon" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
-                  <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
-                </a>
-              </xsl:if>
             </div>      
         
           </xsl:for-each>

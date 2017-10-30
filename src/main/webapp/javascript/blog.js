@@ -1751,6 +1751,42 @@ function publishNewEntries() {
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
 }
 
+function detachFile(imgName, posInPage) {
+    if (!confirm(resourceBundle["blog.confirmDetach"])) {
+        return;
+    }
+     
+    showHourGlass();
+
+    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=detach&imgName=" + imgName;
+
+	xmlRequest(xmlUrl, function(req) {
+        if (req.readyState == 4) {
+            hideHourGlass();
+            if (req.status == 200) {
+                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+                var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+
+                if (success == 'true') {
+                	var attachmentLink = document.getElementById("attachment-" + posInPage);
+                	attachmentLink.setAttribute("class", "icon-font icon-attachment icon-blog-attachment");
+                	attachmentLink.removeAttribute("onclick");
+                	attachmentLink.onclick = function() {attachFile(imgName, posInPage)};
+                	attachmentLink.title = resourceBundle["blog.attach"];
+                	
+                	var geoTrackLink = document.getElementById("geoTrackLink-" + posInPage);
+                	if (geoTrackLink) {
+                		geoTrackLink.parentNode.removeChild(geoTrackLink);
+                	}
+                } else {
+                	// TODO: resourceBundle
+                    alert("failed to detach file");
+                }
+            }
+        }
+    });
+}
+
 function attachFile(fileName, posInPage) {
     // window.location.href = getContextRoot() + "/servlet?command=blog&cmd=attachment&fileName=" + encodeURIComponent(fileName) + "&posInPage=" + posInPage;
     
@@ -1879,6 +1915,12 @@ function updateAttachmentUploadProgress(e) {
 }
 
 function viewAttachment(blogFileName, attachmentName) {
-    var attachmentWin = window.open(getContextRoot() + "/servlet?command=blog&cmd=viewAttachment&imgName=" + encodeURIComponent(blogFileName), "attachmentWin");
+    var attachmentWin = window.open(getContextRoot() + "/servlet?command=blog&cmd=viewAttachment&imgName=" + encodeURIComponent(blogFileName) + "&attachmentName=" + encodeURIComponent(attachmentName), "attachmentWin");
     attachmentWin.focus();
 }
+
+function viewGeoTrack(blogFileName, attachmentName) {
+    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=blog&cmd=viewGeoTrack&imgName=" + encodeURIComponent(blogFileName) + "&attachmentName=" + encodeURIComponent(attachmentName), "geoTrackWin");
+    geoTrackWin.focus();
+}
+

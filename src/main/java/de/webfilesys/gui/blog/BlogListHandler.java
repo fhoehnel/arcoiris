@@ -472,7 +472,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                     ArrayList<String> attachments = metaInfMgr.getListOfAttachments(file.getAbsolutePath());
                                     
                                     if ((attachments != null) && (attachments.size() > 0)) {
-                                        XmlUtil.setChildText(fileElement, "attachment", attachments.get(0));
+                                        String attachmentFileName = attachments.get(0);
+                                        if (isGpsTrack(attachmentFileName)) {
+                                            XmlUtil.setChildText(fileElement, "geoTrack", attachments.get(0));
+                                        } else {
+                                            XmlUtil.setChildText(fileElement, "attachment", attachments.get(0));
+                                        }
                                     }
                                     
                                     GeoTag geoTag = metaInfMgr.getGeoTag(file.getAbsolutePath());
@@ -634,6 +639,10 @@ public class BlogListHandler extends XslRequestHandlerBase {
         String fileNameExt = CommonUtils.getFileExtension(file.getName());
 
         return fileNameExt.equals(".jpg") || fileNameExt.equals(".jpeg") || fileNameExt.equals(".png") || fileNameExt.equals(".gif");
+    }
+    
+    private boolean isGpsTrack(String attachmentFileName) {
+        return attachmentFileName.endsWith(".GPX") || attachmentFileName.endsWith(".gpx");
     }
 
 }
