@@ -14,6 +14,8 @@ label.logon=Anmelden
 label.about=arcoiris blog info
 label.of=von
 label.file=Datei
+label.edit=Eintrag bearbeiten
+label.delete=Eintrag löschen
 
 # common buttons
 button.create=Anlegen
