@@ -24,7 +24,7 @@ import de.webfilesys.util.UTF8URLDecoder;
 public class UploadServlet extends BlogWebServlet {
     private static final long serialVersionUID = 1L;
     
-    private static final String SUBDIR_ATTACHMENT = "attachments";
+    public static final String SUBDIR_ATTACHMENT = "attachments";
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
         // prevent caching

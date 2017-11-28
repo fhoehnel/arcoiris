@@ -263,6 +263,7 @@ blog.sortOrderDiary=diary (oldest first)
 
 upload.attachment.headline=attach file
 upload.attachment.label=select file
+upload.attachment.sizeLimitExceeded=The size of the file to attach exceeds the limit of
 
 error.latitudeInvalid=latitude must be a number between -90.0 and 90.0
 error.longitudeInvalid=longitude must be a number between -180.0 and 180.0

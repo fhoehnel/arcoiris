@@ -429,7 +429,7 @@
               </xsl:if>
               
               
-              <xsl:if test="geoTag or geoTrack">
+              <xsl:if test="geoTag or geoTrack or attachment">
  
                 <div>
                   <xsl:if test="geoTag">
@@ -452,18 +452,19 @@
                   </xsl:if>
 
                   <xsl:if test="geoTrack">
-                    <!--  
-                    <a href="javascript:void(0)" id="viewAttachmentIcon" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
-                      <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
-                    </a>
-                    -->
-
                     <a class="blogGeoTagLink">
                       <xsl:attribute name="id">geoTrackLink-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
-                      <xsl:attribute name="href">viewGeoTrack('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                      <xsl:attribute name="href">javascript:void(0)</xsl:attribute>
+                      <xsl:attribute name="onclick">viewGeoTrack('<xsl:value-of select="@name" />', '<xsl:value-of select="geoTrack" />')</xsl:attribute>
                       <span resource="geoTrackLink"></span>
                     </a>
+                  </xsl:if>
 
+                  <xsl:if test="attachment">
+                    <a href="javascript:void(0)" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
+                      <xsl:attribute name="id">viewAttachmentIcon-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                      <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                    </a>
                   </xsl:if>
 
                 </div>  

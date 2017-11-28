@@ -85,6 +85,7 @@ import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
 import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
+import de.webfilesys.gui.user.GetAttachmentRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapHandler;
@@ -220,7 +221,7 @@ public class BlogWebServlet extends ServletBase {
             command = req.getParameter("command");
         }
 
-        if ((command == null) || (!command.equals("getFile"))) {
+        if ((command == null) || ((!command.equals("getFile")) && (!command.equals("getAttachment")))) {
             // resp.setCharacterEncoding("ISO-8859-1");
             resp.setCharacterEncoding("UTF-8");
 
@@ -450,6 +451,12 @@ public class BlogWebServlet extends ServletBase {
 
         if (command.equals("getFile")) {
             (new GetFileRequestHandler(req, resp, session, output, userid)).handleRequest();
+
+            return true;
+        }
+
+        if (command.equals("getAttachment")) {
+            (new GetAttachmentRequestHandler(req, resp, session, output, userid)).handleRequest();
 
             return true;
         }
