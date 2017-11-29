@@ -24,7 +24,7 @@
   </div>  
   
   <div style="text-align:center;margin:10px 0;">
-    <input type="button" value="Close Window" onclick="hideSubscribeForm()" />
+    <input type="button" resource="button.closewin" onclick="hideSubscribeForm()" />
   </div>
 
 </xsl:template>

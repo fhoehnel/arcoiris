@@ -70,6 +70,10 @@ div.urlInput input[type="button"] {
     color: ivory;
 }
 
+#changePosCont input[type="button"]:disabled {
+    color: #a0a0a0; 
+}
+
 div.commentContHead, 
 div.blogSettingsHead,
 div.uploadContHead,

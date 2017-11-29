@@ -63,6 +63,10 @@ div.urlInput input[type="button"] {
     color: #400000;
 }
 
+#changePosCont input[type="button"]:disabled {
+    color: #a0a0a0; 
+}
+
 div.blogEmpty {
     color: maroon;
 }
