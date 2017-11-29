@@ -373,6 +373,13 @@
                   </a>
                 </xsl:if>
 
+                <xsl:if test="not ((position() = last()) and (position() = 1))">
+                  &#160;
+                  <a class="icon-font icon-move icon-blog-move" titleResource="blog.changePosition">
+                    <xsl:attribute name="href">javascript:changeBlogEntryPosition('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </a>
+                </xsl:if>
+
                 <xsl:if test="not(staged)">
                   &#160;
                   <a href="#" id="titlePicIcon" class="icon-font icon-heart icon-blog-titlePic" titleResource="blog.makeTitlePic">

@@ -57,6 +57,7 @@ import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
 import de.webfilesys.gui.blog.BlogAddCommentHandler;
+import de.webfilesys.gui.blog.BlogAltPositionsHandler;
 import de.webfilesys.gui.blog.BlogChangeEntryHandler;
 import de.webfilesys.gui.blog.BlogDeleteCommentsHandler;
 import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
@@ -68,6 +69,7 @@ import de.webfilesys.gui.blog.BlogListCommentsHandler;
 import de.webfilesys.gui.blog.BlogListHandler;
 import de.webfilesys.gui.blog.BlogListSubscribersHandler;
 import de.webfilesys.gui.blog.BlogMoveEntryHandler;
+import de.webfilesys.gui.blog.BlogMoveToPosHandler;
 import de.webfilesys.gui.blog.BlogPostHandler;
 import de.webfilesys.gui.blog.BlogPublishFormHandler;
 import de.webfilesys.gui.blog.BlogPublishHandler;
@@ -533,6 +535,12 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("listSubscribers")) {
                 (new BlogListSubscribersHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("altPositions")) {
+                (new BlogAltPositionsHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("moveToPos")) {
+                (new BlogMoveToPosHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else if (cmd.equals("emojiList")) {
                 (new XmlEmojiListHandler(req, resp, session, output, userid)).handleRequest();

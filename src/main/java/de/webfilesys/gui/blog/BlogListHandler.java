@@ -128,7 +128,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         for (int i = 0; i < filesInDir.length; i++) {
             if (filesInDir[i].isFile() && filesInDir[i].canRead()) {
 
-                if (isPictureFile(filesInDir[i])) {
+                if (CommonUtils.isPictureFile(filesInDir[i])) {
 
                     if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
 
@@ -635,12 +635,6 @@ public class BlogListHandler extends XslRequestHandlerBase {
         }
     }
 
-    private boolean isPictureFile(File file) {
-        String fileNameExt = CommonUtils.getFileExtension(file.getName());
-
-        return fileNameExt.equals(".jpg") || fileNameExt.equals(".jpeg") || fileNameExt.equals(".png") || fileNameExt.equals(".gif");
-    }
-    
     private boolean isGpsTrack(String attachmentFileName) {
         return attachmentFileName.endsWith(".GPX") || attachmentFileName.endsWith(".gpx");
     }

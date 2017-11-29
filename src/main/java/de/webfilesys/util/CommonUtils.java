@@ -544,4 +544,10 @@ public class CommonUtils {
         return true;
     }
 
+    public static boolean isPictureFile(File file) {
+        String fileNameExt = getFileExtension(file.getName());
+
+        return fileNameExt.equals(".jpg") || fileNameExt.equals(".jpeg") || fileNameExt.equals(".png") || fileNameExt.equals(".gif");
+    }
+    
 }

@@ -577,6 +577,68 @@ function moveBlogEntry(fileName, direction, posInPage) {
     });
 }
 
+function changeBlogEntryPosition(fileName, posInPage) {
+	
+    showHourGlass();
+
+    var changePosCont = document.createElement("div"); 
+    changePosCont.id = "changePosCont";
+    changePosCont.setAttribute("class", "changePosCont");
+    changePosCont.setAttribute("posInPage", posInPage);
+    
+    document.body.appendChild(changePosCont);
+
+    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=altPositions&fileName=" + encodeURIComponent(fileName);
+        
+    var xslUrl = getContextRoot() + "/xsl/blog/altPositions.xsl";    
+        
+    htmlFragmentByXslt(xmlUrl, xslUrl, changePosCont, function() {
+        setBundleResources();
+        centerBox(changePosCont);
+        changePosCont.style.visibility = "visible";
+        hideHourGlass();
+    });
+}
+
+function hidePositionSelection() {
+	var changePosCont = document.getElementById("changePosCont");
+	if (changePosCont) {
+		changePosCont.parentNode.removeChild(changePosCont);
+	}
+}
+
+function selectTargetPosition(targetPos) {
+    showHourGlass();
+	
+	if (!targetPos) {
+		var targetPosSelect = document.getElementById("targetPos");
+		targetPos = targetPosSelect[targetPosSelect.selectedIndex].value;
+	}
+	
+	document.getElementById("newPos").value = targetPos;
+	
+	var formData = getFormData(document.getElementById("targetPosForm"));
+	
+	xmlRequestPost(getContextRoot() + "/servlet", formData, handleMovedToPos);	
+}
+
+function handleMovedToPos(req) {
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+
+            if (success == 'true') {
+                window.location.href = getContextRoot() + "/servlet?command=blog";
+            }
+            hideHourGlass();    
+        } else {
+            alert(resourceBundle["alert.communicationFailure"]);
+            hideHourGlass();    
+        }
+    }
+}
+
 function loadGoogleMapsAPIScriptCode(googleMapsAPIKey) {
     var script = document.createElement("script");
     script.type = "text/javascript";

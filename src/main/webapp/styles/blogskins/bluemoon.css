@@ -35,6 +35,7 @@ a.blogLinkIns::before {
 .icon-blog-delete::before, 
 .icon-blog-rotate::before, 
 .icon-blog-move::before, 
+.icon-attachment::before, 
 .icon-blog-titlePic::before, 
 .icon-blog-like::before {
     color: #c08000;
@@ -62,6 +63,7 @@ input.blogUploadFileSelButton,
 #subscribeCont input[type="button"], 
 #searchResultCont input[type="button"], 
 #searchFormCont input[type="button"],
+#changePosCont input[type="button"],
 div.urlInput input[type="button"] {
     background: rgba(0, 0, 0, 0) linear-gradient(#a06000, #c08000) repeat scroll 0 0;
     border-color: ivory;
@@ -70,6 +72,7 @@ div.urlInput input[type="button"] {
 
 div.commentContHead, 
 div.blogSettingsHead,
+div.uploadContHead,
 div.promptHead {
     background-color: #c08000;
     color: #ffffff;
@@ -104,7 +107,8 @@ html.blog form label {
     color: ivory;
 }
 
-div.subscriberList span {
+div.subscriberList span,
+div.uploadCont span {
     color: ivory;
 }
 
@@ -126,6 +130,8 @@ div.blogSubscribeCont,
 div.blogSettingsCont,
 div.blogCommentCont,
 div.blogSearchFormCont,
+div.changePosCont,
+div.uploadCont,
 div.searchResultCont {
     background-color: #002060;
 }

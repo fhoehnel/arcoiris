@@ -27,6 +27,7 @@ input.blogUploadFileSelButton,
 #subscribeCont input[type="button"],
 #searchResultCont input[type="button"],
 #searchFormCont input[type="button"],
+#changePosCont input[type="button"],
 div.urlInput input[type="button"] {
     height: 32px;
     background: linear-gradient(#d0d0d0, #f0f0f0);
@@ -847,6 +848,28 @@ form.uploadAttachmentForm input {
 	height: 32px;
 	padding: 0;
 	width: 100%;
+}
+
+div.changePosCont {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 300px;
+    height: 270px;
+    border: 2px ridge #808080;
+    background-color: #ffffe0;
+    visibility: hidden;
+}
+
+div.changePosCont .buttonCont {
+    margin-top: 10px;
+    padding: 20px 0;
+    border-top: 1px solid #a0a0a0;
+    text-align: center;
+}
+
+div.targetPosCont {
+	padding: 20px 20px 10px 20px;
 }
 
 @media (max-width: 500px) {

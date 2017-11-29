@@ -169,6 +169,10 @@ a.icon-font {
 	content: '\f016';
 }
 
+.icon-move:before {
+	content: '\f079';
+}
+
 .icon-page-prev:before {
 	content: '\f04a';
 }
