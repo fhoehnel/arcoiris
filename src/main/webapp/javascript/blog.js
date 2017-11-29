@@ -4,6 +4,8 @@ var MAX_PICTURE_SIZE_SUM = 40000000;
 
 var MAX_BLOG_TEXT_LENGTH = 4096;
 
+var MAX_ATTACHMENT_SIZE = 8000000;
+
 var THUMB_SUBDIR_NAME = "_thumbnails400";
       
 var xhr;
@@ -1750,3 +1752,189 @@ function publishNewEntries() {
     
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
 }
+
+function detachFile(imgName, posInPage) {
+    if (!confirm(resourceBundle["blog.confirmDetach"])) {
+        return;
+    }
+     
+    showHourGlass();
+
+    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=detach&imgName=" + imgName;
+
+	xmlRequest(xmlUrl, function(req) {
+        if (req.readyState == 4) {
+            hideHourGlass();
+            if (req.status == 200) {
+                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+                var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+
+                if (success == 'true') {
+                	var attachmentLink = document.getElementById("attachment-" + posInPage);
+                	attachmentLink.setAttribute("class", "icon-font icon-attachment icon-blog-attachment");
+                	attachmentLink.removeAttribute("onclick");
+                	attachmentLink.onclick = function() {attachFile(imgName, posInPage)};
+                	attachmentLink.title = resourceBundle["blog.attach"];
+                	
+                	var geoTrackLink = document.getElementById("geoTrackLink-" + posInPage);
+                	if (geoTrackLink) {
+                		geoTrackLink.parentNode.removeChild(geoTrackLink);
+                	} else {
+                		attachmentIcon = document.getElementById("viewAttachmentIcon-" + posInPage);
+                		if (attachmentIcon) {
+                			attachmentIcon.parentNode.removeChild(attachmentIcon);
+                		}
+                	}
+                } else {
+                	// TODO: resourceBundle
+                    alert("failed to detach file");
+                }
+            }
+        }
+    });
+}
+
+function attachFile(fileName, posInPage) {
+    // window.location.href = getContextRoot() + "/servlet?command=blog&cmd=attachment&fileName=" + encodeURIComponent(fileName) + "&posInPage=" + posInPage;
+    
+    var uploadCont = document.createElement("div"); 
+    uploadCont.id = "uploadCont";
+    uploadCont.setAttribute("class", "uploadCont");
+    uploadCont.setAttribute("posInPage", posInPage);
+    
+    document.body.appendChild(uploadCont);
+
+    var uploadContHead = document.createElement("div");
+    uploadContHead.setAttribute("class", "uploadContHead");
+    
+    uploadCont.appendChild(uploadContHead);
+    
+    var headlineText = document.createElement("span");
+    headlineText.innerHTML = resourceBundle["upload.attachment.headline"];
+    
+    uploadContHead.appendChild(headlineText);
+
+    var fileNameLabelCont = document.createElement("div");
+    fileNameLabelCont.setAttribute("class", "uploadLabel");
+    uploadCont.appendChild(fileNameLabelCont);
+
+    var fileNameLabelText = document.createElement("span");
+    fileNameLabelText.innerHTML = resourceBundle["upload.attachment.label"] + ":";
+    fileNameLabelCont.appendChild(fileNameLabelText);
+    
+    var uploadForm = document.createElement("form");
+    uploadForm.id = "uploadForm";
+    uploadForm.setAttribute("class", "uploadAttachmentForm");
+    uploadForm.setAttribute("enctype", "multipart/form-data");
+    uploadForm.setAttribute("method", "post");
+    uploadForm.setAttribute("action", getContextRoot() + "/servlet?command=blog&cmd=uploadAttachment"); 
+    uploadForm.setAttribute("accept-charset", "utf-8");
+    uploadCont.appendChild(uploadForm);    
+    
+    var fileInput = document.createElement("input");
+    fileInput.setAttribute("type", "file");
+    fileInput.setAttribute("name", "uploadFile");
+    fileInput.onchange = function() {
+    	uploadAttachment(this.files[0], fileName);
+    };
+    uploadForm.appendChild(fileInput);
+    
+    centerBox(uploadCont);
+}
+
+function uploadAttachment(file, blogFileName) {
+    
+    var fileName;
+    var fileSize;
+    if (browserSafari) {
+        fileName = file.fileName;
+        fileSize = file.fileSize;
+    } else {
+        fileName = file.name
+        fileSize = file.size;
+    }
+     
+    if (fileSize > MAX_ATTACHMENT_SIZE) {
+    	alert(resourceBundle["upload.attachment.sizeLimitExceeded"] + " " + MAX_ATTACHMENT_SIZE + " bytes.");
+    	var uploadCont = document.getElementById("uploadCont");
+    	uploadCont.parentNode.removeChild(uploadCont);
+    	return;
+    }
+    
+    sizeOfCurrentFile = fileSize;
+	  
+    lastUploadedFile = fileName;
+      
+    document.getElementById("currentFile").innerHTML = shortText(fileName, 50);
+          
+    document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
+
+    var statusWin = document.getElementById("uploadStatus");
+    statusWin.style.visibility = 'visible';
+
+    var now = new Date();
+
+    var serverFileName = "attach-" + now.getTime() + getFileNameExt(fileName).toLowerCase();
+                         
+    var uploadUrl = getContextRoot() + "/upload/attachment/" + serverFileName + "/" + blogFileName; 
+
+    xhr = new XMLHttpRequest();  
+
+    xhr.onreadystatechange = handleAttachmentUploadState;
+    xhr.upload.addEventListener("progress", updateAttachmentUploadProgress, false);
+    xhr.upload.addEventListener("load", uploadComplete, false);
+
+    xhr.open("POST", uploadUrl, true);  
+
+    if (!browserMSIE) {
+        xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');  
+    }
+         
+    if (firefoxDragDrop) {
+        try {
+            xhr.sendAsBinary(file.getAsBinary());    
+        } catch (ex) {
+            // Chrome has no file.getAsBinary() function
+            xhr.send(file);
+        }
+    } else {
+        xhr.send(file);
+    }    
+}
+
+function handleAttachmentUploadState() {
+    if (xhr.readyState == 4) {
+        document.getElementById("uploadStatus").style.visibility = 'hidden';
+        
+        var uploadCont = document.getElementById("uploadCont");
+        uploadCont.style.visibility = "hidden";
+
+        if (xhr.status == 200) {
+        	var posInPage = uploadCont.getAttribute("posInPage");
+            var returnURL = getContextRoot() + "/servlet?command=blog&cmd=list&random=" + ((new Date()).getTime()) + "#entry-" + posInPage;
+        	window.location.href = returnURL;
+        } else {
+            alert(resourceBundle["upload.error"] + " " + lastUploadedFile);
+        }
+    }
+}
+
+function updateAttachmentUploadProgress(e) {
+    if (e.lengthComputable) {  
+        var percent = Math.round((e.loaded * 100) / e.total);  
+        document.getElementById("statusText").innerHTML = formatDecimalNumber(e.loaded) + " " + resourceBundle["label.of"] + " " + formatDecimalNumber(e.total) + " bytes (" + percent + "%)";
+        document.getElementById("done").width = 3 * percent;
+        document.getElementById("todo").width = 300 - (3 * percent);
+    }  
+}
+
+function viewAttachment(blogFileName, attachmentName) {
+    var attachmentWin = window.open(getContextRoot() + "/servlet?command=getAttachment&attachmentName=" + encodeURIComponent(attachmentName), "attachmentWin");
+    attachmentWin.focus();
+}
+
+function viewGeoTrack(blogFileName, attachmentName) {
+    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=getAttachment&attachmentName=" + encodeURIComponent(attachmentName), "geoTrackWin");
+    geoTrackWin.focus();
+}
+

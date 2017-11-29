@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<viewHandlerRegistry>
+  
+  <!-- shows elevation and speed profile diagrams for GPX geo track and waypoint files -->
+  <viewHandler>
+    <class>de.webfilesys.viewhandler.GeoTrackViewHandler</class>
+    <filePatternList>
+      <filePattern>*.gpx</filePattern>
+    </filePatternList>
+  </viewHandler>
+  
+</viewHandlerRegistry>

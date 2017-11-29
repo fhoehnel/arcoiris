@@ -60,6 +60,7 @@ import de.webfilesys.gui.blog.BlogAddCommentHandler;
 import de.webfilesys.gui.blog.BlogChangeEntryHandler;
 import de.webfilesys.gui.blog.BlogDeleteCommentsHandler;
 import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
+import de.webfilesys.gui.blog.BlogDetachHandler;
 import de.webfilesys.gui.blog.BlogEditEntryHandler;
 import de.webfilesys.gui.blog.BlogGetPublicUrlHandler;
 import de.webfilesys.gui.blog.BlogLikeHandler;
@@ -84,6 +85,7 @@ import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
 import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
+import de.webfilesys.gui.user.GetAttachmentRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapHandler;
@@ -219,9 +221,7 @@ public class BlogWebServlet extends ServletBase {
             command = req.getParameter("command");
         }
 
-        if ((command == null)
-                        || ((!command.equals("exifThumb")) && (!command.equals("getFile")) && (!command.equals("getThumb")) && (!command.equals("multiDownload"))
-                                        && (!command.equals("getZipContentFile")) && (!command.equals("mp3Thumb")) && (!command.equals("downloadFolder")))) {
+        if ((command == null) || ((!command.equals("getFile")) && (!command.equals("getAttachment")))) {
             // resp.setCharacterEncoding("ISO-8859-1");
             resp.setCharacterEncoding("UTF-8");
 
@@ -455,6 +455,12 @@ public class BlogWebServlet extends ServletBase {
             return true;
         }
 
+        if (command.equals("getAttachment")) {
+            (new GetAttachmentRequestHandler(req, resp, session, output, userid)).handleRequest();
+
+            return true;
+        }
+
         if (command.equals("getResourceBundle")) {
             (new ResourceBundleHandler(req, resp, session, output, userid)).handleRequest();
 
@@ -545,6 +551,9 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("publishNewEntries")) {
                 (new BlogPublishNewEntriesHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("detach")) {
+                (new BlogDetachHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);

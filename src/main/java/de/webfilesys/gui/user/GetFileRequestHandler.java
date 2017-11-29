@@ -3,6 +3,7 @@ package de.webfilesys.gui.user;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
@@ -13,9 +14,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.MetaInfManager;
+import de.webfilesys.ViewHandlerConfig;
+import de.webfilesys.ViewHandlerManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.util.FileEncodingMap;
 import de.webfilesys.util.MimeTypeMap;
+import de.webfilesys.viewhandler.ViewHandler;
 
 /**
  * @author Frank Hoehnel
@@ -97,6 +101,20 @@ public class GetFileRequestHandler extends UserRequestHandler {
         if ((disposition != null) && disposition.equals(("download"))) {
             resp.setHeader("Content-Disposition", "attachment; filename=" + fileToSend.getName());
         }
+        
+        if (disposition == null) {
+            ViewHandlerConfig viewHandlerConfig = ViewHandlerManager.getInstance().getViewHandlerConfig(fileToSend.getName());
+
+            if (viewHandlerConfig != null) {
+                String viewHandlerClassName = viewHandlerConfig.getHandlerClass();
+              
+                if (viewHandlerClassName != null) {
+                    if (delegateToViewHandler(viewHandlerConfig, filePath, null)) {
+                        return;
+                    }
+                }
+            }
+        }        
 
         String encoding = FileEncodingMap.getInstance().getFileEncoding(filePath);
 
@@ -156,4 +174,37 @@ public class GetFileRequestHandler extends UserRequestHandler {
         }
     }
 
+    protected boolean delegateToViewHandler(ViewHandlerConfig viewHandlerConfig, String filePath, InputStream zipIn) {
+        String viewHandlerClassName = viewHandlerConfig.getHandlerClass();
+
+        try {
+            ViewHandler viewHandler = (ViewHandler) (Class.forName(viewHandlerClassName).newInstance());
+
+            Logger.getLogger(getClass()).debug("ViewHandler instantiated: " + viewHandler.getClass().getName());
+
+            if (zipIn == null) {
+                viewHandler.process(filePath, viewHandlerConfig, req, resp);
+                return true;
+            }
+
+            if (!viewHandler.supportsZipContent()) {
+                return false;
+            }
+
+            viewHandler.processZipContent(filePath, zipIn, viewHandlerConfig, req, resp);
+
+            return (true);
+        } catch (ClassNotFoundException cnfex) {
+            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be found: " + cnfex);
+        } catch (InstantiationException instEx) {
+            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + instEx);
+        } catch (IllegalAccessException iaEx) {
+            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + iaEx);
+        } catch (ClassCastException cex) {
+            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " does not implement the ViewHandler interface: " + cex);
+        }
+
+        return (false);
+    }
+    
 }
