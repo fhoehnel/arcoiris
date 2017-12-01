@@ -81,6 +81,7 @@ import de.webfilesys.gui.blog.BlogSetDescrHandler;
 import de.webfilesys.gui.blog.BlogSetTitlePicHandler;
 import de.webfilesys.gui.blog.BlogShowSettingsHandler;
 import de.webfilesys.gui.blog.BlogSubscribeHandler;
+import de.webfilesys.gui.blog.BlogSwitchLowBandwidthHandler;
 import de.webfilesys.gui.blog.BlogUnpublishHandler;
 import de.webfilesys.gui.blog.BlogUnsetTitlePicHandler;
 import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
@@ -562,6 +563,9 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("detach")) {
                 (new BlogDetachHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("switchLowBandwidthMode")) {
+                (new BlogSwitchLowBandwidthHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);

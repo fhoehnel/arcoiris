@@ -41,7 +41,10 @@ a.blogLinkIns::before {
 .icon-blog-rotate::before, 
 .icon-blog-move::before, 
 .icon-attachment::before, 
+.icon-signal::before, 
+.icon-wifi::before, 
 .icon-blog-titlePic::before, 
+.icon-blog-file::before,
 .icon-blog-like::before {
     color: #b04000;
 }

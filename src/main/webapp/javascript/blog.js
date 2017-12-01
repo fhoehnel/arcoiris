@@ -1815,6 +1815,34 @@ function publishNewEntries() {
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
 }
 
+function switchLowBandwidthMode() {
+    showHourGlass();
+
+    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=switchLowBandwidthMode";
+
+	xmlRequest(xmlUrl, function(req) {
+        if (req.readyState == 4) {
+            hideHourGlass();
+            if (req.status == 200) {
+                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+                var newMode = resultElem.getElementsByTagName("newBandwidthMode")[0].firstChild.nodeValue;
+
+            	var switchBandwidthLink = document.getElementById("switchBandwidthLink");
+                if (newMode == "low") {
+                	switchBandwidthLink.setAttribute("class", "icon-font icon-wifi blogMenu");
+                	switchBandwidthLink.setAttribute("title", resourceBundle["blog.highBandwith"]);
+                } else {
+                	switchBandwidthLink.setAttribute("class", "icon-font icon-signal blogMenu");
+                	switchBandwidthLink.setAttribute("title", resourceBundle["blog.lowBandwith"]);
+                }
+            } else {
+                alert(resourceBundle["alert.communicationFailure"]);
+                hideHourGlass();    
+            }
+        }
+    });
+}
+
 function detachFile(imgName, posInPage) {
     if (!confirm(resourceBundle["blog.confirmDetach"])) {
         return;
@@ -1851,6 +1879,9 @@ function detachFile(imgName, posInPage) {
                 	// TODO: resourceBundle
                     alert("failed to detach file");
                 }
+            } else {
+                alert(resourceBundle["alert.communicationFailure"]);
+                hideHourGlass();    
             }
         }
     });

@@ -267,6 +267,8 @@ blog.emptyLinkData=Please enter a label and an URL for the link!
 blog.sortOrder=sort order
 blog.sortOrderBlog=blog (newest first)
 blog.sortOrderDiary=diary (oldest first)
+blog.lowBandwith=slow network mode
+blog.highBandwith=fast network mode
 
 upload.attachment.headline=attach file
 upload.attachment.label=select file

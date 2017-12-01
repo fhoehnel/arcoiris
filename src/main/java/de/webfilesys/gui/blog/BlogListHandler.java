@@ -74,7 +74,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
         if (readonly) {
             XmlUtil.setChildText(blogElement, "readonly", "true", false);
         }
-
+        
+        Boolean lowBandwidth = (Boolean) session.getAttribute(BlogSwitchLowBandwidthHandler.SESSION_KEY_LOW_BANDWIDTH);
+        if (lowBandwidth != null) {
+            XmlUtil.setChildText(blogElement, "lowBandwidthMode", "true");
+        }
+        
         String posInPage = req.getParameter("posInPage");
         
         if ((posInPage != null) && (!posInPage.isEmpty())) {

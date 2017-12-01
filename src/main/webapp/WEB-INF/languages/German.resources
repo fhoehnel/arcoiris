@@ -267,6 +267,8 @@ blog.emptyLinkData=Text und URL des Links dürfen nicht leer sein!
 blog.sortOrder=Sortierung
 blog.sortOrderBlog=Blog (neueste zuerst)
 blog.sortOrderDiary=Tagebuch (älteste zuerst)
+blog.lowBandwith=Modus für langsame Internetverbindung
+blog.highBandwith=Modus für schnelle Internetverbindung
 
 upload.attachment.headline=Datei anhängen
 upload.attachment.label=Datei auswählen

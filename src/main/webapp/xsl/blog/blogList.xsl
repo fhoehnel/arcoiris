@@ -179,7 +179,15 @@
           <a href="#" class="icon-font icon-menu blogMenu" titleResource="blog.settingsHeadline">
             <xsl:attribute name="onClick">showSettings()</xsl:attribute>
           </a>
+          
           <a href="javascript:showSearchForm()" class="icon-font icon-search blogMenu" titleResource="blog.search" />
+          
+          <xsl:if test="not(/blog/lowBandwidthMode)">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.lowBandwith" />
+          </xsl:if>
+          <xsl:if test="/blog/lowBandwidthMode">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.highBandwith" />
+          </xsl:if>
         </xsl:if>
 
         <div class="blogCalenderCont">
