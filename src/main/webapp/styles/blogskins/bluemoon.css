@@ -212,3 +212,7 @@ div.urlInputCont {
 span.descrText a {
     color: #ffffff;
 }
+
+.icon-remove::after {
+	color: #ff0000;
+}

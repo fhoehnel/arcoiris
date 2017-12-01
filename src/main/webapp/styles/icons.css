@@ -129,6 +129,14 @@ a.icon-font {
 	content: '\f093';
 }
 
+.icon-signal:before {
+	content: '\f012';
+}
+
+.icon-wifi:before {
+	content: '\f1eb';
+}
+
 .icon-exit:before {
 	content: '\f08b';
 }

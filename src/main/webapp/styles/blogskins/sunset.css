@@ -138,3 +138,7 @@ div.blogEditHead {
 div.urlInputCont {
     background-color: #ffffe0;;
 }
+
+.icon-remove::after {
+	color: #ff0000;
+}

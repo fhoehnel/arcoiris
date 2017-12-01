@@ -1900,6 +1900,18 @@ function attachFile(fileName, posInPage) {
     	uploadAttachment(this.files[0], fileName);
     };
     uploadForm.appendChild(fileInput);
+
+    var buttonCont = document.createElement("div");
+    buttonCont.setAttribute("class", "buttonCont");
+    uploadCont.appendChild(buttonCont);
+    
+    var closeButton = document.createElement("input");
+    closeButton.setAttribute("type", "button");
+    closeButton.setAttribute("value", resourceBundle["button.closewin"]);
+    closeButton.onclick = function() {
+    	uploadCont.parentNode.removeChild(uploadCont);
+    };
+    buttonCont.appendChild(closeButton);
     
     centerBox(uploadCont);
 }
