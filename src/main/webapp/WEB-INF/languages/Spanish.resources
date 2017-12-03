@@ -268,8 +268,8 @@ blog.emptyLinkData=¡El texto y la URL del enlace pueden no estar vacías!
 blog.sortOrder=orden de clasificación
 blog.sortOrderBlog=blog (el más reciente primero)
 blog.sortOrderDiary=diario (lo más viejo primero)
-blog.lowBandwith=modo de red lenta
-blog.highBandwith=modo de red rápida
+blog.lowBandwith=cambiar a modo de red lenta
+blog.highBandwith=cambiar a modo de red rápida
 
 upload.attachment.headline=adjuntar un archivo
 upload.attachment.label=selecciona archivo

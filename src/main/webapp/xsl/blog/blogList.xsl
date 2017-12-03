@@ -89,6 +89,11 @@
       
       <script type="text/javascript">
         var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
+        
+        var lowBandwidthMode = false;
+        <xsl:if test="/blog/lowBandwidthMode">
+          lowBandwidthMode = true;
+        </xsl:if>
       
         function setCalendarStyles() 
         {
@@ -183,10 +188,10 @@
           <a href="javascript:showSearchForm()" class="icon-font icon-search blogMenu" titleResource="blog.search" />
           
           <xsl:if test="not(/blog/lowBandwidthMode)">
-            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.lowBandwith" />
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.lowBandwith" />
           </xsl:if>
           <xsl:if test="/blog/lowBandwidthMode">
-            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.highBandwith" />
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.highBandwith" />
           </xsl:if>
         </xsl:if>
 
