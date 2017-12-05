@@ -22,23 +22,11 @@ var pictureFileSize = 0;
 
 var firefoxDragDrop = existFileReader();
 
-var SINGLE_FILE_MAX_SIZE;
-
 var uploadStartedByButton = false;
 
 var publicUrl = null;
 
 var lastScrollPos = 0;
-      
-if (browserFirefox)
-{
-    // SINGLE_FILE_MAX_SIZE = 134217728;
-    SINGLE_FILE_MAX_SIZE = 500000000;
-}
-else 
-{
-    SINGLE_FILE_MAX_SIZE = 999999999;
-}
 
 function existFileReader()
 {
@@ -63,8 +51,7 @@ function isPictureFile(fileType) {
     return((lowerCaseFileType.indexOf("jpg") >= 0) ||
            (lowerCaseFileType.indexOf("jpeg") >= 0) ||
            (lowerCaseFileType.indexOf("gif") >= 0) ||
-           (lowerCaseFileType.indexOf("png") >= 0) ||
-           (lowerCaseFileType.indexOf("bmp") >= 0));
+           (lowerCaseFileType.indexOf("png") >= 0));
 }
 
 function selectedDuplicate(fileName) {

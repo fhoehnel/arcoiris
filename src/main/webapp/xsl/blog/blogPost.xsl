@@ -94,6 +94,8 @@
   
         var cal1x = new CalendarPopup("calDiv");
         
+        var SINGLE_FILE_MAX_SIZE = <xsl:value-of select="/blog/uploadLimit" />;
+        
         function setInitialDate() {
             var now = new Date();
         

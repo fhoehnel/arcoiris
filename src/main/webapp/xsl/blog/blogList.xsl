@@ -96,7 +96,7 @@
         </xsl:if>
       
         var ATTACHMENT_MAX_SIZE = <xsl:value-of select="/blog/attachmentMaxSize" />;
-      
+        
         function setCalendarStyles() 
         {
             if (browserFirefox) 

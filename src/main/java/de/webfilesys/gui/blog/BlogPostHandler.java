@@ -63,6 +63,8 @@ public class BlogPostHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(geoTagElement, "googleMapsAPIKey", googleMapsAPIKey, false);
         }
         
+        XmlUtil.setChildText(blogElement, "uploadLimit", Long.toString(ArcoirisBlog.getInstance().getUploadLimit()));
+        
         processResponse("blog/blogPost.xsl", req, true);
     }
 

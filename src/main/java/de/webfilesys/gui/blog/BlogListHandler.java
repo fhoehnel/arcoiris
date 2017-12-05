@@ -82,7 +82,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         }
 
         XmlUtil.setChildText(blogElement, "attachmentMaxSize", Long.toString(ArcoirisBlog.getInstance().getAttachmentMaxSize()));
-        
+
         String posInPage = req.getParameter("posInPage");
         
         if ((posInPage != null) && (!posInPage.isEmpty())) {
