@@ -165,6 +165,7 @@ blog.createPostHeadline=post a new blog entry
 blog.editPostHeadline=edit blog entry
 blog.uploadDropZone=Drag and drop picture file for upload here!
 blog.uploadFileNames=selected pictures
+blog.noPictureFile=Select only picture files for upload (JPEG, PNG, GIF)!
 blog.sendPostButton=Send
 blog.cancelButton=Cancel
 blog.calendarTitle=select date from calendar

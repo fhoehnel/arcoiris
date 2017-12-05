@@ -166,6 +166,7 @@ blog.createPostHeadline=publicar una nueva entrada de blog
 blog.editPostHeadline=editar la entrada de blog
 blog.uploadDropZone=¡Arrastrar y soltar archivos para la carga aqui!
 blog.uploadFileNames=imagenes seleccionadas
+blog.noPictureFile=¡Seleccione solo archivos de imagen (JPEG, PNG, GIF)!
 blog.sendPostButton=Enviar
 blog.cancelButton=Cancelar
 blog.calendarTitle=seleccione la fecha del calendario

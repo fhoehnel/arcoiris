@@ -168,51 +168,55 @@ function handleFiles(files) {
             fileName = file.name
             fileSize = file.size;
         }
-              
-        if (file.size > SINGLE_FILE_MAX_SIZE) {
-            alert(fileName + ': ' + resourceBundle["blog.uploadFileTooLarge"]);
+             
+        if (!isPictureFile(file.type)) {
+        	alert(fileName + ': ' + resourceBundle["blog.noPictureFile"]);
         } else {
-            if (!selectedDuplicate(fileName)) {
-                if (!browserSafari) {
-                    var hintText = document.getElementById("dragDropHint");
-                    if (hintText) {
-                        dropZone.removeChild(hintText);
+            if (file.size > SINGLE_FILE_MAX_SIZE) {
+                alert(fileName + ': ' + resourceBundle["blog.uploadFileTooLarge"]);
+            } else {
+                if (!selectedDuplicate(fileName)) {
+                    if (!browserSafari) {
+                        var hintText = document.getElementById("dragDropHint");
+                        if (hintText) {
+                            dropZone.removeChild(hintText);
+                        }
                     }
+
+                    if (firefoxDragDrop) {  
+                          
+                        if (pictureFileSize < MAX_PICTURE_SIZE_SUM) {
+                            var img = document.createElement("img");  
+                          
+                            img.className += (img.className ? " " : "") + "uploadPreview";
+                          
+                            img.file = file;  
+                            dropZone.appendChild(img);  
+         
+                            var reader = new FileReader();  
+                            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);  
+                            reader.readAsDataURL(file);  
+                                  
+                            pictureFileSize += file.size;
+                         }
+                    } 
+                          
+                    var listElem = document.createElement("li");
+                          
+                    listElem.className += (listElem.className ? " " : "") + "selectedForUpload";
+                          
+                    var listElemText = document.createTextNode(fileName);
+                    listElem.appendChild(listElemText);
+                    uploadFileList.appendChild(listElem);
+                          
+                    selectedForUpload.push(file);
                 }
 
-                if (firefoxDragDrop && isPictureFile(file.type)) {  
-                      
-                    if (pictureFileSize < MAX_PICTURE_SIZE_SUM) {
-                        var img = document.createElement("img");  
-                      
-                        img.className += (img.className ? " " : "") + "uploadPreview";
-                      
-                        img.file = file;  
-                        dropZone.appendChild(img);  
-     
-                        var reader = new FileReader();  
-                        reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);  
-                        reader.readAsDataURL(file);  
-                              
-                        pictureFileSize += file.size;
-                     }
-                } 
-                      
-                var listElem = document.createElement("li");
-                      
-                listElem.className += (listElem.className ? " " : "") + "selectedForUpload";
-                      
-                var listElemText = document.createTextNode(fileName);
-                listElem.appendChild(listElemText);
-                uploadFileList.appendChild(listElem);
-                      
-                selectedForUpload.push(file);
+                /*
+                document.getElementById('selectedForUpload').style.visibility = 'visible';
+                document.getElementById('selectedForUpload').style.display = 'block';
+                */
             }
-
-            /*
-            document.getElementById('selectedForUpload').style.visibility = 'visible';
-            document.getElementById('selectedForUpload').style.display = 'block';
-            */
         }
     }  
 } 

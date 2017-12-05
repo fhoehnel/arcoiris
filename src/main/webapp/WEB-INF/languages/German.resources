@@ -165,6 +165,7 @@ blog.createPostHeadline=Neuen Blog-Eintrag erstellen
 blog.editPostHeadline=Blog-Eintrag bearbeiten
 blog.uploadDropZone=Drag and drop Bilddatei für Upload hier!
 blog.uploadFileNames=ausgewählte Bilder
+blog.noPictureFile=Nur Bild-Dateien (JPEG, PNG, GIF) sind erlaubt!
 blog.sendPostButton=Senden
 blog.cancelButton=Abbrechen
 blog.calendarTitle=Datum im Kalender auswählen
