@@ -52,6 +52,9 @@ public class ArcoirisBlog {
     // default upload limit: 32 MBytes
     private static final long DEFAULT_UPLOAD_LIMIT = (32l * 1024l * 1024l);
 
+    // default maximum attachment size: 8 MBytes
+    private static final long DEFAULT_ATTACHMENT_MAX_SIZE = (8l * 1024l * 1024l);
+    
     // default disk quota: 16 MB
     private static long DEFAULT_DISK_QUOTA = 16l * 1024l * 1024l;
 
@@ -119,6 +122,8 @@ public class ArcoirisBlog {
     private int diskQuotaCheckHour = 3;
 
     private long uploadLimit = DEFAULT_UPLOAD_LIMIT;
+
+    private long attachmentMaxSize = DEFAULT_ATTACHMENT_MAX_SIZE;
     
     private String googleMapsAPIKeyHTTP;
     private String googleMapsAPIKeyHTTPS;
@@ -213,6 +218,21 @@ public class ArcoirisBlog {
                 uploadLimit = Long.parseLong(temp);
             } catch (NumberFormatException nfex) {
                 Logger.getLogger(getClass()).warn("invalid upload limit ignored: " + temp);
+            }
+        }
+
+        temp = config.getProperty("AttachmentMaxSize");
+
+        if (temp != null) {
+            try {
+                attachmentMaxSize = Long.parseLong(temp);
+                
+                if (attachmentMaxSize > uploadLimit) {
+                    attachmentMaxSize = uploadLimit;
+                    Logger.getLogger(getClass()).warn("max attachment size may not be larger than the upload limit of " + uploadLimit);
+                }
+            } catch (NumberFormatException nfex) {
+                Logger.getLogger(getClass()).warn("invalid value for max attachment size ignored: " + temp);
             }
         }
 
@@ -541,6 +561,10 @@ public class ArcoirisBlog {
         return uploadLimit;
     }
 
+    public long getAttachmentMaxSize() {
+        return attachmentMaxSize;
+    }
+    
     public String getLoopbackAddress() {
         return LOOPBACK_ADDRESS;
     }

@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
+import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.Constants;
 import de.webfilesys.FileComparator;
 import de.webfilesys.GeoTag;
@@ -79,6 +80,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
         if (lowBandwidth != null) {
             XmlUtil.setChildText(blogElement, "lowBandwidthMode", "true");
         }
+
+        XmlUtil.setChildText(blogElement, "attachmentMaxSize", Long.toString(ArcoirisBlog.getInstance().getAttachmentMaxSize()));
         
         String posInPage = req.getParameter("posInPage");
         

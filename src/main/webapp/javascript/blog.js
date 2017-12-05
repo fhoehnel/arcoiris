@@ -4,8 +4,6 @@ var MAX_PICTURE_SIZE_SUM = 40000000;
 
 var MAX_BLOG_TEXT_LENGTH = 4096;
 
-var MAX_ATTACHMENT_SIZE = 8000000;
-
 var THUMB_SUBDIR_NAME = "_thumbnails400";
       
 var xhr;
@@ -1969,9 +1967,11 @@ function uploadAttachment(file, blogFileName) {
         fileSize = file.size;
     }
      
-    if (fileSize > MAX_ATTACHMENT_SIZE) {
-    	alert(resourceBundle["upload.attachment.sizeLimitExceeded"] + " " + MAX_ATTACHMENT_SIZE + " bytes.");
-    	var uploadCont = document.getElementById("uploadCont");
+	var uploadCont = document.getElementById("uploadCont");
+    uploadCont.style.visibility = "hidden";
+	
+	if (fileSize > ATTACHMENT_MAX_SIZE) {
+    	alert(resourceBundle["upload.attachment.sizeLimitExceeded"] + " " + ATTACHMENT_MAX_SIZE + " bytes.");
     	uploadCont.parentNode.removeChild(uploadCont);
     	return;
     }
@@ -1985,6 +1985,7 @@ function uploadAttachment(file, blogFileName) {
     document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
 
     var statusWin = document.getElementById("uploadStatus");
+    centerBox(statusWin);
     statusWin.style.visibility = 'visible';
 
     var now = new Date();
@@ -2021,9 +2022,6 @@ function handleAttachmentUploadState() {
     if (xhr.readyState == 4) {
         document.getElementById("uploadStatus").style.visibility = 'hidden';
         
-        var uploadCont = document.getElementById("uploadCont");
-        uploadCont.style.visibility = "hidden";
-
         if (xhr.status == 200) {
         	var posInPage = uploadCont.getAttribute("posInPage");
             var returnURL = getContextRoot() + "/servlet?command=blog&cmd=list&random=" + ((new Date()).getTime()) + "#entry-" + posInPage;
