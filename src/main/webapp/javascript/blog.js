@@ -1122,6 +1122,7 @@ function showSubscribers() {
         
     htmlFragmentByXslt(xmlUrl, xslUrl, subscribeCont, function() {
         setBundleResources();
+        centerBox(subscribeCont);
         subscribeCont.style.visibility = "visible";
     });
 }
