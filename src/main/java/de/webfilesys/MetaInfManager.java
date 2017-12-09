@@ -474,7 +474,7 @@ public class MetaInfManager extends Thread {
 
             Document doc = metaInfElement.getOwnerDocument();
 
-            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "comments");
+            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
 
             if (attachmentListElement == null) {
                 attachmentListElement = doc.createElement("attachments");
