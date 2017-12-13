@@ -56,8 +56,6 @@ public class BlogAppServlet extends BlogWebServlet {
     }
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
-        LOG.debug("blog entry posted by Android app");
-
         // prevent caching
         resp.setDateHeader("expires", 0l);
         resp.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate, no-store");
@@ -83,6 +81,8 @@ public class BlogAppServlet extends BlogWebServlet {
 
         String command = requestPath.substring(delIdx + 1, lastPathDelimiterIdx);
 
+        LOG.debug("command posted by Android app: " + command);
+        
         /*
          * if (command.equals("authenticate")) { return; }
          */
@@ -101,6 +101,13 @@ public class BlogAppServlet extends BlogWebServlet {
         if (command.equals("picture")) {
             reveicePicture(req, resp, userid, currentPath, fileName);
         } else if (command.equals("description")) {
+            
+            /*
+            if (System.currentTimeMillis() > 1l) {
+                throw new ServletException("test exception");
+            }
+            */
+            
             receiveDescription(req, resp, currentPath, fileName);
 
             String path = currentPath.replace('/', File.separatorChar);
@@ -115,7 +122,7 @@ public class BlogAppServlet extends BlogWebServlet {
                 }
             }
         } else if (command.equals("publish")) {
-            receivePublishParams(req, resp);
+            receiveAndIgnoreParams(req, resp);
             String path = currentPath.replace('/', File.separatorChar);
             if (MetaInfManager.getInstance().isStagedPublication(path)) {
                 MetaInfManager.getInstance().setStatus(path, fileName, MetaInfManager.STATUS_BLOG_PUBLISHED);
@@ -125,6 +132,27 @@ public class BlogAppServlet extends BlogWebServlet {
                     InvitationManager.getInstance().notifySubscribers(accessCode);
                 } else {
                     Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
+                }
+            }
+        } else if (command.equals("cancel")) {
+            receiveAndIgnoreParams(req, resp);
+            
+            String osDepPath = currentPath.replace('/', File.separatorChar);
+            
+            File fileToCancel = new File(osDepPath, fileName);
+            
+            if (fileToCancel.exists()) {
+                MetaInfManager.getInstance().removeDescription(fileToCancel.getAbsolutePath());
+
+                if (fileToCancel.delete()) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("entry canceled by app: " + fileName);
+                    }
+                    if (!BlogThumbnailHandler.getInstance().deleteThumbnail(fileToCancel.getAbsolutePath())) {
+                        LOG.warn("failed to delete thumbnail for canceled entry " + fileName);
+                    }
+                } else {
+                    LOG.error("failed to delete picture file for entry canceled by app: " + fileName);
                 }
             }
         } else {
@@ -316,7 +344,7 @@ public class BlogAppServlet extends BlogWebServlet {
         BlogThumbnailHandler.getInstance().createBlogThumbnail(origImgPath);
     }
 
-    private void receivePublishParams(HttpServletRequest req, HttpServletResponse resp) {
+    private void receiveAndIgnoreParams(HttpServletRequest req, HttpServletResponse resp) {
         InputStreamReader isr = null;
         BufferedReader bufferedIn = null;
 
@@ -327,7 +355,7 @@ public class BlogAppServlet extends BlogWebServlet {
             // currently there are no parameters processed
             bufferedIn.readLine();
         } catch (IOException ex) {
-            LOG.error("failed to read publish params", ex);
+            LOG.error("failed to read params", ex);
         } finally {
             if (bufferedIn != null) {
                 try {
