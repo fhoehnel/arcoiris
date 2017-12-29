@@ -505,6 +505,14 @@ public class CommonUtils {
         return partsOfPath;
     }
 
+    public static String joinFilesysPath(String part1, String part2) {
+        
+        if (part1.endsWith(File.separator)) {
+            return part1 + part2;
+        }
+        return part1 + File.separatorChar + part2;
+    }
+    
     public static String filterForbiddenChars(String text) {
         StringBuffer cleanText = new StringBuffer();
 
