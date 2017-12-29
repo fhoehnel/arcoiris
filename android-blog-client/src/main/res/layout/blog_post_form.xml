@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="android.webfilesys.de.webfilesysblog.MainActivity"
+    tools:context="de.arcoiris.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <ScrollView android:id="@+id/ScrollView02"
@@ -23,15 +23,35 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
 
-            <Button
-                android:id="@+id/pick_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="32sp"
-                android:textColor="#202020"
-                android:textSize="16sp"
-                android:background="@drawable/button_border"
-                android:layout_marginBottom="10px"
-                android:text="@string/buttonPickImage" />
+            <LinearLayout
+                android:drawingCacheQuality="low"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/pick_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32sp"
+                    android:textColor="#202020"
+                    android:textSize="16sp"
+                    android:background="@drawable/button_border"
+                    android:layout_marginBottom="10px"
+                    android:text="@string/buttonPickImage" />
+
+                <Button
+                    android:id="@+id/pickDateButton"
+                    android:layout_width="wrap_content"
+                    android:text="@string/buttonPickDate"
+                    android:layout_height="32sp"
+                    android:textColor="#202020"
+                    android:textSize="16sp"
+                    android:background="@drawable/button_border"
+                    android:layout_marginBottom="10px"
+                    android:layout_marginLeft="20px"
+                    android:onClick="showDatePickerDialog" />
+
+            </LinearLayout>
 
             <View
                 android:background="#00000000"
@@ -51,16 +71,6 @@
                     android:layout_width="400px"
                     android:layout_height="400px" />
 
-                <ProgressBar
-                    android:id="@+id/progressBar1"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="40dp"
-                    android:indeterminate="true"
-                    android:progress="1" />
             </LinearLayout>
 
             <LinearLayout

@@ -27,6 +27,7 @@ input.blogUploadFileSelButton,
 #subscribeCont input[type="button"],
 #searchResultCont input[type="button"],
 #searchFormCont input[type="button"],
+#changePosCont input[type="button"],
 div.urlInput input[type="button"] {
     height: 32px;
     background: linear-gradient(#d0d0d0, #f0f0f0);
@@ -34,6 +35,11 @@ div.urlInput input[type="button"] {
     border-width: 1px;
     font-size: 1rem;
 }
+
+#changePosCont input[type="button"]:disabled {
+    color: #808080; 
+}
+
 
 body.blog input[type="button"]:focus {
     outline: none;
@@ -284,9 +290,18 @@ div.blogPagingCont {
 .icon-blog-rotate:before,
 .icon-blog-move:before,
 .icon-blog-titlePic:before,
+.icon-blog-attachment:before,
+.icon-blog-file:before,
 .icon-blog-like:before {
 	color: #000060;
     font-size: 24px;
+}
+
+.icon-remove:after {
+	content: '\2A09';
+	color: #a00000;
+	font-size: 12px;
+	font-weight: bold;
 }
 
 a.icon-blog-edit,
@@ -439,7 +454,8 @@ table.blogCommentForm {
 }
 
 div.commentContHead,
-div.blogSettingsHead {
+div.blogSettingsHead,
+div.uploadContHead {
     font-size: 1rem;
     font-weight: bold;
     background-color: lavender;  
@@ -815,6 +831,57 @@ div.urlInput span {
 
 div.urlInput div.buttonCont {
 	padding-top: 12px;
+}
+
+div.uploadCont {
+	width: 400px;
+	height: 220px;
+    background-color: #ffffe0;
+    border: 2px ridge #808080;
+	position: absolute;
+}
+
+div.uploadLabel {
+	padding: 20px 0 0 16px;
+}
+
+form.uploadAttachmentForm {
+	padding: 16px;
+	border-bottom: 1px solid #a0a0a0;
+	margin-bottom: 0;
+}
+
+form.uploadAttachmentForm input {
+	height: 32px;
+	padding: 0;
+	width: 100%;
+}
+
+div.changePosCont {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 300px;
+    height: 270px;
+    border: 2px ridge #808080;
+    background-color: #ffffe0;
+    visibility: hidden;
+}
+
+div.changePosCont .buttonCont,
+div.uploadCont .buttonCont {
+    padding: 20px 0;
+    text-align: center;
+}
+
+div.targetPosCont {
+	padding: 20px 20px 20px 20px;
+	border-bottom: 1px solid #a0a0a0;
+}
+
+form.uploadAttachmentForm input[type="file"] {
+	background-color: transparent;
+	border: 0;
 }
 
 @media (max-width: 500px) {

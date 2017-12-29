@@ -9,7 +9,9 @@ import javax.servlet.http.HttpSession;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
+import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
+import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
 public class BlogPostHandler extends XslRequestHandlerBase {
@@ -50,6 +52,19 @@ public class BlogPostHandler extends XslRequestHandlerBase {
             zoomLevelElement.appendChild(zoomFactorElement);
         }
 
+        String googleMapsAPIKey = null;
+        if (req.getScheme().equalsIgnoreCase("https")) {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+        } else {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+        }
+        
+        if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+            XmlUtil.setChildText(geoTagElement, "googleMapsAPIKey", googleMapsAPIKey, false);
+        }
+        
+        XmlUtil.setChildText(blogElement, "uploadLimit", Long.toString(ArcoirisBlog.getInstance().getUploadLimit()));
+        
         processResponse("blog/blogPost.xsl", req, true);
     }
 

@@ -210,6 +210,8 @@ public class XslRequestHandlerBase extends UserRequestHandler {
     public void processResponse(String xslFile, HttpServletRequest req, boolean handleMozillaXslBug) {
         XmlUtil.setChildText(doc.getDocumentElement(), "contextRoot", req.getContextPath());
 
+        // XmlUtil.writeToStream(doc, new PrintWriter(System.out));
+        
         if ((session != null) && isBrowserXslEnabled())
         // && ((!handleMozillaXslBug) || (browserManufacturer !=
         // BROWSER_MOZILLA)))

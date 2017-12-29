@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
+import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.GeoTag;
 import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
@@ -133,6 +134,17 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
             }
 
             zoomFactor = geoTag.getZoomFactor();
+            
+            String googleMapsAPIKey = null;
+            if (req.getScheme().equalsIgnoreCase("https")) {
+                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+            } else {
+                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+            }
+            
+            if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+                XmlUtil.setChildText(geoTagElement, "googleMapsAPIKey", googleMapsAPIKey, false);
+            }
         }
 
         Element zoomLevelElem = doc.createElement("zoomLevel");

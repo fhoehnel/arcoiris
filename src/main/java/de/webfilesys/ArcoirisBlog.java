@@ -39,7 +39,7 @@ import de.webfilesys.util.CommonUtils;
 public class ArcoirisBlog {
     private static ArcoirisBlog instance = null;
 
-    public static final String VERSION = "Version 2.17.0 (12 July 2017)";
+    public static final String VERSION = "Version 2.18.0 (29 Dec 2017)";
 
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
@@ -52,6 +52,9 @@ public class ArcoirisBlog {
     // default upload limit: 32 MBytes
     private static final long DEFAULT_UPLOAD_LIMIT = (32l * 1024l * 1024l);
 
+    // default maximum attachment size: 8 MBytes
+    private static final long DEFAULT_ATTACHMENT_MAX_SIZE = (8l * 1024l * 1024l);
+    
     // default disk quota: 16 MB
     private static long DEFAULT_DISK_QUOTA = 16l * 1024l * 1024l;
 
@@ -119,6 +122,11 @@ public class ArcoirisBlog {
     private int diskQuotaCheckHour = 3;
 
     private long uploadLimit = DEFAULT_UPLOAD_LIMIT;
+
+    private long attachmentMaxSize = DEFAULT_ATTACHMENT_MAX_SIZE;
+    
+    private String googleMapsAPIKeyHTTP;
+    private String googleMapsAPIKeyHTTPS;
 
     private SimpleDateFormat logDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -210,6 +218,21 @@ public class ArcoirisBlog {
                 uploadLimit = Long.parseLong(temp);
             } catch (NumberFormatException nfex) {
                 Logger.getLogger(getClass()).warn("invalid upload limit ignored: " + temp);
+            }
+        }
+
+        temp = config.getProperty("AttachmentMaxSize");
+
+        if (temp != null) {
+            try {
+                attachmentMaxSize = Long.parseLong(temp);
+                
+                if (attachmentMaxSize > uploadLimit) {
+                    attachmentMaxSize = uploadLimit;
+                    Logger.getLogger(getClass()).warn("max attachment size may not be larger than the upload limit of " + uploadLimit);
+                }
+            } catch (NumberFormatException nfex) {
+                Logger.getLogger(getClass()).warn("invalid value for max attachment size ignored: " + temp);
             }
         }
 
@@ -339,6 +362,16 @@ public class ArcoirisBlog {
             }
         }
 
+        googleMapsAPIKeyHTTP = config.getProperty("GoogleMapsAPIKeyHTTP");
+        if (CommonUtils.isEmpty(googleMapsAPIKeyHTTP)) {
+            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTP (missing config property GoogleMapsAPIKeyHTTP)");
+        }
+        
+        googleMapsAPIKeyHTTPS = config.getProperty("GoogleMapsAPIKeyHTTPS");
+        if (CommonUtils.isEmpty(googleMapsAPIKeyHTTPS)) {
+            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTPS (missing config property GoogleMapsAPIKeyHTTPS)");
+        }
+        
         primaryLanguage = config.getProperty("primaryLanguage", LanguageManager.DEFAULT_LANGUAGE);
 
         contextRoot = config.getProperty("contextRoot", "/blog");
@@ -528,6 +561,10 @@ public class ArcoirisBlog {
         return uploadLimit;
     }
 
+    public long getAttachmentMaxSize() {
+        return attachmentMaxSize;
+    }
+    
     public String getLoopbackAddress() {
         return LOOPBACK_ADDRESS;
     }
@@ -563,4 +600,13 @@ public class ArcoirisBlog {
     public String getContextRoot() {
         return contextRoot;
     }
+    
+    public String getGoogleMapsAPIKeyHTTP() {
+        return googleMapsAPIKeyHTTP;
+    }
+
+    public String getGoogleMapsAPIKeyHTTPS() {
+        return googleMapsAPIKeyHTTPS;
+    }
+    
 }

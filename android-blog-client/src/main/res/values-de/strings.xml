@@ -4,9 +4,12 @@
     <string name="action_settings">Einstellungen</string>
     <string name="buttonClose">Schliessen</string>
     <string name="buttonPickImage">Bild wählen</string>
+    <string name="buttonPickDate">Datum wählen</string>
     <string name="buttonSaveSettings">Weiter</string>
     <string name="buttonSendPost">Senden</string>
     <string name="buttonSendPublish">Senden &amp; Publizieren</string>
+    <string name="buttonSaveOffline">Speichern</string>
+    <string name="buttonSavePublish">Speichern &amp; Publ. </string>
     <string name="noImageSelected">kein Bild ausgewählt</string>
 
     <string name="labelPassword">arcoiris Passwort:</string>
@@ -15,6 +18,10 @@
     <string name="optionMenuAbout">Über arcoiris blog App</string>
     <string name="optionMenuExit">Beenden</string>
     <string name="optionMenuSettings">Einstellungen</string>
+    <string name="optionMenuSendQueued">Senden</string>
+
+    <string name="youAreOffline">Keine Netzwerkverbindung!</string>
+    <string name="workOffline">offline arbeiten</string>
 
     <string name="missingParameters">Bitte füllen Sie die Pflichtfelder aus!</string>
 
@@ -23,6 +30,15 @@
 
     <string name="postSuccess">erfolgreich gesendet</string>
     <string name="postFailed">Senden ist fehlgeschlagen!</string>
+    <string name="saveSuccess">Der Blog-Eintrag wurde offline gespeichert.</string>
+
+    <string name="notLoggedIn">Sie sind auf keinem Blog-Server eingeloggt.</string>
+
+    <string name="sendingQueuedEntries">Offline gespeicherte Einträge werden versandt.</string>
+    <string name="queuedEntriesSent">offline gespeicherte Einträge wurden versandt.</string>
+
+    <string name="wentOffline">Die Netzwerkverbindung ist unterbrochen. Sie arbeiten jetzt offline.</string>
+    <string name="backOnline">Eine Netzwerkverbindung ist jetzt verfügbar. Um online zu gehen, loggen Sie sich unter Einstellungen im Hauptmenü ein.</string>
 
     <string name="buttonSelectGeoLocation">Lokation auf Karte auswählen</string>
     <string name="buttonChangeGeoLocation">Lokation ändern</string>
@@ -37,5 +53,20 @@
     <string name="authenticationFailed">Das Login am Server ist fehlgeschlagen wegen ungültigem Nutzer oder Passwort.</string>
     <string name="communicationFailure">Das Login am Server ist fehlgeschlagen wegen Kommunikations-Problemen. Bitte überprüfen Sie die URL des arcoiris blog Servers!</string>
     <string name="connecting">verbinde zum Server ...</string>
+
+    <string name="sendStatusTitle">Sende neuen Eintrag zum Server ...</string>
+
+    <string name="sendErrorTitle">Fehler beim Senden</string>
+    <string name="sendErrorDetail">Der neue Blog-Eintrag konnte nicht zum Server gesendet werden.</string>
+
+    <string name="noQueuedEntriesToSend">Es existieren keine offline gespeicherten Einträge für die authentifizierten Blog-Nutzer.</string>
+    <string name="confirmSendQueuedTitle">Senden gespeicherter Einträge</string>
+    <string name="confirmSendQueuedPart1">Es existieren</string>
+    <string name="confirmSendQueuedPart2">offline gespeicherte Einträge für die authentifizierten Blog-Nutzer. Sollen sie jetzt gesendet werden?</string>
+    <string name="buttonOk">Ok</string>
+    <string name="buttonCancel">Abbrechen</string>
+
+    <string name="offlineQueueHeadline">Offline gespeicherte Einträge</string>
+    <string name="optionMenuShowQueued">Offline-Einträge anzeigen</string>
 
 </resources>

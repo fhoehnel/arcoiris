@@ -14,6 +14,8 @@ label.logon=Anmelden
 label.about=arcoiris blog info
 label.of=von
 label.file=Datei
+label.edit=Eintrag bearbeiten
+label.delete=Eintrag löschen
 
 # common buttons
 button.create=Anlegen
@@ -27,6 +29,7 @@ button.previous=Zurück
 button.reload=Neu laden
 button.close=Abbrechen
 button.closeMap=Schliessen
+button.copyToClip=Kopieren in Zwischenablage
 
 # upload parameter window labels
 label.uploadfile=Datei-Upload
@@ -130,6 +133,7 @@ selectMapType=- Kartentyp wählen -
 mapTypeOSM=Open Street Maps
 mapTypeGoogleMap=Google Maps
 mapTypeGoogleEarth=Google Earth
+geoTrackLink=GPS Track
 label.googleEarthAllFiles=Geographische Position aller Bilder in Google Earth anzeigen
 label.OSMapAllFiles=Geographische Position aller Bilder in Open Street Maps anzeigen
 label.googleMapAllFiles=Geographische Position aller Bilder in Google Maps anzeigen
@@ -162,6 +166,7 @@ blog.createPostHeadline=Neuen Blog-Eintrag erstellen
 blog.editPostHeadline=Blog-Eintrag bearbeiten
 blog.uploadDropZone=Drag and drop Bilddatei für Upload hier!
 blog.uploadFileNames=ausgewählte Bilder
+blog.noPictureFile=Nur Bild-Dateien (JPEG, PNG, GIF) sind erlaubt!
 blog.sendPostButton=Senden
 blog.cancelButton=Abbrechen
 blog.calendarTitle=Datum im Kalender auswählen
@@ -199,7 +204,16 @@ blog.newPasswdConfirm=neues Passwort (Wiederholung)
 blog.invalidDaysPerPage=Der Wert für Tage je Seite muss eine Zahl zwischen 1 und 64 sein!
 blog.moveUp=nach oben verschieben
 blog.moveDown=nach unten verschieben
+blog.changePosition=Eintrag an eine bestimmte Position verschieben
+blog.targetPosition=Neue Position auswählen
+blog.targetPosTop=ganz oben
+blog.targetPosBottom=ganz unten
+blog.newPosInDay=Position
 blog.makeTitlePic=dieses Bild als Titelbild des Blog setzen
+blog.attach=Datei anhängen
+blog.detach=Dateianhang entfernen
+blog.confirmDetach=Dateianhang wirklich entfernen?
+blog.viewAttach=Dateianhang anzeigen
 blog.confirmSetTitlePic=Dieses Bild als Titelbild des Blog setzen?
 blog.unsetTitlePic=Titelbild des Blog entfernen
 blog.confirmUnsetTitlePic=Titelbild des Blog entfernen?
@@ -255,6 +269,12 @@ blog.emptyLinkData=Text und URL des Links dürfen nicht leer sein!
 blog.sortOrder=Sortierung
 blog.sortOrderBlog=Blog (neueste zuerst)
 blog.sortOrderDiary=Tagebuch (älteste zuerst)
+blog.lowBandwith=zu Modus für langsame Internetverbindung wechseln
+blog.highBandwith=zu Modus für schnelle Internetverbindung wechseln
+
+upload.attachment.headline=Datei anhängen
+upload.attachment.label=Datei auswählen
+upload.attachment.sizeLimitExceeded=Die Datei ist grösser als das Limit von
 
 error.latitudeInvalid=geografische Breite muss zwischen -90 und 90 liegen
 error.longitudeInvalid=geografische Länge muss zwischen -180.0 und 180.0 liegen

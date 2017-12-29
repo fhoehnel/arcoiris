@@ -112,10 +112,15 @@
 	
     }  
     
-    function loadGoogleMapsAPIScriptCode() {
+    function loadGoogleMapsAPIScriptCode(googleMapsAPIKey) {
         var script = document.createElement("script");
         script.type = "text/javascript";
-        script.src = "http://maps.google.com/maps/api/js?sensor=false&amp;callback=handleGoogleMapsApiReady";
+
+        if (window.location.href.indexOf("https") == 0) {
+            script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;key=" + googleMapsAPIKey;
+        } else {
+            script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;key=" + googleMapsAPIKey;
+        }        
         document.body.appendChild(script);
     }
     
@@ -138,7 +143,8 @@
 
 </head>
 
-<body onload="loadGoogleMapsAPIScriptCode()" style="margin:0px;height:100%;">
+<body style="margin:0px;height:100%;">
+  <xsl:attribute name="onload">loadGoogleMapsAPIScriptCode('<xsl:value-of select="/geoData/googleMapsAPIKey" />')</xsl:attribute>
 
   <div id="map" style="width:100%;height:100%;"></div>
   

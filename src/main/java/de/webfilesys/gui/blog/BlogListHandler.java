@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
+import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.Constants;
 import de.webfilesys.FileComparator;
 import de.webfilesys.GeoTag;
@@ -74,14 +75,21 @@ public class BlogListHandler extends XslRequestHandlerBase {
         if (readonly) {
             XmlUtil.setChildText(blogElement, "readonly", "true", false);
         }
+        
+        Boolean lowBandwidth = (Boolean) session.getAttribute(BlogSwitchLowBandwidthHandler.SESSION_KEY_LOW_BANDWIDTH);
+        if (lowBandwidth != null) {
+            XmlUtil.setChildText(blogElement, "lowBandwidthMode", "true");
+        }
+
+        XmlUtil.setChildText(blogElement, "attachmentMaxSize", Long.toString(ArcoirisBlog.getInstance().getAttachmentMaxSize()));
 
         String posInPage = req.getParameter("posInPage");
-
+        
         if ((posInPage != null) && (!posInPage.isEmpty())) {
             XmlUtil.setChildText(blogElement, "posInPage", posInPage, false);
         }
 
-        String positionToFile = req.getParameter("positionToFile");
+        String positionToFile = getParameter("positionToFile");
 
         XmlUtil.setChildText(blogElement, "blogTitle", blogTitle, false);
 
@@ -128,7 +136,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         for (int i = 0; i < filesInDir.length; i++) {
             if (filesInDir[i].isFile() && filesInDir[i].canRead()) {
 
-                if (isPictureFile(filesInDir[i])) {
+                if (CommonUtils.isPictureFile(filesInDir[i])) {
 
                     if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
 
@@ -469,6 +477,17 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                                     XmlUtil.setChildText(fileElement, "imgPathForScript", srcPathForScript);
 
+                                    ArrayList<String> attachments = metaInfMgr.getListOfAttachments(file.getAbsolutePath());
+                                    
+                                    if ((attachments != null) && (attachments.size() > 0)) {
+                                        String attachmentFileName = attachments.get(0);
+                                        if (isGpsTrack(attachmentFileName)) {
+                                            XmlUtil.setChildText(fileElement, "geoTrack", attachments.get(0));
+                                        } else {
+                                            XmlUtil.setChildText(fileElement, "attachment", attachments.get(0));
+                                        }
+                                    }
+                                    
                                     GeoTag geoTag = metaInfMgr.getGeoTag(file.getAbsolutePath());
 
                                     if (geoTag != null) {
@@ -624,10 +643,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
         }
     }
 
-    private boolean isPictureFile(File file) {
-        String fileNameExt = CommonUtils.getFileExtension(file.getName());
-
-        return fileNameExt.equals(".jpg") || fileNameExt.equals(".jpeg") || fileNameExt.equals(".png") || fileNameExt.equals(".gif");
+    private boolean isGpsTrack(String attachmentFileName) {
+        return attachmentFileName.endsWith(".GPX") || attachmentFileName.endsWith(".gpx");
     }
 
 }

@@ -14,6 +14,8 @@ label.logon=Login
 label.about=about arcoiris blog
 label.of=of
 label.file=file
+label.edit=edit this entry
+label.delete=delete this entry
 
 # common buttons
 button.create=Create
@@ -27,6 +29,7 @@ button.previous=Previous
 button.reload=Reload
 button.close=Cancel
 button.closeMap=Close
+button.copyToClip=Copy to Clipboard
 
 # upload parameter window labels
 label.uploadfile=Upload File
@@ -130,6 +133,7 @@ selectMapType=- select map type -
 mapTypeOSM=Open Street Maps
 mapTypeGoogleMap=Google Maps
 mapTypeGoogleEarth=Google Earth
+geoTrackLink=view GPS track
 label.googleEarthAllFiles=Show geographic location of all pictures in Google Earth
 label.OSMapAllFiles=Show geographic location of all pictures in Open Street Map
 label.googleMapAllFiles=Show geographic location of all pictures in Google Maps
@@ -162,6 +166,7 @@ blog.createPostHeadline=post a new blog entry
 blog.editPostHeadline=edit blog entry
 blog.uploadDropZone=Drag and drop picture file for upload here!
 blog.uploadFileNames=selected pictures
+blog.noPictureFile=Select only picture files for upload (JPEG, PNG, GIF)!
 blog.sendPostButton=Send
 blog.cancelButton=Cancel
 blog.calendarTitle=select date from calendar
@@ -199,7 +204,16 @@ blog.newPasswdConfirm=confirm new password
 blog.invalidDaysPerPage=The value for days per page muste be a number between 1 and 64!
 blog.moveUp=move up
 blog.moveDown=move down
+blog.changePosition=move entry to an other position
+blog.targetPosTop=top of day
+blog.targetPosBottom=bottom of day
+blog.newPosInDay=position
+blog.targetPosition=Select target position
 blog.makeTitlePic=make this picture the blog title pic
+blog.attach=attach a file
+blog.detach=remove attachment
+blog.confirmDetach=Remove attachment?
+blog.viewAttach=view attachment
 blog.confirmSetTitlePic=Set this picture as the blog's title pic?
 blog.unsetTitlePic=unset the blog's title pic
 blog.confirmUnsetTitlePic=Unset the blog's title pic?
@@ -255,6 +269,12 @@ blog.emptyLinkData=Please enter a label and an URL for the link!
 blog.sortOrder=sort order
 blog.sortOrderBlog=blog (newest first)
 blog.sortOrderDiary=diary (oldest first)
+blog.lowBandwith=switch to slow network mode
+blog.highBandwith=switch to fast network mode
+
+upload.attachment.headline=attach file
+upload.attachment.label=select file
+upload.attachment.sizeLimitExceeded=The size of the file to attach exceeds the limit of
 
 error.latitudeInvalid=latitude must be a number between -90.0 and 90.0
 error.longitudeInvalid=longitude must be a number between -180.0 and 180.0

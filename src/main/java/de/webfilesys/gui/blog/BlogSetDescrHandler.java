@@ -132,6 +132,8 @@ public class BlogSetDescrHandler extends UserRequestHandler {
             }
         }
 
+        setParameter("positionToFile", firstUploadFileName);        
+        
         if (!metaInfMgr.isStagedPublication(currentPath)) {
             String accessCode = InvitationManager.getInstance().getInvitationCode(uid, currentPath);
 

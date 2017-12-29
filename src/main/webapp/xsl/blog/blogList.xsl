@@ -89,7 +89,14 @@
       
       <script type="text/javascript">
         var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
+        
+        var lowBandwidthMode = false;
+        <xsl:if test="/blog/lowBandwidthMode">
+          lowBandwidthMode = true;
+        </xsl:if>
       
+        var ATTACHMENT_MAX_SIZE = <xsl:value-of select="/blog/attachmentMaxSize" />;
+        
         function setCalendarStyles() 
         {
             if (browserFirefox) 
@@ -179,7 +186,15 @@
           <a href="#" class="icon-font icon-menu blogMenu" titleResource="blog.settingsHeadline">
             <xsl:attribute name="onClick">showSettings()</xsl:attribute>
           </a>
+          
           <a href="javascript:showSearchForm()" class="icon-font icon-search blogMenu" titleResource="blog.search" />
+          
+          <xsl:if test="not(/blog/lowBandwidthMode)">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.lowBandwith" />
+          </xsl:if>
+          <xsl:if test="/blog/lowBandwidthMode">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.highBandwith" />
+          </xsl:if>
         </xsl:if>
 
         <div class="blogCalenderCont">
@@ -373,12 +388,34 @@
                   </a>
                 </xsl:if>
 
+                <xsl:if test="not ((position() = last()) and (position() = 1))">
+                  &#160;
+                  <a class="icon-font icon-move icon-blog-move" titleResource="blog.changePosition">
+                    <xsl:attribute name="href">javascript:changeBlogEntryPosition('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </a>
+                </xsl:if>
+
                 <xsl:if test="not(staged)">
                   &#160;
                   <a href="#" id="titlePicIcon" class="icon-font icon-heart icon-blog-titlePic" titleResource="blog.makeTitlePic">
                     <xsl:attribute name="onClick">setTitlePic('<xsl:value-of select="@name" />')</xsl:attribute>
                   </a>
                 </xsl:if>
+                
+                &#160;
+                <a href="javascript:void(0)">
+                  <xsl:attribute name="id">attachment-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                  <xsl:if test="attachment or geoTrack">
+                    <xsl:attribute name="class">icon-font icon-attachment icon-blog-attachment icon-remove</xsl:attribute>
+                    <xsl:attribute name="titleResource">blog.detach</xsl:attribute>
+                    <xsl:attribute name="onClick">detachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="not(attachment or geoTrack)">
+                    <xsl:attribute name="class">icon-font icon-attachment icon-blog-attachment</xsl:attribute>
+                    <xsl:attribute name="titleResource">blog.attach</xsl:attribute>
+                    <xsl:attribute name="onClick">attachFile('<xsl:value-of select="@name" />', '<xsl:value-of select="pagePicCounter" />')</xsl:attribute>
+                  </xsl:if>
+                </a>
                 
               </xsl:if>
               
@@ -399,7 +436,6 @@
 
               </xsl:if>
               
-              
               <xsl:if test="/blog/readonly and ratingAllowed">
                 &#160;
 
@@ -415,28 +451,48 @@
               </xsl:if>
               
               
-              <xsl:if test="geoTag">
+              <xsl:if test="geoTag or geoTrack or attachment">
  
                 <div>
-                  <div>
-                    <xsl:attribute name="id">mapIcon-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
-                    <a class="blogGeoTagLink">
-                      <xsl:attribute name="href">javascript:showMapSelection('<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
-                      <span resource="geoMapLinkShort"></span>
-                    </a>
-                  </div>
+                  <xsl:if test="geoTag">
+                    <div>
+                      <xsl:attribute name="id">mapIcon-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                      <a class="blogGeoTagLink">
+                        <xsl:attribute name="href">javascript:showMapSelection('<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                        <span resource="geoMapLinkShort"></span>
+                      </a>
+                    </div>
                   
-                  <select class="pictureAlbum">
-                    <xsl:attribute name="id">geoLocSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
-                    <xsl:attribute name="onchange">geoMapFileSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
-                    <option value="0" resource="selectMapType" />
-                    <option value="1" resource="mapTypeOSM" />
-                    <option value="2" resource="mapTypeGoogleMap" />
-                    <option value="3" resource="mapTypeGoogleEarth" />
-                  </select>
+                    <select class="pictureAlbum">
+                      <xsl:attribute name="id">geoLocSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                      <xsl:attribute name="onchange">geoMapFileSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                      <option value="0" resource="selectMapType" />
+                      <option value="1" resource="mapTypeOSM" />
+                      <option value="2" resource="mapTypeGoogleMap" />
+                      <option value="3" resource="mapTypeGoogleEarth" />
+                    </select>
+                  </xsl:if>
+
+                  <xsl:if test="geoTrack">
+                    <a class="blogGeoTagLink">
+                      <xsl:attribute name="id">geoTrackLink-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                      <xsl:attribute name="href">javascript:void(0)</xsl:attribute>
+                      <xsl:attribute name="onclick">viewGeoTrack('<xsl:value-of select="@name" />', '<xsl:value-of select="geoTrack" />')</xsl:attribute>
+                      <span resource="geoTrackLink"></span>
+                    </a>
+                  </xsl:if>
+
+                  <xsl:if test="attachment">
+                    <a href="javascript:void(0)" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
+                      <xsl:attribute name="id">viewAttachmentIcon-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
+                      <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                    </a>
+                  </xsl:if>
+
                 </div>  
                   
               </xsl:if>
+              
             </div>      
         
           </xsl:for-each>
@@ -553,6 +609,46 @@
           </ul>
         </form>
     </div>
+    
+    <xsl:if test="not(/blog/readonly)">
+    
+      <div id="uploadStatus" class="uploadStatus" style="visibility:hidden">
+        <table border="0" width="100%" cellpadding="2" cellspacing="0">
+          <tr>
+            <th class="headline" style="border-width:0;border-bottom-width:1px;" resource="label.uploadStatus"></th>
+          </tr>
+        </table>
+	
+	    <div id="currentFile" class="uploadStatusCurrentFile"></div>
+  
+        <center>
+
+          <div class="uploadStatusBar">
+            <img id="done" width="1" height="20" border="0">
+              <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/bluedot.gif</xsl:attribute>
+            </img>
+            <img id="todo" width="299" height="20" border="0">  
+              <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/space.gif</xsl:attribute>
+            </img>
+          </div>
+
+          <table border="0" cellspacing="0" cellpadding="0" style="width:300px">
+            <tr>
+              <td class="fileListData">
+                <div id="statusText" class="uploadStatusText">
+                  0 
+                  <span resource="label.of"></span>
+                  0 bytes (0 %)
+                </div>
+              </td>
+            </tr>
+          </table>
+	  
+        </center>
+  
+      </div>
+    
+    </xsl:if>
     
     <script type="text/javascript">
       setBundleResources();

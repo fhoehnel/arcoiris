@@ -94,6 +94,8 @@
   
         var cal1x = new CalendarPopup("calDiv");
         
+        var SINGLE_FILE_MAX_SIZE = <xsl:value-of select="/blog/uploadLimit" />;
+        
         function setInitialDate() {
             var now = new Date();
         
@@ -112,7 +114,9 @@
 
     </head>
 
-    <body class="blog" onload="setCalendarStyles();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode();">
+    <body class="blog">
+    
+      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/geoTag/googleMapsAPIKey" />')</xsl:attribute>
     
       <div class="blogEditHead" resource="blog.createPostHeadline"></div>    
       

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="android.webfilesys.de.webfilesysblog.MainActivity"
+    tools:context="de.arcoiris.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
@@ -72,6 +72,15 @@
             android:background="#00000000"
             android:layout_width="match_parent"
             android:layout_height="10sp"/>
+
+        <TextView
+            android:id="@+id/offlineMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="30sp"
+            android:paddingBottom="6sp"
+            android:textColor="#c00000"
+            android:visibility="gone"
+            android:text="@string/youAreOffline" />
 
         <LinearLayout
             android:id="@+id/saveSettings_layout"

@@ -14,6 +14,8 @@ label.logon=Iniciar sesión
 label.about=sobre arcoiris blog
 label.of=de
 label.file=archivo
+label.edit=editar la entrada de blog
+label.delete=borrar la entrada de blog
 
 # common buttons
 button.create=Crear
@@ -27,6 +29,7 @@ button.previous=Anterior
 button.reload=Recargar
 button.close=Cancelar
 button.closeMap=Cerrar
+button.copyToClip=Copiar al portapapeles
 
 # upload parameter window labels
 label.uploadfile=Cargar archivo
@@ -131,6 +134,7 @@ selectMapType=- tipo de mapa -
 mapTypeOSM=Open Street Maps
 mapTypeGoogleMap=Google Maps
 mapTypeGoogleEarth=Google Earth
+geoTrackLink=pista de GPS
 label.googleEarthAllFiles=Mostrar localización geográfica de todos los imagenes en Google Earth
 label.OSMapAllFiles=Mostrar localización geográfica de todos los imagenes en Open Street Map
 label.googleMapAllFiles=Mostrar localización geográfica de todos los imagenes en Google Maps
@@ -163,6 +167,7 @@ blog.createPostHeadline=publicar una nueva entrada de blog
 blog.editPostHeadline=editar la entrada de blog
 blog.uploadDropZone=¡Arrastrar y soltar archivos para la carga aqui!
 blog.uploadFileNames=imagenes seleccionadas
+blog.noPictureFile=¡Seleccione solo archivos de imagen (JPEG, PNG, GIF)!
 blog.sendPostButton=Enviar
 blog.cancelButton=Cancelar
 blog.calendarTitle=seleccione la fecha del calendario
@@ -200,7 +205,16 @@ blog.newPasswdConfirm=repetir contraseña nueva
 blog.invalidDaysPerPage=El valor de días por página debe ser un número entre 1 y 64.
 blog.moveUp=mover arriba
 blog.moveDown=mover abajo
+blog.changePosition=mover a una posición específica
+blog.targetPosition=Elige la nueva posición
+blog.targetPosTop=primera entrada
+blog.targetPosBottom=última entrada
+blog.newPosInDay=posición
 blog.makeTitlePic=establecer esta imagen como la imagen del título
+blog.attach=adjuntar un archivo
+blog.detach=borrar adjunto archivo
+blog.confirmDetach=¿Borrar adjunto archivo?
+blog.viewAttach=ver adjunto archivo
 blog.confirmSetTitlePic=¿Establecer esta imagen como la imagen del título?
 blog.unsetTitlePic=retirar imagen del título
 blog.confirmUnsetTitlePic=¿retirar imagen del título?
@@ -256,6 +270,12 @@ blog.emptyLinkData=¡El texto y la URL del enlace pueden no estar vacías!
 blog.sortOrder=orden de clasificación
 blog.sortOrderBlog=blog (el más reciente primero)
 blog.sortOrderDiary=diario (lo más viejo primero)
+blog.lowBandwith=cambiar a modo de red lenta
+blog.highBandwith=cambiar a modo de red rápida
+
+upload.attachment.headline=adjuntar un archivo
+upload.attachment.label=selecciona archivo
+upload.attachment.sizeLimitExceeded=El tamaño del archivo para adjuntar excede el límite
 
 error.latitudeInvalid=latitude debe ser un número entre -90.0 y 90.0
 error.longitudeInvalid=longitude debe ser un número entre -180.0 y 180.0

@@ -28,13 +28,13 @@ import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
 /**
- * Voting by anonymous visitors is obsolet now. The code for anonymous visitors
- * should be removed in a future release. TODO: synchronize more fine granular
+ * TODO: synchronize more fine granular
  * 
  * @author fho
  */
 public class MetaInfManager extends Thread {
-    public static final String METAINF_FILE = "_metainf.fmweb";
+    public static final String HISTORIC_METAINF_FILE = "_metainf.fmweb";
+    public static final String METAINF_FILE = "_metainf-arcoiris.xml";
 
     public static final int STATUS_NONE = 0;
     public static final int STATUS_BLOG_EDIT = 1;
@@ -81,22 +81,22 @@ public class MetaInfManager extends Thread {
         }
 
         synchronized (this) {
-            String metaInfFileName = null;
+            String metaInfFilePath = null;
 
             if (path.endsWith(File.separator)) {
-                metaInfFileName = path + METAINF_FILE;
+                metaInfFilePath = path + METAINF_FILE;
             } else {
-                metaInfFileName = path + File.separator + METAINF_FILE;
+                metaInfFilePath = path + File.separator + METAINF_FILE;
             }
 
             NodeList metaInfList = metaInfRoot.getElementsByTagName("metainf");
 
             if ((metaInfList == null) || (metaInfList.getLength() == 0)) {
-                File metaInfFile = new File(metaInfFileName);
+                File metaInfFile = new File(metaInfFilePath);
 
                 if (metaInfFile.exists() && metaInfFile.canWrite()) {
                     if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                        Logger.getLogger(getClass()).debug("removing empty meta inf file " + metaInfFileName);
+                        Logger.getLogger(getClass()).debug("removing empty meta inf file " + metaInfFilePath);
                     }
 
                     metaInfFile.delete();
@@ -106,13 +106,15 @@ public class MetaInfManager extends Thread {
             }
 
             if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                Logger.getLogger(getClass()).debug("saving meta info to file: " + metaInfFileName);
+                Logger.getLogger(getClass()).debug("saving meta info to file: " + metaInfFilePath);
             }
 
+            String newMetaInfFilePath = metaInfFilePath + ".new";
+            
             OutputStreamWriter xmlOutFile = null;
 
             try {
-                FileOutputStream fos = new FileOutputStream(metaInfFileName);
+                FileOutputStream fos = new FileOutputStream(newMetaInfFilePath);
 
                 xmlOutFile = new OutputStreamWriter(fos, "UTF-8");
 
@@ -120,12 +122,32 @@ public class MetaInfManager extends Thread {
 
                 xmlOutFile.flush();
             } catch (IOException ioex) {
-                Logger.getLogger(getClass()).error("error saving metainf file : " + metaInfFileName, ioex);
+                Logger.getLogger(getClass()).error("error saving metainf file : " + metaInfFilePath, ioex);
             } finally {
                 if (xmlOutFile != null) {
                     try {
                         xmlOutFile.close();
+                        
+                        File oldMetaInfFile = new File(metaInfFilePath);
+                        if (oldMetaInfFile.exists() && oldMetaInfFile.canWrite()) {
+                            if (oldMetaInfFile.delete()) {
+                                File newMetaInfFile = new File(newMetaInfFilePath);
+                                if (newMetaInfFile.exists() && newMetaInfFile.isFile() && newMetaInfFile.canRead()) {
+                                    File targetFile = new File(metaInfFilePath);
+                                    if (!newMetaInfFile.renameTo(targetFile)) {
+                                        Logger.getLogger(getClass()).error("failed to rename new metainf file " + newMetaInfFile + " to " + metaInfFilePath);
+                                    }
+                                } else {
+                                    Logger.getLogger(getClass()).error("new metainf file missing: " + newMetaInfFile);
+                                }
+                            } else {
+                                Logger.getLogger(getClass()).error("failed to delete old metainf file " + metaInfFilePath);
+                            }
+                        } else {
+                            Logger.getLogger(getClass()).error("old metainf file is not a writable file: " + metaInfFilePath);
+                        }
                     } catch (Exception ex) {
+                        Logger.getLogger(getClass()).error("failed to close new metainf file " + newMetaInfFilePath);
                     }
                 }
             }
@@ -133,18 +155,31 @@ public class MetaInfManager extends Thread {
     }
 
     public Element loadMetaInfFile(String path) {
-        String metaInfFileName = null;
 
-        if (path.endsWith(File.separator)) {
-            metaInfFileName = path + METAINF_FILE;
+        String metaInfFilePath = CommonUtils.joinFilesysPath(path, METAINF_FILE);
+
+        File metaInfFile = new File(metaInfFilePath);
+
+        if (!metaInfFile.exists()) {
+            String historicMetaInfFilePath = CommonUtils.joinFilesysPath(path, HISTORIC_METAINF_FILE);
+            
+            File historicMetaInfFile = new File(historicMetaInfFilePath);
+            if (historicMetaInfFile.exists()) {
+                if (historicMetaInfFile.renameTo(metaInfFile)) {
+                    Logger.getLogger(getClass()).debug("metainf file migration succeeded for historic file: " + historicMetaInfFilePath);
+                    metaInfFile = new File(metaInfFilePath);
+                } else {
+                    Logger.getLogger(getClass()).warn("metainf file migration failed for historic file: " + historicMetaInfFilePath);
+                    return null;
+                }
+            } else {
+                return (null);
+            }
         } else {
-            metaInfFileName = path + File.separator + METAINF_FILE;
-        }
-
-        File metaInfFile = new File(metaInfFileName);
-
-        if ((!metaInfFile.exists()) || (!metaInfFile.canRead())) {
-            return (null);
+            if (!metaInfFile.canRead()) {
+                Logger.getLogger(getClass()).warn("metainf file not readable: " + metaInfFile);
+                return (null);
+            }
         }
 
         synchronized (this) {
@@ -160,14 +195,14 @@ public class MetaInfManager extends Thread {
                 inputSource.setEncoding("UTF-8");
 
                 if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                    Logger.getLogger(getClass()).debug("reading meta info from " + metaInfFileName);
+                    Logger.getLogger(getClass()).debug("reading meta info from " + metaInfFilePath);
                 }
 
                 doc = builder.parse(inputSource);
             } catch (SAXException saxex) {
-                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFileName, saxex);
+                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, saxex);
             } catch (IOException ioex) {
-                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFileName, ioex);
+                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, ioex);
             } finally {
                 if (fis != null) {
                     try {
@@ -458,7 +493,109 @@ public class MetaInfManager extends Thread {
             cacheDirty.remove(path);
         }
     }
+    
+    public void addAttachment(String absoluteFileName, String attachmentName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        addAttachment(partsOfPath[0], partsOfPath[1], attachmentName);
+    }
 
+    public void addAttachment(String path, String fileName, String attachmentName) {
+        synchronized(this) {
+            Element metaInfElement = getMetaInfElement(path,fileName);
+            
+            if (metaInfElement == null) {
+                metaInfElement = createMetaInfElement(path,fileName);
+            }
+
+            Document doc = metaInfElement.getOwnerDocument();
+
+            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
+
+            if (attachmentListElement == null) {
+                attachmentListElement = doc.createElement("attachments");
+
+                metaInfElement.appendChild(attachmentListElement);
+            }
+
+            Element attachmentElement = doc.createElement("attachment");
+
+            attachmentListElement.appendChild(attachmentElement);
+
+            XmlUtil.setElementText(attachmentElement, attachmentName, false);
+            
+            cacheDirty.put(path, Boolean.TRUE);
+        }
+    }
+
+    public void removeAttachments(String absoluteFileName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        removeComments(partsOfPath[0], partsOfPath[1]);
+    }
+
+    public void removeAttachments(String path, String fileName) {
+        synchronized(this) {
+            Element metaInfElement = getMetaInfElement(path,fileName);
+            
+            if (metaInfElement == null) {
+                return;
+            }
+        
+            Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
+
+            if (attachmentListElement == null) {
+                return;
+            }
+
+            metaInfElement.removeChild(attachmentListElement);
+
+            cacheDirty.put(path, Boolean.TRUE);
+        }
+    }
+    
+    public ArrayList<String> getListOfAttachments(String absoluteFileName) {
+        String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
+        return(getListOfAttachments(partsOfPath[0], partsOfPath[1]));
+    }
+
+    public ArrayList<String> getListOfAttachments(String path, String fileName) {
+        Element metaInfElement = getMetaInfElement(path,fileName);
+
+        if (metaInfElement == null) {
+            return null;
+        }
+
+        Element attachmentListElement = XmlUtil.getChildByTagName(metaInfElement, "attachments");
+
+        if (attachmentListElement == null) {
+            return null;
+        }
+        
+        NodeList attachmentList = attachmentListElement.getElementsByTagName("attachment");
+
+        if (attachmentList == null) {
+            return null;
+        }
+
+        int listLength = attachmentList.getLength();
+
+        if (listLength == 0) {
+            return null;
+        }
+
+        ArrayList<String> listOfAttachments = new ArrayList<String>();
+
+        for (int i = 0; i < listLength; i++)
+        {
+            Element attachmentElement = (Element) attachmentList.item(i);
+
+            String attachmentName = XmlUtil.getElementText(attachmentElement);
+
+            listOfAttachments.add(attachmentName);
+        }
+
+        return(listOfAttachments);
+    }
+    
     public void addComment(String absoluteFileName, Comment newComment) {
         String[] partsOfPath = CommonUtils.splitPath(absoluteFileName);
         addComment(partsOfPath[0], partsOfPath[1], newComment);

@@ -1,18 +1,22 @@
 <resources>
     <string name="app_name">arcoiris blog</string>
-    <string name="appVersion" translatable="false">version 0.6.0 (13 Jan 2017)</string>
+    <string name="appVersion" translatable="false">version 0.8.1 (11 Oct 2017)</string>
     <string name="appAuthor" translatable="false">by Frank Hoehnel</string>
     <string name="appHomepage" translatable="false">www.webfilesys.de/arcoiris</string>
     <string name="buttonClose">Close</string>
     <string name="action_settings">Settings</string>
-    <string name="buttonPickImage">Pick Image from Gallery</string>
+    <string name="buttonPickImage">Pick Image</string>
+    <string name="buttonPickDate">Select date</string>
     <string name="buttonSendPost">Send</string>
     <string name="buttonSendPublish">Send &amp; Publish</string>
+    <string name="buttonSaveOffline">Save</string>
+    <string name="buttonSavePublish">Save &amp; Publish</string>
     <string name="noImageSelected">no image selected</string>
 
     <string name="optionMenuAbout">About</string>
     <string name="optionMenuExit">Exit</string>
     <string name="optionMenuSettings">Settings</string>
+    <string name="optionMenuSendQueued">Send</string>
 
     <string name="buttonSaveSettings">Continue</string>
 
@@ -20,13 +24,26 @@
     <string name="labelUserid">arcoiris userid:</string>
     <string name="labelPassword">arcoiris password:</string>
 
+    <string name="youAreOffline">You are offline!</string>
+    <string name="workOffline">Work offline</string>
+
     <string name="missingParameters">Please enter required parameters!</string>
 
     <string name="hintDescription">enter description text</string>
     <string name="missingDescription">Please enter a description text!</string>
 
-    <string name="postSuccess">Post was successful</string>
-    <string name="postFailed">Post has failed!</string>
+    <string name="postSuccess">successfully sent</string>
+    <string name="postFailed">Sending failed!</string>
+
+    <string name="saveSuccess">The blog entry has been saved offline.</string>
+
+    <string name="notLoggedIn">You are not logged in to any blog server.</string>
+
+    <string name="sendingQueuedEntries">Saved blog entries are being sent now.</string>
+    <string name="queuedEntriesSent">saved blog entries have been sent.</string>
+
+    <string name="wentOffline">The network connection has been lost. You are working offline now.</string>
+    <string name="backOnline">A network connection is available now. Go to settings in the main menue to login and work online.</string>
 
     <string name="buttonSelectGeoLocation">Select geo location on map</string>
     <string name="buttonChangeGeoLocation">Change location</string>
@@ -41,5 +58,20 @@
     <string name="authenticationFailed">The authentication with the server has failed due to invalid userid or password.</string>
     <string name="communicationFailure">The authentication with the server has failed due to communication problems. Please check the URL of the arcoiris blog server!</string>
     <string name="connecting">connecting to server ...</string>
+
+    <string name="sendStatusTitle">Sending new entry to the server ...</string>
+
+    <string name="sendErrorTitle">Send error</string>
+    <string name="sendErrorDetail">Faied to send the new blog entry to the server.</string>
+
+    <string name="noQueuedEntriesToSend">There are no offline stored entries for the authenticated blog users.</string>
+    <string name="confirmSendQueuedTitle">Send stored entries</string>
+    <string name="confirmSendQueuedPart1">There are</string>
+    <string name="confirmSendQueuedPart2">entries stored offline for the authenticated blog users. Send them now?</string>
+    <string name="buttonOk">Ok</string>
+    <string name="buttonCancel">Cancel</string>
+
+    <string name="offlineQueueHeadline">Offline stored entries</string>
+    <string name="optionMenuShowQueued">Show offline queue</string>
 
 </resources>
