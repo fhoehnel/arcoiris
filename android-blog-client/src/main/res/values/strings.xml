@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">arcoiris blog</string>
-    <string name="appVersion" translatable="false">version 0.8.1 (11 Oct 2017)</string>
+    <string name="appVersion" translatable="false">version 0.8.3 (29 Dec 2017)</string>
     <string name="appAuthor" translatable="false">by Frank Hoehnel</string>
     <string name="appHomepage" translatable="false">www.webfilesys.de/arcoiris</string>
     <string name="buttonClose">Close</string>
@@ -68,6 +68,12 @@
     <string name="confirmSendQueuedTitle">Send stored entries</string>
     <string name="confirmSendQueuedPart1">There are</string>
     <string name="confirmSendQueuedPart2">entries stored offline for the authenticated blog users. Send them now?</string>
+
+    <string name="sendResultTitle">Send Result</string>
+    <string name="sendResultPart1">Only</string>
+    <string name="sendResultPart2">of</string>
+    <string name="sendResultPart3">entries could be sent successfully.</string>
+
     <string name="buttonOk">Ok</string>
     <string name="buttonCancel">Cancel</string>
 

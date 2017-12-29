@@ -63,6 +63,12 @@
     <string name="confirmSendQueuedTitle">Senden gespeicherter Einträge</string>
     <string name="confirmSendQueuedPart1">Es existieren</string>
     <string name="confirmSendQueuedPart2">offline gespeicherte Einträge für die authentifizierten Blog-Nutzer. Sollen sie jetzt gesendet werden?</string>
+
+    <string name="SendResultTitle">Sende-Ergebnis</string>
+    <string name="sendResultPart1">Nur</string>
+    <string name="sendResultPart2">von</string>
+    <string name="sendResultPart3">Einträge konnten erfolgreich gesendet werden.</string>
+
     <string name="buttonOk">Ok</string>
     <string name="buttonCancel">Abbrechen</string>
 

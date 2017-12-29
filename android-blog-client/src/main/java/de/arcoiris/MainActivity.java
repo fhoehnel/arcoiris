@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.content.Context;
@@ -29,7 +28,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,7 +51,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -80,8 +77,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_INTERNET = 3;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 4;
-
-    private static final int PLACE_PICKER_REQUEST = 10;
 
     private static final String LAT_LONG_FORMAT = "##0.0###";
 
@@ -145,8 +140,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private LatLng selectedLocation = null;
 
-    SupportMapFragment mMapFragment = null;
-
     private GoogleMap googleMap = null;
 
     private Button mapSelectionOkButton = null;
@@ -165,9 +158,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private Date selectedDate = null;
 
-    float latitudeFromExif;
-    float longitudeFromExif;
-
     private boolean networkAvailabilityThreadRunning = false;
 
     private boolean currentNetworkStatus = false;
@@ -182,7 +172,6 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
 
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
@@ -644,6 +633,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         return (networkInfo != null) && networkInfo.isConnected();
+        // return false;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -674,13 +664,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             case R.id.optionSendQueued:
                 if (checkNetworkConnection()) {
-                    int entriesToSend = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, true);
-                    if (entriesToSend == 0) {
+                    QueueSendResult sendResult = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, true);
+                    if (sendResult.getEntriesToSend() == 0) {
                         Toast toast = Toast.makeText(getApplicationContext(), R.string.noQueuedEntriesToSend, Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
                     } else {
-                        confirmToSendOfflineEntries(entriesToSend);
+                        confirmToSendOfflineEntries(sendResult.getEntriesToSend());
                     }
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.youAreOffline, Toast.LENGTH_SHORT);
@@ -1264,6 +1254,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                             success = true;
                         }
                     }
+
+                    if (!success) {
+                        serverCommunicator.cancelEntry(serverUrl, userid, password, destFileName);
+                    }
                 }
             } catch (FileNotFoundException fnfex) {
                 Log.e("arcoiris", "picture file for blog entry not found", fnfex);
@@ -1311,7 +1305,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         private boolean success = false;
 
-        private int entriesSentCount = 0;
+        private QueueSendResult sendResult = new QueueSendResult();
 
         public SendQueuedOfflineEntriesTask() {
         }
@@ -1334,7 +1328,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         protected String doInBackground(String... params) {
 
             if (!checkedLogins.isEmpty()) {
-                entriesSentCount = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, false);
+                sendResult = OfflineQueueManager.getInstance(getFilesDir()).sendQueuedEntries(checkedLogins, false);
             }
 
             return "";
@@ -1343,11 +1337,41 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            String toastText = entriesSentCount + " " + getString(R.string.queuedEntriesSent);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-            Toast toast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            dialogBuilder.setTitle(getString(R.string.sendResultTitle));
+
+            StringBuffer buff = new StringBuffer();
+
+            if (sendResult.getFailed() > 0) {
+                buff.append(getString(R.string.sendResultPart1));
+                buff.append(" ");
+                buff.append(sendResult.getSuccess());
+                buff.append(" ");
+                buff.append(getString(R.string.sendResultPart2));
+                buff.append(" ");
+                buff.append(sendResult.getSuccess() + sendResult.getFailed());
+                buff.append(" ");
+                buff.append(getString(R.string.sendResultPart3));
+            } else {
+                buff.append(sendResult.getSuccess());
+                buff.append(" ");
+                buff.append(getString(R.string.queuedEntriesSent));
+            }
+
+            dialogBuilder.setMessage(buff.toString());
+
+            dialogBuilder.setPositiveButton(R.string.buttonOk,
+                    new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }
+            );
+
+            AlertDialog sendResultDialog = dialogBuilder.create();
+
+            sendResultDialog.show();
         }
     }
 
