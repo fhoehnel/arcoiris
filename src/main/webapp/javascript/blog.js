@@ -925,6 +925,7 @@ function showPublicURL() {
 
     var tableCell = document.createElement("td");
     tableCell.setAttribute("class", "formParm1");
+    tableCell.setAttribute("colspan", "2");
     tableCell.innerHTML = resourceBundle["blog.publicLink"] + ":";
     tableRow.appendChild(tableCell);
 
@@ -933,9 +934,11 @@ function showPublicURL() {
 
     tableCell = document.createElement("td");
     tableCell.setAttribute("class", "formParm2");
+    tableCell.setAttribute("colspan", "2");
     tableRow.appendChild(tableCell);
     
     var urlInput = document.createElement("textarea");
+    urlInput.id = "publicUrl";
     urlInput.setAttribute("class", "publicLinkCopyField");
     urlInput.setAttribute("readonly", "readonly");
     urlInput.value = publicUrl;
@@ -946,7 +949,7 @@ function showPublicURL() {
 
     tableCell = document.createElement("td");
     tableCell.style.paddingTop = "20px";
-    tableCell.style.textAlign = "center";
+    tableCell.style.paddingLeft = "8px";
     tableRow.appendChild(tableCell);
 
     var closeButton = document.createElement("input");
@@ -955,13 +958,31 @@ function showPublicURL() {
     closeButton.setAttribute("onclick", "hidePublishForm()");
     closeButton.style.marginBottom = "10px";
     tableCell.appendChild(closeButton);
+
+    tableCell = document.createElement("td");
+    tableCell.style.paddingTop = "20px";
+    tableCell.style.textAlign = "right";
+    tableRow.appendChild(tableCell);
+    
+    var copyButton = document.createElement("input");
+    copyButton.setAttribute("type", "button");
+    copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
+    copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
+    copyButton.style.marginBottom = "10px";
+    tableCell.appendChild(copyButton);
     
     centerBox(publishCont);
     
     publishCont.style.visibility = "visible";
 
-    urlInput.focus();
+    // urlInput.focus();
     urlInput.select();
+}
+
+function copyPublicUrlToClip() {
+    document.getElementById("publicUrl").select();
+    document.execCommand("Copy");
+    hidePublishForm();
 }
 
 function unpublish() {

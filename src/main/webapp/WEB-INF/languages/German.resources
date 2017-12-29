@@ -29,6 +29,7 @@ button.previous=Zurück
 button.reload=Neu laden
 button.close=Abbrechen
 button.closeMap=Schliessen
+button.copyToClip=Kopieren in Zwischenablage
 
 # upload parameter window labels
 label.uploadfile=Datei-Upload

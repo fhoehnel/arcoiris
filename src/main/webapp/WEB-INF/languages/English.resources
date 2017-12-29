@@ -29,6 +29,7 @@ button.previous=Previous
 button.reload=Reload
 button.close=Cancel
 button.closeMap=Close
+button.copyToClip=Copy to Clipboard
 
 # upload parameter window labels
 label.uploadfile=Upload File

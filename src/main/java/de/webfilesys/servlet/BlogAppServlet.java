@@ -34,6 +34,8 @@ public class BlogAppServlet extends BlogWebServlet {
     private static final String BASIC_HTTP_AUTH_HEADER = "Authorization";
 
     private static final String BASIC_HTTP_AUTH_PROMPT = "WWW-Authenticate";
+    
+    // private static int requestCounter = 0;
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
         if (LOG.isDebugEnabled()) {
@@ -102,9 +104,17 @@ public class BlogAppServlet extends BlogWebServlet {
             reveicePicture(req, resp, userid, currentPath, fileName);
         } else if (command.equals("description")) {
             
+            // testing code for network delay and network error             
             /*
-            if (System.currentTimeMillis() > 1l) {
-                throw new ServletException("test exception");
+            if (++requestCounter % 2 == 0) {
+                if (System.currentTimeMillis() > 1l) {
+                    throw new ServletException("test exception");
+                }
+                
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException iex) {
+                }
             }
             */
             

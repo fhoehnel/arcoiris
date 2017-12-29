@@ -29,6 +29,7 @@ button.previous=Anterior
 button.reload=Recargar
 button.close=Cancelar
 button.closeMap=Cerrar
+button.copyToClip=Copiar al portapapeles
 
 # upload parameter window labels
 label.uploadfile=Cargar archivo
