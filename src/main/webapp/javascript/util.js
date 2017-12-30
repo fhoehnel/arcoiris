@@ -282,3 +282,105 @@ function getContextRoot() {
 	
 	return "/" + restOfUrl.substring(0, endIdx);
 }
+
+function customAlert(alertText, buttonText) {
+   	var mouseShield = document.createElement("div");
+   	mouseShield.id = "mouseClickShield";
+   	mouseShield.setAttribute("class", "mouseClickShield");
+   	document.documentElement.appendChild(mouseShield);
+    mouseShield.setAttribute("onclick", "javascript:void(0);");
+	
+    mouseShield.style.height = document.documentElement.clientHeight + "px";   
+    
+    var alertCont = document.createElement("div");
+    alertCont.setAttribute("class", "alertCont");
+   	mouseShield.appendChild(alertCont);
+
+    var alertTextElem = document.createElement("span");
+    alertTextElem.setAttribute("class", "alertText");
+    alertTextElem.innerHTML = alertText;
+    alertCont.appendChild(alertTextElem);
+    
+    var buttonContElem = document.createElement("div");
+    buttonContElem.setAttribute("class", "alertButtonCont");
+    alertCont.appendChild(buttonContElem);
+    
+    var confirmButtonElem = document.createElement("button");
+    confirmButtonElem.setAttribute("class", "alertConfirmButton");
+    confirmButtonElem.setAttribute("onclick", "closeAlert()");
+    if (buttonText) {
+        confirmButtonElem.innerHTML = buttonText;
+    } else {
+        confirmButtonElem.innerHTML = "OK";
+    }
+    buttonContElem.appendChild(confirmButtonElem);
+
+    centerBox(alertCont);
+}
+
+function closeAlert() {
+	var clickShield = document.getElementById("mouseClickShield");
+	if (clickShield) {
+		clickShield.parentNode.removeChild(clickShield);
+	}
+}
+
+function customConfirm(confirmText, cancelButtonText, continueButtonText, continueCallback, cancelCallback) {
+   	var mouseShield = document.createElement("div");
+   	mouseShield.id = "mouseClickShield";
+   	mouseShield.setAttribute("class", "mouseClickShield");
+    
+   	var bodyElem = document.getElementsByTagName("BODY")[0];
+    bodyElem.appendChild(mouseShield);
+    
+    mouseShield.setAttribute("onclick", "javascript:void(0);");
+	
+    mouseShield.style.height = window.innerHeight + "px";
+    
+    var alertCont = document.createElement("div");
+    alertCont.setAttribute("class", "alertCont");
+   	mouseShield.appendChild(alertCont);
+
+    var alertTextCont = document.createElement("div");
+    alertTextCont.setAttribute("class", "alertTextCont");
+    alertCont.appendChild(alertTextCont);
+   	
+    var alertTextElem = document.createElement("span");
+    alertTextElem.setAttribute("class", "alertText");
+    alertTextElem.innerHTML = confirmText;
+    alertTextCont.appendChild(alertTextElem);
+    
+    var buttonContElem = document.createElement("div");
+    buttonContElem.setAttribute("class", "alertButtonCont");
+    alertCont.appendChild(buttonContElem);
+    
+    var confirmButtonElem = document.createElement("button");
+    confirmButtonElem.setAttribute("class", "alertConfirmButton");
+    confirmButtonElem.style.marginRight = "40px";
+    confirmButtonElem.onclick = function() {
+    	closeAlert();
+    	continueCallback();
+    };
+    if (continueButtonText) {
+    	confirmButtonElem.innerHTML = continueButtonText;
+    } else {
+    	confirmButtonElem.innerHTML = "Yes";
+    }
+    buttonContElem.appendChild(confirmButtonElem);
+    
+    var cancelButtonElem = document.createElement("button");
+    cancelButtonElem.setAttribute("class", "alertConfirmButton");
+    if (cancelCallback) {
+    	cancelButtonElem.onclick = cancelCallback;
+    } else {
+        cancelButtonElem.setAttribute("onclick", "closeAlert()");
+    }
+    if (cancelButtonText) {
+    	cancelButtonElem.innerHTML = cancelButtonText;
+    } else {
+    	cancelButtonElem.innerHTML = "No";
+    }
+    buttonContElem.appendChild(cancelButtonElem);
+
+    centerBox(alertCont);
+}

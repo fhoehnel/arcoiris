@@ -2,6 +2,7 @@
 <viewHandlerRegistry>
   
   <!-- shows elevation and speed profile diagrams for GPX geo track and waypoint files -->
+  <!-- deprecated: replaced by GPXViewHandler -->
   <viewHandler>
     <class>de.webfilesys.viewhandler.GeoTrackViewHandler</class>
     <filePatternList>

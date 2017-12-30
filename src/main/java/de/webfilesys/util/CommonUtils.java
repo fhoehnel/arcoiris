@@ -557,5 +557,20 @@ public class CommonUtils {
 
         return fileNameExt.equals(".jpg") || fileNameExt.equals(".jpeg") || fileNameExt.equals(".png") || fileNameExt.equals(".gif");
     }
+
+    public static String escapeForJavascript(String source) {
+        StringBuffer dest = new StringBuffer();
+
+        for (int i = 0; i < source.length(); i++) {
+            if (source.charAt(i)=='\\') {
+                dest.append("\\\\");
+            } else if (source.charAt(i)=='\'') {
+                dest.append("\\\'");
+            } else {
+                dest.append(source.charAt(i));
+            }
+        }    
+        return(dest.toString());
+    }
     
 }

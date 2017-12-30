@@ -2060,7 +2060,7 @@ function viewAttachment(blogFileName, attachmentName) {
 }
 
 function viewGeoTrack(blogFileName, attachmentName) {
-    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=getAttachment&attachmentName=" + encodeURIComponent(attachmentName), "geoTrackWin");
+    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=viewGPX&attachmentName=" + encodeURIComponent(attachmentName), "geoTrackWin");
     geoTrackWin.focus();
 }
 
