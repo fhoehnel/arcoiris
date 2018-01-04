@@ -127,24 +127,29 @@ public class MetaInfManager extends Thread {
                 if (xmlOutFile != null) {
                     try {
                         xmlOutFile.close();
+
+                        boolean deleteOldFailed = false;
                         
                         File oldMetaInfFile = new File(metaInfFilePath);
-                        if (oldMetaInfFile.exists() && oldMetaInfFile.canWrite()) {
-                            if (oldMetaInfFile.delete()) {
-                                File newMetaInfFile = new File(newMetaInfFilePath);
-                                if (newMetaInfFile.exists() && newMetaInfFile.isFile() && newMetaInfFile.canRead()) {
-                                    File targetFile = new File(metaInfFilePath);
-                                    if (!newMetaInfFile.renameTo(targetFile)) {
-                                        Logger.getLogger(getClass()).error("failed to rename new metainf file " + newMetaInfFile + " to " + metaInfFilePath);
-                                    }
-                                } else {
-                                    Logger.getLogger(getClass()).error("new metainf file missing: " + newMetaInfFile);
-                                }
-                            } else {
+                        if (oldMetaInfFile.exists()) {
+                            if (!oldMetaInfFile.delete()) {
+                                deleteOldFailed = true;
                                 Logger.getLogger(getClass()).error("failed to delete old metainf file " + metaInfFilePath);
                             }
                         } else {
-                            Logger.getLogger(getClass()).error("old metainf file is not a writable file: " + metaInfFilePath);
+                            Logger.getLogger(getClass()).debug("creating new metainf file " + metaInfFilePath);
+                        }
+                        
+                        if (!deleteOldFailed) {
+                            File newMetaInfFile = new File(newMetaInfFilePath);
+                            if (newMetaInfFile.exists() && newMetaInfFile.isFile() && newMetaInfFile.canRead()) {
+                                File targetFile = new File(metaInfFilePath);
+                                if (!newMetaInfFile.renameTo(targetFile)) {
+                                    Logger.getLogger(getClass()).error("failed to rename new metainf file " + newMetaInfFile + " to " + metaInfFilePath);
+                                }
+                            } else {
+                                Logger.getLogger(getClass()).error("new metainf file missing: " + newMetaInfFile);
+                            }
                         }
                     } catch (Exception ex) {
                         Logger.getLogger(getClass()).error("failed to close new metainf file " + newMetaInfFilePath);
