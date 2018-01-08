@@ -1754,6 +1754,51 @@ img.picOnMap {
 	display: none;
 }
 
+div.mouseClickShield {
+    height: 768px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+div.alertCont {
+	position: absolute;
+	width: 300px;
+	min-height: 120px;
+	margin: auto;
+	background-color: #f0f0f0;
+	border: 3px ridge #808080;
+	text-align: center;
+	padding: 20px;
+    box-sizing: content-box;
+}
+
+div.alertTextCont {
+	max-height: 300px;
+	overflow-y: auto;
+	text-align: left;
+}
+
+span.alertText {
+	font-size: 15px;
+}
+
+div.alertButtonCont {
+    margin-top: 40px;
+}
+
+button.alertConfirmButton {
+	width: 120px;
+	height: 30px;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #404040;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
 @media (max-width: 400px) {
     div.centerBox {
         position: static;

@@ -30,15 +30,23 @@ public class BlogMoveToPosHandler extends BlogMoveHandlerBase {
         
         ArrayList<File> filesOfDay = getAllFilesOfDaySorted(getCwd(), fileToMove);
         
+        boolean moveDown = false;
+        
+        int currentPos = getCurrentPos(filesOfDay, fileToMove);
+
         int moveTarget = 0;
         
         if (targetPos.equals("top")) {
             moveTarget = 0;
         } else if (targetPos.equals("bottom")) {
             moveTarget = filesOfDay.size() -1;
+            moveDown = true;
         } else {
             try {
                 moveTarget = Integer.parseInt(targetPos) - 1;
+                if (moveTarget > currentPos) {
+                    moveDown = true;
+                }
             } catch (Exception ex) {
                 Logger.getLogger(getClass()).error("invalid target pos for move: " + targetPos, ex);
             }
@@ -52,7 +60,7 @@ public class BlogMoveToPosHandler extends BlogMoveHandlerBase {
             return;
         }
         
-        boolean success = swapFileNamesAndRandomize(getCwd(), currentFileAtTargetPos, fileToMove);        
+        boolean success = moveFileToTarget(getCwd(), currentFileAtTargetPos, fileToMove, moveDown);        
 
         Element resultElement = doc.createElement("result");
 
@@ -62,4 +70,49 @@ public class BlogMoveToPosHandler extends BlogMoveHandlerBase {
 
         processResponse();
     }
+    
+    private int getCurrentPos(ArrayList<File> filesOfDay, String fileToMove) {
+        int posCounter = 0;
+        
+        for (File file : filesOfDay) {
+            if (file.getName().equals(fileToMove)) {
+                return posCounter;
+            }
+            posCounter++;
+        }
+        
+        return filesOfDay.size() - 1;
+    }
+    
+    protected boolean moveFileToTarget(String currentPath, String currentFileAtTargetPos, String fileToMove, boolean moveDown) {
+
+        int firstDotIdx = currentFileAtTargetPos.indexOf('.');
+        String targetNameBase = currentFileAtTargetPos.substring(0, firstDotIdx);
+        
+        int lastDotIdx = currentFileAtTargetPos.lastIndexOf('.');
+        String targetNameExt = currentFileAtTargetPos.substring(lastDotIdx + 1);
+
+        String suffix1;
+        String suffix2;
+        if (moveDown) {
+            suffix1 = "-2.";
+            suffix2 = "-1.";
+        } else {
+            suffix1 = "-1.";
+            suffix2 = "-2.";
+        }
+        
+        String insertTargetName = targetNameBase  + suffix1 + targetNameExt;
+
+        String moveTargetName = targetNameBase  + suffix2 + targetNameExt;
+
+        if (renameInclMetaInf(currentPath, currentFileAtTargetPos, moveTargetName)) {
+            if (renameInclMetaInf(currentPath, fileToMove, insertTargetName)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
 }

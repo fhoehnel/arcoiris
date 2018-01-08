@@ -47,12 +47,14 @@ public class ServerCommunicator {
             URL url = new URL(serverUrl + "/blogpost/authenticate");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(60000);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", encodedAuthToken);
 
             int responseCode = conn.getResponseCode();
+
+            conn.disconnect();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 return 1;
@@ -97,6 +99,7 @@ public class ServerCommunicator {
 
             } catch (Exception ioex) {
                 Log.e("arcoiris", "failed to post description data to blog", ioex);
+                return false;
             } finally {
                 if (pout != null) {
                     try {
@@ -210,6 +213,48 @@ public class ServerCommunicator {
         return false;
     }
 
+    public boolean cancelEntry(String serverUrl, String userid, String password, String destFileName) {
+        String response = "";
+        try {
+            HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/cancel/" + destFileName, userid, password);
+
+            OutputStream os = null;
+            BufferedWriter out = null;
+            PrintWriter pout = null;
+            try {
+                os = conn.getOutputStream();
+
+                out = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                pout = new PrintWriter(out);
+
+                pout.println("cancel entry");
+
+                os.flush();
+            } catch (Exception ioex) {
+                Log.e("arcoiris", "failed to post cancel request", ioex);
+            } finally {
+                if (pout != null) {
+                    try {
+                        pout.close();
+                    } catch (Exception closeEx) {
+                    }
+                }
+                if (os != null) {
+                    try {
+                        os.close();
+                    } catch (Exception closeEx) {
+                    }
+                }
+            }
+
+            return consumeResponse(conn, "sending cancel request");
+
+        } catch (Exception e) {
+            Log.e("arcoiris", "failed to post cancel request", e);
+        }
+        return false;
+    }
+
     private boolean consumeResponse(HttpURLConnection conn, String action) {
         boolean result = true;
 
@@ -227,6 +272,8 @@ public class ServerCommunicator {
                 while ((line = responseReader.readLine()) != null) {
                     Log.d("arcoiris", "response line: " + line);
                 }
+            } else {
+                result = false;
             }
         } catch (Exception ex) {
             Log.e("arcoiris", "failed to read response of " + action, ex);
@@ -238,6 +285,7 @@ public class ServerCommunicator {
                 } catch (Exception closeEx) {
                 }
             }
+            conn.disconnect();
         }
 
         return result;
@@ -251,8 +299,8 @@ public class ServerCommunicator {
         URL url = new URL(webfilesysUrl);
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(15000);
-        conn.setConnectTimeout(15000);
+        conn.setReadTimeout(120000);
+        conn.setConnectTimeout(120000);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Authorization", encodedAuthToken);
         conn.setDoInput(true);

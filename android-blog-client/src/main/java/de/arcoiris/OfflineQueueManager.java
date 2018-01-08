@@ -153,7 +153,7 @@ public class OfflineQueueManager {
         }
     }
 
-    public int sendQueuedEntries(HashMap<String, String> checkedLogins, boolean simulate) {
+    public QueueSendResult sendQueuedEntries(HashMap<String, String> checkedLogins, boolean simulate) {
 
         File queuePathFile = new File(queuePath);
 
@@ -164,6 +164,7 @@ public class OfflineQueueManager {
         HashMap<String, File> pictureFileMap = new HashMap<String, File>();
 
         int sentCount = 0;
+        int entriesToSend = 0;
 
         ArrayList<File> metadataFileList = new ArrayList<File>();
 
@@ -201,7 +202,7 @@ public class OfflineQueueManager {
 
                 if (password != null) {
                     if (simulate) {
-                        sentCount++;
+                        entriesToSend++;
                     } else {
                         if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
 
@@ -235,7 +236,16 @@ public class OfflineQueueManager {
             }
         }
 
-        return sentCount;
+        QueueSendResult sendResult = new QueueSendResult();
+
+        if (simulate) {
+            sendResult.setEntriesToSend(entriesToSend);
+        } else {
+            sendResult.setSuccess(sentCount);
+            sendResult.setFailed(errorCount);
+        }
+
+        return sendResult;
     }
 
     public List<OfflineQueueEntryInfo> getQueuedFiles() {
@@ -333,6 +343,10 @@ public class OfflineQueueManager {
                     } else {
                         success = true;
                     }
+                }
+
+                if (!success) {
+                    serverCommunicator.cancelEntry(metaData.getServerUrl(), metaData.getUserid(), password, destFileName);
                 }
             }
         } catch (FileNotFoundException fnfex) {

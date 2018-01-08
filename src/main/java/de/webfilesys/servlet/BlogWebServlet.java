@@ -88,9 +88,11 @@ import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
 import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
+import de.webfilesys.gui.user.GPXTrackHandler;
 import de.webfilesys.gui.user.GetAttachmentRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
+import de.webfilesys.gui.xsl.GPXViewHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapMultiHandler;
 import de.webfilesys.gui.xsl.XslLogonHandler;
@@ -624,7 +626,17 @@ public class BlogWebServlet extends ServletBase {
             (new GoogleEarthDirPlacemarkHandler(req, resp, session, output, userid)).handleRequest();
             return true;
         }
+        
+        if (command.equals("viewGPX")) {
+            (new GPXViewHandler(req, resp, session, output, userid)).handleRequest();
+            return(true);
+        }
 
+        if (command.equals("gpxTrack")) {
+            (new GPXTrackHandler(req, resp, session, output, userid)).handleRequest();
+            return(true);
+        }
+        
         if (command.equals("logout")) {
             logout(req, resp, session, userid);
 
