@@ -435,8 +435,11 @@ function CP_select(inputobj, linkname, format) {
 		time = getDateFromFormat(selectedDate,format)
 		}
 	else if (inputobj.value!="") {
-		time = getDateFromFormat(inputobj.value,format);
-		}
+		// MSIE 11 inserts the Unicode RTL (Right-to-Left) mark in Date.toLocaleDateString()
+		// must be removed for parsing
+		var inputValue = inputobj.value.replace(/\u200E/g, "");
+		time = getDateFromFormat(inputValue, format);
+	}
 	if (selectedDate!=null || inputobj.value!="") {
 		if (time==0) { this.currentDate=null; }
 		else { this.currentDate=new Date(time); }
@@ -445,6 +448,18 @@ function CP_select(inputobj, linkname, format) {
 	this.showCalendar(linkname);
 	}
 	
+function fixMSIERemoveEmptyChars(origStr) {
+	var resultStr = "";
+	
+	for (var i = 0; i < origStr.length; i++) {
+		var charCode = origStr.charCodeAt(i);
+		var c = origStr.charAt(i);
+		resultStr += origStr.charAt(i);
+	}
+	
+	return resultStr;
+}
+
 // Get style block needed to display the calendar correctly
 function getCalendarStyles() {
 	var result = "";
@@ -468,29 +483,6 @@ function getCalendarStyles() {
 	result += "</STYLE>\n";
 	return result;
 	}
-
-// function added by Frank Hoehnel
-function getCalStyles() {
-	var result = "";
-	var p = "";
-	if (this!=null && typeof(this.cssPrefix)!="undefined" && this.cssPrefix!=null && this.cssPrefix!="") { p=this.cssPrefix; }
-	result += "."+p+"cpYearNavigation,."+p+"cpMonthNavigation { background-color:#C0C0C0; text-align:center; vertical-align:center; text-decoration:none; color:#000000; font-weight:bold; }\n";
-	result += "."+p+"cpDayColumnHeader, ."+p+"cpYearNavigation,."+p+"cpMonthNavigation,."+p+"cpCurrentMonthDate,."+p+"cpCurrentMonthDateDisabled,."+p+"cpOtherMonthDate,."+p+"cpOtherMonthDateDisabled,."+p+"cpCurrentDate,."+p+"cpCurrentDateDisabled,."+p+"cpTodayText,."+p+"cpTodayTextDisabled,."+p+"cpText { font-family:arial; font-size:8pt; }\n";
-	result += "TD."+p+"cpDayColumnHeader { text-align:right; border:solid thin #C0C0C0;border-width:0px 0px 1px 0px; }\n";
-	result += "."+p+"cpCurrentMonthDate, ."+p+"cpOtherMonthDate, ."+p+"cpCurrentDate  { text-align:right; text-decoration:none; }\n";
-	result += "."+p+"cpCurrentMonthDateDisabled, ."+p+"cpOtherMonthDateDisabled, ."+p+"cpCurrentDateDisabled { color:#D0D0D0; text-align:right; text-decoration:line-through; }\n";
-	result += "."+p+"cpCurrentMonthDate, .cpCurrentDate { color:#000000; }\n";
-	result += "."+p+"cpOtherMonthDate { color:#808080; }\n";
-	result += "TD."+p+"cpCurrentDate { color:white; background-color: #C0C0C0; border-width:1px; border:solid thin #800000; }\n";
-	result += "TD."+p+"cpCurrentDateDisabled { border-width:1px; border:solid thin #FFAAAA; }\n";
-	result += "TD."+p+"cpTodayText, TD."+p+"cpTodayTextDisabled { border:solid thin #C0C0C0; border-width:1px 0px 0px 0px;}\n";
-	result += "A."+p+"cpTodayText, SPAN."+p+"cpTodayTextDisabled { height:20px; }\n";
-	result += "A."+p+"cpTodayText { color:black; }\n";
-	result += "."+p+"cpTodayTextDisabled { color:#D0D0D0; }\n";
-	result += "."+p+"cpBorder { border:solid thin #808080; }\n";
-	return result;
-	}
-
 
 // Return a string containing all the calendar code to be displayed
 function CP_getCalendar() {
@@ -586,7 +578,7 @@ function CP_getCalendar() {
 				}
 			}
 		result += '</TR></TABLE>\n';
-		result += '<TABLE WIDTH=120 BORDER=0 CELLSPACING=0 CELLPADDING=1 ALIGN=CENTER>\n';
+		result += '<TABLE class="dayCont" WIDTH=120 BORDER=0 CELLSPACING=0 CELLPADDING=1 ALIGN=CENTER>\n';
 		result += '<TR>\n';
 		for (var j=0; j<7; j++) {
 
@@ -669,7 +661,7 @@ function CP_getCalendar() {
 			else { var year = now.getFullYear(); }
 			}
 		if (this.displayType!="year" && this.isShowYearNavigation) {
-			result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
+			result += '<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>';
 			result += '<TR>\n';
 			result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year-1)+');">&lt;&lt;</A></TD>\n';
 			result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="100">'+year+'</TD>\n';

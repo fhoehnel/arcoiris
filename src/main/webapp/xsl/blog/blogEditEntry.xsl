@@ -90,15 +90,20 @@
 
         var cal1x;
 
+        var initialDate = new Date(<xsl:value-of select="/blog/blogEntry/blogDate/year" />,
+                                   <xsl:value-of select="/blog/blogEntry/blogDate/month" /> - 1,
+                                   <xsl:value-of select="/blog/blogEntry/blogDate/day" />);
+
         function prepareCalendar() {
             cal1x = new CalendarPopup("calDiv");
             cal1x.setReturnFunction("setSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
         }
 
         function setInitialDate() {
-            var initialDate = new Date(<xsl:value-of select="/blog/blogEntry/blogDate/year" />,
-                                       <xsl:value-of select="/blog/blogEntry/blogDate/month" /> - 1,
-                                       <xsl:value-of select="/blog/blogEntry/blogDate/day" />);
         
             document.getElementById("dateDay").value = LZ(initialDate.getDate());        
             document.getElementById("dateMonth").value = LZ(initialDate.getMonth() + 1);        
@@ -156,7 +161,7 @@
             <span resource="blog.selectDate"></span>:
             &#160;
           
-            <input type="text" name="blogDate" size="4" maxlength="10" id="blogDate" readonly="readonly" class="blogDate"/>
+            <input type="text" name="blogDate" id="blogDate" readonly="readonly" class="blogDate"/>
             &#160;
             <a href="#" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
               <xsl:attribute name="onClick">selectDate()</xsl:attribute>

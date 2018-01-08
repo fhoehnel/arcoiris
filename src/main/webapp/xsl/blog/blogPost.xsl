@@ -95,6 +95,10 @@
         function prepareCalendar() {
             cal1x = new CalendarPopup("calDiv");
             cal1x.setReturnFunction("setSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
         }
         
         var SINGLE_FILE_MAX_SIZE = <xsl:value-of select="/blog/uploadLimit" />;

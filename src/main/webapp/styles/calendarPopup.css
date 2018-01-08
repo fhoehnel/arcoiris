@@ -89,3 +89,75 @@ A.cpTodayText {
 .cpBorder {
 	border: solid thin #808080;
 }
+
+#calDiv {
+    background-color: ivory;
+    position: absolute;
+    layer-background-color: ivory;
+    visibility: hidden;
+}
+
+#calDiv .cpDayColumnHeader, 
+#calDiv .cpYearNavigation, 
+#calDiv .cpMonthNavigation, 
+#calDiv .cpCurrentMonthDate, 
+#calDiv .cpCurrentMonthDateDisabled, 
+#calDiv .cpOtherMonthDate, 
+#calDiv .cpOtherMonthDateDisabled, 
+#calDiv .cpCurrentDate, 
+#calDiv .cpCurrentDateDisabled, 
+#calDiv .cpTodayText, 
+#calDiv .cpTodayTextDisabled, 
+#calDiv .cpText {
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 1.2rem;
+    padding: 4px;
+    white-space: nowrap;
+}
+
+#calDiv table.dayCont {
+	width: 300px;
+}
+
+#calDiv table table:first-child {
+    width: 100%;
+    border-bottom: 1px solid #000060;
+}
+
+#calDiv table table:last-child tr:last-child {
+    background-color: #ffffc0;
+}
+
+#calDiv table table:last-child tr:last-child td{
+    border-top: 1px solid #000060;
+}
+
+#calDiv table table:last-child tr:not(:last-child) td:first-child:not(.cpOtherMonthDate) a {
+    color: #c00000;
+}
+
+#calDiv table table:last-child tr:not(:last-child) td:last-child:not(.cpOtherMonthDate) a {
+    color: #b06060;
+}
+
+#calDiv .cpMonthNavigation,
+#calDiv .cpYearNavigation {
+    color: #000060;
+    background-color: #ffffc0;
+}
+
+#calDiv .cpMonthNavigation a:hover,
+#calDiv .cpTodayText a:hover {
+    color: #a00000;
+}
+
+#calDiv .cpDayColumnHeader {
+    font-weight: bold;
+}
+
+#calDiv a.cpTodayText {
+    color: #000060;
+    text-decoration: none;
+    font-weight: bold;
+}
+

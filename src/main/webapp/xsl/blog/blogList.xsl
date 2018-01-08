@@ -104,6 +104,10 @@
         function prepareCalenderPopup() {
             cal1x = new CalendarPopup("calDiv");
             cal1x.setReturnFunction("gotoSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
         }
    
         function gotoSelectedDate(y, m, d) { 

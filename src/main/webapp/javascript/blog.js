@@ -1484,7 +1484,15 @@ function showSaveSettingsResult(req) {
 }
    
 function selectDate() {
-    cal1x.select(document.getElementById("blogDate"), "anchorDate", "MM/dd/yyyy");
+	
+	var dateFormat;
+	if (window.navigator.language.indexOf("en") == 0) {
+		dateFormat = "MM/dd/yyyy";
+	} else {
+		dateFormat = "dd.MM.yyyy";
+	}
+	
+    cal1x.select(document.getElementById("blogDate"), "anchorDate", dateFormat);
     centerBox(document.getElementById("calDiv"));
 }
 
