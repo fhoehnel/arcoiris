@@ -38,7 +38,9 @@
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
       </link>
       
-      <style id="calendarStyle"></style>
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
+      </link>
       
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
@@ -86,12 +88,12 @@
       
       <script type="text/javascript">
 
-        if (!browserFirefox) 
-        {
-            document.write(getCalendarStyles());
+        var cal1x;
+
+        function prepareCalendar() {
+            cal1x = new CalendarPopup("calDiv");
+            cal1x.setReturnFunction("setSelectedDate");
         }
-  
-        var cal1x = new CalendarPopup("calDiv");
 
         function setInitialDate() {
             var initialDate = new Date(<xsl:value-of select="/blog/blogEntry/blogDate/year" />,
@@ -114,7 +116,7 @@
     </head>
 
     <body class="blog">
-      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/blogEntry/geoTag/googleMapsAPIKey" />');replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
+      <xsl:attribute name="onload">prepareCalendar();setInitialDate();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/blogEntry/geoTag/googleMapsAPIKey" />');replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
       
       <div class="blogEditHead" resource="blog.editPostHeadline"></div>    
       

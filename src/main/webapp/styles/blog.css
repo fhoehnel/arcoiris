@@ -51,7 +51,7 @@ html.blog select {
 }
 
 html.blog textarea {
-    font-size: 1.1rem; // min 16px to prevent font boosting in chrome on android
+    font-size: 1.1rem; /* min 16px to prevent font boosting in chrome on android */
 }
 
 html.blog span,
@@ -221,6 +221,7 @@ textarea.blogText {
     height: 200px;
     font-size: 1rem;
     font-weight: normal;
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
 }
 
 .rightAlignedButton {

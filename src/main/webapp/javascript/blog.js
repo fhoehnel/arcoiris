@@ -1482,16 +1482,8 @@ function showSaveSettingsResult(req) {
         hideHourGlass();
     }
 }
-
-function setCalendarStyles() {
-    if (browserFirefox) {
-        var calendarCssElem = document.getElementById("calendarStyle");
-        calendarCssElem.innerHTML = getCalStyles();
-    }
-}
    
 function selectDate() {
-    cal1x.setReturnFunction("setSelectedDate");
     cal1x.select(document.getElementById("blogDate"), "anchorDate", "MM/dd/yyyy");
     centerBox(document.getElementById("calDiv"));
 }

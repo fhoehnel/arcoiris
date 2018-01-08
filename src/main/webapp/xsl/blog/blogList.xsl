@@ -40,8 +40,10 @@
       <link rel="stylesheet" type="text/css">
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
       </link>
-      
-      <style id="calendarStyle"></style>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
+      </link>
       
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
@@ -96,32 +98,15 @@
         </xsl:if>
       
         var ATTACHMENT_MAX_SIZE = <xsl:value-of select="/blog/attachmentMaxSize" />;
-        
-        function setCalendarStyles() 
-        {
-            if (browserFirefox) 
-            {
-                var calendarCssElem = document.getElementById("calendarStyle");
-                calendarCssElem.innerHTML = getCalStyles();
-            }
-        }
-
-        if (!browserFirefox) 
-        {
-            document.write(getCalendarStyles());
-        }
   
-        var cal1x = new CalendarPopup("calDiv");
-   
-        function selectDate()
-        {
-            cal1x.setReturnFunction("setSelectedDate");
-            cal1x.select(document.getElementById("blogDate"), "anchorDate", "MM/dd/yyyy");
-            centerBox(document.getElementById("calDiv"));
-        }
+        var cal1x;
 
-        function setSelectedDate(y, m, d) 
-        { 
+        function prepareCalenderPopup() {
+            cal1x = new CalendarPopup("calDiv");
+            cal1x.setReturnFunction("gotoSelectedDate");
+        }
+   
+        function gotoSelectedDate(y, m, d) { 
             var selectedDate = new Date();
             selectedDate.setYear(y);
             selectedDate.setMonth(m - 1);
@@ -153,10 +138,10 @@
 
     <body class="blog">
       <xsl:if test="not(/blog/readonly)">
-        <xsl:attribute name="onload">setCalendarStyles();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">setCalendarStyles();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
       </xsl:if>
       
       <div class="blogCont">
