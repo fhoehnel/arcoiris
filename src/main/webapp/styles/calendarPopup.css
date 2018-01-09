@@ -51,8 +51,17 @@ TD.cpDayColumnHeader {
 	color: #000000;
 }
 
+.cpCurrentMonthDate a.weekend, 
+.cpCurrentDate a.weekend {
+    color: #c00000;
+}
+
 .cpOtherMonthDate {
 	color: #808080;
+}
+
+.cpOtherMonthDate a.weekend {
+	color: #b06060;
 }
 
 TD.cpCurrentDate {
@@ -87,7 +96,12 @@ A.cpTodayText {
 }
 
 .cpBorder {
-	border: solid thin #808080;
+	border: 2px ridge #808080;
+	border-collapse: collapse;
+}
+
+.cpBorder > tbody > tr > td {
+	padding: 0;
 }
 
 #calDiv {
@@ -111,39 +125,35 @@ A.cpTodayText {
 #calDiv .cpText {
     font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
     font-size: 1.2rem;
-    padding: 4px;
+    padding: 6px;
     white-space: nowrap;
 }
 
 #calDiv table.dayCont {
-	width: 300px;
+	width: 350px;
+    border-collapse: collapse;
 }
 
 #calDiv table table:first-child {
     width: 100%;
     border-bottom: 1px solid #000060;
+    border-collapse: collapse;
 }
 
 #calDiv table table:last-child tr:last-child {
     background-color: #ffffc0;
+    background: linear-gradient(#b0b0b0, #f0f0f0);
 }
 
 #calDiv table table:last-child tr:last-child td{
     border-top: 1px solid #000060;
 }
 
-#calDiv table table:last-child tr:not(:last-child) td:first-child:not(.cpOtherMonthDate) a {
-    color: #c00000;
-}
-
-#calDiv table table:last-child tr:not(:last-child) td:last-child:not(.cpOtherMonthDate) a {
-    color: #b06060;
-}
-
 #calDiv .cpMonthNavigation,
 #calDiv .cpYearNavigation {
     color: #000060;
     background-color: #ffffc0;
+    background: linear-gradient(#f0f0f0, #b0b0b0);
 }
 
 #calDiv .cpMonthNavigation a:hover,

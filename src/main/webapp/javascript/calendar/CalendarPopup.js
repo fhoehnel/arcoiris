@@ -497,7 +497,7 @@ function CP_getCalendar() {
 		result += '<CENTER><TABLE WIDTH=100% BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>\n';
 		}
 	else {
-		result += '<TABLE CLASS="'+this.cssPrefix+'cpBorder" WIDTH=144 BORDER=1 BORDERWIDTH=1 CELLSPACING=0 CELLPADDING=1>\n';
+		result += '<TABLE CLASS="'+this.cssPrefix+'cpBorder">\n';
 		result += '<TR><TD ALIGN=CENTER>\n';
 		result += '<CENTER>\n';
 		}
@@ -534,7 +534,7 @@ function CP_getCalendar() {
 		if (last_month < 1) { last_month=12; last_month_year--; }
 		var date_class;
 		if (this.type!="WINDOW") {
-			result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
+			result += "<TABLE>";
 			}
 		result += '<TR>\n';
 		var refresh = windowref+'CP_refreshCalendar';
@@ -578,7 +578,7 @@ function CP_getCalendar() {
 				}
 			}
 		result += '</TR></TABLE>\n';
-		result += '<TABLE class="dayCont" WIDTH=120 BORDER=0 CELLSPACING=0 CELLPADDING=1 ALIGN=CENTER>\n';
+		result += '<TABLE class="dayCont">\n';
 		result += '<TR>\n';
 		for (var j=0; j<7; j++) {
 
@@ -610,15 +610,23 @@ function CP_getCalendar() {
 					var selected_date = display_date;
 					var selected_month = display_month;
 					var selected_year = display_year;
+					var d = new Date(selected_year,selected_month-1,selected_date,0,0,0,0);
+
+					// inserted by fho
+					var dayOfWeek = d.getDay();
+					var weekendStyleClass = "";
+					if ((dayOfWeek == 0) || (dayOfWeek == 6)) {
+						weekendStyleClass = " weekend";
+					}
+					
 					if (this.displayType=="week-end") {
-						var d = new Date(selected_year,selected_month-1,selected_date,0,0,0,0);
 						d.setDate(d.getDate() + (7-col));
 						selected_year = d.getYear();
 						if (selected_year < 1000) { selected_year += 1900; }
 						selected_month = d.getMonth()+1;
 						selected_date = d.getDate();
 						}
-					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><A HREF="javascript:'+windowref+this.returnFunction+'('+selected_year+','+selected_month+','+selected_date+');'+windowref+'CP_hideCalendar(\''+this.index+'\');" CLASS="'+this.cssPrefix+dateClass+'">'+display_date+'</A></TD>\n';
+					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><A HREF="javascript:'+windowref+this.returnFunction+'('+selected_year+','+selected_month+','+selected_date+');'+windowref+'CP_hideCalendar(\''+this.index+'\');" CLASS="'+this.cssPrefix+dateClass + weekendStyleClass +'">'+display_date+'</A></TD>\n';
 					}
 				display_date++;
 				if (display_date > daysinmonth[display_month]) {

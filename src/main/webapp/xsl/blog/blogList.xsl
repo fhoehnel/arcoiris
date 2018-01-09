@@ -172,7 +172,7 @@
         </div> 
       
         <xsl:if test="not(/blog/readonly)">
-          <a href="#" class="icon-font icon-menu blogMenu" titleResource="blog.settingsHeadline">
+          <a href="javascript:void(0)" class="icon-font icon-menu blogMenu" titleResource="blog.settingsHeadline">
             <xsl:attribute name="onClick">showSettings()</xsl:attribute>
           </a>
           
@@ -187,7 +187,7 @@
         </xsl:if>
 
         <div class="blogCalenderCont">
-          <a href="#" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
+          <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
             <xsl:attribute name="onClick">selectDate()</xsl:attribute>
           </a>
           <input type="text" id="blogDate" style="display:none" />
