@@ -494,12 +494,11 @@ function CP_getCalendar() {
 	// If POPUP, write entire HTML document
 	if (this.type == "WINDOW") {
 		result += "<HTML><HEAD><TITLE>Calendar</TITLE>"+this.getStyles()+"</HEAD><BODY MARGINWIDTH=0 MARGINHEIGHT=0 TOPMARGIN=0 RIGHTMARGIN=0 LEFTMARGIN=0>\n";
-		result += '<CENTER><TABLE WIDTH=100% BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>\n';
+		result += '<TABLE WIDTH=100% BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>\n';
 		}
 	else {
 		result += '<TABLE CLASS="'+this.cssPrefix+'cpBorder">\n';
-		result += '<TR><TD ALIGN=CENTER>\n';
-		result += '<CENTER>\n';
+		result += '<TR><TD style="text-align:center">\n';
 		}
 	// Code for DATE display (default)
 	// -------------------------------
@@ -645,7 +644,7 @@ function CP_getCalendar() {
 			current_weekday += 7;
 			}
 		result += '<TR>\n';
-		result += '	<TD COLSPAN=7 ALIGN=CENTER CLASS="'+this.cssPrefix+'cpTodayText">\n';
+		result += '	<TD COLSPAN=7 CLASS="'+this.cssPrefix+'cpTodayText">\n';
 		if (this.disabledDatesExpression!="") {
 			var ds=""+now.getFullYear()+LZ(now.getMonth()+1)+LZ(now.getDate());
 			eval("disabled=("+this.disabledDatesExpression+")");
@@ -657,7 +656,7 @@ function CP_getCalendar() {
 			result += '		<A CLASS="'+this.cssPrefix+'cpTodayText" HREF="javascript:'+windowref+this.returnFunction+'(\''+now.getFullYear()+'\',\''+(now.getMonth()+1)+'\',\''+now.getDate()+'\');'+windowref+'CP_hideCalendar(\''+this.index+'\');">'+this.todayText+'</A>\n';
 			}
 		result += '		<BR>\n';
-		result += '	</TD></TR></TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '	</TD></TR></TABLE></TD></TR></TABLE>\n';
 	}
 
 	// Code common for MONTH, QUARTER, YEAR
@@ -691,7 +690,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 	
 	// Code for QUARTER display
@@ -706,7 +705,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 
 	// Code for YEAR display
@@ -726,7 +725,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 	// Common
 	if (this.type == "WINDOW") {

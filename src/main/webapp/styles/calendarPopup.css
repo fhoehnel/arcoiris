@@ -80,6 +80,7 @@ TD.cpTodayText,
 TD.cpTodayTextDisabled {
 	border: solid thin #C0C0C0;
 	border-width: 1px 0px 0px 0px;
+	text-align: center;
 }
 
 A.cpTodayText, 
