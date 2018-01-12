@@ -592,6 +592,7 @@ function CP_getCalendar() {
 					var ds=""+display_year+LZ(display_month)+LZ(display_date);
 					eval("disabled=("+this.disabledDatesExpression+")");
 					}
+				
 				var dateClass = "";
 				if ((display_month == this.currentDate.getMonth()+1) && (display_date==this.currentDate.getDate()) && (display_year==this.currentDate.getFullYear())) {
 					dateClass = "cpCurrentDate";
@@ -602,6 +603,17 @@ function CP_getCalendar() {
 				else {
 					dateClass = "cpOtherMonthDate";
 					}
+
+				if (daysWithEntries.length > 0) {
+					var calDay = "" + display_year + "-" + LZ(display_month) + "-" + LZ(display_date);
+
+				    for (var dayIdx = daysWithEntries.length -1; dayIdx >= 0; dayIdx --) {
+				    	if (calDay == daysWithEntries[dayIdx]) {
+				    		dateClass += " calDayWithEntries";
+				    	}
+				    }
+				}
+				
 				if (disabled || this.disabledWeekDays[col-1]) {
 					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><SPAN CLASS="'+this.cssPrefix+dateClass+'Disabled">'+display_date+'</SPAN></TD>\n';
 					}

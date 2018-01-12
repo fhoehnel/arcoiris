@@ -28,6 +28,8 @@ var publicUrl = null;
 
 var lastScrollPos = 0;
 
+var daysWithEntries = new Array();
+
 function existFileReader()
 {
     try
@@ -1484,16 +1486,37 @@ function showSaveSettingsResult(req) {
 }
    
 function selectDate() {
+	daysWithEntries = new Array();	
 	
-	var dateFormat;
-	if (window.navigator.language.indexOf("en") == 0) {
-		dateFormat = "MM/dd/yyyy";
-	} else {
-		dateFormat = "dd.MM.yyyy";
-	}
-	
-    cal1x.select(document.getElementById("blogDate"), "anchorDate", dateFormat);
-    centerBox(document.getElementById("calDiv"));
+    var url = getContextRoot() + "/servlet?command=blog&cmd=datesWithEntries";
+    
+    xmlRequest(url, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+                var responseXml = req.responseXML;
+                var resultItem = responseXml.getElementsByTagName("datesWithEntries")[0];
+
+                var listLength = resultItem.childNodes.length;
+                
+                for (var i = 0; i < listLength; i++) {
+                	var childNode = resultItem.childNodes[i];
+                	if ((childNode.nodeType == 1) && (childNode.tagName == "date")) {
+                		daysWithEntries.push(childNode.firstChild.nodeValue);
+                	}
+                }
+                
+            	var dateFormat;
+            	if (window.navigator.language.indexOf("en") == 0) {
+            		dateFormat = "MM/dd/yyyy";
+            	} else {
+            		dateFormat = "dd.MM.yyyy";
+            	}
+            	
+                cal1x.select(document.getElementById("blogDate"), "anchorDate", dateFormat);
+                centerBox(document.getElementById("calDiv"));
+            }
+        }
+    });          
 }
 
 function setSelectedDate(y, m, d) { 

@@ -64,6 +64,15 @@ TD.cpDayColumnHeader {
 	color: #b06060;
 }
 
+a.calDayWithEntries {
+	font-weight: bold;
+}
+
+td.calDayWithEntries {
+    background-color: #f0f0f0;
+    border: 1px solid navy;
+}
+
 TD.cpCurrentDate {
 	color: white;
 	background-color: #C0C0C0;

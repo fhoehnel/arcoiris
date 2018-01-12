@@ -63,6 +63,7 @@ import de.webfilesys.gui.blog.BlogDeleteCommentsHandler;
 import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
 import de.webfilesys.gui.blog.BlogDetachHandler;
 import de.webfilesys.gui.blog.BlogEditEntryHandler;
+import de.webfilesys.gui.blog.BlogGetDatesWithEntriesHandler;
 import de.webfilesys.gui.blog.BlogGetPublicUrlHandler;
 import de.webfilesys.gui.blog.BlogLikeHandler;
 import de.webfilesys.gui.blog.BlogListCommentsHandler;
@@ -565,6 +566,9 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("detach")) {
                 (new BlogDetachHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("datesWithEntries")) {
+                (new BlogGetDatesWithEntriesHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else if (cmd.equals("switchLowBandwidthMode")) {
                 (new BlogSwitchLowBandwidthHandler(req, resp, session, output, userid)).handleRequest();
