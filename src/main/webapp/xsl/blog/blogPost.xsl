@@ -177,9 +177,9 @@
             <span resource="blog.selectDate"></span>:
             &#160;
           
-            <input type="text" name="blogDate" size="4" maxlength="10" id="blogDate" readonly="readonly" class="blogDate"/>
+            <input type="text" name="blogDate" id="blogDate" readonly="readonly" class="blogDate"/>
             &#160;
-            <a href="#" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
+            <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
               <xsl:attribute name="onClick">selectDate()</xsl:attribute>
             </a>
           </div>
