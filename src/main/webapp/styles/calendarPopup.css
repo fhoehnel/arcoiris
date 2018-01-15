@@ -66,11 +66,11 @@ TD.cpDayColumnHeader {
 
 a.calDayWithEntries {
 	font-weight: bold;
+	color: #208020;
 }
 
 td.calDayWithEntries {
     background-color: #f0f0f0;
-    border: 1px solid navy;
 }
 
 TD.cpCurrentDate {
