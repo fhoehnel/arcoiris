@@ -435,8 +435,11 @@ function CP_select(inputobj, linkname, format) {
 		time = getDateFromFormat(selectedDate,format)
 		}
 	else if (inputobj.value!="") {
-		time = getDateFromFormat(inputobj.value,format);
-		}
+		// MSIE 11 inserts the Unicode RTL (Right-to-Left) mark in Date.toLocaleDateString()
+		// must be removed for parsing
+		var inputValue = inputobj.value.replace(/\u200E/g, "");
+		time = getDateFromFormat(inputValue, format);
+	}
 	if (selectedDate!=null || inputobj.value!="") {
 		if (time==0) { this.currentDate=null; }
 		else { this.currentDate=new Date(time); }
@@ -445,6 +448,18 @@ function CP_select(inputobj, linkname, format) {
 	this.showCalendar(linkname);
 	}
 	
+function fixMSIERemoveEmptyChars(origStr) {
+	var resultStr = "";
+	
+	for (var i = 0; i < origStr.length; i++) {
+		var charCode = origStr.charCodeAt(i);
+		var c = origStr.charAt(i);
+		resultStr += origStr.charAt(i);
+	}
+	
+	return resultStr;
+}
+
 // Get style block needed to display the calendar correctly
 function getCalendarStyles() {
 	var result = "";
@@ -469,29 +484,6 @@ function getCalendarStyles() {
 	return result;
 	}
 
-// function added by Frank Hoehnel
-function getCalStyles() {
-	var result = "";
-	var p = "";
-	if (this!=null && typeof(this.cssPrefix)!="undefined" && this.cssPrefix!=null && this.cssPrefix!="") { p=this.cssPrefix; }
-	result += "."+p+"cpYearNavigation,."+p+"cpMonthNavigation { background-color:#C0C0C0; text-align:center; vertical-align:center; text-decoration:none; color:#000000; font-weight:bold; }\n";
-	result += "."+p+"cpDayColumnHeader, ."+p+"cpYearNavigation,."+p+"cpMonthNavigation,."+p+"cpCurrentMonthDate,."+p+"cpCurrentMonthDateDisabled,."+p+"cpOtherMonthDate,."+p+"cpOtherMonthDateDisabled,."+p+"cpCurrentDate,."+p+"cpCurrentDateDisabled,."+p+"cpTodayText,."+p+"cpTodayTextDisabled,."+p+"cpText { font-family:arial; font-size:8pt; }\n";
-	result += "TD."+p+"cpDayColumnHeader { text-align:right; border:solid thin #C0C0C0;border-width:0px 0px 1px 0px; }\n";
-	result += "."+p+"cpCurrentMonthDate, ."+p+"cpOtherMonthDate, ."+p+"cpCurrentDate  { text-align:right; text-decoration:none; }\n";
-	result += "."+p+"cpCurrentMonthDateDisabled, ."+p+"cpOtherMonthDateDisabled, ."+p+"cpCurrentDateDisabled { color:#D0D0D0; text-align:right; text-decoration:line-through; }\n";
-	result += "."+p+"cpCurrentMonthDate, .cpCurrentDate { color:#000000; }\n";
-	result += "."+p+"cpOtherMonthDate { color:#808080; }\n";
-	result += "TD."+p+"cpCurrentDate { color:white; background-color: #C0C0C0; border-width:1px; border:solid thin #800000; }\n";
-	result += "TD."+p+"cpCurrentDateDisabled { border-width:1px; border:solid thin #FFAAAA; }\n";
-	result += "TD."+p+"cpTodayText, TD."+p+"cpTodayTextDisabled { border:solid thin #C0C0C0; border-width:1px 0px 0px 0px;}\n";
-	result += "A."+p+"cpTodayText, SPAN."+p+"cpTodayTextDisabled { height:20px; }\n";
-	result += "A."+p+"cpTodayText { color:black; }\n";
-	result += "."+p+"cpTodayTextDisabled { color:#D0D0D0; }\n";
-	result += "."+p+"cpBorder { border:solid thin #808080; }\n";
-	return result;
-	}
-
-
 // Return a string containing all the calendar code to be displayed
 function CP_getCalendar() {
 	var now = new Date();
@@ -502,12 +494,11 @@ function CP_getCalendar() {
 	// If POPUP, write entire HTML document
 	if (this.type == "WINDOW") {
 		result += "<HTML><HEAD><TITLE>Calendar</TITLE>"+this.getStyles()+"</HEAD><BODY MARGINWIDTH=0 MARGINHEIGHT=0 TOPMARGIN=0 RIGHTMARGIN=0 LEFTMARGIN=0>\n";
-		result += '<CENTER><TABLE WIDTH=100% BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>\n';
+		result += '<TABLE WIDTH=100% BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>\n';
 		}
 	else {
-		result += '<TABLE CLASS="'+this.cssPrefix+'cpBorder" WIDTH=144 BORDER=1 BORDERWIDTH=1 CELLSPACING=0 CELLPADDING=1>\n';
-		result += '<TR><TD ALIGN=CENTER>\n';
-		result += '<CENTER>\n';
+		result += '<TABLE CLASS="'+this.cssPrefix+'cpBorder">\n';
+		result += '<TR><TD style="text-align:center">\n';
 		}
 	// Code for DATE display (default)
 	// -------------------------------
@@ -542,7 +533,7 @@ function CP_getCalendar() {
 		if (last_month < 1) { last_month=12; last_month_year--; }
 		var date_class;
 		if (this.type!="WINDOW") {
-			result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
+			result += "<TABLE>";
 			}
 		result += '<TR>\n';
 		var refresh = windowref+'CP_refreshCalendar';
@@ -586,7 +577,7 @@ function CP_getCalendar() {
 				}
 			}
 		result += '</TR></TABLE>\n';
-		result += '<TABLE WIDTH=120 BORDER=0 CELLSPACING=0 CELLPADDING=1 ALIGN=CENTER>\n';
+		result += '<TABLE class="dayCont">\n';
 		result += '<TR>\n';
 		for (var j=0; j<7; j++) {
 
@@ -601,6 +592,7 @@ function CP_getCalendar() {
 					var ds=""+display_year+LZ(display_month)+LZ(display_date);
 					eval("disabled=("+this.disabledDatesExpression+")");
 					}
+				
 				var dateClass = "";
 				if ((display_month == this.currentDate.getMonth()+1) && (display_date==this.currentDate.getDate()) && (display_year==this.currentDate.getFullYear())) {
 					dateClass = "cpCurrentDate";
@@ -611,6 +603,17 @@ function CP_getCalendar() {
 				else {
 					dateClass = "cpOtherMonthDate";
 					}
+
+				if (daysWithEntries.length > 0) {
+					var calDay = "" + display_year + "-" + LZ(display_month) + "-" + LZ(display_date);
+
+				    for (var dayIdx = daysWithEntries.length -1; dayIdx >= 0; dayIdx --) {
+				    	if (calDay == daysWithEntries[dayIdx]) {
+				    		dateClass += " calDayWithEntries";
+				    	}
+				    }
+				}
+				
 				if (disabled || this.disabledWeekDays[col-1]) {
 					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><SPAN CLASS="'+this.cssPrefix+dateClass+'Disabled">'+display_date+'</SPAN></TD>\n';
 					}
@@ -618,15 +621,23 @@ function CP_getCalendar() {
 					var selected_date = display_date;
 					var selected_month = display_month;
 					var selected_year = display_year;
+					var d = new Date(selected_year,selected_month-1,selected_date,0,0,0,0);
+
+					// inserted by fho
+					var dayOfWeek = d.getDay();
+					var weekendStyleClass = "";
+					if ((dayOfWeek == 0) || (dayOfWeek == 6)) {
+						weekendStyleClass = " weekend";
+					}
+					
 					if (this.displayType=="week-end") {
-						var d = new Date(selected_year,selected_month-1,selected_date,0,0,0,0);
 						d.setDate(d.getDate() + (7-col));
 						selected_year = d.getYear();
 						if (selected_year < 1000) { selected_year += 1900; }
 						selected_month = d.getMonth()+1;
 						selected_date = d.getDate();
 						}
-					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><A HREF="javascript:'+windowref+this.returnFunction+'('+selected_year+','+selected_month+','+selected_date+');'+windowref+'CP_hideCalendar(\''+this.index+'\');" CLASS="'+this.cssPrefix+dateClass+'">'+display_date+'</A></TD>\n';
+					result += '	<TD CLASS="'+this.cssPrefix+dateClass+'"><A HREF="javascript:'+windowref+this.returnFunction+'('+selected_year+','+selected_month+','+selected_date+');'+windowref+'CP_hideCalendar(\''+this.index+'\');" CLASS="'+this.cssPrefix+dateClass + weekendStyleClass +'">'+display_date+'</A></TD>\n';
 					}
 				display_date++;
 				if (display_date > daysinmonth[display_month]) {
@@ -645,7 +656,7 @@ function CP_getCalendar() {
 			current_weekday += 7;
 			}
 		result += '<TR>\n';
-		result += '	<TD COLSPAN=7 ALIGN=CENTER CLASS="'+this.cssPrefix+'cpTodayText">\n';
+		result += '	<TD COLSPAN=7 CLASS="'+this.cssPrefix+'cpTodayText">\n';
 		if (this.disabledDatesExpression!="") {
 			var ds=""+now.getFullYear()+LZ(now.getMonth()+1)+LZ(now.getDate());
 			eval("disabled=("+this.disabledDatesExpression+")");
@@ -657,7 +668,7 @@ function CP_getCalendar() {
 			result += '		<A CLASS="'+this.cssPrefix+'cpTodayText" HREF="javascript:'+windowref+this.returnFunction+'(\''+now.getFullYear()+'\',\''+(now.getMonth()+1)+'\',\''+now.getDate()+'\');'+windowref+'CP_hideCalendar(\''+this.index+'\');">'+this.todayText+'</A>\n';
 			}
 		result += '		<BR>\n';
-		result += '	</TD></TR></TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '	</TD></TR></TABLE></TD></TR></TABLE>\n';
 	}
 
 	// Code common for MONTH, QUARTER, YEAR
@@ -669,7 +680,7 @@ function CP_getCalendar() {
 			else { var year = now.getFullYear(); }
 			}
 		if (this.displayType!="year" && this.isShowYearNavigation) {
-			result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
+			result += '<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>';
 			result += '<TR>\n';
 			result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year-1)+');">&lt;&lt;</A></TD>\n';
 			result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="100">'+year+'</TD>\n';
@@ -691,7 +702,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 	
 	// Code for QUARTER display
@@ -706,7 +717,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 
 	// Code for YEAR display
@@ -726,7 +737,7 @@ function CP_getCalendar() {
 				}
 			result += '</TR>';
 			}
-		result += '</TABLE></CENTER></TD></TR></TABLE>\n';
+		result += '</TABLE></TD></TR></TABLE>\n';
 		}
 	// Common
 	if (this.type == "WINDOW") {

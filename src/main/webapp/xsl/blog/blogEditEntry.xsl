@@ -38,7 +38,9 @@
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
       </link>
       
-      <style id="calendarStyle"></style>
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
+      </link>
       
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
@@ -86,17 +88,22 @@
       
       <script type="text/javascript">
 
-        if (!browserFirefox) 
-        {
-            document.write(getCalendarStyles());
+        var cal1x;
+
+        var initialDate = new Date(<xsl:value-of select="/blog/blogEntry/blogDate/year" />,
+                                   <xsl:value-of select="/blog/blogEntry/blogDate/month" /> - 1,
+                                   <xsl:value-of select="/blog/blogEntry/blogDate/day" />);
+
+        function prepareCalendar() {
+            cal1x = new CalendarPopup("calDiv");
+            cal1x.setReturnFunction("setSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
         }
-  
-        var cal1x = new CalendarPopup("calDiv");
 
         function setInitialDate() {
-            var initialDate = new Date(<xsl:value-of select="/blog/blogEntry/blogDate/year" />,
-                                       <xsl:value-of select="/blog/blogEntry/blogDate/month" /> - 1,
-                                       <xsl:value-of select="/blog/blogEntry/blogDate/day" />);
         
             document.getElementById("dateDay").value = LZ(initialDate.getDate());        
             document.getElementById("dateMonth").value = LZ(initialDate.getMonth() + 1);        
@@ -114,7 +121,7 @@
     </head>
 
     <body class="blog">
-      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/blogEntry/geoTag/googleMapsAPIKey" />');replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
+      <xsl:attribute name="onload">prepareCalendar();setInitialDate();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/blogEntry/geoTag/googleMapsAPIKey" />');replaceEditThumbnail();<xsl:if test="/blog/blogEntry/geoTag">toggleGeoData(document.getElementById('blogGeoDataSwitcher'));</xsl:if></xsl:attribute>
       
       <div class="blogEditHead" resource="blog.editPostHeadline"></div>    
       
@@ -154,9 +161,9 @@
             <span resource="blog.selectDate"></span>:
             &#160;
           
-            <input type="text" name="blogDate" size="4" maxlength="10" id="blogDate" readonly="readonly" class="blogDate"/>
+            <input type="text" name="blogDate" id="blogDate" readonly="readonly" class="blogDate"/>
             &#160;
-            <a href="#" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
+            <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
               <xsl:attribute name="onClick">selectDate()</xsl:attribute>
             </a>
           </div>

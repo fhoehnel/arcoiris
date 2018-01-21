@@ -40,7 +40,9 @@
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
       </link>
       
-      <style id="calendarStyle"></style>
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
+      </link>
       
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
@@ -88,11 +90,16 @@
       
       
       <script type="text/javascript">
-        if (!browserFirefox) {
-            document.write(getCalendarStyles());
+        var cal1x;
+
+        function prepareCalendar() {
+            cal1x = new CalendarPopup("calDiv");
+            cal1x.setReturnFunction("setSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
         }
-  
-        var cal1x = new CalendarPopup("calDiv");
         
         var SINGLE_FILE_MAX_SIZE = <xsl:value-of select="/blog/uploadLimit" />;
         
@@ -116,7 +123,7 @@
 
     <body class="blog">
     
-      <xsl:attribute name="onload">setCalendarStyles();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/geoTag/googleMapsAPIKey" />')</xsl:attribute>
+      <xsl:attribute name="onload">prepareCalendar();setInitialDate();prepareDropZone();hideBrowserSpecifics();loadGoogleMapsAPIScriptCode('<xsl:value-of select="/blog/geoTag/googleMapsAPIKey" />')</xsl:attribute>
     
       <div class="blogEditHead" resource="blog.createPostHeadline"></div>    
       
@@ -170,9 +177,9 @@
             <span resource="blog.selectDate"></span>:
             &#160;
           
-            <input type="text" name="blogDate" size="4" maxlength="10" id="blogDate" readonly="readonly" class="blogDate"/>
+            <input type="text" name="blogDate" id="blogDate" readonly="readonly" class="blogDate"/>
             &#160;
-            <a href="#" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
+            <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
               <xsl:attribute name="onClick">selectDate()</xsl:attribute>
             </a>
           </div>

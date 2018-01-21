@@ -1,0 +1,183 @@
+/* styles for the Javascript calendar by Matt Kruse (http://www.mattkruse.com) */
+
+.cpYearNavigation, .cpMonthNavigation {
+	background-color: #C0C0C0;
+	text-align: center;
+	vertical-align: center;
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+.cpDayColumnHeader, 
+.cpYearNavigation, 
+.cpMonthNavigation,
+.cpCurrentMonthDate, 
+.cpCurrentMonthDateDisabled, 
+.cpOtherMonthDate,
+.cpOtherMonthDateDisabled, 
+.cpCurrentDate, 
+.cpCurrentDateDisabled,
+.cpTodayText, 
+.cpTodayTextDisabled, 
+.cpText {
+	font-family: arial;
+	font-size: 8pt;
+}
+
+TD.cpDayColumnHeader {
+	text-align: right;
+	border: solid thin #C0C0C0;
+	border-width: 0px 0px 1px 0px;
+}
+
+.cpCurrentMonthDate, 
+.cpOtherMonthDate, 
+.cpCurrentDate {
+	text-align: right;
+	text-decoration: none;
+}
+
+.cpCurrentMonthDateDisabled, 
+.cpOtherMonthDateDisabled,
+.cpCurrentDateDisabled {
+	color: #D0D0D0;
+	text-align: right;
+	text-decoration: line-through;
+}
+
+.cpCurrentMonthDate, 
+.cpCurrentDate {
+	color: #000000;
+}
+
+.cpCurrentMonthDate a.weekend, 
+.cpCurrentDate a.weekend {
+    color: #c00000;
+}
+
+.cpOtherMonthDate {
+	color: #808080;
+}
+
+.cpOtherMonthDate a.weekend {
+	color: #b06060;
+}
+
+a.calDayWithEntries {
+	font-weight: bold;
+	color: #208020;
+}
+
+td.calDayWithEntries {
+    background-color: #f0f0f0;
+}
+
+TD.cpCurrentDate {
+	color: white;
+	background-color: #C0C0C0;
+	border-width: 1px;
+	border: solid thin #800000;
+}
+
+TD.cpCurrentDateDisabled {
+	border-width: 1px;
+	border: solid thin #FFAAAA;
+}
+
+TD.cpTodayText, 
+TD.cpTodayTextDisabled {
+	border: solid thin #C0C0C0;
+	border-width: 1px 0px 0px 0px;
+	text-align: center;
+}
+
+A.cpTodayText, 
+SPAN.cpTodayTextDisabled {
+	height: 20px;
+}
+
+A.cpTodayText {
+	color: black;
+}
+
+.cpTodayTextDisabled {
+	color: #D0D0D0;
+}
+
+.cpBorder {
+	border: 2px ridge #808080;
+	border-collapse: collapse;
+}
+
+.cpBorder > tbody > tr > td {
+	padding: 0;
+}
+
+#calDiv {
+    background-color: ivory;
+    position: absolute;
+    layer-background-color: ivory;
+    visibility: hidden;
+}
+
+#calDiv .cpDayColumnHeader, 
+#calDiv .cpYearNavigation, 
+#calDiv .cpMonthNavigation, 
+#calDiv .cpCurrentMonthDate, 
+#calDiv .cpCurrentMonthDateDisabled, 
+#calDiv .cpOtherMonthDate, 
+#calDiv .cpOtherMonthDateDisabled, 
+#calDiv .cpCurrentDate, 
+#calDiv .cpCurrentDateDisabled, 
+#calDiv .cpTodayText, 
+#calDiv .cpTodayTextDisabled, 
+#calDiv .cpText {
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 1.2rem;
+    padding: 6px;
+    white-space: nowrap;
+}
+
+#calDiv table.dayCont {
+	width: 350px;
+    border-collapse: collapse;
+}
+
+#calDiv table table:first-child {
+    width: 100%;
+    border-bottom: 1px solid #000060;
+    border-collapse: collapse;
+}
+
+#calDiv table table:last-child tr:last-child {
+    background-color: #ffffc0;
+    background: linear-gradient(#b0b0b0, #f0f0f0);
+}
+
+#calDiv table table:last-child tr:last-child td{
+    border-top: 1px solid #000060;
+}
+
+#calDiv .cpMonthNavigation,
+#calDiv .cpYearNavigation {
+    color: #000060;
+    background-color: #ffffc0;
+    background: linear-gradient(#f0f0f0, #b0b0b0);
+}
+
+#calDiv .cpMonthNavigation a:hover,
+#calDiv .cpTodayText a:hover {
+    color: #a00000;
+}
+
+#calDiv .cpDayColumnHeader {
+    font-weight: bold;
+}
+
+#calDiv a.cpTodayText {
+    color: #000060;
+    text-decoration: none;
+    font-weight: bold;
+}
+
