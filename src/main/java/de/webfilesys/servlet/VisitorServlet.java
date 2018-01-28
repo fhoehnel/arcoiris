@@ -40,10 +40,7 @@ public class VisitorServlet extends BlogWebServlet {
 
     public static final String SESSION_ATTRIB_VISITOR_ID = "visitorId";
 
-    private static final int VISITOR_COOKIE_MAX_AGE = 120 * 24 * 60 * 60; // expires
-                                                                          // after
-                                                                          // 120
-                                                                          // days
+    private static final int VISITOR_COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // expires after one year
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
 

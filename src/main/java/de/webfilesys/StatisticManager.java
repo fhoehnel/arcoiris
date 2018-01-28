@@ -33,6 +33,8 @@ public class StatisticManager extends Thread {
     private final static long MONTH_MILLIS = 30L * DAY_MILLIS;
     private final static long YEAR_MILLIS = 365L * DAY_MILLIS;
     
+    private static final long EXPIRATION_MILLIS = 366 * DAY_MILLIS;
+    
     private HashMap<String, Element> userCache = null;
 
     boolean cacheDirty = false;
@@ -186,12 +188,25 @@ public class StatisticManager extends Thread {
     public synchronized void run() {
         boolean exitFlag = false;
 
+        int loopCounter = 0;
+        
         while (!exitFlag) {
             try {
                 this.wait(60000);
 
                 if (cacheDirty) {
                     saveToFile();
+                }
+                
+                loopCounter++;
+                
+                if (loopCounter == 60 * 24) {
+                    removeExpiredVisits();
+                    loopCounter = 0;
+
+                    if (cacheDirty) {
+                        saveToFile();
+                    }
                 }
             } catch (InterruptedException e) {
                 if (cacheDirty) {
@@ -237,14 +252,16 @@ public class StatisticManager extends Thread {
     
     public void addVisit(String userid, String visitorId) {
         
-        Element visitListElem = getVisitListElem(userid);
-        
-        Element visitElem = doc.createElement("visit");
-        XmlUtil.setChildText(visitElem, "timestamp", Long.toString(System.currentTimeMillis()));
-        XmlUtil.setChildText(visitElem, "visitorId", visitorId);
-        
-        visitListElem.appendChild(visitElem);
-        cacheDirty = true;
+        synchronized(statisticRoot) {
+            Element visitListElem = getVisitListElem(userid);
+            
+            Element visitElem = doc.createElement("v");
+            XmlUtil.setChildText(visitElem, "t", Long.toString(System.currentTimeMillis()));
+            XmlUtil.setChildText(visitElem, "vId", visitorId);
+            
+            visitListElem.appendChild(visitElem);
+            cacheDirty = true;
+        }        
     }
     
     public VisitStatistic getVisitsByAge(String userid) {
@@ -259,7 +276,7 @@ public class StatisticManager extends Thread {
         
         Element visitListElem = getVisitListElem(userid);
         
-        NodeList visitList = visitListElem.getElementsByTagName("visit");
+        NodeList visitList = visitListElem.getElementsByTagName("v");
 
         if (visitList != null) {
 
@@ -270,12 +287,12 @@ public class StatisticManager extends Thread {
             for (int i = 0; i < listLength; i++) {
                 Element visitElem = (Element) visitList.item(i);
 
-                String timestamp = XmlUtil.getChildText(visitElem, "timestamp");
+                String timestamp = XmlUtil.getChildText(visitElem, "t");
                 
                 try {
                     long visitTime = Long.parseLong(timestamp);
                     
-                    String visitorId = XmlUtil.getChildText(visitElem, "visitorId");
+                    String visitorId = XmlUtil.getChildText(visitElem, "vId");
 
                     if (now - visitTime < YEAR_MILLIS) {
                         visitStats.setVisitsLastYear(visitStats.getVisitsLastYear() + 1);
@@ -319,5 +336,59 @@ public class StatisticManager extends Thread {
         visitStats.setDistinctVisitorsLastYear(distinctVisitorsLastYear.size());
         
         return visitStats;
+    }
+    
+    private void removeExpiredVisits() {
+       
+        synchronized(statisticRoot) {
+
+            int expirationCounter = 0;
+            
+            NodeList userList = statisticRoot.getElementsByTagName("user");
+
+            if (userList != null) {
+
+                long now = System.currentTimeMillis();
+                
+                int userListLength = userList.getLength();
+
+                for (int i = 0; i < userListLength; i++) {
+                    Element userElem = (Element) userList.item(i);
+                    
+                    Element visitListElem = XmlUtil.getChildByTagName(userElem, "visits");
+
+                    if (visitListElem != null) {
+                        NodeList visitList = visitListElem.getElementsByTagName("v");
+
+                        if (visitList != null) {
+
+                            int listLength = visitList.getLength();
+
+                            for (int k = listLength - 1; k >= 0; k--) {
+                                Element visitElem = (Element) visitList.item(k);
+
+                                String timestamp = XmlUtil.getChildText(visitElem, "t");
+                                
+                                try {
+                                    long visitTime = Long.parseLong(timestamp);
+                                    
+                                    if (now - visitTime > EXPIRATION_MILLIS) {
+                                        visitListElem.removeChild(visitElem);
+                                        expirationCounter++;
+                                        cacheDirty = true;
+                                    }
+                                } catch (Exception ex) {
+                                    LOG.error("invalid timestamp value: " + timestamp);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(expirationCounter + " expired visits removed from statistcis");
+            }
+        }
     }
 }
