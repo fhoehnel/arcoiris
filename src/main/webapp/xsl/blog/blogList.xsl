@@ -177,6 +177,10 @@
           </a>
           
           <a href="javascript:showSearchForm()" class="icon-font icon-search blogMenu" titleResource="blog.search" />
+
+          <a href="javascript:void(0)" class="icon-font icon-stats blogMenu" titleResource="blog.statisticIcon">
+            <xsl:attribute name="onClick">statistics()</xsl:attribute>
+          </a>
           
           <xsl:if test="not(/blog/lowBandwidthMode)">
             <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.lowBandwith" />

@@ -2087,3 +2087,30 @@ function viewGeoTrack(blogFileName, attachmentName) {
     geoTrackWin.focus();
 }
 
+function statistics() {
+    showHourGlass();
+
+    var statisticCont = document.createElement("div"); 
+    statisticCont.id = "statisticCont";
+    statisticCont.setAttribute("class", "statisticCont");
+    
+    document.body.appendChild(statisticCont);
+
+    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=statistics";
+        
+    var xslUrl = getContextRoot() + "/xsl/blog/statistics.xsl";    
+        
+    htmlFragmentByXslt(xmlUrl, xslUrl, statisticCont, function() {
+        setBundleResources();
+        centerBox(statisticCont);
+        statisticCont.style.visibility = "visible";
+        hideHourGlass();
+    });
+}
+
+function hideStatistics() {
+    var statisticCont = document.getElementById("statisticCont");
+    if (statisticCont) {
+        statisticCont.parentNode.removeChild(statisticCont);
+    }
+}

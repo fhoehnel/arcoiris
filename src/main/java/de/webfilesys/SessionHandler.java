@@ -100,6 +100,8 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
 
         InvitationManager.getInstance().interrupt();
         
+        StatisticManager.getInstance().interrupt();
+        
         if (ArcoirisBlog.getInstance().getDiskQuotaInspector() != null) {
             ArcoirisBlog.getInstance().getDiskQuotaInspector().interrupt();
         }
