@@ -274,16 +274,15 @@ blog.sortOrderDiary=Tagebuch (älteste zuerst)
 blog.lowBandwith=zu Modus für langsame Internetverbindung wechseln
 blog.highBandwith=zu Modus für schnelle Internetverbindung wechseln
 
-visitsLast24Hours=Besuche letzte 24 Stunden
-visitorsLast24Hours=unterschiedliche Besucher letzte 24 Stunden
-visitsLast48Hours=Besuche letzte 48 Stunden
-visitorsLast48Hours=unterschiedliche Besucher letzte 48 Stunden
-visitsLastWeek=Besuche letzte Woche
-visitorsLastWeek=unterschiedliche Besucher letzte Woche
-visitsLastMonth=Besuche letzter Monat
-visitorsLastMonth=unterschiedliche Besucher letzter Monat
-visitsLastYear=Besuche letztes Jahr
-visitorsLastYear=unterschiedliche Besucher letztes Jahr
+statLast24Hours=letzte 24 Stunden
+statLast48Hours=letzte 48 Stunden
+statLastWeek=letzte Woche
+statLastMonth=letzter Monat
+statLastYear=letztes Jahr
+
+statisticVisits=Besuche
+statisticVisitors=unterschiedliche Besucher
+statisticComments=Kommentare von Besuchern
 
 upload.attachment.headline=Datei anhängen
 upload.attachment.label=Datei auswählen

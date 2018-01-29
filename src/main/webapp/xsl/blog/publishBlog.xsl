@@ -21,7 +21,7 @@
 	    <span resource="blog.daysPerPage" />:
       </td>
       <td class="formParm2" width="70%">
-        <input type="text" id="daysPerPage" name="daysPerPage" maxlength="3" style="width:80px;" />
+        <input type="text" id="visitorDaysPerPage" name="daysPerPage" maxlength="3" style="width:80px;" />
       </td>
     </tr>
 

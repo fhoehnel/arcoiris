@@ -275,16 +275,15 @@ blog.sortOrderDiary=diario (lo más viejo primero)
 blog.lowBandwith=cambiar a modo de red lenta
 blog.highBandwith=cambiar a modo de red rápida
 
-visitsLast24Hours=visitas en las últimas 24 horas
-visitorsLast24Hours=diferentes visitantes en las últimas 24 horas
-visitsLast48Hours=visitas en las últimas 48 horas
-visitorsLast48Hours=diferentes visitantes en las últimas 48 horas
-visitsLastWeek=visitas durante la última semana
-visitorsLastWeek=diferentes visitantes durante la última semana
-visitsLastMonth=visitas durante el último mes
-visitorsLastMonth=diferentes visitantes durante el último mes
-visitsLastYear=visitas durante el último año
-visitorsLastYear=diferentes visitantes durante el último año
+statLast24Hours=las últimas 24 horas
+statLast48Hours=las últimas 48 horas
+statLastWeek=la última semana
+statLastMonth=el último mes
+statLastYear=el último año
+
+statisticVisits=visitas
+statisticVisitors=diferentes visitantes
+statisticComments=comentarios de visitantes
 
 upload.attachment.headline=adjuntar un archivo
 upload.attachment.label=selecciona archivo

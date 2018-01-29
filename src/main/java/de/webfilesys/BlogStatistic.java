@@ -1,13 +1,18 @@
 package de.webfilesys;
 
-public class VisitStatistic {
+public class BlogStatistic {
 
     private int visitsLastDay;
     private int visitsLast2Days;
     private int visitsLastWeek;
     private int visitsLastMonth;
     private int visitsLastYear;
-    
+
+    private int commentsLastDay;
+    private int commentsLast2Days;
+    private int commentsLastWeek;
+    private int commentsLastMonth;
+    private int commentsLastYear;
     
     private int distinctVisitorsLastDay;
     private int distinctVisitorsLast2Days;
@@ -95,4 +100,44 @@ public class VisitStatistic {
         return distinctVisitorsLastYear;
     }
 
+    public void setCommentsLastDay(int newVal) {
+        commentsLastDay = newVal;
+    }
+    
+    public int getCommentsLastDay() {
+        return commentsLastDay;
+    }
+
+    public void setCommentsLast2Days(int newVal) {
+        commentsLast2Days = newVal;
+    }
+    
+    public int getCommentsLast2Days() {
+        return commentsLast2Days;
+    }
+    
+    public void setCommentsLastWeek(int newVal) {
+        commentsLastWeek = newVal;
+    }
+    
+    public int getCommentsLastWeek() {
+        return commentsLastWeek;
+    }
+
+    public void setCommentsLastMonth(int newVal) {
+        commentsLastMonth = newVal;
+    }
+    
+    public int getCommentsLastMonth() {
+        return commentsLastMonth;
+    }
+    
+    public void setCommentsLastYear(int newVal) {
+        visitsLastYear = newVal;
+    }
+    
+    public int getCommentsLastYear() {
+        return visitsLastYear;
+    }
+    
 }

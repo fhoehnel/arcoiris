@@ -547,8 +547,18 @@ div.statisticList {
     height: 310px;
 }
 
-div.statisticList table {
-    width: 100%;
+div.statisticList table td {
+    padding-left: 10px;
+}
+
+div.statisticList table td:nth-child(2) {
+    text-align: right;
+}
+
+div.statisticList table tr.statisticDateRange td {
+    color: #000060;
+    font-weight: bold;
+    padding-left: 0;
 }
 
 div.blogSearchFormCont {
@@ -828,7 +838,7 @@ div.statisticCont {
     position: absolute;
     right: 10px;
     top: 10px;
-    width: 400px;
+    width: 300px;
     height: 400px;
     border: 2px ridge #808080;
     background-color: #ffffe0;

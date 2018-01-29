@@ -790,7 +790,7 @@ function hidePublishForm() {
 }
 
 function validatePublishFormAndSubmit() {
-    var daysPerPage = parseInt(document.getElementById("daysPerPage").value);
+    var daysPerPage = parseInt(document.getElementById("visitorDaysPerPage").value);
 
     if (isNaN(daysPerPage) || (daysPerPage < 1) || (daysPerPage > 32)) {
         alert(resourceBundle["blog.invalidDaysPerPageValue"]);
@@ -844,6 +844,7 @@ function showPublishResult(req) {
                 tableRow.appendChild(tableCell);
                 
                 var urlInput = document.createElement("textarea");
+                urlInput.id = "publicUrl";
                 urlInput.setAttribute("class", "publicLinkCopyField");
                 urlInput.setAttribute("readonly", "readonly");
                 urlInput.value = publicUrl;
@@ -857,7 +858,6 @@ function showPublishResult(req) {
 
                 tableCell = document.createElement("td");
                 tableCell.style.paddingTop = "20px";
-                tableCell.style.textAlign = "center";
                 tableRow.appendChild(tableCell);
 
                 var closeButton = document.createElement("input");
@@ -865,6 +865,13 @@ function showPublishResult(req) {
                 closeButton.setAttribute("value", resourceBundle["button.closewin"]);
                 closeButton.setAttribute("onclick", "hidePublishForm()");
                 tableCell.appendChild(closeButton);
+                
+                var copyButton = document.createElement("input");
+                copyButton.setAttribute("type", "button");
+                copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
+                copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
+                copyButton.setAttribute("style", "float:right");
+                tableCell.appendChild(copyButton);
                 
                 document.getElementById("publishBlogButton").style.display = "none";                    
                 document.getElementById("unpublishButton").style.display = "inline";

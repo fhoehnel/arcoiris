@@ -274,16 +274,15 @@ blog.sortOrderDiary=diary (oldest first)
 blog.lowBandwith=switch to slow network mode
 blog.highBandwith=switch to fast network mode
 
-visitsLast24Hours=visits last 24 hours
-visitorsLast24Hours=distinct visitors last 24 hours
-visitsLast48Hours=visits last 48 hours
-visitorsLast48Hours=distinct visitors last 48 hours
-visitsLastWeek=visits last week
-visitorsLastWeek=distinct visitors last week
-visitsLastMonth=visits last month
-visitorsLastMonth=distinct visitors last month
-visitsLastYear=visits last year
-visitorsLastYear=distinct visitors last year
+statLast24Hours=last 24 hours
+statLast48Hours=last 48 hours
+statLastWeek=last week
+statLastMonth=last month
+statLastYear=last year
+
+statisticVisits=visits
+statisticVisitors=distinct visitors
+statisticComments=visitor comments
 
 upload.attachment.headline=attach file
 upload.attachment.label=select file

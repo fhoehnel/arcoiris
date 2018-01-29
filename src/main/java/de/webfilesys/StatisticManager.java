@@ -27,11 +27,11 @@ public class StatisticManager extends Thread {
     
     private static final Logger LOG = Logger.getLogger(StatisticManager.class);
     
-    private final static long DAY_MILLIS = 1000L * 60L * 60L * 24L;
-    private final static long TWO_DAY_MILLIS = 2L * DAY_MILLIS;
-    private final static long WEEK_MILLIS = 7L * DAY_MILLIS;
-    private final static long MONTH_MILLIS = 30L * DAY_MILLIS;
-    private final static long YEAR_MILLIS = 365L * DAY_MILLIS;
+    public final static long DAY_MILLIS = 1000L * 60L * 60L * 24L;
+    public final static long TWO_DAY_MILLIS = 2L * DAY_MILLIS;
+    public final static long WEEK_MILLIS = 7L * DAY_MILLIS;
+    public final static long MONTH_MILLIS = 30L * DAY_MILLIS;
+    public final static long YEAR_MILLIS = 365L * DAY_MILLIS;
     
     private static final long EXPIRATION_MILLIS = 366 * DAY_MILLIS;
     
@@ -264,7 +264,7 @@ public class StatisticManager extends Thread {
         }        
     }
     
-    public VisitStatistic getVisitsByAge(String userid) {
+    public BlogStatistic getVisitsByAge(String userid) {
 
         HashMap<String, Boolean> distinctVisitorsLastDay = new HashMap<String, Boolean>();
         HashMap<String, Boolean> distinctVisitorsLast2Days = new HashMap<String, Boolean>();
@@ -272,7 +272,7 @@ public class StatisticManager extends Thread {
         HashMap<String, Boolean> distinctVisitorsLastMonth = new HashMap<String, Boolean>();
         HashMap<String, Boolean> distinctVisitorsLastYear = new HashMap<String, Boolean>();
         
-        VisitStatistic visitStats = new VisitStatistic();
+        BlogStatistic visitStats = new BlogStatistic();
         
         Element visitListElem = getVisitListElem(userid);
         
