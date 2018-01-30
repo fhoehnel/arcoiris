@@ -24,6 +24,7 @@ import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.Constants;
 import de.webfilesys.FileComparator;
 import de.webfilesys.GeoTag;
+import de.webfilesys.IconManager;
 import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.ScaledImage;
@@ -488,9 +489,13 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                     if ((attachments != null) && (attachments.size() > 0)) {
                                         String attachmentFileName = attachments.get(0);
                                         if (isGpsTrack(attachmentFileName)) {
-                                            XmlUtil.setChildText(fileElement, "geoTrack", attachments.get(0));
+                                            XmlUtil.setChildText(fileElement, "geoTrack", attachmentFileName);
                                         } else {
-                                            XmlUtil.setChildText(fileElement, "attachment", attachments.get(0));
+                                            Element attachmentElem = doc.createElement("attachment");
+                                            XmlUtil.setElementText(attachmentElem, attachmentFileName);
+                                            String attachmentIcon = IconManager.getInstance().getIconForFileName(attachmentFileName);
+                                            attachmentElem.setAttribute("icon", attachmentIcon);
+                                            fileElement.appendChild(attachmentElem);
                                         }
                                     }
                                     

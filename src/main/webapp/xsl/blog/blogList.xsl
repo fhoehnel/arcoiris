@@ -476,9 +476,18 @@
                   </xsl:if>
 
                   <xsl:if test="attachment">
-                    <a href="javascript:void(0)" class="icon-font icon-file icon-blog-file" titleResource="blog.viewAttach">
+                    <a href="javascript:void(0)" titleResource="blog.viewAttach">
+                      <xsl:if test="/blog/readonly">
+                        <xsl:attribute name="class">icon-font icon-attachment icon-blog-attachment</xsl:attribute>
+                      </xsl:if>
+                      <xsl:if test="not(/blog/readonly)">
+                        <xsl:attribute name="class">attachmentIcon</xsl:attribute>
+                      </xsl:if>
                       <xsl:attribute name="id">viewAttachmentIcon-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
                       <xsl:attribute name="onClick">viewAttachment('<xsl:value-of select="@name" />', '<xsl:value-of select="attachment" />')</xsl:attribute>
+                      <img>
+                        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/icons/<xsl:value-of select="attachment/@icon" /></xsl:attribute>
+                      </img>
                     </a>
                   </xsl:if>
 

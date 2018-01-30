@@ -312,6 +312,10 @@ a.icon-blog-rotate {
     text-decoration: none;
 }
 
+a.attachmentIcon img {
+    margin-top: 6px;
+}
+
 div.blogGeoDataSwitcher {
     margin-top: 16px;
     margin-bottom: 16px;
