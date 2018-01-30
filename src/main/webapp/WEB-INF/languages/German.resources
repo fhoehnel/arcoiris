@@ -229,6 +229,7 @@ blog.moveError=Fehler beim Verschieben des Blog-Eintrages
 blog.rotateError=Fehler beim Drehen des Bildes
 blog.commentAdded=der Kommentar wurde hinzugefügt
 blog.search=Suchen
+blog.statisticIcon=Statistik
 blog.subscribe=Abonnieren
 blog.subscribeButton=Abonnieren
 blog.subscribePrompt=Abonnieren Sie diesen Blog, um über Änderungen per e-mail informiert zu werden. Geben Sie Ihre e-mail Adresse ein:
@@ -243,6 +244,7 @@ blog.subjectNewCommentNotification=Neue Kommentare im Blog
 blog.showSubscribers=Abonnenten
 blog.headlineSubscribers=Abonnenten
 blog.noSubscribers=Der Blog wurde noch nicht abonniert.
+blog.headlineStatistics=Besucher-Statistik
 blog.insertEmoji=diese Emoticon an der Cursorposition einfügen
 blog.showEmojis=Emoticons anzeigen/einfügen
 blog.insertLink=externen Link einfügen
@@ -271,6 +273,16 @@ blog.sortOrderBlog=Blog (neueste zuerst)
 blog.sortOrderDiary=Tagebuch (älteste zuerst)
 blog.lowBandwith=zu Modus für langsame Internetverbindung wechseln
 blog.highBandwith=zu Modus für schnelle Internetverbindung wechseln
+
+statLast24Hours=letzte 24 Stunden
+statLast48Hours=letzte 48 Stunden
+statLastWeek=letzte Woche
+statLastMonth=letzter Monat
+statLastYear=letztes Jahr
+
+statisticVisits=Besuche
+statisticVisitors=unterschiedliche Besucher
+statisticComments=Kommentare von Besuchern
 
 upload.attachment.headline=Datei anhängen
 upload.attachment.label=Datei auswählen

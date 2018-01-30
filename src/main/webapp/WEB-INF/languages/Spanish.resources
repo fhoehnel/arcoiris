@@ -230,6 +230,7 @@ blog.moveError=error al mover la entrada de blog
 blog.rotateError=error al girar la imagen
 blog.commentAdded=el comentario nuevo ha sido guardado
 blog.search=buscar
+blog.statisticIcon=estadística
 blog.subscribe=suscribir
 blog.subscribeButton=Suscribir
 blog.subscribePrompt=Suscribirse a este blog para ser notificado por correo electrónico cuando se crean nuevas entradas de blog. Introduzca su dirección de correo electrónico:
@@ -244,6 +245,7 @@ blog.subjectNewCommentNotification=Nuevos comentarios en el Blog
 blog.showSubscribers=Suscriptores
 blog.headlineSubscribers=suscriptores que miran este Blog
 blog.noSubscribers=Su blog tiene ningún suscriptor todavía.
+blog.headlineStatistics=Estadísticas de visitantes
 blog.insertEmoji=insertar este emoticón en el texto en la posición del cursor
 blog.showEmojis=mostrar/insertar emoticonos
 blog.insertLink=insertar enlace externo
@@ -272,6 +274,16 @@ blog.sortOrderBlog=blog (el más reciente primero)
 blog.sortOrderDiary=diario (lo más viejo primero)
 blog.lowBandwith=cambiar a modo de red lenta
 blog.highBandwith=cambiar a modo de red rápida
+
+statLast24Hours=las últimas 24 horas
+statLast48Hours=las últimas 48 horas
+statLastWeek=la última semana
+statLastMonth=el último mes
+statLastYear=el último año
+
+statisticVisits=visitas
+statisticVisitors=diferentes visitantes
+statisticComments=comentarios de visitantes
 
 upload.attachment.headline=adjuntar un archivo
 upload.attachment.label=selecciona archivo

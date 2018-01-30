@@ -433,7 +433,33 @@ public class InvitationManager extends Thread {
 
         return (virtualUser);
     }
+    
+    public String getFirstVirtualUser(String ownerUserid) {
+        NodeList invitationList = invitationRoot.getElementsByTagName("invitation");
 
+        if (invitationList == null) {
+            return  null;
+        }
+
+        int listLength = invitationList.getLength();
+
+        for (int i = 0; i < listLength; i++) {
+            Element invitationElement = (Element) invitationList.item(i);
+
+            String owner = XmlUtil.getChildText(invitationElement, "user");
+
+            if ((owner != null) && owner.equals(ownerUserid)) {
+                String virtualUser = XmlUtil.getChildText(invitationElement, "virtualUser");
+                
+                if (!CommonUtils.isEmpty(virtualUser)) {
+                    return virtualUser;
+                }
+            }
+        }
+
+        return null;
+    }
+    
     public boolean commentsAllowed(String virtualUser) {
         NodeList invitationList = invitationRoot.getElementsByTagName("invitation");
 

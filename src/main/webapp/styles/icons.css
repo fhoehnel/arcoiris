@@ -181,6 +181,10 @@ a.icon-font {
 	content: '\f079';
 }
 
+.icon-stats:before {
+	content: '\f080';
+}
+
 .icon-page-prev:before {
 	content: '\f04a';
 }

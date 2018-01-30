@@ -13,10 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ViewHandlerConfig;
 import de.webfilesys.ViewHandlerManager;
-import de.webfilesys.ArcoirisBlog;
+import de.webfilesys.graphics.BlogThumbnailHandler;
+import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.FileEncodingMap;
 import de.webfilesys.util.MimeTypeMap;
 import de.webfilesys.viewhandler.ViewHandler;
@@ -37,16 +37,18 @@ public class GetFileRequestHandler extends UserRequestHandler {
             if (fileName != null) {
                 String cwdPath = getCwd();
                 if (cwdPath != null) {
-                    if (cwdPath.endsWith(File.separator)) {
-                        filePath = cwdPath + fileName;
+                    String thumbParam = getParameter("thumb");
+                    if ((thumbParam != null) && thumbParam.equalsIgnoreCase("true")) {
+                        filePath = CommonUtils.joinFilesysPath(cwdPath, CommonUtils.joinFilesysPath(BlogThumbnailHandler.BLOG_THUMB_PATH, fileName));
                     } else {
-                        filePath = cwdPath + File.separatorChar + fileName;
+                        filePath = CommonUtils.joinFilesysPath(cwdPath, fileName);
                     }
                 }
             }
         }
 
         if (!this.checkAccess(filePath)) {
+            Logger.getLogger(getClass()).warn("unauthorized access to " + filePath);
             return;
         }
 
@@ -85,21 +87,22 @@ public class GetFileRequestHandler extends UserRequestHandler {
         String mimeType = MimeTypeMap.getInstance().getMimeType(filePath);
 
         resp.setContentType(mimeType);
-
+        
         String cached = getParameter("cached");
 
         if ((cached != null) && (cached.equals("true"))) {
             // overwrite the no chache headers already set in WebFileSysServlet
             // resp.setHeader("Cache-Control", null);
             resp.setHeader("Cache-Control", "public, max-age=3600, s-maxage=3600");
-            resp.setDateHeader("expires", System.currentTimeMillis() + (60 * 60 * 1000)); // now
-                                                                                          // +
-                                                                                          // 10
-                                                                                          // hours
+            resp.setDateHeader("expires", System.currentTimeMillis() + (60 * 60 * 1000)); // now + 10 hours
         }
 
-        if ((disposition != null) && disposition.equals(("download"))) {
-            resp.setHeader("Content-Disposition", "attachment; filename=" + fileToSend.getName());
+        if (!CommonUtils.isEmpty(disposition)) {
+            if (disposition.equals("download")) {
+                resp.setHeader("Content-Disposition", "attachment; filename=" + fileToSend.getName());
+            } else if (disposition.equals("inline")) {
+                resp.setHeader("Content-Disposition", "inline; filename=" + fileToSend.getName());
+            }
         }
         
         if (disposition == null) {

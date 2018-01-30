@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.ArcoirisBlog;
+import de.webfilesys.StatisticManager;
 import de.webfilesys.gui.blog.BlogListHandler;
 import de.webfilesys.mail.SmtpEmail;
 import de.webfilesys.user.UserManager;
@@ -39,10 +40,7 @@ public class VisitorServlet extends BlogWebServlet {
 
     public static final String SESSION_ATTRIB_VISITOR_ID = "visitorId";
 
-    private static final int VISITOR_COOKIE_MAX_AGE = 120 * 24 * 60 * 60; // expires
-                                                                          // after
-                                                                          // 120
-                                                                          // days
+    private static final int VISITOR_COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // expires after one year
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
 
@@ -145,6 +143,8 @@ public class VisitorServlet extends BlogWebServlet {
             if (userMgr.getRole(visitorUserId).equals("blog")) {
                 (new BlogListHandler(req, resp, session, output, visitorUserId)).handleRequest();
             }
+            
+            StatisticManager.getInstance().addVisit(visitorUserId, visitorId);
         } else {
             sendNotAuthorizedPage(resp);
         }
