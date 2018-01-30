@@ -87,7 +87,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
         String mimeType = MimeTypeMap.getInstance().getMimeType(filePath);
 
         resp.setContentType(mimeType);
-
+        
         String cached = getParameter("cached");
 
         if ((cached != null) && (cached.equals("true"))) {
@@ -97,8 +97,12 @@ public class GetFileRequestHandler extends UserRequestHandler {
             resp.setDateHeader("expires", System.currentTimeMillis() + (60 * 60 * 1000)); // now + 10 hours
         }
 
-        if ((disposition != null) && disposition.equals(("download"))) {
-            resp.setHeader("Content-Disposition", "attachment; filename=" + fileToSend.getName());
+        if (!CommonUtils.isEmpty(disposition)) {
+            if (disposition.equals("download")) {
+                resp.setHeader("Content-Disposition", "attachment; filename=" + fileToSend.getName());
+            } else if (disposition.equals("inline")) {
+                resp.setHeader("Content-Disposition", "inline; filename=" + fileToSend.getName());
+            }
         }
         
         if (disposition == null) {

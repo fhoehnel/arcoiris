@@ -34,6 +34,8 @@ public class GetAttachmentRequestHandler extends UserRequestHandler {
         
         setParameter("filePath", filePath.toString());
         
+        setParameter("disposition", "inline");
+        
         (new GetFileRequestHandler(req, resp, session, output, uid)).handleRequest();        
     }
 
