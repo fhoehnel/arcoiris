@@ -133,11 +133,11 @@ public class BlogStatistic {
     }
     
     public void setCommentsLastYear(int newVal) {
-        visitsLastYear = newVal;
+        commentsLastYear = newVal;
     }
     
     public int getCommentsLastYear() {
-        return visitsLastYear;
+        return commentsLastYear;
     }
     
 }
