@@ -183,7 +183,7 @@
         
           <div class="blogGeoDataSwitcher">
             <input type="checkbox" id="blogGeoDataSwitcher" name="geoDataSwitcher" onchange="toggleGeoData(this)">
-              <xsl:if test="/blog/blogEntry/geoTag">
+              <xsl:if test="/blog/blogEntry/geoTag/latitude">
                 <xsl:attribute name="checked">checked</xsl:attribute>
               </xsl:if>
             </input>

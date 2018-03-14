@@ -118,14 +118,25 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         XmlUtil.setChildText(blogDateElement, "month", fileName.substring(5, 7));
         XmlUtil.setChildText(blogDateElement, "day", fileName.substring(8, 10));
 
+        Element geoTagElement = doc.createElement("geoTag");
+        blogEntryElement.appendChild(geoTagElement);
+
+        String googleMapsAPIKey = null;
+        if (req.getScheme().equalsIgnoreCase("https")) {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+        } else {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+        }
+        
+        if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+            XmlUtil.setChildText(geoTagElement, "googleMapsAPIKey", googleMapsAPIKey, false);
+        }
+        
         int zoomFactor = 10;
 
         GeoTag geoTag = metaInfMgr.getGeoTag(picFile.getAbsolutePath());
 
         if (geoTag != null) {
-            Element geoTagElement = doc.createElement("geoTag");
-            blogEntryElement.appendChild(geoTagElement);
-
             XmlUtil.setChildText(geoTagElement, "latitude", Float.toString(geoTag.getLatitude()));
             XmlUtil.setChildText(geoTagElement, "longitude", Float.toString(geoTag.getLongitude()));
 
@@ -134,17 +145,6 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
             }
 
             zoomFactor = geoTag.getZoomFactor();
-            
-            String googleMapsAPIKey = null;
-            if (req.getScheme().equalsIgnoreCase("https")) {
-                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
-            } else {
-                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
-            }
-            
-            if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
-                XmlUtil.setChildText(geoTagElement, "googleMapsAPIKey", googleMapsAPIKey, false);
-            }
         }
 
         Element zoomLevelElem = doc.createElement("zoomLevel");
