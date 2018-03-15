@@ -402,6 +402,19 @@ div.blogGeoMap {
     color: #ffff80;
 }
 
+form.mapButtonCont {
+   	position: absolute;
+   	bottom: 15px;
+   	left: 10px;
+   	z-index: 100;   	
+}
+
+input.mapButton {
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+}
+
 span.blogErrorMsg {
     font-size: 13px;
     color: #a00000;

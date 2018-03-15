@@ -271,19 +271,6 @@
     
     <div id="mapFrame" class="blogGeoMapFrame">
       <div id="map" class="blogGeoMap"></div>
-    
-      <div style="position:absolute;bottom:15px;left:10px;"> 
-
-        <form>
-          <input id="closeButton" type="button" resource="button.closeMap" onclick="hideMap()" 
-              style="font-size:13px;font-weight:bold;color:black;"/>
-
-          <input id="selectButton" type="button" resource="button.save" onclick="javascript:selectLocation()" 
-              style="visibility:hidden;font-size:13px;font-weight:bold;color:black;"/>
-        </form>
-      
-      </div>
-
     </div>
     
     <div id="urlInputCont" class="urlInputCont">

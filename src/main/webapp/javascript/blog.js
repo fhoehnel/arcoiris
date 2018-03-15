@@ -708,10 +708,6 @@ function showMap(selectLocation) {
       
     var map = new google.maps.Map(document.getElementById("map"), myOptions);      
           
-    if (selectLocation) {
-        document.getElementById("selectButton").style.visibility = 'visible';
-    }
-
     var markerPos = new google.maps.LatLng(latitude, longitude);
 
     posMarker = new google.maps.Marker({
@@ -738,10 +734,36 @@ function showMap(selectLocation) {
     centerBox(document.getElementById("mapFrame"));
 
     document.getElementById("mapFrame").style.visibility = 'visible';
+    
+    requestFullScreen(document.getElementById("map"));
+    
+    var mapCont = document.getElementById("map");
+    
+   	var mapButtonCont = document.createElement("form");
+   	mapButtonCont.setAttribute("class", "mapButtonCont");
+   	mapCont.appendChild(mapButtonCont);
+
+   	var closeButton = document.createElement("input");
+   	closeButton.setAttribute("type", "button");
+   	closeButton.setAttribute("value", resourceBundle["button.closeMap"]);
+   	closeButton.setAttribute("onclick", "hideMap()");
+   	closeButton.setAttribute("class", "mapButton");
+   	mapButtonCont.appendChild(closeButton);
+   	
+    if (selectLocation) {
+       	var selectButton = document.createElement("input");
+       	selectButton.setAttribute("type", "button");
+       	selectButton.setAttribute("value", resourceBundle["button.save"]);
+       	selectButton.setAttribute("onclick", "selectLocation()");
+       	selectButton.setAttribute("class", "mapButton");
+       	mapButtonCont.appendChild(selectButton);
+    }
 }  
 
 function hideMap() {
-    document.getElementById("selectButton").style.visibility = 'hidden';
+	
+    cancelFullScreen(document.getElementById("map"));
+	
     document.getElementById("mapFrame").style.visibility = 'hidden';
     document.getElementById("mapFrame").style.display = 'none';
 }
