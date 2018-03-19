@@ -130,7 +130,7 @@
     	var picContElem = document.createElement("div");
     	picContElem.id = "picOnMapCont";
     	picContElem.setAttribute("class", "picOnMap");
-	    document.documentElement.appendChild(picContElem);
+    	document.getElementById("map").firstChild.appendChild(picContElem);
 	    
 	    var closeIconElem = document.createElement("img");
 	    closeIconElem.setAttribute("src", getContextRoot() + "/images/winClose.gif");
@@ -190,6 +190,6 @@
     function removeImageFromMap() {
     	var picContElem = document.getElementById("picOnMapCont");
     	if (picContElem) {
-        	document.documentElement.removeChild(picContElem);
+        	picContElem.parentNode.removeChild(picContElem);
     	}
     }
