@@ -82,7 +82,7 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
             String infoText = geoTag.getInfoText();
 
             if (infoText != null) {
-                XmlUtil.setChildText(geoTagElement, "infoText", infoText, false);
+                XmlUtil.setChildText(geoTagElement, "infoText", infoText.replace('\'',  '´'), false);
             }
 
             geoLocationDefined = true;
