@@ -19,6 +19,10 @@
   </link>
 
   <link rel="stylesheet" type="text/css">
+    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/icons.css</xsl:attribute>
+  </link>
+
+  <link rel="stylesheet" type="text/css">
     <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/geoData/skin" />.css</xsl:attribute>
   </link>
   

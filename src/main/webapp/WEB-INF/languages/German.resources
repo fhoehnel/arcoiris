@@ -150,6 +150,7 @@ label.hintGoogleMapSelect=Klick wählt geografische Lokation aus
 noFilesWithGeoData=Dieser Ordner enthält keine Bilder mit geografischen Koordinaten!
 button.hideMapInfo=Info-Text ausblenden
 button.showMapInfo=Info-Text einblenden
+linkToBlogEntryTitle=zugehörigen Blog-Eintrag anzeigen
 
 # alert messages
 alert.regsuccess=Der neue Nutzer wurde erfolgreich registriert.

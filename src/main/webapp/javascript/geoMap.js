@@ -132,6 +132,12 @@
     	picContElem.setAttribute("class", "picOnMap");
     	document.getElementById("map").firstChild.appendChild(picContElem);
 	    
+    	var blogLinkElem = document.createElement("a");
+    	blogLinkElem.setAttribute("href", "javascript:showMapImageInBlog('" + picFileName + "')");
+    	blogLinkElem.setAttribute("class", "icon-font icon-book linkBlogImgFromMap");
+    	blogLinkElem.setAttribute("title", resourceBundle["linkToBlogEntryTitle"]);
+        picContElem.appendChild(blogLinkElem);
+    	
 	    var closeIconElem = document.createElement("img");
 	    closeIconElem.setAttribute("src", getContextRoot() + "/images/winClose.gif");
         closeIconElem.setAttribute("style", "float:right");
@@ -148,6 +154,19 @@
 	    centerBox(picContElem);
 	    
 	    picContElem.onclick = removeImageFromMap;
+    }
+    
+    function showMapImageInBlog(picFileName) {
+    	var picDate = new Date(picFileName.substring(0, 10));
+    	
+    	var beforeDay = new Date(picDate.getTime() + (24 * 60 * 60 * 1000));
+    	
+    	var beforeDayStr = beforeDay.toISOString().substring(0,10);  
+    	
+    	var url = getContextRoot() + "/servlet?command=blog&beforeDay=" + beforeDayStr + "&positionToFile=" + picFileName;
+        window.opener.location.href = url;
+        
+        setTimeout("self.close()", 100);
     }
     
     function resizeAndShowPic() {

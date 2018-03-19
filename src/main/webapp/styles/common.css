@@ -1750,8 +1750,13 @@ div.picOnMap {
 }
 
 img.picOnMap {
-	margin-top: 10px;
+	margin-top: 6px;
 	display: none;
+}
+
+a.linkBlogImgFromMap {
+	font-size: 18px;
+	color: black;
 }
 
 div.mouseClickShield {

@@ -185,6 +185,10 @@ a.icon-font {
 	content: '\f080';
 }
 
+.icon-book:before {
+	content: '\f02d';
+}
+
 .icon-page-prev:before {
 	content: '\f04a';
 }
