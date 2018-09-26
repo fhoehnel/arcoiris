@@ -218,6 +218,10 @@ a.icon-font {
 	content: '\f051';
 }
 
+.icon-check:before {
+	content: '\f00c';
+}
+
 a.icon-paging {
 	text-decoration: none;
 }

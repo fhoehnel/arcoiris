@@ -228,3 +228,7 @@ div.statisticList table tr.statisticDateRange td {
     color: #ffff80;
     font-weight: bold;
 }
+
+a.publishDayLink {
+	color: #ffff80;
+}

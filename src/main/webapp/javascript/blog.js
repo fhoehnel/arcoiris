@@ -1882,6 +1882,14 @@ function publishNewEntries() {
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
 }
 
+function publishDay(dayToPublish) {
+    if (!confirm(resourceBundle["blog.confirmPublishDay"])) {
+        return;
+    }
+    
+    window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishDay&day=" + dayToPublish;
+}
+
 function switchLowBandwidthMode() {
     showHourGlass();
 

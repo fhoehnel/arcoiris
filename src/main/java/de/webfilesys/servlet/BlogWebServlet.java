@@ -72,6 +72,7 @@ import de.webfilesys.gui.blog.BlogListSubscribersHandler;
 import de.webfilesys.gui.blog.BlogMoveEntryHandler;
 import de.webfilesys.gui.blog.BlogMoveToPosHandler;
 import de.webfilesys.gui.blog.BlogPostHandler;
+import de.webfilesys.gui.blog.BlogPublishDayHandler;
 import de.webfilesys.gui.blog.BlogPublishFormHandler;
 import de.webfilesys.gui.blog.BlogPublishHandler;
 import de.webfilesys.gui.blog.BlogPublishNewEntriesHandler;
@@ -576,6 +577,9 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("statistics")) {
                 (new BlogStatisticsHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("publishDay")) {
+                (new BlogPublishDayHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);

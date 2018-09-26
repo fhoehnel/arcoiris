@@ -1804,6 +1804,12 @@ button.alertConfirmButton {
 	cursor: pointer;
 }
 
+a.publishDayLink {
+	float: right;
+	margin-right: 8px;
+	font-size: 24px;
+}
+
 @media (max-width: 400px) {
     div.centerBox {
         position: static;

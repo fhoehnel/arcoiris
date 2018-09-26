@@ -15,3 +15,7 @@ div.urlInputCont {
 span.descrText a {
     color: navy;
 }
+
+a.publishDayLink {
+	color: #800000;
+}
