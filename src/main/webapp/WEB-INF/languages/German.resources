@@ -276,6 +276,7 @@ blog.lowBandwith=zu Modus für langsame Internetverbindung wechseln
 blog.highBandwith=zu Modus für schnelle Internetverbindung wechseln
 blog.publishDayLink=alle Einträge dieses Tages freigeben
 blog.confirmPublishDay=Sollen die neuen Einträge dieses Tages wirklich freigegeben werden?
+blog.linkToUnseenComment=ungelesene Kommentare
 
 statLast24Hours=letzte 24 Stunden
 statLast48Hours=letzte 48 Stunden

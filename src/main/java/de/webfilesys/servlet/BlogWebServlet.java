@@ -53,6 +53,7 @@ import de.webfilesys.gui.admin.UserListRequestHandler;
 import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
+import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
 import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
@@ -592,6 +593,8 @@ public class BlogWebServlet extends ServletBase {
 
             if (method.equals("checkForGeoData")) {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("checkForUnseenComments")) {
+                (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("existFile")) {
                 (new AjaxCheckFileExistHandler(req, resp, session, output, userid)).handleRequest();
             }

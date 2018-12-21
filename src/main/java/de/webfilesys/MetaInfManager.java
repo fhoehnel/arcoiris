@@ -827,7 +827,48 @@ public class MetaInfManager extends Thread {
 
         return (commentList.getLength());
     }
+    
+    public synchronized int getUnseenCommentCount(String path) {
+        int unseenCommentCount = 0;
+        
+        Element metaInfRoot = null;
 
+        metaInfRoot = (Element) dirList.get(path);
+
+        if (metaInfRoot == null) {
+            metaInfRoot = loadMetaInfFile(path);
+
+            if (metaInfRoot == null) {
+                return unseenCommentCount;
+            } 
+
+            dirList.put(path, metaInfRoot);
+        }
+
+        NodeList metaInfList = metaInfRoot.getElementsByTagName("metainf");
+
+        if (metaInfList == null) {
+            return unseenCommentCount;
+        }
+
+        int listLength = metaInfList.getLength();
+
+        for (int i = 0; i < listLength; i++) {
+            Element metaInfElement = (Element) metaInfList.item(i);
+            
+            Element commentListElement = XmlUtil.getChildByTagName(metaInfElement, "comments");
+
+            if (commentListElement != null) {
+                String seenByOwner = commentListElement.getAttribute("seenByOwner");
+                if ((seenByOwner == null) || (!seenByOwner.equals("true"))) {
+                    unseenCommentCount++;
+                }
+            }
+        }
+
+        return unseenCommentCount;
+    }
+    
     public void setOwnerRating(String path, int rating) {
         String[] partsOfPath = CommonUtils.splitPath(path);
         setOwnerRating(partsOfPath[0], partsOfPath[1], rating);

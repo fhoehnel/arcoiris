@@ -1810,6 +1810,35 @@ a.publishDayLink {
 	font-size: 24px;
 }
 
+a.unseenComments {
+	display: none;
+	text-decoration: none;
+    margin-left: 20px;
+}
+
+a.blogMenu.unseenComments:before {
+	color: #000060;
+	text-decoration: none;
+	position: relative;
+	bottom: 4px;
+}
+
+span.unseenCommentCount {
+	display: none;
+	float: left;
+	margin-top: 16px;
+	color: #ffffff;
+	position: relative;
+	left: -40px;
+    top: 2px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+html.blog span.unseenCommentCount {
+	font-size: 13px;
+}
+
 @media (max-width: 400px) {
     div.centerBox {
         position: static;

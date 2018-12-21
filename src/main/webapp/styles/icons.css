@@ -157,6 +157,10 @@ a.icon-font {
 	content: '\f08e';
 }
 
+.icon-comment:before {
+	content: '\f075';
+}
+
 .icon-calender:before {
 	content: '\f073';
 }

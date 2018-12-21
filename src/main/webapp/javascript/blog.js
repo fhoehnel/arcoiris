@@ -1777,10 +1777,38 @@ function queryGeoData() {
 	                        document.getElementById("mapAllLink").style.display = "inline";
 	                    } 
 	                }
+	                
+	                // cascading ajax calls for performance reasons
+	                queryUnseenComments();
 	            }
 	        });          
 		
 	    }, 500);
+}
+
+function queryUnseenComments() {
+	setTimeout(function() {
+	        var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForUnseenComments";
+	    
+	        xmlRequest(url, function(req) {
+	            if (req.readyState == 4) {
+	                if (req.status == 200) {
+	                    var responseXml = req.responseXML;
+	                    var resultItem = responseXml.getElementsByTagName("result")[0];
+	                    var result = resultItem.firstChild.nodeValue;  
+	                
+	                    if (result && (result != "0")) {
+	                    	var unseenCommentLink = document.getElementById("unseenCommentLink");
+	                    	unseenCommentLink.style.display = "inline";
+	                    	var unseenCommentCount = document.getElementById("unseenCommentCount");
+	                    	unseenCommentCount.innerText = result;
+	                    	unseenCommentCount.style.display = "inline";
+	                    } 
+	                }
+	            }
+	        });          
+		
+	}, 500);
 }
 
 function googleMapAll() {
