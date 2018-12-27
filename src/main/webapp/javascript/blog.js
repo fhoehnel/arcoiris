@@ -1068,6 +1068,7 @@ function closeBlogComments() {
     var commentNewLabel = document.getElementById("newComment-" + posInPage);
     if (commentNewLabel) {
         commentNewLabel.style.display = 'none';
+        queryUnseenComments();        
     }
 
     var commentCont = document.getElementById("commentCont");
@@ -1100,6 +1101,7 @@ function showPostCommentResult(req) {
                 var commentNewLabel = document.getElementById("newComment-" + posInPage);
                 if (commentNewLabel) {
                     commentNewLabel.style.display = 'none';
+                    queryUnseenComments();
                 }
 
                 var commentCont = document.getElementById("commentCont");
@@ -1797,18 +1799,50 @@ function queryUnseenComments() {
 	                    var resultItem = responseXml.getElementsByTagName("result")[0];
 	                    var result = resultItem.firstChild.nodeValue;  
 	                
-	                    if (result && (result != "0")) {
-	                    	var unseenCommentLink = document.getElementById("unseenCommentLink");
+                    	var unseenCommentLink = document.getElementById("unseenCommentLink");
+                    	var unseenCommentCount = document.getElementById("unseenCommentCount");
+
+                    	if (result && (result != "0")) {
+	                    	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
 	                    	unseenCommentLink.style.display = "inline";
-	                    	var unseenCommentCount = document.getElementById("unseenCommentCount");
+	                    	
 	                    	unseenCommentCount.innerText = result;
+	                    	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
 	                    	unseenCommentCount.style.display = "inline";
-	                    } 
+	                    } else {
+	                    	unseenCommentLink.style.display = "none";
+	                    	unseenCommentCount.style.display = "none";
+	                    }
+	                } else {
+	                    alert(resourceBundle["alert.communicationFailure"]);
 	                }
 	            }
 	        });          
 		
 	}, 500);
+}
+
+function showUnseenComment() {
+    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=getFirstUnseenComment";
+    
+    xmlRequest(url, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+                var responseXml = req.responseXML;
+                var resultItem = responseXml.getElementsByTagName("fileName")[0];
+                var fileName = resultItem.firstChild.nodeValue;  
+
+                var resultItem = responseXml.getElementsByTagName("linkDate")[0];
+                var linkDate = resultItem.firstChild.nodeValue;  
+                
+            	var targetUrl = getContextRoot() + "/servlet?command=blog&beforeDay=" + linkDate + "&positionToFile=" + fileName;
+            	
+            	window.location.href = targetUrl;
+            } else {
+                alert(resourceBundle["alert.communicationFailure"]);
+            }
+        }
+    });          
 }
 
 function googleMapAll() {

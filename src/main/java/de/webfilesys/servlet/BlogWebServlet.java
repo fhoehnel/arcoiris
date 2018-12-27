@@ -65,6 +65,7 @@ import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
 import de.webfilesys.gui.blog.BlogDetachHandler;
 import de.webfilesys.gui.blog.BlogEditEntryHandler;
 import de.webfilesys.gui.blog.BlogGetDatesWithEntriesHandler;
+import de.webfilesys.gui.blog.BlogGetFirstUnseenCommentHandler;
 import de.webfilesys.gui.blog.BlogGetPublicUrlHandler;
 import de.webfilesys.gui.blog.BlogLikeHandler;
 import de.webfilesys.gui.blog.BlogListCommentsHandler;
@@ -595,6 +596,8 @@ public class BlogWebServlet extends ServletBase {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("checkForUnseenComments")) {
                 (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("getFirstUnseenComment")) {
+                (new BlogGetFirstUnseenCommentHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("existFile")) {
                 (new AjaxCheckFileExistHandler(req, resp, session, output, userid)).handleRequest();
             }

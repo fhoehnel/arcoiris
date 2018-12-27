@@ -201,10 +201,10 @@
         <xsl:if test="not(/blog/readonly)">
           <a id="unseenCommentLink" href="javascript:void(0)" class="icon-font icon-comment blogMenu unseenComments" style="display:none" 
               titleResource="blog.linkToUnseenComment">
-            <xsl:attribute name="onClick">showUnseenComment()</xsl:attribute>
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
           </a>
           <span id="unseenCommentCount" class="unseenCommentCount" titleResource="blog.linkToUnseenComment">
-            <xsl:attribute name="onClick">showUnseenComment()</xsl:attribute>
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
           </span>
         </xsl:if>
         
