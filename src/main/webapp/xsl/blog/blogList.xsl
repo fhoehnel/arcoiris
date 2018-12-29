@@ -188,6 +188,7 @@
           <xsl:if test="/blog/lowBandwidthMode">
             <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.highBandwith" />
           </xsl:if>
+
         </xsl:if>
 
         <div class="blogCalenderCont">
@@ -196,6 +197,16 @@
           </a>
           <input type="text" id="blogDate" style="display:none" />
         </div>
+
+        <xsl:if test="not(/blog/readonly)">
+          <a id="unseenCommentLink" href="javascript:void(0)" class="icon-font icon-comment blogMenu unseenComments" style="display:none" 
+              titleResource="blog.linkToUnseenComment">
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
+          </a>
+          <span id="unseenCommentCount" class="unseenCommentCount" titleResource="blog.linkToUnseenComment">
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
+          </span>
+        </xsl:if>
         
         <div class="blogDateRange">
           <xsl:if test="/blog/dateRangeFrom">

@@ -279,6 +279,7 @@ blog.lowBandwith=cambiar a modo de red lenta
 blog.highBandwith=cambiar a modo de red rápida
 blog.publishDayLink=publicar todas las entradas de este día
 blog.confirmPublishDay=¿Seguro que quieres publicar las nuevas entradas del este día?
+blog.linkToUnseenComment=comentarios no leídos
 
 statLast24Hours=las últimas 24 horas
 statLast48Hours=las últimas 48 horas

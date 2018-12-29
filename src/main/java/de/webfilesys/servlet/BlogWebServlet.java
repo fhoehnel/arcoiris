@@ -53,6 +53,7 @@ import de.webfilesys.gui.admin.UserListRequestHandler;
 import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
+import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
 import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
@@ -64,6 +65,7 @@ import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
 import de.webfilesys.gui.blog.BlogDetachHandler;
 import de.webfilesys.gui.blog.BlogEditEntryHandler;
 import de.webfilesys.gui.blog.BlogGetDatesWithEntriesHandler;
+import de.webfilesys.gui.blog.BlogGetFirstUnseenCommentHandler;
 import de.webfilesys.gui.blog.BlogGetPublicUrlHandler;
 import de.webfilesys.gui.blog.BlogLikeHandler;
 import de.webfilesys.gui.blog.BlogListCommentsHandler;
@@ -592,6 +594,10 @@ public class BlogWebServlet extends ServletBase {
 
             if (method.equals("checkForGeoData")) {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("checkForUnseenComments")) {
+                (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("getFirstUnseenComment")) {
+                (new BlogGetFirstUnseenCommentHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("existFile")) {
                 (new AjaxCheckFileExistHandler(req, resp, session, output, userid)).handleRequest();
             }
