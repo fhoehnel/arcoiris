@@ -151,6 +151,8 @@ noFilesWithGeoData=Dieser Ordner enthält keine Bilder mit geografischen Koordina
 button.hideMapInfo=Info-Text ausblenden
 button.showMapInfo=Info-Text einblenden
 linkToBlogEntryTitle=zugehörigen Blog-Eintrag anzeigen
+slowMotionLink=Zeitlupe
+slowMotionTitle=Track in Zeitlupe zeichnen
 
 # alert messages
 alert.regsuccess=Der neue Nutzer wurde erfolgreich registriert.

@@ -151,6 +151,8 @@ noFilesWithGeoData=This folder does not contain pictures with geographic coordin
 button.hideMapInfo=Hide Info Text
 button.showMapInfo=Show Info Text
 linkToBlogEntryTitle=Show picture in blog
+slowMotionLink=slow motion
+slowMotionTitle=paint track in slow motion
 
 # alert messages
 alert.regsuccess=New user has been registered successfully.
