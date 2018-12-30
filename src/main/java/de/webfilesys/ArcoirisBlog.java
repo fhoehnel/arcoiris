@@ -39,7 +39,7 @@ import de.webfilesys.util.CommonUtils;
 public class ArcoirisBlog {
     private static ArcoirisBlog instance = null;
 
-    public static final String VERSION = "Version 2.20.0-alpha2 (29 Dec 2018)";
+    public static final String VERSION = "Version 2.20.0-beta2 (30 Dec 2018)";
 
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
