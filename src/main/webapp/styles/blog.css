@@ -660,6 +660,28 @@ span.searchHit {
 	font-weight: bold;
 }
 
+div.searchPreviewCont {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 400px;
+    height: 480px;
+    border: 2px ridge #808080;
+    background-color: #e0e0e0;
+    padding: 10px;
+    box-sizing: content-box;
+    text-align: center;
+    overflow-y: auto;
+}
+
+div.searchPreviewCont p {
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #004000;
+    text-align: left;
+}
+
 .poweredBy {
     clear: both;
     margin-top: 20px;
