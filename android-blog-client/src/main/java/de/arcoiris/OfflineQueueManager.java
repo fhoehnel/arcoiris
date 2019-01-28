@@ -38,6 +38,8 @@ public class OfflineQueueManager {
 
     private static final String METADATA_FILE_EXT = ".metadata";
 
+    private static final String SWAP_FILE_NAME = "swap-";
+
     private static final int MAX_ERROR_COUNT = 5;
 
     private static OfflineQueueManager instance = null;
@@ -82,8 +84,152 @@ public class OfflineQueueManager {
 
         File queueImgFile = new File(queuePath, imgQueueFileName);
 
-        Log.d("arcoiris", "queue img path: " + queueImgFile.getAbsolutePath());
+        storePictureFile(applicationContext, pictureUri, picturePath, queueImgFile);
 
+        /*
+        String origPictureFileName = pictureSource.substring(pictureSource.lastIndexOf('/') + 1);
+
+        metaData.setOrigPictureFileName(origPictureFileName);
+        */
+
+        storeMetaData(metaData, queueFileBaseName);
+    }
+
+    public void moveBlogEntryUp(String queueFileName) {
+        String fileNameWithoutExt = queueFileName.substring(0, queueFileName.lastIndexOf('.'));
+
+        OfflineQueueEntryInfo prevQueueEntry = null;
+        OfflineQueueEntryInfo currentQueueEntry = null;
+
+        for (OfflineQueueEntryInfo queueEntry : getQueuedFiles()) {
+            File imgFile = queueEntry.getQueueImgFile();
+            if (imgFile.getName().equals(queueFileName)) {
+                currentQueueEntry = queueEntry;
+                break;
+            } else {
+                prevQueueEntry = queueEntry;
+            }
+        }
+
+        if (currentQueueEntry == null) {
+            Log.e("arcoiris", "blog entry to move not found in offline queue: " + queueFileName);
+            return;
+        }
+
+        if (prevQueueEntry == null) {
+            Log.d("arcoiris", "blog entry to move up is already first entry: " + queueFileName);
+            return;
+        }
+
+        OfflineQueueMetaDataElem prevMetaData = prevQueueEntry.getMetaData();
+
+        OfflineQueueMetaDataElem currentMetaData = currentQueueEntry.getMetaData();
+
+        Date swapDate = prevMetaData.getBlogDate();
+        prevMetaData.setBlogDate(currentMetaData.getBlogDate());
+        currentMetaData.setBlogDate(swapDate);
+
+        String prevFileName = prevQueueEntry.getQueueImgFile().getName();
+        String prevFileNameBase = prevFileName.substring(0, prevFileName.lastIndexOf('.'));
+
+        storeMetaData(prevMetaData, prevFileNameBase);
+
+        String currentFileName = currentQueueEntry.getQueueImgFile().getName();
+        String currentFileNameBase = currentFileName.substring(0, currentFileName.lastIndexOf('.'));
+
+        storeMetaData(currentMetaData, currentFileNameBase);
+    }
+
+    public void deleteQueuedBlogEntry(String queueFileName) {
+        OfflineQueueEntryInfo offlineEntryInfo = getQueuedFileByFileName(queueFileName);
+
+        if (offlineEntryInfo == null) {
+            Log.e("arcoiris", "blog entry to delete not found in offline queue: " + queueFileName);
+            return;
+        }
+
+        File queueImgFile = offlineEntryInfo.getQueueImgFile();
+
+        String queueFileBaseName = queueImgFile.getName().substring(0, queueImgFile.getName().lastIndexOf('.'));
+
+        if (queueImgFile.exists()) {
+            if (!queueImgFile.delete()) {
+                Log.e("arcoiris", "failed to delete queue img file " + queueImgFile.getName());
+            }
+        } else {
+            Log.e("arcoiris", "queue img file to delete not found: " + queueImgFile.getName());
+        }
+
+        String metaDataQueueFileName = queueFileBaseName + METADATA_FILE_EXT;
+
+        File metaDataQueueFile = new File(queuePath, metaDataQueueFileName);
+
+        if (metaDataQueueFile.exists()) {
+            if (!metaDataQueueFile.delete()) {
+                Log.e("arcoiris", "failed to delete metadata queue file " + metaDataQueueFile.getAbsolutePath());
+            }
+        } else {
+            Log.e("arcoiris", "queue metadata file to delete not found: " + metaDataQueueFile.getAbsolutePath());
+        }
+    }
+
+    public void changeQueuedBlogEntry(Context applicationContext, OfflineQueueMetaDataElem metaData, Uri pictureUri, String picturePath, String editedEntryQueueFileName) {
+        OfflineQueueEntryInfo offlineEntryInfo = getQueuedFileByFileName(editedEntryQueueFileName);
+
+        if (offlineEntryInfo == null) {
+            Log.e("arcoiris", "blog entry to update not found in offline queue: " + editedEntryQueueFileName);
+            return;
+        }
+
+        File queueImgFile = offlineEntryInfo.getQueueImgFile();
+
+        String queueFileBaseName = queueImgFile.getName().substring(0, queueImgFile.getName().lastIndexOf('.'));
+
+        if (queueImgFile.exists()) {
+            if (!queueImgFile.delete()) {
+                Log.e("arcoiris", "failed to delete old img file for blog entry to update: " + editedEntryQueueFileName);
+            }
+        }
+
+        String metaDataQueueFileName = queueFileBaseName + METADATA_FILE_EXT;
+
+        File metaDataQueueFile = new File(metaDataQueueFileName);
+        if (metaDataQueueFile.exists()) {
+            if (!metaDataQueueFile.delete()) {
+                Log.e("arcoiris", "failed to delete old metadata file for blog entry to update: " + editedEntryQueueFileName);
+            }
+        }
+
+        storePictureFile(applicationContext, pictureUri, picturePath, queueImgFile);
+
+        storeMetaData(metaData, queueFileBaseName);
+    }
+
+    private void storeMetaData(OfflineQueueMetaDataElem metaData, String queueFileBaseName) {
+        Gson gson = new Gson();
+        String serializedMetaData = gson.toJson(metaData);
+
+        String metaDataQueueFileName = queueFileBaseName + METADATA_FILE_EXT;
+
+        File queueInfoFile = new File(queuePath, metaDataQueueFileName);
+
+        PrintWriter metaDataOut = null;
+        try {
+            metaDataOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(queueInfoFile), "UTF-8"));
+            metaDataOut.print(serializedMetaData);
+        } catch (IOException ioex) {
+            Log.e("arcoiris", "failed to save blog metadata in offline queue", ioex);
+        } finally {
+            if (metaDataOut != null) {
+                try {
+                    metaDataOut.close();
+                } catch (Exception ex) {
+                }
+            }
+        }
+    }
+
+    private void storePictureFile(Context applicationContext, Uri pictureUri, String picturePath, File queueImgFile) {
         BufferedOutputStream buffOut = null;
         InputStream pictureIn = null;
         BufferedInputStream buffIn = null;
@@ -120,34 +266,6 @@ public class OfflineQueueManager {
                 try {
                     buffOut.close();
                 } catch (Exception closeEx) {
-                }
-            }
-        }
-
-        /*
-        String origPictureFileName = pictureSource.substring(pictureSource.lastIndexOf('/') + 1);
-
-        metaData.setOrigPictureFileName(origPictureFileName);
-        */
-
-        Gson gson = new Gson();
-        String serializedMetaData = gson.toJson(metaData);
-
-        String metaDataQueueFileName = queueFileBaseName + METADATA_FILE_EXT;
-
-        File queueInfoFile = new File(queuePath, metaDataQueueFileName);
-
-        PrintWriter metaDataOut = null;
-        try {
-            metaDataOut = new PrintWriter(new OutputStreamWriter(new FileOutputStream(queueInfoFile), "UTF-8"));
-            metaDataOut.print(serializedMetaData);
-        } catch (IOException ioex) {
-            Log.e("arcoiris", "failed to save blog metadata in offline queue", ioex);
-        } finally {
-            if (metaDataOut != null) {
-                try {
-                    metaDataOut.close();
-                } catch (Exception ex) {
                 }
             }
         }
@@ -248,6 +366,94 @@ public class OfflineQueueManager {
         return sendResult;
     }
 
+    public boolean existQueuedFiles() {
+        File queuePathFile = new File(queuePath);
+
+        File[] filesOfDir = queuePathFile.listFiles();
+
+        return (filesOfDir.length > 0);
+    }
+
+    public OfflineQueueEntryInfo getQueuedFileByFileName(String fileName) {
+
+        String fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        File metadataFile = null;
+        File pictureFile = null;
+
+        File queuePathFile = new File(queuePath);
+
+        File[] filesOfDir = queuePathFile.listFiles();
+
+        for (File file : filesOfDir) {
+            if (file.isFile()) {
+                if (file.getName().startsWith(fileNameWithoutExt)) {
+                    if (file.getName().endsWith(METADATA_FILE_EXT)) {
+                        metadataFile = file;
+                    } else {
+                        pictureFile = file;
+                    }
+                }
+            }
+        }
+
+        if ((metadataFile == null) || (pictureFile == null)) {
+            Log.e("arcoiris", "failed to load  metadata from offline queue for file " + fileName);
+            return null;
+        }
+
+        Log.d("arcoiris", "getQueuedFileByFileName for " + fileName + " pictureFile = " + pictureFile.getName() + " metadataFile = " + metadataFile.getName());
+
+        BufferedReader metadataIn = null;
+
+        try {
+            metadataIn = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"));
+
+            Gson gson = new Gson();
+
+            OfflineQueueMetaDataElem metaData = gson.fromJson(metadataIn, OfflineQueueMetaDataElem.class);
+
+            OfflineQueueEntryInfo entryInfo = new OfflineQueueEntryInfo();
+
+            entryInfo.setQueueImgFile(pictureFile);
+
+            entryInfo.setMetaData(metaData);
+
+            return entryInfo;
+        } catch (IOException ioex) {
+            Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
+        } finally {
+            if (metadataIn != null) {
+                try {
+                    metadataIn.close();
+                } catch (IOException ioex) {
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Date getLatestEntryOfDay(Date selectedDate) {
+        Date latestEntryOfDay = new Date(selectedDate.getTime());
+        latestEntryOfDay.setHours(0);
+        latestEntryOfDay.setMinutes(0);
+        latestEntryOfDay.setSeconds(0);
+
+        List<OfflineQueueEntryInfo> queuedFiles = getQueuedFiles();
+
+        for (OfflineQueueEntryInfo entryInfo : queuedFiles) {
+            Date blogDate = entryInfo.getMetaData().getBlogDate();
+            if ((blogDate.getDate() == selectedDate.getDate()) && (blogDate.getMonth() == selectedDate.getMonth() && (blogDate.getYear() == selectedDate.getYear()))) {
+                if (blogDate.getTime() > latestEntryOfDay.getTime()) {
+                    latestEntryOfDay = blogDate;
+                }
+            }
+        }
+
+        return latestEntryOfDay;
+    }
+
     public List<OfflineQueueEntryInfo> getQueuedFiles() {
         File queuePathFile = new File(queuePath);
 
@@ -278,31 +484,35 @@ public class OfflineQueueManager {
             String key = metadataFile.getName().substring(0, metadataFile.getName().lastIndexOf('.'));
             File pictureFile = pictureFileMap.get(key);
 
-            BufferedReader metadataIn = null;
+            if (pictureFile == null) {
+                Log.e("arcoiris", "zombie metadata file without image file: " + metadataFile.getName());
+            } else {
+                BufferedReader metadataIn = null;
 
-            try {
-                metadataIn = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"));
+                try {
+                    metadataIn = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"));
 
-                Gson gson = new Gson();
+                    Gson gson = new Gson();
 
-                OfflineQueueMetaDataElem metaData = gson.fromJson(metadataIn, OfflineQueueMetaDataElem.class);
+                    OfflineQueueMetaDataElem metaData = gson.fromJson(metadataIn, OfflineQueueMetaDataElem.class);
 
-                OfflineQueueEntryInfo entryInfo = new OfflineQueueEntryInfo();
+                    OfflineQueueEntryInfo entryInfo = new OfflineQueueEntryInfo();
 
-                // entryInfo.setOrigPictureFileName(metaData.getOrigPictureFileName());
+                    // entryInfo.setOrigPictureFileName(metaData.getOrigPictureFileName());
 
-                entryInfo.setQueueImgFile(pictureFile);
+                    entryInfo.setQueueImgFile(pictureFile);
 
-                entryInfo.setMetaData(metaData);
+                    entryInfo.setMetaData(metaData);
 
-                offlineInfoList.add(entryInfo);
-            } catch (IOException ioex) {
-                Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
-            } finally {
-                if (metadataIn != null) {
-                    try {
-                        metadataIn.close();
-                    } catch (IOException ioex) {
+                    offlineInfoList.add(entryInfo);
+                } catch (IOException ioex) {
+                    Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
+                } finally {
+                    if (metadataIn != null) {
+                        try {
+                            metadataIn.close();
+                        } catch (IOException ioex) {
+                        }
                     }
                 }
             }

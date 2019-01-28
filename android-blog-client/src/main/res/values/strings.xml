@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">arcoiris blog</string>
-    <string name="appVersion" translatable="false">version 0.8.3 (29 Dec 2017)</string>
+    <string name="appVersion" translatable="false">version 0.9.3 (27 Jan 2019)</string>
     <string name="appAuthor" translatable="false">by Frank Hoehnel</string>
     <string name="appHomepage" translatable="false">www.webfilesys.de/arcoiris</string>
     <string name="buttonClose">Close</string>
@@ -11,12 +11,16 @@
     <string name="buttonSendPublish">Send &amp; Publish</string>
     <string name="buttonSaveOffline">Save</string>
     <string name="buttonSavePublish">Save &amp; Publish</string>
+    <string name="buttonCancelCreate">Cancel</string>
+    <string name="buttonNewEntry">Create new entry</string>
     <string name="noImageSelected">no image selected</string>
 
     <string name="optionMenuAbout">About</string>
     <string name="optionMenuExit">Exit</string>
     <string name="optionMenuSettings">Settings</string>
-    <string name="optionMenuSendQueued">Send</string>
+    <string name="optionMenuSendQueued">Send offline entries</string>
+    <string name="optionMenuWorkOffline">Work offline</string>
+    <string name="optionMenuWorkOnline">Work online</string>
 
     <string name="buttonSaveSettings">Continue</string>
 
@@ -45,6 +49,9 @@
     <string name="wentOffline">The network connection has been lost. You are working offline now.</string>
     <string name="backOnline">A network connection is available now. Go to settings in the main menue to login and work online.</string>
 
+    <string name="offlineRequestedByUser">You are working offline now.</string>
+    <string name="onlineRequestedByUser">You are working online now.</string>
+
     <string name="buttonSelectGeoLocation">Select geo location on map</string>
     <string name="buttonChangeGeoLocation">Change location</string>
     <string name="buttonClearGeoLocation">Clear</string>
@@ -68,6 +75,9 @@
     <string name="confirmSendQueuedTitle">Send stored entries</string>
     <string name="confirmSendQueuedPart1">There are</string>
     <string name="confirmSendQueuedPart2">entries stored offline for the authenticated blog users. Send them now?</string>
+
+    <string name="confirmDeleteTitle">Delete blog entry</string>
+    <string name="confirmDelete">Are you sure you want to delete this blog entry?</string>
 
     <string name="sendResultTitle">Send Result</string>
     <string name="sendResultPart1">Only</string>

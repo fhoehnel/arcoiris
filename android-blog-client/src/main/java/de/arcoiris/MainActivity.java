@@ -24,7 +24,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -38,6 +38,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -67,12 +68,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_EXTERNAL_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_INTERNET = 3;
@@ -84,12 +84,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private static final int MAX_IMG_SIZE = 1280;
 
-    private static final int MIN_SCREEN_HEIGHT_FOR_LARGE_THUMBS = 600;
+    public static final int MIN_SCREEN_HEIGHT_FOR_LARGE_THUMBS = 600;
 
     private static final int THUMBNAIL_SIZE_SMALL = 160;
     private static final int THUMBNAIL_SIZE_LARGE = 240;
 
     private static final int MAX_THUMBNAIL_TEXT_LENGTH = 100;
+    public static final int MAX_LIST_TEXT_LENGTH = 180;
 
     protected static final int REQUEST_PICK_IMAGE = 1;
     protected static final int REQUEST_PICK_CROP_IMAGE = 2;
@@ -113,11 +114,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final int POPUP_QUEUE_WIDTH_LARGE = 356;
     private static final int POPUP_QUEUE_MAX_HEIGHT = 1200;
 
+    private static final int BLOG_FORM_MODE_CREATE = 1;
+    public static final int BLOG_FORM_MODE_MODIFY = 2;
+
     private Button sendPostButton;
     private Button sendPublishButton;
+    private Button cancelCreateButton;
     private Button geoLocationButton;
     private Button changeLocationButton;
     private Button clearLocationButton;
+    private Button createEntryButton;
     private ImageView blogPicImageView;
 
     private boolean offline = false;
@@ -132,6 +138,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private String picturePath = null;
 
+    private Menu actionBarMenu = null;
+
     private PopupWindow aboutPopup = null;
 
     private PopupWindow offlineQueuePopup = null;
@@ -145,6 +153,8 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private Button mapSelectionOkButton = null;
 
     private View blogFormLayout = null;
+
+    private View blogListLayout = null;
 
     private View mapLayout = null;
 
@@ -162,7 +172,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     private boolean currentNetworkStatus = false;
 
+    private boolean offlineRequestedByUser = false;
+
     private boolean stopNetworkQueryThread;
+
+    private boolean entryListModified = false;
+
+    private int blogFormMode = BLOG_FORM_MODE_CREATE;
+
+    private String currentEntryQueueFileName = null;
 
     /**
      * key: serverURL + '~' + userid
@@ -218,7 +236,11 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         if ((serverUrl == null) || (userid == null) || (password == null)) {
             showSettings();
         } else {
-            showBlogForm();
+            if (OfflineQueueManager.getInstance(getFilesDir()).existQueuedFiles()) {
+                showBlogList();
+            } else {
+                showBlogForm(BLOG_FORM_MODE_CREATE);
+            }
         }
     }
 
@@ -284,7 +306,25 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         Log.d("arcoiris", "connection to location services failed");
     }
 
-    private void showBlogForm() {
+    private void resetBlogForm() {
+        EditText descriptionInput = (EditText) findViewById(R.id.description);
+        descriptionInput.getText().clear();
+        blogPicImageView.setImageDrawable(null);
+        selectedLocation = null;
+        hidePictureLayout();
+
+        if ((!offline) && (!offlineRequestedByUser)) {
+            geoLocationButton.setVisibility(View.VISIBLE);
+        }
+
+        View selectedLocationView = (View) findViewById(R.id.selectedLocation);
+        selectedLocationView.setVisibility(View.GONE);
+    }
+
+    public void showBlogForm(int mode) {
+
+        blogFormMode = mode;
+
         boolean viewJustCreated = false;
 
         if (blogFormLayout == null) {
@@ -309,6 +349,9 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             sendPublishButton.setOnClickListener(mButtonListener);
             sendPublishButton.setVisibility(View.GONE);
 
+            cancelCreateButton = (Button) findViewById(R.id.cancel_create_button);
+            cancelCreateButton.setOnClickListener(mButtonListener);
+
             geoLocationButton = (Button) findViewById(R.id.select_geo_location);
             geoLocationButton.setOnClickListener(mButtonListener);
 
@@ -322,15 +365,168 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         }
 
-        if (offline) {
+        if (offline || offlineRequestedByUser) {
             sendPostButton.setText(R.string.buttonSaveOffline);
             sendPublishButton.setText(R.string.buttonSavePublish);
-            geoLocationButton.setVisibility(View.GONE);
+            cancelCreateButton.setVisibility(View.VISIBLE);
+            geoLocationButton.setVisibility(View.VISIBLE);
+            if (changeLocationButton != null) {
+                changeLocationButton.setVisibility(View.GONE);
+            }
+            if (clearLocationButton != null) {
+                clearLocationButton.setVisibility(View.GONE);
+            }
         } else {
             sendPostButton.setText(R.string.buttonSendPost);
             sendPublishButton.setText(R.string.buttonSendPublish);
             geoLocationButton.setVisibility(View.VISIBLE);
+            cancelCreateButton.setVisibility(View.GONE);
         }
+    }
+
+    public void moveOfflineEntryUp(final String offlineQueueFileName) {
+        OfflineQueueManager queueMgr = OfflineQueueManager.getInstance(getFilesDir());
+        queueMgr.moveBlogEntryUp(offlineQueueFileName);
+        entryListModified = true;
+        showBlogList();
+    }
+
+    public void deleteOfflineEntry(final String offlineQueueFileName) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogBuilder.setMessage(getString(R.string.confirmDelete));
+
+        dialogBuilder.setTitle(getString(R.string.confirmDeleteTitle));
+
+        dialogBuilder.setPositiveButton(R.string.buttonOk,
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        OfflineQueueManager queueMgr = OfflineQueueManager.getInstance(getFilesDir());
+                        queueMgr.deleteQueuedBlogEntry(offlineQueueFileName);
+                        entryListModified = true;
+                        showBlogList();
+                    }
+                }
+        );
+
+        dialogBuilder.setNegativeButton(R.string.buttonCancel,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                }
+        );
+
+        AlertDialog confirmDeleteDialog = dialogBuilder.create();
+
+        confirmDeleteDialog.show();
+    }
+
+    public void presetBlogFormValues(String offlineQueueFileName) {
+
+        resetBlogForm();
+
+        currentEntryQueueFileName = offlineQueueFileName;
+
+        OfflineQueueEntryInfo offlineEntryInfo = OfflineQueueManager.getInstance(getFilesDir()).getQueuedFileByFileName(offlineQueueFileName);
+
+        EditText descrText = (EditText) findViewById(R.id.description);
+        descrText.setText(offlineEntryInfo.getMetaData().getBlogText());
+
+        Uri pictureFileUri = Uri.fromFile(offlineEntryInfo.getQueueImgFile());
+
+        handlePictureSelection(pictureFileUri);
+
+        selectedDate = offlineEntryInfo.getMetaData().getBlogDate();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedSelectedDate = dateFormat.format(offlineEntryInfo.getMetaData().getBlogDate());
+
+        Button selectDateButton = (Button) findViewById(R.id.pickDateButton);
+        selectDateButton.setText(formattedSelectedDate);
+
+        if (offlineEntryInfo.getMetaData().getGeoLocation() != null) {
+            selectedLocation = offlineEntryInfo.getMetaData().getGeoLocation();
+
+            TextView latitudeText = (TextView) findViewById(R.id.selectedLocLatitude);
+            latitudeText.setText(latLongFormat.format(selectedLocation.latitude));
+
+            TextView longitudeText = (TextView) findViewById(R.id.selectedLocLongitude);
+            longitudeText.setText(latLongFormat.format(selectedLocation.longitude));
+
+            View selectedLocationView = (View) findViewById(R.id.selectedLocation);
+            selectedLocationView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showBlogList() {
+        boolean viewJustCreated = false;
+
+        if (blogListLayout == null) {
+            LayoutInflater inflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            blogListLayout = inflater.inflate(R.layout.blog_entry_list, null);
+            viewJustCreated = true;
+        }
+
+        setContentView(blogListLayout);
+
+        if (viewJustCreated) {
+
+            createEntryButton = (Button) findViewById(R.id.createEntryButton);
+
+            createEntryButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBlogForm(BLOG_FORM_MODE_CREATE);
+                    resetBlogForm();
+                }
+            });
+        }
+
+        LinearLayout fileListLayout = (LinearLayout) blogListLayout.findViewById(R.id.entryList);
+
+        if ((fileListLayout.getChildCount() == 0) || entryListModified) {
+
+            if (fileListLayout.getChildCount() > 0) {
+                fileListLayout.removeAllViews();
+            }
+
+            List<OfflineQueueEntryInfo> queuedFileList = OfflineQueueManager.getInstance(getFilesDir()).getQueuedFiles();
+
+            Date prevDate = null;
+
+            SimpleDateFormat blogDateFormat = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+            blogDateFormat.applyPattern("EEEE, dd MMMM yyyy");
+
+            for (OfflineQueueEntryInfo queuedFile : queuedFileList) {
+                Date entryDate = queuedFile.getMetaData().getBlogDate();
+
+                boolean firstEntryOfDay = false;
+
+                if ((prevDate == null) || (prevDate.getDate() != entryDate.getDate())) {
+                    TextView dateText = new TextView(this);
+                    dateText.setTextColor(Color.rgb(255, 255, 127));
+                    dateText.setBackgroundColor(Color.rgb(48, 48, 48));
+                    dateText.setPadding(10, 0, 0, 0);
+                    dateText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    dateText.setText(blogDateFormat.format(entryDate));
+                    dateText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    fileListLayout.addView(dateText);
+
+                    firstEntryOfDay = true;
+                }
+
+                prevDate = entryDate;
+
+                OfflineListEntry listEntry = new OfflineListEntry(this, queuedFile, this, firstEntryOfDay);
+
+                fileListLayout.addView(listEntry);
+            }
+        }
+
+        entryListModified = false;
     }
 
     private View.OnClickListener mButtonListener = new View.OnClickListener() {
@@ -354,13 +550,15 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                         toast.show();
                     } else {
                         if (v.getId() == R.id.send_publish_button) {
-                            if (offline) {
+                            if (offline || offlineRequestedByUser) {
+                                entryListModified = true;
                                 queueEntryOffline(true);
                             } else {
                                 new PostToBlogTask(v, true).execute();
                             }
                         } else {
-                            if (offline) {
+                            if (offline || offlineRequestedByUser) {
+                                entryListModified = true;
                                 queueEntryOffline(false);
                             } else {
                                 new PostToBlogTask(v, false).execute();
@@ -418,8 +616,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                     View selectedLocationView = (View) findViewById(R.id.selectedLocation);
                     selectedLocationView.setVisibility(View.GONE);
 
-                    Button selectLocationButton = (Button) findViewById(R.id.select_geo_location);
-                    selectLocationButton.setVisibility(View.VISIBLE);
+                    if ((!offline) && (!offlineRequestedByUser)) {
+                        Button selectLocationButton = (Button) findViewById(R.id.select_geo_location);
+                        selectLocationButton.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case R.id.cancel_create_button:
+                    showBlogList();
                     break;
             }
         }
@@ -595,14 +798,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 TextView longitudeText = (TextView) findViewById(R.id.selectedLocLongitude);
                 longitudeText.setText(latLongFormat.format(gpsFromExif.longitude));
 
-                View selectedLocationView = (View) findViewById(R.id.selectedLocation);
-                selectedLocationView.setVisibility(View.VISIBLE);
+                if ((!offline)  && (!offlineRequestedByUser)) {
+                    View selectedLocationView = (View) findViewById(R.id.selectedLocation);
+                    selectedLocationView.setVisibility(View.VISIBLE);
 
-                changeLocationButton = (Button) findViewById(R.id.change_geo_location);
-                changeLocationButton.setOnClickListener(mButtonListener);
+                    changeLocationButton = (Button) findViewById(R.id.change_geo_location);
+                    changeLocationButton.setOnClickListener(mButtonListener);
 
-                clearLocationButton = (Button) findViewById(R.id.clear_geo_location);
-                clearLocationButton.setOnClickListener(mButtonListener);
+                    clearLocationButton = (Button) findViewById(R.id.clear_geo_location);
+                    clearLocationButton.setOnClickListener(mButtonListener);
+                }
 
                 selectedLocation = gpsFromExif;
             }
@@ -616,7 +821,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         showPictureLayout();
 
-        if (offline) {
+        if (offline || offlineRequestedByUser) {
             sendPostButton.setText(R.string.buttonSaveOffline);
             sendPublishButton.setText(R.string.buttonSavePublish);
         } else {
@@ -632,13 +837,23 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        return (networkInfo != null) && networkInfo.isConnected();
+        boolean connected = (networkInfo != null) && networkInfo.isConnected();
+
+        return connected;
         // return false;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar_options, menu);
+
+        if (!checkNetworkConnection()) {
+            // menu.findItem(R.id.optionWorkOffline).setIcon(getResources().getDrawable(R.drawable.ic_action_green));
+            menu.findItem(R.id.optionWorkOffline).setVisible(false);
+        }
+
+        actionBarMenu = menu;
+
         return true;
     }
 
@@ -660,6 +875,37 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
             case R.id.optionExit:
                 System.exit(0);
+                return true;
+
+            case R.id.optionWorkOffline:
+                int toastText;
+                if (offlineRequestedByUser) {
+                    if (checkNetworkConnection()) {
+                        actionBarMenu.findItem(R.id.optionWorkOffline).setIcon(getResources().getDrawable(R.drawable.ic_action_network_wifi));
+                        actionBarMenu.findItem(R.id.optionWorkOffline).setTitle(R.string.optionMenuWorkOffline);
+                        actionBarMenu.findItem(R.id.optionSendQueued).setVisible(true);
+                        offlineRequestedByUser = false;
+                        toastText = R.string.onlineRequestedByUser;
+                    } else {
+                        toastText = R.string.wentOffline;
+                    }
+                } else {
+                    actionBarMenu.findItem(R.id.optionWorkOffline).setIcon(getResources().getDrawable(R.drawable.ic_action_airplane_mode_on));
+                    actionBarMenu.findItem(R.id.optionWorkOffline).setTitle(R.string.optionMenuWorkOnline);
+                    actionBarMenu.findItem(R.id.optionSendQueued).setVisible(false);
+                    offlineRequestedByUser = true;
+                    toastText = R.string.offlineRequestedByUser;
+                }
+
+                // TODO: only if settings view is shown
+                // get current content view:
+                // findViewById(android.R.id.content)
+                showSettings();
+
+                Toast switchModeToast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT);
+                switchModeToast.setGravity(Gravity.CENTER, 0, 0);
+                switchModeToast.show();
+
                 return true;
 
             case R.id.optionSendQueued:
@@ -728,7 +974,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         });
 
-        View parentView = findViewById(R.id.scene_layout);
+        View parentView = getWindow().getDecorView().findViewById(android.R.id.content);
 
         float densityFactor = getResources().getDisplayMetrics().density;
 
@@ -954,10 +1200,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         offline = false;
 
         if (!checkNetworkConnection()) {
+            offline = true;
+        }
+
+        if (offline || offlineRequestedByUser) {
             saveSettingsButton.setText(R.string.workOffline);
             offlineMsg.setVisibility(View.VISIBLE);
             passwordInput.setEnabled(false);
-            offline = true;
         } else {
             saveSettingsButton.setText(R.string.buttonSaveSettings);
             offlineMsg.setVisibility(View.GONE);
@@ -991,7 +1240,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                             (userid == null) || userid.trim().isEmpty()) {
                             missingParameters = true;
                         } else {
-                            if (!offline) {
+                            if ((!offline) && (!offlineRequestedByUser)) {
                                 if ((password == null) || password.trim().isEmpty()) {
                                     missingParameters = true;
                                 }
@@ -1009,7 +1258,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                             v.setVisibility(View.GONE);
 
-                            if (!offline) {
+                            if ((!offline) && (!offlineRequestedByUser)) {
                                 TextView connectingMsg = (TextView) findViewById(R.id.connecting_msg);
                                 connectingMsg.setVisibility(View.VISIBLE);
 
@@ -1027,8 +1276,13 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                                 new QueryNetworkAvailabilityTask(v).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                             }
 
-                            if (offline) {
-                                showBlogForm();
+                            if (offline || offlineRequestedByUser) {
+                                if (OfflineQueueManager.getInstance(getFilesDir()).existQueuedFiles()) {
+                                    showBlogList();
+                                } else {
+                                    showBlogForm(BLOG_FORM_MODE_CREATE);
+                                    resetBlogForm();
+                                }
                             } else {
                                 new TestAuthenticationTask(v).execute();
                             }
@@ -1048,10 +1302,19 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         metaData.setUserid(userid);
 
+        OfflineQueueManager queueMgr = OfflineQueueManager.getInstance(getFilesDir());
+
         Date blogEntryDate = selectedDate;
+
         if (blogEntryDate == null) {
             blogEntryDate = new Date();
         }
+
+        if (blogFormMode == BLOG_FORM_MODE_CREATE) {
+            blogEntryDate = new Date(queueMgr.getLatestEntryOfDay(blogEntryDate).getTime() + 1000);
+            Log.d("arcoiris","adjusted blogDate");
+        }
+
         metaData.setBlogDate(blogEntryDate);
 
         EditText descrText = (EditText) findViewById(R.id.description);
@@ -1062,15 +1325,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         metaData.setPublishImmediately(publishImmediately);
 
-        OfflineQueueManager queueMgr = OfflineQueueManager.getInstance(getFilesDir());
+        if (blogFormMode == BLOG_FORM_MODE_CREATE) {
+            queueMgr.queueBlogEntry(getApplicationContext(), metaData, pictureUri, picturePath);
 
-        queueMgr.queueBlogEntry(getApplicationContext(), metaData, pictureUri, picturePath);
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.saveSuccess, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        } else {
+            queueMgr.changeQueuedBlogEntry(getApplicationContext(), metaData, pictureUri, picturePath, currentEntryQueueFileName);
+        }
 
         // sendResultText.setText(R.string.saveSuccess);
-
-        Toast toast = Toast.makeText(getApplicationContext(), R.string.saveSuccess, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
 
         EditText descriptionInput = (EditText) findViewById(R.id.description);
         descriptionInput.getText().clear();
@@ -1078,12 +1343,14 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         selectedLocation = null;
         hidePictureLayout();
 
-        if (!offline) {
+        if ((!offline) && (!offlineRequestedByUser)) {
             geoLocationButton.setVisibility(View.VISIBLE);
         }
 
         View selectedLocationView = (View) findViewById(R.id.selectedLocation);
         selectedLocationView.setVisibility(View.GONE);
+
+        showBlogList();
     }
 
     class QueryNetworkAvailabilityTask extends AsyncTask<String, Void, String> {
@@ -1118,6 +1385,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                             if (currentNetworkStatus) {
                                 offline = true;
                                 networkStatusChanged = true;
+                                actionBarMenu.findItem(R.id.optionWorkOffline).setVisible(false);
                             }
                         }
 
@@ -1137,8 +1405,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 int toastText;
                 if (currentNetworkStatus) {
                     toastText = R.string.backOnline;
+                    actionBarMenu.findItem(R.id.optionWorkOffline).setVisible(true);
                 } else {
                     toastText = R.string.wentOffline;
+                    actionBarMenu.findItem(R.id.optionWorkOffline).setVisible(false);
                 }
                 Toast toast = Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
@@ -1173,7 +1443,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             if (authResult == 1) {
                 String key = serverUrl + '~' + userid;
                 checkedLogins.put(key, password);
-                showBlogForm();
+                showBlogForm(BLOG_FORM_MODE_CREATE);
             } else if (authResult == 0) {
                 Toast toast = Toast.makeText(view.getContext(), R.string.authenticationFailed, Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);

@@ -3,8 +3,6 @@
     package="de.arcoiris"
     android:versionCode="12" android:versionName="0.8.3">
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18"/>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />

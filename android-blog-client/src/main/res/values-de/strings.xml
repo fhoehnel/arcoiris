@@ -9,7 +9,9 @@
     <string name="buttonSendPost">Senden</string>
     <string name="buttonSendPublish">Senden &amp; Publizieren</string>
     <string name="buttonSaveOffline">Speichern</string>
-    <string name="buttonSavePublish">Speichern &amp; Publ. </string>
+    <string name="buttonSavePublish">Sp. &amp; Publ. </string>
+    <string name="buttonCancelCreate">Abbr.</string>
+    <string name="buttonNewEntry">Neuen Eintrag erstellen</string>
     <string name="noImageSelected">kein Bild ausgewählt</string>
 
     <string name="labelPassword">arcoiris Passwort:</string>
@@ -18,7 +20,9 @@
     <string name="optionMenuAbout">Über arcoiris blog App</string>
     <string name="optionMenuExit">Beenden</string>
     <string name="optionMenuSettings">Einstellungen</string>
-    <string name="optionMenuSendQueued">Senden</string>
+    <string name="optionMenuSendQueued">Offline-Einträge Senden</string>
+    <string name="optionMenuWorkOffline">Offline arbeiten</string>
+    <string name="optionMenuWorkOnline">Online arbeiten</string>
 
     <string name="youAreOffline">Keine Netzwerkverbindung!</string>
     <string name="workOffline">offline arbeiten</string>
@@ -39,6 +43,9 @@
 
     <string name="wentOffline">Die Netzwerkverbindung ist unterbrochen. Sie arbeiten jetzt offline.</string>
     <string name="backOnline">Eine Netzwerkverbindung ist jetzt verfügbar. Um online zu gehen, loggen Sie sich unter Einstellungen im Hauptmenü ein.</string>
+
+    <string name="offlineRequestedByUser">Sie arbeiten jetzt im offline-Modus</string>
+    <string name="onlineRequestedByUser">Sie arbeiten jetzt im online-Modus</string>
 
     <string name="buttonSelectGeoLocation">Lokation auf Karte auswählen</string>
     <string name="buttonChangeGeoLocation">Lokation ändern</string>
@@ -64,7 +71,10 @@
     <string name="confirmSendQueuedPart1">Es existieren</string>
     <string name="confirmSendQueuedPart2">offline gespeicherte Einträge für die authentifizierten Blog-Nutzer. Sollen sie jetzt gesendet werden?</string>
 
-    <string name="SendResultTitle">Sende-Ergebnis</string>
+    <string name="confirmDeleteTitle">Blog-Eintrag löschen</string>
+    <string name="confirmDelete">Soll der Blog-Eintrag wirklich gelöscht werden?</string>
+
+    <string name="sendResultTitle">Sende-Ergebnis</string>
     <string name="sendResultPart1">Nur</string>
     <string name="sendResultPart2">von</string>
     <string name="sendResultPart3">Einträge konnten erfolgreich gesendet werden.</string>
