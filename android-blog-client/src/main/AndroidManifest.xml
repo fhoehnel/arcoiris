@@ -44,7 +44,7 @@
         <!--
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCTPzAuQd-_HSXipD22tn4LrYOiDr-Kdyo" />
         -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCWExv9yztuvF9tRyj1v0abcrIg4fjkkao" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="NU3aLS5WExv39HtuvNF6Ryj1NSGbcL4W4fjs9ao" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
         <uses-library android:name="com.google.android.maps" />
