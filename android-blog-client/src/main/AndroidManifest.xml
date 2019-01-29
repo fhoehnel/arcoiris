@@ -39,10 +39,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <!--
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCTPzAuQd-_HSXipD22tn4LrYOiDr-Kdyo" />
-        -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCWExv9yztuvF9tRyj1v0abcrIg4fjkkao" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="FU2aSyJ3Rxv9yztuvLPNRyj1x24bcrK63fjmnao" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
         <uses-library android:name="com.google.android.maps" />
