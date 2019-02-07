@@ -157,6 +157,10 @@ a.icon-font {
 	content: '\f08e';
 }
 
+.icon-comment:before {
+	content: '\f075';
+}
+
 .icon-calender:before {
 	content: '\f073';
 }
@@ -183,6 +187,10 @@ a.icon-font {
 
 .icon-stats:before {
 	content: '\f080';
+}
+
+.icon-book:before {
+	content: '\f02d';
 }
 
 .icon-page-prev:before {
@@ -212,6 +220,10 @@ a.icon-font {
 
 .icon-page-last:before {
 	content: '\f051';
+}
+
+.icon-check:before {
+	content: '\f00c';
 }
 
 a.icon-paging {

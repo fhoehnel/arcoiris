@@ -110,7 +110,7 @@ public class GPXViewHandler extends UserRequestHandler {
 								output.println("  <googleMapsAPIKey>" + googleMapsAPIKey + "</googleMapsAPIKey>");
 							}
 							output.println("  <filePath>" + CommonUtils.escapeForJavascript(filePath) + "</filePath>");
-							
+							output.println("  <language>" + language + "</language>");							
                             output.println("  <contextRoot>" + req.getContextPath() + "</contextRoot>");
 						}
 

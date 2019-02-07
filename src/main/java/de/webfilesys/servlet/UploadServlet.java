@@ -277,7 +277,7 @@ public class UploadServlet extends BlogWebServlet {
         for (int i = 0; i < fileName.length(); i++) {
             char c = fileName.charAt(i);
 
-            if ((c == '\'') || (c == '#') || (c == '`') || (c == '%') || (c == '!') || (c == 'ง') || (c == '&') || (c == '[') || (c == ']') || (c == '\"')) {
+            if ((c == '\'') || (c == '#') || (c == '`') || (c == '%') || (c == '!') || (c == 'ยง') || (c == '&') || (c == '[') || (c == ']') || (c == '\"')) {
                 c = '_';
             }
 

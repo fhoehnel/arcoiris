@@ -340,6 +340,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                         blogEntriesElement.appendChild(blogDateElement);
 
+                        XmlUtil.setChildText(blogDateElement, "plainDate", blogDate, false);
                         XmlUtil.setChildText(blogDateElement, "formattedDate", formatBlogDate(day), false);
 
                         ArrayList<File> entriesOfDay = blogDays.get(blogDate);

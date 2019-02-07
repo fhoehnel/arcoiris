@@ -151,6 +151,9 @@ label.hintGoogleMapSelect=¡Haz click para seleccionar las coordenadas geográfica
 noFilesWithGeoData=No hay imagenes con coordenadas geográficas en esta carpeta.
 button.hideMapInfo=Ocultar texto de información
 button.showMapInfo=Mostrar texto de información
+linkToBlogEntryTitle=Mostrar entrada de blog relacionada
+slowMotionLink=camara lenta
+slowMotionTitle=mostrar en camara lenta
 
 # alert messages
 alert.regsuccess=El nuevo usuario ha sido registrado correctamente.
@@ -274,6 +277,9 @@ blog.sortOrderBlog=blog (el más reciente primero)
 blog.sortOrderDiary=diario (lo más viejo primero)
 blog.lowBandwith=cambiar a modo de red lenta
 blog.highBandwith=cambiar a modo de red rápida
+blog.publishDayLink=publicar todas las entradas de este día
+blog.confirmPublishDay=¿Seguro que quieres publicar las nuevas entradas del este día?
+blog.linkToUnseenComment=comentarios no leídos
 
 statLast24Hours=las últimas 24 horas
 statLast48Hours=las últimas 48 horas

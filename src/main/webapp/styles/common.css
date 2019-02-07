@@ -1750,8 +1750,13 @@ div.picOnMap {
 }
 
 img.picOnMap {
-	margin-top: 10px;
+	margin-top: 6px;
 	display: none;
+}
+
+a.linkBlogImgFromMap {
+	font-size: 18px;
+	color: black;
 }
 
 div.mouseClickShield {
@@ -1797,6 +1802,41 @@ button.alertConfirmButton {
 	border: 1px solid #404040;
 	border-radius: 8px;
 	cursor: pointer;
+}
+
+a.publishDayLink {
+	float: right;
+	margin-right: 8px;
+	font-size: 24px;
+}
+
+a.unseenComments {
+	display: none;
+	text-decoration: none;
+    margin-left: 20px;
+}
+
+a.blogMenu.unseenComments:before {
+	color: #000060;
+	text-decoration: none;
+	position: relative;
+	bottom: 4px;
+}
+
+span.unseenCommentCount {
+	display: none;
+	float: left;
+	margin-top: 16px;
+	color: #ffffff;
+	position: relative;
+	left: -40px;
+    top: 2px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+html.blog span.unseenCommentCount {
+	font-size: 13px;
 }
 
 @media (max-width: 400px) {

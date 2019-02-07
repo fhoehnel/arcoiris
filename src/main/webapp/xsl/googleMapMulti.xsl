@@ -19,6 +19,10 @@
   </link>
 
   <link rel="stylesheet" type="text/css">
+    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/icons.css</xsl:attribute>
+  </link>
+
+  <link rel="stylesheet" type="text/css">
     <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/geoData/skin" />.css</xsl:attribute>
   </link>
   
@@ -148,7 +152,7 @@
 
   <div id="map" style="width:100%;height:100%;"></div>
   
-  <div style="position:absolute;top:10px;right:10px;"> 
+  <div style="position:absolute;bottom:10px;left:10px;"> 
 
     <form>
         <input id="hideInfoButton" type="button" resource="button.hideMapInfo" onclick="hideMapInfoWindows()" 

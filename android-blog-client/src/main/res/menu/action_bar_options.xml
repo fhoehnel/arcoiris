@@ -14,6 +14,17 @@
         android:icon="@drawable/ic_action_settings" />
 
     <item
+        android:id="@+id/optionWorkOffline"
+        android:enabled="true"
+        android:visible="true"
+        android:titleCondensed="Work offline"
+        android:alphabeticShortcut="d"
+        android:menuCategory="system"
+        android:title="@string/optionMenuWorkOffline"
+        yourapp:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_network_wifi" />
+
+    <item
         android:id="@+id/optionSendQueued"
         android:enabled="true"
         android:visible="true"

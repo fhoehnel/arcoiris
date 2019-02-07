@@ -30,6 +30,10 @@ var lastScrollPos = 0;
 
 var daysWithEntries = new Array();
 
+var searchPreviewTimeout = null;
+
+var searchPreviewActive = false;
+
 function existFileReader()
 {
     try
@@ -708,10 +712,6 @@ function showMap(selectLocation) {
       
     var map = new google.maps.Map(document.getElementById("map"), myOptions);      
           
-    if (selectLocation) {
-        document.getElementById("selectButton").style.visibility = 'visible';
-    }
-
     var markerPos = new google.maps.LatLng(latitude, longitude);
 
     posMarker = new google.maps.Marker({
@@ -738,10 +738,36 @@ function showMap(selectLocation) {
     centerBox(document.getElementById("mapFrame"));
 
     document.getElementById("mapFrame").style.visibility = 'visible';
+    
+    requestFullScreen(document.getElementById("map"));
+    
+    var mapCont = document.getElementById("map");
+    
+   	var mapButtonCont = document.createElement("form");
+   	mapButtonCont.setAttribute("class", "mapButtonCont");
+   	mapCont.appendChild(mapButtonCont);
+
+   	var closeButton = document.createElement("input");
+   	closeButton.setAttribute("type", "button");
+   	closeButton.setAttribute("value", resourceBundle["button.closeMap"]);
+   	closeButton.setAttribute("onclick", "hideMap()");
+   	closeButton.setAttribute("class", "mapButton");
+   	mapButtonCont.appendChild(closeButton);
+   	
+    if (selectLocation) {
+       	var selectButton = document.createElement("input");
+       	selectButton.setAttribute("type", "button");
+       	selectButton.setAttribute("value", resourceBundle["button.save"]);
+       	selectButton.setAttribute("onclick", "selectLocation()");
+       	selectButton.setAttribute("class", "mapButton");
+       	mapButtonCont.appendChild(selectButton);
+    }
 }  
 
 function hideMap() {
-    document.getElementById("selectButton").style.visibility = 'hidden';
+	
+    cancelFullScreen(document.getElementById("map"));
+	
     document.getElementById("mapFrame").style.visibility = 'hidden';
     document.getElementById("mapFrame").style.display = 'none';
 }
@@ -1046,6 +1072,7 @@ function closeBlogComments() {
     var commentNewLabel = document.getElementById("newComment-" + posInPage);
     if (commentNewLabel) {
         commentNewLabel.style.display = 'none';
+        queryUnseenComments();        
     }
 
     var commentCont = document.getElementById("commentCont");
@@ -1078,6 +1105,7 @@ function showPostCommentResult(req) {
                 var commentNewLabel = document.getElementById("newComment-" + posInPage);
                 if (commentNewLabel) {
                     commentNewLabel.style.display = 'none';
+                    queryUnseenComments();
                 }
 
                 var commentCont = document.getElementById("commentCont");
@@ -1346,11 +1374,18 @@ function handleSearchResult(req) {
                    	var isComment = getChildValueByTagName(searchHits[i], "isComment");
                    	
                    	var searchLinkElem = document.createElement("a");
+                   	searchLinkElem.setAttribute("fileName", fileName);
                    	if (isComment) {
                        	searchLinkElem.setAttribute("class", "searchHitLink searchHitComment");
                    	} else {
                        	searchLinkElem.setAttribute("class", "searchHitLink");
                    	}
+                   	searchLinkElem.onmouseover = function () {
+                   		var timeoutFunctionCall = "previewSearchResult('" + this.getAttribute("fileName") + "')";
+                   		searchPreviewTimeout = setTimeout(timeoutFunctionCall, 500);
+                   	};
+                   	searchLinkElem.setAttribute("onmouseout", "cancelSearchPreview()");
+                   	
                    	searchLinkElem.setAttribute("href", getContextRoot() + "/servlet?command=blog&beforeDay=" + blogLinkDate + "&positionToFile=" + fileName);
                    	searchHitListEntry.appendChild(searchLinkElem);
                    	
@@ -1404,6 +1439,73 @@ function searchKeyPress(e) {
         return false;
     }
     return true;
+}
+
+function previewSearchResult(fileName) {
+	searchPreviewTimeout = null;
+
+   	var searchPreviewCont = document.createElement("div");
+   	searchPreviewCont.id = "searchPreviewCont";
+   	searchPreviewCont.setAttribute("class", "searchPreviewCont");
+   	document.documentElement.appendChild(searchPreviewCont);
+	
+   	var previewPic = document.createElement("img");
+   	previewPic.src = getContextRoot() + "/servlet?command=getFile&fileName=" + encodeURIComponent(fileName) + "&cached=true&thumb=true";
+   	searchPreviewCont.appendChild(previewPic);
+
+   	var blogEntryText = document.createElement("p");
+   	blogEntryText.id = "searchPreviewText";
+   	searchPreviewCont.appendChild(blogEntryText);
+   	
+   	document.documentElement.appendChild(searchPreviewCont);
+   	
+   	var searchResultCont = document.getElementById("searchResultCont");
+   	if (searchResultCont) {
+   		var resultContXpos = searchResultCont.offsetLeft;
+   		var previewContWidth = searchPreviewCont.offsetWidth;
+   		var previewXpos = resultContXpos - previewContWidth - 4;
+   		if (previewXpos < 1) {
+   			previewXpos = 1;
+   		}
+   		searchPreviewCont.style.left = previewXpos + "px";
+   	}
+   	
+    searchPreviewActive = true;
+
+    var ajaxUrl = getContextRoot() + "/servlet?command=getFileDesc&fileName=" + encodeURIComponent(fileName);
+    
+	xmlRequest(ajaxUrl, function(req) {
+        if (req.readyState == 4) {
+        	if (searchPreviewActive) {
+                if (req.status == 200) {
+                    var fileDescription = req.responseXML.getElementsByTagName("result")[0].firstChild.nodeValue;        
+                    if (fileDescription && (fileDescription.length > 0)) {
+                        var searchPreviewText = document.getElementById("searchPreviewText");
+                        if (searchPreviewText) {
+                        	searchPreviewText.innerText = shortText(fileDescription, 170);
+                        }
+                    }
+                } else {
+                    alert(resourceBundle["alert.communicationFailure"]);
+                }
+        	}
+        }
+	});
+}
+
+function cancelSearchPreview() {
+	if (searchPreviewTimeout) {
+		clearTimeout(searchPreviewTimeout);
+		return;
+	}
+	
+	if (!searchPreviewActive) {
+		return;
+	}
+	
+	document.documentElement.removeChild(document.getElementById("searchPreviewCont"));
+
+	searchPreviewActive = false;
 }
 
 function showSettings() {
@@ -1755,10 +1857,70 @@ function queryGeoData() {
 	                        document.getElementById("mapAllLink").style.display = "inline";
 	                    } 
 	                }
+	                
+	                // cascading ajax calls for performance reasons
+	                queryUnseenComments();
 	            }
 	        });          
 		
 	    }, 500);
+}
+
+function queryUnseenComments() {
+	setTimeout(function() {
+	        var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForUnseenComments";
+	    
+	        xmlRequest(url, function(req) {
+	            if (req.readyState == 4) {
+	                if (req.status == 200) {
+	                    var responseXml = req.responseXML;
+	                    var resultItem = responseXml.getElementsByTagName("result")[0];
+	                    var result = resultItem.firstChild.nodeValue;  
+	                
+                    	var unseenCommentLink = document.getElementById("unseenCommentLink");
+                    	var unseenCommentCount = document.getElementById("unseenCommentCount");
+
+                    	if (result && (result != "0")) {
+	                    	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
+	                    	unseenCommentLink.style.display = "inline";
+	                    	
+	                    	unseenCommentCount.innerText = result;
+	                    	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
+	                    	unseenCommentCount.style.display = "inline";
+	                    } else {
+	                    	unseenCommentLink.style.display = "none";
+	                    	unseenCommentCount.style.display = "none";
+	                    }
+	                } else {
+	                    alert(resourceBundle["alert.communicationFailure"]);
+	                }
+	            }
+	        });          
+		
+	}, 500);
+}
+
+function showUnseenComment() {
+    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=getFirstUnseenComment";
+    
+    xmlRequest(url, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+                var responseXml = req.responseXML;
+                var resultItem = responseXml.getElementsByTagName("fileName")[0];
+                var fileName = resultItem.firstChild.nodeValue;  
+
+                var resultItem = responseXml.getElementsByTagName("linkDate")[0];
+                var linkDate = resultItem.firstChild.nodeValue;  
+                
+            	var targetUrl = getContextRoot() + "/servlet?command=blog&beforeDay=" + linkDate + "&positionToFile=" + fileName;
+            	
+            	window.location.href = targetUrl;
+            } else {
+                alert(resourceBundle["alert.communicationFailure"]);
+            }
+        }
+    });          
 }
 
 function googleMapAll() {
@@ -1858,6 +2020,14 @@ function publishNewEntries() {
     }
     
     window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
+}
+
+function publishDay(dayToPublish) {
+    if (!confirm(resourceBundle["blog.confirmPublishDay"])) {
+        return;
+    }
+    
+    window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishDay&day=" + dayToPublish;
 }
 
 function switchLowBandwidthMode() {

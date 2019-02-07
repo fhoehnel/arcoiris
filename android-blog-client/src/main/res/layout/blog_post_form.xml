@@ -215,6 +215,18 @@
                     android:layout_marginTop="20px"
                     android:layout_marginLeft="10dp"
                     android:text="@string/buttonSendPublish" />
+
+                <Button
+                    android:id="@+id/cancel_create_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32sp"
+                    android:textColor="#202020"
+                    android:textSize="16sp"
+                    android:background="@drawable/button_border"
+                    android:layout_marginTop="20px"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/buttonCancelCreate" />
+
             </LinearLayout>
 
         </LinearLayout>

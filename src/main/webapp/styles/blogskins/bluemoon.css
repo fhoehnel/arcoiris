@@ -228,3 +228,15 @@ div.statisticList table tr.statisticDateRange td {
     color: #ffff80;
     font-weight: bold;
 }
+
+a.publishDayLink {
+	color: #ffff80;
+}
+
+a.blogMenu.unseenComments:before {
+	color: #c08000;
+}
+
+span.unseenCommentCount {
+	color: #ffffff;
+}

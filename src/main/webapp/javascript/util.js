@@ -384,3 +384,27 @@ function customConfirm(confirmText, cancelButtonText, continueButtonText, contin
 
     centerBox(alertCont);
 }
+
+function requestFullScreen(elem) {
+	if (elem.requestFullscreen) {
+		elem.requestFullscreen();
+	} else if (elem.mozRequestFullScreen) {
+		elem.mozRequestFullScreen();
+	} else if (elem.webkitRequestFullscreen) {
+		elem.webkitRequestFullscreen();
+	} else if (elem.msRequestFullscreen) {
+	    elem.msRequestFullscreen();
+	}
+}
+
+function cancelFullScreen(elem) {
+	if (document.cancelFullScreen) {
+        document.cancelFullScreen();
+	} else if (document.mozCancelFullScreen) {
+	    document.mozCancelFullScreen();
+	} else if (document.webkitCancelFullScreen) {
+	    document.webkitCancelFullScreen();
+	} else if (document.msExitFullscreen) {
+		document.msExitFullscreen();
+	}
+}

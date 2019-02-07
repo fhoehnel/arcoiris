@@ -150,6 +150,9 @@ label.hintGoogleMapSelect=Click to select geographic coordinates!
 noFilesWithGeoData=This folder does not contain pictures with geographic coordinates!
 button.hideMapInfo=Hide Info Text
 button.showMapInfo=Show Info Text
+linkToBlogEntryTitle=Show picture in blog
+slowMotionLink=slow motion
+slowMotionTitle=paint track in slow motion
 
 # alert messages
 alert.regsuccess=New user has been registered successfully.
@@ -273,6 +276,9 @@ blog.sortOrderBlog=blog (newest first)
 blog.sortOrderDiary=diary (oldest first)
 blog.lowBandwith=switch to slow network mode
 blog.highBandwith=switch to fast network mode
+blog.publishDayLink=publish all entries of this day
+blog.confirmPublishDay=Are you sure you want to publish the new entries of this day?
+blog.linkToUnseenComment=unread comments
 
 statLast24Hours=last 24 hours
 statLast48Hours=last 48 hours

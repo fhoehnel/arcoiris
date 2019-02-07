@@ -4,7 +4,7 @@
   <groupId>de.webfilesys</groupId>
   <artifactId>blog</artifactId>
   <packaging>war</packaging>
-  <version>2.19.0</version>
+  <version>2.20.0</version>
   <name>arcoiris blog webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -89,8 +89,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.0.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
 		  <!-- to prevent compile errors because of missing com.sun.image.codec.jpeg.* classes in Java 1.7 -->
           <compilerArgument>-XDignore.symbol.file=true</compilerArgument>
         </configuration>

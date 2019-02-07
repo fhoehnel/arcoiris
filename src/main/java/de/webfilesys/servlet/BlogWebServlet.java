@@ -53,6 +53,7 @@ import de.webfilesys.gui.admin.UserListRequestHandler;
 import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
+import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
 import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
@@ -64,6 +65,7 @@ import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
 import de.webfilesys.gui.blog.BlogDetachHandler;
 import de.webfilesys.gui.blog.BlogEditEntryHandler;
 import de.webfilesys.gui.blog.BlogGetDatesWithEntriesHandler;
+import de.webfilesys.gui.blog.BlogGetFirstUnseenCommentHandler;
 import de.webfilesys.gui.blog.BlogGetPublicUrlHandler;
 import de.webfilesys.gui.blog.BlogLikeHandler;
 import de.webfilesys.gui.blog.BlogListCommentsHandler;
@@ -72,6 +74,7 @@ import de.webfilesys.gui.blog.BlogListSubscribersHandler;
 import de.webfilesys.gui.blog.BlogMoveEntryHandler;
 import de.webfilesys.gui.blog.BlogMoveToPosHandler;
 import de.webfilesys.gui.blog.BlogPostHandler;
+import de.webfilesys.gui.blog.BlogPublishDayHandler;
 import de.webfilesys.gui.blog.BlogPublishFormHandler;
 import de.webfilesys.gui.blog.BlogPublishHandler;
 import de.webfilesys.gui.blog.BlogPublishNewEntriesHandler;
@@ -577,6 +580,9 @@ public class BlogWebServlet extends ServletBase {
             } else if (cmd.equals("statistics")) {
                 (new BlogStatisticsHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
+            } else if (cmd.equals("publishDay")) {
+                (new BlogPublishDayHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);
                 return true;
@@ -588,6 +594,10 @@ public class BlogWebServlet extends ServletBase {
 
             if (method.equals("checkForGeoData")) {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("checkForUnseenComments")) {
+                (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("getFirstUnseenComment")) {
+                (new BlogGetFirstUnseenCommentHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("existFile")) {
                 (new AjaxCheckFileExistHandler(req, resp, session, output, userid)).handleRequest();
             }

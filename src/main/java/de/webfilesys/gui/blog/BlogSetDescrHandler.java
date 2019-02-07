@@ -125,6 +125,7 @@ public class BlogSetDescrHandler extends UserRequestHandler {
                 String infoText = req.getParameter("infoText");
 
                 if (infoText != null) {
+                    infoText = CommonUtils.filterForbiddenChars(infoText);
                     geoTag.setInfotext(infoText);
                 }
 

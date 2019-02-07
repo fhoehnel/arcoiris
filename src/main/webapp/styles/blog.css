@@ -402,6 +402,19 @@ div.blogGeoMap {
     color: #ffff80;
 }
 
+form.mapButtonCont {
+   	position: absolute;
+   	bottom: 15px;
+   	left: 10px;
+   	z-index: 100;   	
+}
+
+input.mapButton {
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+}
+
 span.blogErrorMsg {
     font-size: 13px;
     color: #a00000;
@@ -647,6 +660,28 @@ span.searchHit {
 	font-weight: bold;
 }
 
+div.searchPreviewCont {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 400px;
+    height: 480px;
+    border: 2px ridge #808080;
+    background-color: #e0e0e0;
+    padding: 10px;
+    box-sizing: content-box;
+    text-align: center;
+    overflow-y: auto;
+}
+
+div.searchPreviewCont p {
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #004000;
+    text-align: left;
+}
+
 .poweredBy {
     clear: both;
     margin-top: 20px;
@@ -873,6 +908,17 @@ span.trackName {
 span.trackTime {
 	margin-right: 20px;
 	color: maroon;	
+}
+
+a.gpxSlowMotionLink {
+	color: maroon;
+	font-size: 13px;
+    text-decoration: underline;
+}
+
+a.gpxSlowMotionLink:hover {
+	color: #006000;
+    text-decoration: none;
 }
 
 div.gpsProfileCont {
