@@ -557,7 +557,7 @@
     
     <div id="calDiv"></div>
     
-    <div id="picturePopup" style="position:absolute;top:50px;left:150px;width:400px;height:400px;background-color:#c0c0c0;padding:0px;visibility:hidden;border-style:ridge;border-color:white;border-width:6px;z-index:2;">
+    <div id="picturePopup" style="position:absolute;top:50px;left:150px;width:400px;height:400px;background-color:#c0c0c0;padding:0px;visibility:hidden;border-style:ridge;border-color:white;border-width:6px;z-index:2;box-sizing:content-box;">
       <img id="zoomPic" src="" border="0" style="width:100%;height:100%;" onclick="hidePopupPicture()"/>
       <div id="popupClose" style="position:absolute;top:5px;left:5px;width:16px;height:14px;padding:0px;visibility:hidden;border-style:none;z-index:3">
         <img border="0" width="16" height="14" onclick="hidePopupPicture()">
