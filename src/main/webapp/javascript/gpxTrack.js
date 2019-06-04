@@ -591,7 +591,22 @@ function showTrackInSlowMotion(trackId) {
             			pointsPerStep = 2;
             		}
             		var delay = SLOWMOTION_DURATION / (response.trackpoints.length / pointsPerStep);
-            		showTrackOnMapSlow(trackId, response.trackpoints, 0, TRACK_COLORS[(globalTrackCounter - 1) % TRACK_COLORS.length], delay, pointsPerStep);
+            		
+            		var invalidTime = false;
+            		
+            		var trackDuration = 0;
+            		if (response.startTime && response.endTime) {
+                		trackDuration = response.endTime - response.startTime;
+            		} else {
+            			invalidTime = true;
+            		}
+            		
+            		if (response.invalidTime) {
+            			invalidTime = true;
+            		}
+            		
+            		showTrackOnMapSlow(trackId, response.trackpoints, 0, TRACK_COLORS[(globalTrackCounter - 1) % TRACK_COLORS.length], 
+            				           delay, pointsPerStep, trackDuration, invalidTime);
             	} else {
             		customAlert("track " + (currentTrack + 1) + " not found in GPX file");
             	}
@@ -602,7 +617,7 @@ function showTrackInSlowMotion(trackId) {
     });      
 }
 
-function showTrackOnMapSlow(trackId, trackpoints, index, trackColor, delay, pointsPerStep) {
+function showTrackOnMapSlow(trackId, trackpoints, index, trackColor, delay, pointsPerStep, trackDuration, invalidTime) {
 
 	if (index >= trackpoints.length - 1) {
 		document.getElementById("slowMotionLink-" + trackId).style.display = "inline";
@@ -612,10 +627,14 @@ function showTrackOnMapSlow(trackId, trackpoints, index, trackColor, delay, poin
 	var idx = index;
 
 	var trackPointList = new Array();
+	
+	var sectionStartTime = trackpoints[idx].time;
+	var sectionEndTime = trackpoints[idx].time;
 
 	for (var p = 0; (p < pointsPerStep) && (idx < trackpoints.length); p++, idx++) {
 		var latLon = new google.maps.LatLng(trackpoints[idx].lat, trackpoints[idx].lon);
 	    trackPointList.push(latLon);
+	    sectionEndTime = trackpoints[idx].time;
 	}
 
     var trackPath = new google.maps.Polyline({
@@ -628,9 +647,20 @@ function showTrackOnMapSlow(trackId, trackpoints, index, trackColor, delay, poin
     trackPath.setMap(map);
 
     slowMotionTracks.push(trackPath);
+    
+    var speedAdjustedDelay = delay;
 
+    if (!invalidTime) {
+    	var sectionDuration = sectionEndTime - sectionStartTime;
+    	
+        var trackpointPercentage = trackPointList.length / trackpoints.length;
+        
+        var durationPercentage = sectionDuration / trackDuration;
+        
+        speedAdjustedDelay = delay * durationPercentage / trackpointPercentage;
+    }
+    
     setTimeout(function() {
-    	showTrackOnMapSlow(trackId, trackpoints, idx - 1, trackColor, delay, pointsPerStep);
-    }, delay);
-
+    	showTrackOnMapSlow(trackId, trackpoints, idx - 1, trackColor, delay, pointsPerStep, trackDuration, invalidTime);
+    }, speedAdjustedDelay);
 }
