@@ -19,3 +19,7 @@ span.descrText a {
 a.publishDayLink {
 	color: #800000;
 }
+
+div.blogDate {
+    font-weight: bold;
+}
