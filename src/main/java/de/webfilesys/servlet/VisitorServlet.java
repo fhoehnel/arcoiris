@@ -40,6 +40,8 @@ public class VisitorServlet extends BlogWebServlet {
 
     public static final String SESSION_ATTRIB_VISITOR_ID = "visitorId";
 
+    public static final String SESSION_ATTRIB_VISITOR_URL = "visitorURL";
+    
     private static final int VISITOR_COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // expires after one year
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
@@ -138,6 +140,8 @@ public class VisitorServlet extends BlogWebServlet {
 
             req.getSession(true).setAttribute(SESSION_ATTRIB_VISITOR_ID, visitorId);
 
+            req.getSession(true).setAttribute(SESSION_ATTRIB_VISITOR_URL, req.getRequestURI());
+            
             PrintWriter output = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), "UTF-8"));
 
             if (userMgr.getRole(visitorUserId).equals("blog")) {

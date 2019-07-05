@@ -140,7 +140,8 @@ a.blogSubscribe,
 a.blogMapAll,
 a.blogSearch,
 a.blogEmojiSel:before,
-a.blogLinkIns:before {
+a.blogLinkIns:before,
+a.emailLink:before {
     color: #000060;
     font-size: 2rem;
 }
@@ -301,6 +302,7 @@ div.blogPagingCont {
 .icon-blog-move:before,
 .icon-blog-titlePic:before,
 .icon-blog-attachment:before,
+.icon-blog-share:before,
 .icon-blog-file:before,
 .icon-blog-like:before {
 	color: #000060;
@@ -950,6 +952,12 @@ td.gpsChartText {
     font-size: 13px;
     font-family: Arial,Helvetica;
     color: black;
+}
+
+a.emailLink {
+    float: right;
+    position: relative;
+    top: -10px;
 }
 
 @media (max-width: 500px) {

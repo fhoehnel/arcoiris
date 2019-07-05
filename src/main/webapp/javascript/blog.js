@@ -909,10 +909,31 @@ function showPublishResult(req) {
     }
 }
 
-function queryPublicLink() {
+function queryPublicLink(userIsVisitor) {
     var url = getContextRoot() + "/servlet?command=blog&cmd=getPublicURL";
     
-    xmlRequest(url, handleQueryPublicLinkResult);
+    if (userIsVisitor) {
+        xmlRequest(url, handleVisitorPublicLinkResult);
+    } else {
+        xmlRequest(url, handleQueryPublicLinkResult);
+    }
+}
+
+function handleVisitorPublicLinkResult(req) {
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+            if (success == 'true') {
+                publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;   
+                jQuery(".icon-blog-share").css("display", "inline");
+            }
+        } else {
+        	if (console.log) {
+        		console.log("failed to query public link");
+        	}
+        }
+    }
 }
 
 function handleQueryPublicLinkResult(req) {
@@ -925,11 +946,16 @@ function handleQueryPublicLinkResult(req) {
                 publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;   
                 document.getElementById("publicURLButton").style.display = "inline";
                 document.getElementById("unpublishButton").style.display = "inline";
+                jQuery(".icon-blog-share").css("display", "inline");
             } else {
                 if (document.getElementById("publishBlogButton")) {
                     document.getElementById("publishBlogButton").style.display = "inline";
                 }
             }
+        } else {
+        	if (console.log) {
+        		console.log("failed to query public link");
+        	}
         }
     }
 }
@@ -1041,11 +1067,108 @@ function handleUnpublishResult(req) {
                 document.getElementById("publicURLButton").style.display = "none";
                 document.getElementById("publishBlogButton").style.display = "inline";
                 publicUrl = null;
+                
+                window.location.href = getContextRoot() + "/servlet?command=blog&cmd=list";
             } else {
                 alert("failed to unpublish blog");
             }
         }
     }
+}
+
+function shareBlogEntry(entryFileName) {
+
+    var publishCont = document.getElementById("publishCont");
+        
+    if (!publishCont) {
+        alert('publishCont is not defined');
+        return;
+    }
+    
+	var entryDate = new Date(entryFileName.substring(0, 10));
+	
+	var beforeDay = new Date(entryDate.getTime() + (24 * 60 * 60 * 1000));
+	
+	var beforeDayStr = beforeDay.toISOString().substring(0,10);  
+    
+    var shareUrl = publicUrl + "?beforeDay=" + beforeDayStr + "&positionToFile=" + entryFileName; 
+    
+    publishCont.innerHTML = "";
+    
+    var publishHead = document.createElement("div");
+    publishHead.setAttribute("class", "promptHead");    
+    publishHead.innerHTML = resourceBundle["blog.shareTitle"];
+    publishCont.appendChild(publishHead);
+    
+    var publishTable = document.createElement("table");
+    publishTable.id = "publishTable";
+    publishTable.setAttribute("class", "blogPublishForm");    
+    publishCont.appendChild(publishTable);
+    
+    var tableRow = document.createElement("tr");
+    document.getElementById("publishTable").appendChild(tableRow);
+
+    var tableCell = document.createElement("td");
+    tableCell.setAttribute("class", "formParm1");
+    tableCell.setAttribute("colspan", "2");
+    tableCell.innerHTML = resourceBundle["blog.shareURL"] + ":";
+    tableRow.appendChild(tableCell);
+    
+    var mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailSubject"] + "&body=" + encodeURIComponent(shareUrl);
+
+    var emailLink = document.createElement("a");
+    emailLink.setAttribute("href", mailtoUrl);
+    emailLink.setAttribute("class", "icon-font icon-email emailLink");
+    emailLink.setAttribute("title", resourceBundle["blog.shareByEmail"]);
+    tableCell.appendChild(emailLink);
+
+    tableRow = document.createElement("tr");
+    document.getElementById("publishTable").appendChild(tableRow);
+
+    tableCell = document.createElement("td");
+    tableCell.setAttribute("class", "formParm2");
+    tableCell.setAttribute("colspan", "2");
+    tableRow.appendChild(tableCell);
+    
+    var urlInput = document.createElement("textarea");
+    urlInput.id = "publicUrl";
+    urlInput.setAttribute("class", "publicLinkCopyField");
+    urlInput.setAttribute("readonly", "readonly");
+    urlInput.value = shareUrl;
+    tableCell.appendChild(urlInput);
+                
+    tableRow = document.createElement("tr");
+    document.getElementById("publishTable").appendChild(tableRow);
+
+    tableCell = document.createElement("td");
+    tableCell.style.paddingTop = "20px";
+    tableCell.style.paddingLeft = "8px";
+    tableRow.appendChild(tableCell);
+
+    var closeButton = document.createElement("input");
+    closeButton.setAttribute("type", "button");
+    closeButton.setAttribute("value", resourceBundle["button.cancel"]);
+    closeButton.setAttribute("onclick", "hidePublishForm()");
+    closeButton.style.marginBottom = "10px";
+    tableCell.appendChild(closeButton);
+    
+    tableCell = document.createElement("td");
+    tableCell.style.paddingTop = "20px";
+    tableCell.style.textAlign = "right";
+    tableRow.appendChild(tableCell);
+    
+    var copyButton = document.createElement("input");
+    copyButton.setAttribute("type", "button");
+    copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
+    copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
+    copyButton.style.marginBottom = "10px";
+    tableCell.appendChild(copyButton);
+    
+    centerBox(publishCont);
+    
+    publishCont.style.visibility = "visible";
+
+    urlInput.select();
 }
 
 function blogComments(fileName, posInPage) {
@@ -1859,7 +1982,9 @@ function queryGeoData() {
 	                }
 	                
 	                // cascading ajax calls for performance reasons
-	                queryUnseenComments();
+	                if (document.getElementById("unseenCommentLink")) {
+		                queryUnseenComments();
+	                }
 	            }
 	        });          
 		

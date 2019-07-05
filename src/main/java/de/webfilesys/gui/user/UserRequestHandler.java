@@ -52,13 +52,23 @@ public class UserRequestHandler extends ProtectedRequestHandler {
         return (LanguageManager.getInstance().getResource(language, key, defaultValue));
     }
 
+    public boolean isReadonlySession() {
+        boolean sessionReadonly = false;
+
+        String sessRO = (String) session.getAttribute("readonly");
+        if (sessRO != null) {
+            sessionReadonly = Boolean.valueOf(sessRO);
+        }
+
+        return sessionReadonly || userMgr.isReadonly(uid);
+    }
+    
     public boolean checkWriteAccess() {
         boolean sessionReadonly = false;
 
-        Boolean sessRO = (Boolean) session.getAttribute("readonly");
-
+        String sessRO = (String) session.getAttribute("readonly");
         if (sessRO != null) {
-            sessionReadonly = sessRO.booleanValue();
+            sessionReadonly = Boolean.valueOf(sessRO);
         }
 
         boolean readonly = sessionReadonly || userMgr.isReadonly(uid);
