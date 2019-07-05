@@ -68,6 +68,10 @@ a.icon-font {
 	content: '\f0c7';
 }
 
+.icon-email:before {
+	content: '\f0e0';
+}
+
 .icon-watch:before {
 	content: '\f06e';
 }

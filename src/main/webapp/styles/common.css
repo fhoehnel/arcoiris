@@ -1839,6 +1839,16 @@ html.blog span.unseenCommentCount {
 	font-size: 13px;
 }
 
+div.popupShield {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #a0a0a0;
+    opacity: 0.8;
+}
+
 @media (max-width: 400px) {
     div.centerBox {
         position: static;

@@ -81,7 +81,9 @@
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/blog.js</xsl:attribute>
       </script>
-
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/jquery/jquery.min.js</xsl:attribute>
+      </script>
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>
       </script>
@@ -145,7 +147,7 @@
         <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryPublicLink(true);attachScrollHandler();</xsl:attribute>
       </xsl:if>
       
       <div class="blogCont">
@@ -430,6 +432,15 @@
                 
               </xsl:if>
               
+              <xsl:if test="not(staged)">
+                &#160;
+                <a style="display:none">
+                  <xsl:attribute name="class">icon-font icon-share icon-blog-share</xsl:attribute>
+                  <xsl:attribute name="titleResource">blog.share</xsl:attribute>
+                  <xsl:attribute name="href">javascript:shareBlogEntry('<xsl:value-of select="@name" />')</xsl:attribute>                 
+                </a>                
+              </xsl:if>
+                
               <xsl:if test="(not(/blog/readonly) and not(staged)) or (/blog/readonly and not(ratingAllowed))">
 
                 <xsl:if test="voteCount != 0">

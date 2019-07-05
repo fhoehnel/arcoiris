@@ -172,11 +172,19 @@
 
           currentPicture = '';
           
-          // document.getElementsByTagName("body")[0].style.opacity = "1.0";
+          var popupShield = document.getElementById("popupShield");
+          if (popupShield) {
+        	  popupShield.parentNode.removeChild(popupShield);
+          }
       }
 
       function showPicturePopup(imgSrc, xsize, ysize)
       {
+          var popupShield = document.createElement("div");
+    	  popupShield.id = "popupShield";
+    	  popupShield.setAttribute("class", "popupShield");    		  
+    	  document.getElementsByTagName("body")[0].appendChild(popupShield);    	  
+    	  
           var zoomImgObj = document.getElementById('zoomPic');
 
           zoomImgObj.src = imgSrc;
