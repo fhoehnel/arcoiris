@@ -562,10 +562,18 @@ public class BlogListHandler extends XslRequestHandlerBase {
                 }
 
                 if (dateRangeFrom != null) {
-                    XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeFrom));
+                    if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                        XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeFrom));
+                    } else {
+                        XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeFrom));
+                    }
                 }
                 if (dateRangeUntil != null) {
-                    XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeUntil));
+                    if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                        XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeUntil));
+                    } else {
+                        XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeUntil));
+                    }
                 }
             } else {
                 if (pageBeforeDay != null) {
