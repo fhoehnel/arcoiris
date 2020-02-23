@@ -7,11 +7,11 @@ import java.io.File;
  */
 
 public class OfflineQueueEntryInfo {
-    File queueImgFile;
+    private File queueImgFile;
 
-    String origPictureFileName;
+    private String origPictureFileName;
 
-    OfflineQueueMetaDataElem metaData;
+    private OfflineQueueMetaDataElem metaData;
 
     public void setQueueImgFile(File newVal) {
         queueImgFile = newVal;

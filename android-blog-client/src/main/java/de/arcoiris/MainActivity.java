@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             sendPostButton.setText(R.string.buttonSaveOffline);
             sendPublishButton.setText(R.string.buttonSavePublish);
             cancelCreateButton.setVisibility(View.VISIBLE);
-            geoLocationButton.setVisibility(View.VISIBLE);
+            geoLocationButton.setVisibility(View.GONE);
             if (changeLocationButton != null) {
                 changeLocationButton.setVisibility(View.GONE);
             }
