@@ -509,7 +509,7 @@ public class OfflineQueueManager {
 
             InputStream pictureIn = new FileInputStream(pictureFile);
 
-            if (serverCommunicator.sendPicture(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, pictureIn)) {
+            if (serverCommunicator.sendPicture(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, pictureIn, pictureFile.length())) {
 
                 if (serverCommunicator.sendDescription(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, metaData.getBlogText(), metaData.getGeoLocation())) {
 

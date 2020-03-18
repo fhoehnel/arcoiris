@@ -1505,14 +1505,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             try {
                 ServerCommunicator serverCommunicator = ServerCommunicator.getInstance();
 
+                File pictureFile = null;
+
                 InputStream pictureIn = null;
                 if (pictureUri != null) {
+                    pictureFile = new File(pictureUri.getPath());
                     pictureIn = getApplicationContext().getContentResolver().openInputStream(pictureUri);
                 } else {
-                    pictureIn = new FileInputStream(new File(picturePath));
+                    pictureFile = new File(picturePath);
+                    pictureIn = new FileInputStream(pictureFile);
                 }
 
-                if (serverCommunicator.sendPicture(serverUrl, userid, password, destFileName, pictureIn)) {
+                if (serverCommunicator.sendPicture(serverUrl, userid, password, destFileName, pictureIn, pictureFile.length())) {
 
                     if (serverCommunicator.sendDescription(serverUrl, userid, password, destFileName, blogEntryText, selectedLocation)) {
 
