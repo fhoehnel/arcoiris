@@ -101,7 +101,11 @@ public class BlogAppServlet extends BlogWebServlet {
         fileName = replaceIllegalChars(fileName);
 
         if (command.equals("picture")) {
-            reveicePicture(req, resp, userid, currentPath, fileName);
+            try {
+                reveicePicture(req, resp, userid, currentPath, fileName);
+            } catch (Exception ex) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } else if (command.equals("description")) {
             
             // testing code for network delay and network error             
@@ -260,6 +264,8 @@ public class BlogAppServlet extends BlogWebServlet {
 
         FileOutputStream uploadOut = null;
 
+        boolean error = false;
+        
         try {
             uploadOut = new FileOutputStream(outFile);
 
@@ -284,7 +290,7 @@ public class BlogAppServlet extends BlogWebServlet {
 
         } catch (IOException ex) {
             Logger.getLogger(getClass()).error("error in ajax binary upload", ex);
-            throw ex;
+            error = true;
         } finally {
             if (uploadOut != null) {
                 try {
@@ -294,6 +300,17 @@ public class BlogAppServlet extends BlogWebServlet {
             }
         }
 
+        if (error) {
+            if (outFile.exists()) {
+                if (outFile.delete()) {
+                    Logger.getLogger(getClass()).debug("deleted incompletely uploaded picture file " + fileName);
+                } else {
+                    Logger.getLogger(getClass()).warn("failed to delete incompletely uploaded picture file " + fileName);
+                }
+            }
+            throw new IOException("Failed to receive blog picture " + fileName);
+        }
+        
         String origImgPath = outFile.getAbsolutePath();
 
         GeoTag geoTag = null;
