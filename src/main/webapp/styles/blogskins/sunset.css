@@ -154,7 +154,9 @@ div.statisticList table tr.statisticDateRange td {
     font-weight: bold;
 }
 
-a.publishDayLink {
+a.publishDayLink,
+a.linkToNextDay,
+a.linkToPrevDay {
 	color: #ffff80;
 }
 
@@ -164,4 +166,9 @@ a.blogMenu.unseenComments:before {
 
 span.unseenCommentCount {
 	color: #ffffff;
+}
+
+div.gotoTopOfPage a,
+div.gotoBottomOfPage a {
+    color: #b04000;
 }

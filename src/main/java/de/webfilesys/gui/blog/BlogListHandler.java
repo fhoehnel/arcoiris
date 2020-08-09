@@ -575,6 +575,10 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeUntil));
                     }
                 }
+                
+                if (globalEntryCounter > 10) {
+                    XmlUtil.setChildText(blogElement, "showTopBottomLinks", "true", false);
+                }
             } else {
                 if (pageBeforeDay != null) {
                     XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(pageBeforeDay));

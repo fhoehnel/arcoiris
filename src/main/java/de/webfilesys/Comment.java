@@ -8,6 +8,8 @@ public class Comment {
     private Date creationDate = null;
 
     private String message = null;
+    
+    private String notifyOnAnswerEmail = null;
 
     public Comment(String user, Date creationDate, String message) {
         this.user = user;
@@ -29,5 +31,13 @@ public class Comment {
 
     public String getMessage() {
         return (message);
+    }
+    
+    public void setNotifyOnAnswerEmail(String newVal) {
+        notifyOnAnswerEmail = newVal;
+    }
+    
+    public String getNotifyOnAnswerEmail() {
+        return notifyOnAnswerEmail;
     }
 }

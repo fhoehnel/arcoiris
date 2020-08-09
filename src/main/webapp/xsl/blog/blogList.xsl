@@ -273,11 +273,22 @@
             <xsl:value-of select="formattedDate" />
             
             <xsl:if test="dayEntries/file/staged">
-              <a class="publishDayLink icon-font icon-check" titleResource="blog.publishDayLink">
+              <a class="publishDayLink icon-font icon-check-circle" titleResource="blog.publishDayLink">
                 <xsl:attribute name="href">javascript:publishDay('<xsl:value-of select="plainDate" />')</xsl:attribute>    
               </a>
             </xsl:if>
-            
+            <xsl:if test="not(dayEntries/file/staged)">
+              <xsl:if test="not(position() = last())">
+                <a class="linkToNextDay icon-font icon-next" titleResource="blog.linkToNextDay">
+                  <xsl:attribute name="onclick">gotoNextDay(this)</xsl:attribute>    
+                </a>
+              </xsl:if>
+              <xsl:if test="not(position() = 1)">
+                <a class="linkToPrevDay icon-font icon-prev" titleResource="blog.linkToPrevDay">
+                  <xsl:attribute name="onclick">gotoPrevDay(this)</xsl:attribute>    
+                </a>
+              </xsl:if>
+            </xsl:if>
           </div>
         
           <xsl:for-each select="dayEntries/file">
@@ -679,6 +690,20 @@
   
       </div>
     
+    </xsl:if>
+    
+    <xsl:if test="/blog/showTopBottomLinks">
+      <div id="linkToBottomOfPage" class="gotoBottomOfPage">
+        <a class="icon-font icon-arrow-bottom" titleResource="blog.gotoBottomOfPage">
+            <xsl:attribute name="href">javascript:gotoBottomOfPage()</xsl:attribute>
+        </a>
+      </div>
+
+      <div id="linkToTopOfPage" class="gotoTopOfPage">
+        <a class="icon-font icon-arrow-top" titleResource="blog.gotoTopOfPage">
+            <xsl:attribute name="href">javascript:gotoTopOfPage()</xsl:attribute>
+        </a>
+      </div>
     </xsl:if>
     
     <script type="text/javascript">

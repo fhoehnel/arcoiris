@@ -631,6 +631,10 @@ public class MetaInfManager extends Thread {
             XmlUtil.setChildText(commentElement, "user", newComment.getUser(), false);
             XmlUtil.setChildText(commentElement, "time", Long.toString(newComment.getCreationTime()), false);
             XmlUtil.setChildText(commentElement, "message", newComment.getMessage(), true);
+            
+            if (!CommonUtils.isEmpty(newComment.getNotifyOnAnswerEmail())) {
+                XmlUtil.setChildText(commentElement, "email", newComment.getNotifyOnAnswerEmail(), true);
+            }
 
             cacheDirty.put(path, new Boolean(true));
         }
@@ -795,6 +799,11 @@ public class MetaInfManager extends Thread {
 
             Comment comment = new Comment(user, new Date(creationTime), message);
 
+            String notifyOnAnswerEmail = XmlUtil.getChildText(commentElement, "email");
+            if (!CommonUtils.isEmpty(notifyOnAnswerEmail)) {
+                comment.setNotifyOnAnswerEmail(notifyOnAnswerEmail);
+            }
+            
             listOfComments.add(comment);
         }
 

@@ -23,3 +23,8 @@ a.publishDayLink {
 div.blogDate {
     font-weight: bold;
 }
+
+div.gotoTopOfPage a,
+div.gotoBottomOfPage a {
+    color: #ffff80;
+}

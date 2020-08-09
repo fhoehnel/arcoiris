@@ -80,6 +80,7 @@ label.comments=Kommentare
 label.guestuser=Gast
 label.commentAuthor=Dein Name
 comments.unread=neu
+label.commentNotifyEmail=Benachrichtigungs-E-Mail bei Antwort an
 
 # user self-registration
 label.registerself=Als neuer Nutzer registrieren
@@ -249,6 +250,7 @@ blog.unsubscribeSuccess=Das Abonnement für diesen Blog wurde beendet.
 blog.unsubscribeFailure=Das Abonnement für den Blog konnte nicht beendet werden (ungültige Parameter).
 blog.subjectChangeNotification=Neue Einträge im Blog
 blog.subjectNewCommentNotification=Neue Kommentare im Blog
+blog.subjectCommentAnswerNotification=Neue Antwort zu deinem Kommentar im Blog
 blog.showSubscribers=Abonnenten
 blog.headlineSubscribers=Abonnenten
 blog.noSubscribers=Der Blog wurde noch nicht abonniert.
@@ -284,6 +286,10 @@ blog.highBandwith=zu Modus für schnelle Internetverbindung wechseln
 blog.publishDayLink=alle Einträge dieses Tages freigeben
 blog.confirmPublishDay=Sollen die neuen Einträge dieses Tages wirklich freigegeben werden?
 blog.linkToUnseenComment=ungelesene Kommentare
+blog.gotoTopOfPage=zum Seitenanfang
+blog.gotoBottomOfPage=zum Seitenende
+blog.linkToNextDay=zum nächsten Tag
+blog.linkToPrevDay=zum vorherigen Tag
 
 statLast24Hours=letzte 24 Stunden
 statLast48Hours=letzte 48 Stunden

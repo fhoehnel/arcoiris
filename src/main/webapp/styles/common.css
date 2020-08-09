@@ -1804,10 +1804,21 @@ button.alertConfirmButton {
 	cursor: pointer;
 }
 
-a.publishDayLink {
+a.publishDayLink,
+a.linkToNextDay,
+a.linkToPrevDay {
 	float: right;
 	margin-right: 8px;
 	font-size: 24px;
+}
+
+a.linkToNextDay,
+a.linkToPrevDay {
+	cursor: pointer;
+}
+
+a.linkToNextDay {
+    margin-left: 20px;	
 }
 
 a.unseenComments {
@@ -1847,6 +1858,26 @@ div.popupShield {
     left: 0;
     background-color: #a0a0a0;
     opacity: 0.8;
+}
+
+div.gotoTopOfPage,
+div.gotoBottomOfPage {
+	position: fixed;
+	right: 20px;
+}
+
+div.gotoTopOfPage {
+	bottom: 20px;
+}
+
+div.gotoBottomOfPage {
+	top: 20px;
+}
+
+div.gotoTopOfPage a,
+div.gotoBottomOfPage a {
+    font-size: 32px;
+    font-weight: bold;
 }
 
 @media (max-width: 400px) {

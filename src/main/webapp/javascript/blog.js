@@ -1204,8 +1204,16 @@ function closeBlogComments() {
 
 function submitComment() {
     if (document.getElementById("newComment").value.length == 0) {
-        alert(resourceBundle["blog.newCommentEmpty"]);
+        customAlert(resourceBundle["blog.newCommentEmpty"]);
         return;
+    }
+    
+    var emailInput = document.getElementById("notifyOnAnswerEmail")
+    if (emailInput) {
+        if (!emailInput.validity.valid) {
+        	customAlert(resourceBundle["alert.emailsyntax"]);
+        	return;
+        }
     }
     
     var commentCont = document.getElementById("commentCont");
@@ -2416,3 +2424,36 @@ function hideStatistics() {
         statisticCont.parentNode.removeChild(statisticCont);
     }
 }
+
+function gotoNextDay(clickTarget) {
+	let currentBlogDateCont = clickTarget.parentNode;
+	
+	let nextSibling = currentBlogDateCont.nextSibling;
+	while (nextSibling) {
+		if (nextSibling.nodeType == 1) {
+			let cssClass = nextSibling.getAttribute("class");
+			if (cssClass && cssClass.includes("blogDate")) {
+	            nextSibling.scrollIntoView();
+				return;
+			}
+		}
+		nextSibling = nextSibling.nextSibling;
+	}
+}
+
+function gotoPrevDay(clickTarget) {
+	let currentBlogDateCont = clickTarget.parentNode;
+	
+	let prevSibling = currentBlogDateCont.previousSibling;
+	while (prevSibling) {
+		if (prevSibling.nodeType == 1) {
+			let cssClass = prevSibling.getAttribute("class");
+			if (cssClass && cssClass.includes("blogDate")) {
+				prevSibling.scrollIntoView();
+				return;
+			}
+		}
+		prevSibling = prevSibling.previousSibling;
+	}
+}
+

@@ -102,6 +102,19 @@ public class CommonUtils {
         return (val.trim().length() == 0);
     }
 
+    public static boolean safeCompare(String val1, String val2) {
+        if (val1 == null) {
+            if (val2 == null) {
+                return true;
+            }
+            return false;
+        }
+        if (val2 == null) {
+            return false;
+        }
+        return val1.equals(val2);
+    }
+    
     public static boolean containsString(String elementName, String searched) {
         if (elementName == null) {
             return (false);

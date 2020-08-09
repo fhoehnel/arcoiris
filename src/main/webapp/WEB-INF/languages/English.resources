@@ -80,6 +80,7 @@ label.comments=Comments
 label.guestuser=Guest
 label.commentAuthor=your name
 comments.unread=new
+label.commentNotifyEmail=notification e-mail on anser to
 
 # user self-registration
 label.registerself=I am a new user
@@ -249,6 +250,7 @@ blog.unsubscribeSuccess=The subscription to the blog has been removed.
 blog.unsubscribeFailure=Failed to remove the blog subscription (invalid parameters).
 blog.subjectChangeNotification=New entries in the Blog
 blog.subjectNewCommentNotification=New comments in the Blog
+blog.subjectCommentAnswerNotification=New answer to your comment in the Blog
 blog.showSubscribers=Subscribers
 blog.headlineSubscribers=Subscribers watching this Blog
 blog.noSubscribers=Your blog has no subscribers yet.
@@ -284,6 +286,10 @@ blog.highBandwith=switch to fast network mode
 blog.publishDayLink=publish all entries of this day
 blog.confirmPublishDay=Are you sure you want to publish the new entries of this day?
 blog.linkToUnseenComment=unread comments
+blog.gotoTopOfPage=go to top of page
+blog.gotoBottomOfPage=go to bottom of page
+blog.linkToNextDay=go to next day
+blog.linkToPrevDay=go to previous day
 
 statLast24Hours=last 24 hours
 statLast48Hours=last 48 hours

@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -57,6 +58,8 @@ public class InvitationManager extends Thread {
     Element invitationRoot = null;
 
     String invitationFilePath = null;
+    
+    ArrayList<CommentAnswerQueueElem> commentAnswerQueue = null;
 
     private InvitationManager() {
         invitationFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + INVITATION_FILE_NAME;
@@ -79,6 +82,8 @@ public class InvitationManager extends Thread {
         }
 
         changed = false;
+        
+        commentAnswerQueue = new ArrayList<CommentAnswerQueueElem>();
 
         this.start();
     }
@@ -687,6 +692,35 @@ public class InvitationManager extends Thread {
                 }
             }
         }
+        
+        // notify authors of comments about answers
+        synchronized (commentAnswerQueue) {
+            for (CommentAnswerQueueElem queueElem : commentAnswerQueue) {
+                TransientUser blogUser = ArcoirisBlog.getInstance().getUserMgr().getUser(queueElem.getBlogUser()); 
+                if (blogUser != null) {
+                    Vector<Comment> commentList = metaInfMgr.getListOfComments(queueElem.getFilePath());
+                    if (commentList != null) {
+                        Comment lastComment = (Comment) commentList.get(commentList.size() - 1);
+                        HashMap<String, Boolean> usersToNotify = new HashMap<String, Boolean>(); // prevent multiple e-mails to the same user
+                        for (int i = 0; i < commentList.size() - 1; i++) {
+                            Comment comment = commentList.get(i);
+                            String notifyEmail = comment.getNotifyOnAnswerEmail();
+                            if (!CommonUtils.isEmpty(notifyEmail)) {
+                                if (!CommonUtils.safeCompare(comment.getUser(), lastComment.getUser())) {
+                                    if (!CommonUtils.safeCompare(notifyEmail, lastComment.getNotifyOnAnswerEmail())) {
+                                        usersToNotify.put(notifyEmail, Boolean.TRUE);
+                                    }
+                                }
+                            }
+                        }
+                        for (String userToNotify : usersToNotify.keySet()) {
+                            sendCommentAnswerNotification(blogUser, lastComment, userToNotify);
+                        }
+                    }
+                }
+            }
+            commentAnswerQueue.clear();
+        }        
     }
     
     private void sendNewCommentNotification(TransientUser user) {
@@ -721,6 +755,52 @@ public class InvitationManager extends Thread {
 
         } catch (IllegalArgumentException iaex) {
             Logger.getLogger(getClass()).error("failed to send new comment notification e-mail", iaex);
+        }
+    }
+
+    private void sendCommentAnswerNotification(TransientUser user, Comment lastComment, String notifyOnAnswerEmail) {
+
+        try {
+            String templateFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/languages/commentAnswerNotification_" + user.getLanguage() + ".template";
+            MailTemplate notificationTemplate = new MailTemplate(templateFilePath);
+
+            String blogTitle = MetaInfManager.getInstance().getDescription(user.getDocumentRoot(), ".");
+            if (CommonUtils.isEmpty(blogTitle)) {
+                blogTitle = user.getUserid();
+            }
+            
+            notificationTemplate.setVarValue("BLOGTITLE", blogTitle);
+
+            String baseUrl = ArcoirisBlog.getInstance().getClientUrl();
+            if (!baseUrl.endsWith("/")) {
+                baseUrl = baseUrl + "/";
+            }
+
+            String blogURL = baseUrl + "servlet";
+            notificationTemplate.setVarValue("BLOGURL", blogURL);
+            notificationTemplate.setVarValue("COMMENT", lastComment.getMessage());            
+            
+            String mailText = notificationTemplate.getText();
+
+            String subject = LanguageManager.getInstance().getResource(user.getLanguage(), "blog.subjectCommentAnswerNotification", "New answers to your comment in the Blog");
+            (new SmtpEmail(notifyOnAnswerEmail, subject, mailText)).send();
+
+            Logger.getLogger(getClass()).info("comment answer notification mail sent to " + notifyOnAnswerEmail + " for blog " + blogTitle);
+
+        } catch (IllegalArgumentException iaex) {
+            Logger.getLogger(getClass()).error("failed to send comment answer notification e-mail", iaex);
+        }
+    }
+    
+    public void queueCommentAnswerNotification(String blogUser, String filePath) {
+        synchronized (commentAnswerQueue) {
+            for (CommentAnswerQueueElem queuedElem: commentAnswerQueue) {
+                if (queuedElem.getFilePath().equals(filePath)) {
+                    return;
+                }
+            }
+            CommentAnswerQueueElem queueElem = new CommentAnswerQueueElem(blogUser, filePath);
+            commentAnswerQueue.add(queueElem);
         }
     }
     
@@ -964,4 +1044,21 @@ public class InvitationManager extends Thread {
     static public void main(String args[]) {
     }
 
+    public class CommentAnswerQueueElem {
+        private String blogUser = null;
+        private String filePath = null;
+        
+        public CommentAnswerQueueElem(String blogUser, String filePath) {
+            this.blogUser = blogUser;
+            this.filePath = filePath;
+        }
+        
+        public String getBlogUser() {
+            return blogUser;
+        }
+        
+        public String getFilePath() {
+            return filePath;
+        }
+    }
 }
