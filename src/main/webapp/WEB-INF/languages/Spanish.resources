@@ -291,6 +291,7 @@ blog.gotoTopOfPage=al inicio de la página
 blog.gotoBottomOfPage=al final de la página
 blog.linkToNextDay=al proximo día
 blog.linkToPrevDay=al dia anterior
+blog.multiGPXTracks=mostrar todas las pistas GPX en el mapa
 
 statLast24Hours=las últimas 24 horas
 statLast48Hours=las últimas 48 horas

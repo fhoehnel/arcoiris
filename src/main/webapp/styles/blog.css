@@ -129,6 +129,7 @@ a.blogMenu,
 a.blogSubscribe,
 a.blogMapAll,
 a.blogSearch,
+a.blogExit,
 a.blogEmojiSel,
 a.blogLinkIns {
     text-decoration: none;
@@ -139,6 +140,7 @@ a.blogMenu:before,
 a.blogSubscribe,
 a.blogMapAll,
 a.blogSearch,
+a.blogExit,
 a.blogEmojiSel:before,
 a.blogLinkIns:before,
 a.emailLink:before {
@@ -158,7 +160,8 @@ a.blogMapAll {
 	margin-right: 10px;
 }
 
-a.blogSearch {
+a.blogSearch,
+a.blogExit {
 	margin-left: 10px;
 }
 

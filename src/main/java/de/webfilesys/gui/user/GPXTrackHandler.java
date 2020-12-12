@@ -28,6 +28,8 @@ public class GPXTrackHandler extends UserRequestHandler {
 
 	private static final int DISTANCE_SMOOTH_FACTOR = 12;
 
+	private static final Logger LOG = Logger.getLogger(GPXTrackHandler.class);
+
 	public GPXTrackHandler(
     		HttpServletRequest req, 
     		HttpServletResponse resp,
@@ -411,6 +413,7 @@ public class GPXTrackHandler extends UserRequestHandler {
 					}
 				} catch (WstxParsingException epex) {
 					Logger.getLogger(getClass()).warn("GPX parsing error", epex);
+					documentEnd = true;
 				}
 			}
 

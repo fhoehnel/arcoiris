@@ -54,6 +54,7 @@ import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
+import de.webfilesys.gui.ajax.CheckForGPXTrackHandler;
 import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
@@ -94,10 +95,12 @@ import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
 import de.webfilesys.gui.user.GPXTrackHandler;
+import de.webfilesys.gui.user.GPXWayPointHandler;
 import de.webfilesys.gui.user.GetAttachmentRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
 import de.webfilesys.gui.xsl.GPXViewHandler;
+import de.webfilesys.gui.xsl.MultiGPXTrackHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapHandler;
 import de.webfilesys.gui.xsl.XslGoogleMapMultiHandler;
 import de.webfilesys.gui.xsl.XslLogonHandler;
@@ -600,6 +603,8 @@ public class BlogWebServlet extends ServletBase {
                 (new BlogGetFirstUnseenCommentHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("existFile")) {
                 (new AjaxCheckFileExistHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("checkForGPXTracks")) {
+                (new CheckForGPXTrackHandler(req, resp, session, output, userid)).handleRequest();
             }
 
             return true;
@@ -655,6 +660,16 @@ public class BlogWebServlet extends ServletBase {
             return(true);
         }
         
+        if (command.equals("gpxWayPoints")) {
+            (new GPXWayPointHandler(req, resp, session, output, userid)).handleRequest();
+            return(true);
+        }
+        
+        if (command.equals("multiGPXTrack")) {
+            (new MultiGPXTrackHandler(req, resp, session, output, userid)).handleRequest();
+            return(true);
+        }
+
         if (command.equals("logout")) {
             logout(req, resp, session, userid);
 

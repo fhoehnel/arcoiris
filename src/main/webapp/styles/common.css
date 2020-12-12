@@ -1817,7 +1817,8 @@ a.linkToPrevDay {
 	cursor: pointer;
 }
 
-a.linkToNextDay {
+a.linkToNextDay,
+a.publishDayLink {
     margin-left: 20px;	
 }
 
@@ -1878,6 +1879,10 @@ div.gotoTopOfPage a,
 div.gotoBottomOfPage a {
     font-size: 32px;
     font-weight: bold;
+}
+
+.gpxAllTracksLink {
+	display: none;
 }
 
 @media (max-width: 400px) {

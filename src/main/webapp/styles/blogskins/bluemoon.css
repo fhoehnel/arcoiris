@@ -26,6 +26,7 @@ a.blogMenu::before,
 a.blogSubscribe, 
 a.blogMapAll, 
 a.blogSearch, 
+a.blogExit,
 a.blogEmojiSel::before,
 a.blogLinkIns::before,
 a.emailLink:before {

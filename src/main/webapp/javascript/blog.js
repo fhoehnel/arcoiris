@@ -1990,47 +1990,65 @@ function queryGeoData() {
 	                }
 	                
 	                // cascading ajax calls for performance reasons
-	                if (document.getElementById("unseenCommentLink")) {
-		                queryUnseenComments();
-	                }
+	                queryGPXTracks();
 	            }
 	        });          
 		
 	    }, 500);
 }
 
-function queryUnseenComments() {
-	setTimeout(function() {
-	        var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForUnseenComments";
+function queryGPXTracks() {
+    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForGPXTracks";
 	    
-	        xmlRequest(url, function(req) {
-	            if (req.readyState == 4) {
-	                if (req.status == 200) {
-	                    var responseXml = req.responseXML;
-	                    var resultItem = responseXml.getElementsByTagName("result")[0];
-	                    var result = resultItem.firstChild.nodeValue;  
+	xmlRequest(url, function(req) {
+	    if (req.readyState == 4) {
+	        if (req.status == 200) {
+	            var responseXml = req.responseXML;
+	            var resultItem = responseXml.getElementsByTagName("result")[0];
+	            var result = resultItem.firstChild.nodeValue;  
 	                
-                    	var unseenCommentLink = document.getElementById("unseenCommentLink");
-                    	var unseenCommentCount = document.getElementById("unseenCommentCount");
+	            if (result && (result == "true")) {
+	                document.getElementById("gpxAllTracksLink").style.display = "inline";
+	            } 
+	        }
+	        
+            // cascading ajax calls for performance reasons
+            if (document.getElementById("unseenCommentLink")) {
+                queryUnseenComments();
+            }
+        }
+    });          
+}
 
-                    	if (result && (result != "0")) {
-	                    	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
-	                    	unseenCommentLink.style.display = "inline";
+function queryUnseenComments() {
+    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForUnseenComments";
+	    
+	xmlRequest(url, function(req) {
+	    if (req.readyState == 4) {
+	        if (req.status == 200) {
+	            var responseXml = req.responseXML;
+	            var resultItem = responseXml.getElementsByTagName("result")[0];
+	            var result = resultItem.firstChild.nodeValue;  
+	                
+               	var unseenCommentLink = document.getElementById("unseenCommentLink");
+               	var unseenCommentCount = document.getElementById("unseenCommentCount");
+
+               	if (result && (result != "0")) {
+	               	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
+	               	unseenCommentLink.style.display = "inline";
 	                    	
-	                    	unseenCommentCount.innerText = result;
-	                    	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
-	                    	unseenCommentCount.style.display = "inline";
-	                    } else {
-	                    	unseenCommentLink.style.display = "none";
-	                    	unseenCommentCount.style.display = "none";
-	                    }
-	                } else {
-	                    alert(resourceBundle["alert.communicationFailure"]);
-	                }
+	               	unseenCommentCount.innerText = result;
+	               	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
+	               	unseenCommentCount.style.display = "inline";
+	            } else {
+	               	unseenCommentLink.style.display = "none";
+	               	unseenCommentCount.style.display = "none";
 	            }
-	        });          
-		
-	}, 500);
+	        } else {
+	            alert(resourceBundle["alert.communicationFailure"]);
+	        }
+	    }
+	});          
 }
 
 function showUnseenComment() {
@@ -2457,3 +2475,7 @@ function gotoPrevDay(clickTarget) {
 	}
 }
 
+function showAllGPXTracks() {
+    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiGPXTrack", "geoTrackWin");
+    geoTrackWin.focus();
+}

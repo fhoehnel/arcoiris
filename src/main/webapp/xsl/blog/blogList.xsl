@@ -193,6 +193,8 @@
 
         </xsl:if>
 
+        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
+        
         <div class="blogCalenderCont">
           <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
             <xsl:attribute name="onClick">selectDate()</xsl:attribute>
@@ -209,7 +211,7 @@
             <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
           </span>
         </xsl:if>
-        
+
         <div class="blogDateRange">
           <xsl:if test="/blog/dateRangeFrom">
             <span><xsl:value-of select="/blog/dateRangeFrom" /></span>
@@ -249,9 +251,12 @@
             </input>
           </xsl:if>
           <xsl:if test="/blog/readonly">
-            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-globe blogMapAll" style="display:none;" titleResource="blog.mapAll" />
+            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMapAll" style="display:none;" titleResource="blog.mapAll" />
             <a href="javascript:showSubscribeForm()" class="icon-font icon-watch blogSubscribe" titleResource="blog.subscribe" />
             <a href="javascript:showSearchForm()" class="icon-font icon-search blogSearch" titleResource="blog.search" />
+            <a class="icon-font icon-exit blogExit" titleResource="blog.buttonlogout">
+              <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=logout</xsl:attribute>
+            </a>
           </xsl:if>
         </div>   
     
@@ -271,23 +276,22 @@
         
           <div class="blogDate">
             <xsl:value-of select="formattedDate" />
+            <xsl:if test="not(position() = last())">
+              <a class="linkToNextDay icon-font icon-next" titleResource="blog.linkToNextDay">
+                <xsl:attribute name="onclick">gotoNextDay(this)</xsl:attribute>    
+              </a>
+            </xsl:if>
             
             <xsl:if test="dayEntries/file/staged">
               <a class="publishDayLink icon-font icon-check-circle" titleResource="blog.publishDayLink">
                 <xsl:attribute name="href">javascript:publishDay('<xsl:value-of select="plainDate" />')</xsl:attribute>    
               </a>
             </xsl:if>
-            <xsl:if test="not(dayEntries/file/staged)">
-              <xsl:if test="not(position() = last())">
-                <a class="linkToNextDay icon-font icon-next" titleResource="blog.linkToNextDay">
-                  <xsl:attribute name="onclick">gotoNextDay(this)</xsl:attribute>    
-                </a>
-              </xsl:if>
-              <xsl:if test="not(position() = 1)">
-                <a class="linkToPrevDay icon-font icon-prev" titleResource="blog.linkToPrevDay">
-                  <xsl:attribute name="onclick">gotoPrevDay(this)</xsl:attribute>    
-                </a>
-              </xsl:if>
+
+            <xsl:if test="not(position() = 1)">
+              <a class="linkToPrevDay icon-font icon-prev" titleResource="blog.linkToPrevDay">
+                <xsl:attribute name="onclick">gotoPrevDay(this)</xsl:attribute>    
+              </a>
             </xsl:if>
           </div>
         

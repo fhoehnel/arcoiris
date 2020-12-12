@@ -290,6 +290,7 @@ blog.gotoTopOfPage=go to top of page
 blog.gotoBottomOfPage=go to bottom of page
 blog.linkToNextDay=go to next day
 blog.linkToPrevDay=go to previous day
+blog.multiGPXTracks=show all GPX tracks on map
 
 statLast24Hours=last 24 hours
 statLast48Hours=last 48 hours

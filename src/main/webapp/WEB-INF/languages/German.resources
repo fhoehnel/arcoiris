@@ -290,6 +290,7 @@ blog.gotoTopOfPage=zum Seitenanfang
 blog.gotoBottomOfPage=zum Seitenende
 blog.linkToNextDay=zum nächsten Tag
 blog.linkToPrevDay=zum vorherigen Tag
+blog.multiGPXTracks=alle GPS-Tracks auf Karte anzeigen
 
 statLast24Hours=letzte 24 Stunden
 statLast48Hours=letzte 48 Stunden
