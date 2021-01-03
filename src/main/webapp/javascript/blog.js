@@ -1302,6 +1302,74 @@ function confirmDelComments(fileName) {
     });
 }
 
+function dayTitle(day) {
+
+    var dayTitleCont = document.getElementById("blogDayTitleCont");
+    var xmlUrl = getContextRoot() + '/servlet?command=blog&cmd=dayTitle&day=' + day;
+    var xslUrl = getContextRoot() + '/xsl/blog/dayTitle.xsl';
+
+    htmlFragmentByXslt(xmlUrl, xslUrl, dayTitleCont, function() {
+        setBundleResources();
+        centerBox(dayTitleCont);
+        dayTitleCont.style.visibility = "visible";
+        document.getElementById("dayTitleText").focus();
+    });
+}
+
+function submitDayTitle() {
+	const dayTitleCont = document.getElementById("blogDayTitleCont");
+	dayTitleCont.style.visibility = "hidden";
+
+    xmlRequestPost(getContextRoot() + "/servlet", getFormData(document.getElementById("dayTitleForm")), showPostDayTitleResult);
+}
+
+function showPostDayTitleResult(req) {
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            const resultElem = req.responseXML.getElementsByTagName("result")[0];
+            const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+            if (success == 'true') {
+                const day = resultElem.getElementsByTagName("day")[0].firstChild.nodeValue;
+                const titleTextElem = resultElem.getElementsByTagName("titleText")[0].firstChild;
+                let titleText = "";
+                if (titleTextElem) {
+                	titleText = titleTextElem.nodeValue;
+                }
+                if (day) {
+                	const dayTitle = document.getElementById("dayTitle-" + day);
+                	if (dayTitle) {
+              		    dayTitle.innerHTML = titleText;
+              		    if (titleText.length > 0) {
+                  		    dayTitle.style.display = "block";
+              		    } else {
+                  		    dayTitle.style.display = "none";
+              		    }
+                	}
+                }
+            }
+            const dayTitleCont = document.getElementById("blogDayTitleCont");
+            dayTitleCont.style.visibility = "hidden";
+        } else {
+            customAlert("failed to save title text");
+        }
+    }
+}
+
+function closeDayTitle() {
+	const dayTitleCont = document.getElementById("blogDayTitleCont");
+	if (dayTitleCont) {
+		dayTitleCont.style.visibility = "hidden";
+	}
+}
+
+function limitDayTitleText() { 
+    var dayTitleText = document.getElementById("dayTitleText");
+ 
+    if (dayTitleText.value.length > 46) {  
+    	dayTitleText.value = dayTitleText.value.substring(0, 46);
+    }
+}
+
 function showSubscribers() {
     var subscribeCont = document.getElementById("subscribeCont");
 
@@ -2478,4 +2546,8 @@ function gotoPrevDay(clickTarget) {
 function showAllGPXTracks() {
     var geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiGPXTrack", "geoTrackWin");
     geoTrackWin.focus();
+}
+
+function allDayOverview() {
+	window.location.href = getContextRoot() + "/servlet?command=blog&cmd=overview";
 }

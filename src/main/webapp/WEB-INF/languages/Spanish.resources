@@ -292,6 +292,11 @@ blog.gotoBottomOfPage=al final de la página
 blog.linkToNextDay=al proximo día
 blog.linkToPrevDay=al dia anterior
 blog.multiGPXTracks=mostrar todas las pistas GPX en el mapa
+blog.overviewLinkToDay=mostrar entradas del este día
+label.dayTitle=titulo del día
+label.dayTitleDate=fecha
+blog.dayTitleEmpty=No ha introducido ningún texto.
+blog.linkToOverview=resumen de todos los días
 
 statLast24Hours=las últimas 24 horas
 statLast48Hours=las últimas 48 horas

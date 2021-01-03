@@ -291,6 +291,11 @@ blog.gotoBottomOfPage=zum Seitenende
 blog.linkToNextDay=zum nächsten Tag
 blog.linkToPrevDay=zum vorherigen Tag
 blog.multiGPXTracks=alle GPS-Tracks auf Karte anzeigen
+blog.overviewLinkToDay=Blog-Einträge dieses Tages anzeigen
+label.dayTitle=Titel des Tages
+label.dayTitleDate=Datum
+blog.dayTitleEmpty=es wurde kein Titel-Text eingeben 
+blog.linkToOverview=Übersicht über alle Tage
 
 statLast24Hours=letzte 24 Stunden
 statLast48Hours=letzte 48 Stunden

@@ -250,6 +250,10 @@ a.icon-font {
 	content: '\f058';
 }
 
+.icon-overview:before {
+	content: '\f02d';
+}
+
 a.icon-paging {
 	text-decoration: none;
 }

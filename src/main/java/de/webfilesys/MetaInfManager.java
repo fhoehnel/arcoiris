@@ -385,6 +385,81 @@ public class MetaInfManager extends Thread {
         }
     }
 
+    private Element getDayTitleRoot(String path, boolean createIfMissing) {
+        Element metaInfElement = getMetaInfElement(path, ".");
+
+        if (metaInfElement == null) {
+            if (!createIfMissing) {
+                return null;
+            }
+            metaInfElement = createMetaInfElement(path, ".");
+        }
+        
+        Element dayTitlesElem = XmlUtil.getChildByTagName(metaInfElement, "dayTitles");
+        if (dayTitlesElem == null) {
+            if (!createIfMissing) {
+                return null;
+            }
+            Document doc = metaInfElement.getOwnerDocument();
+            dayTitlesElem = doc.createElement("dayTitles");
+            metaInfElement.appendChild(dayTitlesElem);
+        }
+
+        return dayTitlesElem;
+    }
+    
+    private Element getDayTitleElem(String path, String day, boolean createIfMissing) {
+        Element dayTitlesRoot = getDayTitleRoot(path, createIfMissing);
+
+        if (dayTitlesRoot == null) {
+            return null;
+        }
+        
+        NodeList dayTitleList = dayTitlesRoot.getElementsByTagName("day");
+        
+        if (dayTitleList != null) {
+            int listLength = dayTitleList.getLength();
+            for (int i = 0; i < listLength; i++) {
+                Element dayTitleElement = (Element) dayTitleList.item(i);
+                if (dayTitleElement.getAttribute("date").equals(day)) {
+                    return dayTitleElement;
+                }
+            }
+        }
+        
+        if (!createIfMissing) {
+            return null;
+        }
+        
+        Document doc = dayTitlesRoot.getOwnerDocument();
+        Element dayTitleElem = doc.createElement("day");
+        dayTitleElem.setAttribute("date", day);
+        dayTitlesRoot.appendChild(dayTitleElem);
+        return dayTitleElem;
+    }
+    
+    public void setDayTitle(String path, String day, String titleText) {
+        Element dayTitleElem = getDayTitleElem(path, day, true);
+        XmlUtil.setElementText(dayTitleElem, titleText, true);
+        cacheDirty.put(path, Boolean.TRUE);
+    }
+    
+    public String getDayTitle(String path, String day) {
+        Element dayTitleElem = getDayTitleElem(path, day, false);
+        if (dayTitleElem != null) {
+            return XmlUtil.getElementText(dayTitleElem);
+        }
+        return null;        
+    }
+    
+    public void removeDayTitle(String path, String day) {
+        Element dayTitleElem = getDayTitleElem(path, day, false);
+        if (dayTitleElem != null) {
+            dayTitleElem.getParentNode().removeChild(dayTitleElem);
+            cacheDirty.put(path, Boolean.TRUE);
+        }
+    }
+    
     public void setTitlePic(String path, String titlePicFileName) {
         synchronized (this) {
             Element metaInfElement = getMetaInfElement(path, ".");

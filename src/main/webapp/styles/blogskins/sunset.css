@@ -26,6 +26,29 @@ div.blogDate {
     border-top: 1px solid #400000;    
 }
 
+div.blogOverviewDayCont {
+	border: 2px solid #d04000;
+	background-color: #d04000;
+    box-shadow: none;
+}
+
+div.blogOverviewDay {
+    background-color: #d04000;
+}
+
+div.blogOverviewDay > a.dayDate {
+    color: #ffffff;
+}
+
+div.blogOverviewDayTitle {
+    background-color: #d04000;
+	color: #ffff80;
+}
+
+div.blogListDayTitle {
+	color: #ffff80;
+}
+
 a.blogCalender::before, 
 a.blogMenu::before, 
 a.blogSubscribe, 
@@ -57,6 +80,7 @@ body.blog input[type="button"],
 .blogPublishForm input[type="button"], 
 .blogGeoMapFrame input[type="button"], 
 .blogCommentForm input[type="button"], 
+.dayTitleForm input[type="button"],
 .blogSettingsForm input[type="button"], 
 input.blogUploadFileSelButton, 
 #subscribeCont input[type="button"], 
@@ -112,7 +136,8 @@ a.comments:hover {
 div.commentContHead,
 div.promptHead, 
 div.uploadContHead,
-div.blogSettingsHead {
+div.blogSettingsHead,
+div.dayTitleContHead {
     background-color: #e0c0a0;
 }
 

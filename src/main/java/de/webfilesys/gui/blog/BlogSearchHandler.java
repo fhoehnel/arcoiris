@@ -145,7 +145,7 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
                         try {
                             blogDate = linkDateFormat.parse(blogDateStr);
 
-                            Date linkDate = new Date(blogDate.getTime() + (24l * 60l * 60l * 1000l));
+                            Date linkDate = new Date(blogDate.getTime() + (25l * 60l * 60l * 1000l));  // 25 hours for daylight saving time switch
 
                             String linkDateStr = linkDateFormat.format(linkDate);
 

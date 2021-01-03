@@ -22,7 +22,7 @@ import de.webfilesys.util.XmlUtil;
  */
 public class BlogGetFirstUnseenCommentHandler extends XmlRequestHandlerBase {
 
-    private static final long MILLIS_ONE_DAY = 24l * 60l * 60l * 1000l;
+    private static final long MILLIS_ONE_DAY = 25l * 60l * 60l * 1000l; // 25 hours for daylight saving time period switch
     
     public BlogGetFirstUnseenCommentHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);

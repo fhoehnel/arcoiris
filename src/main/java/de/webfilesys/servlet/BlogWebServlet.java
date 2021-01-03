@@ -60,7 +60,9 @@ import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
 import de.webfilesys.gui.blog.BlogAddCommentHandler;
 import de.webfilesys.gui.blog.BlogAltPositionsHandler;
+import de.webfilesys.gui.blog.BlogChangeDayTitleHandler;
 import de.webfilesys.gui.blog.BlogChangeEntryHandler;
+import de.webfilesys.gui.blog.BlogDayTitleHandler;
 import de.webfilesys.gui.blog.BlogDeleteCommentsHandler;
 import de.webfilesys.gui.blog.BlogDeleteEntryHandler;
 import de.webfilesys.gui.blog.BlogDetachHandler;
@@ -74,6 +76,7 @@ import de.webfilesys.gui.blog.BlogListHandler;
 import de.webfilesys.gui.blog.BlogListSubscribersHandler;
 import de.webfilesys.gui.blog.BlogMoveEntryHandler;
 import de.webfilesys.gui.blog.BlogMoveToPosHandler;
+import de.webfilesys.gui.blog.BlogOverviewHandler;
 import de.webfilesys.gui.blog.BlogPostHandler;
 import de.webfilesys.gui.blog.BlogPublishDayHandler;
 import de.webfilesys.gui.blog.BlogPublishFormHandler;
@@ -490,6 +493,9 @@ public class BlogWebServlet extends ServletBase {
             if (cmd.equals("list")) {
                 (new BlogListHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
+            } else if (cmd.equals("overview")) {
+                (new BlogOverviewHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
             } else if (cmd.equals("post")) {
                 (new BlogPostHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
@@ -585,6 +591,12 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("publishDay")) {
                 (new BlogPublishDayHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("dayTitle")) {
+                (new BlogDayTitleHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("changeDayTitle")) {
+                (new BlogChangeDayTitleHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);

@@ -291,6 +291,11 @@ blog.gotoBottomOfPage=go to bottom of page
 blog.linkToNextDay=go to next day
 blog.linkToPrevDay=go to previous day
 blog.multiGPXTracks=show all GPX tracks on map
+blog.overviewLinkToDay=show blog entries of this day
+label.dayTitle=day title
+label.dayTitleDate=date
+blog.dayTitleEmpty=please enter a title text
+blog.linkToOverview=show overview of all days
 
 statLast24Hours=last 24 hours
 statLast48Hours=last 48 hours

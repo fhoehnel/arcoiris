@@ -55,6 +55,29 @@ div.blogDate {
     color: ivory;
 }
 
+div.blogOverviewDayCont {
+	border: 2px solid #a08000;
+	background-color: #a08000;
+    box-shadow: none;
+}
+
+div.blogOverviewDay {
+    background-color: #a08000;
+}
+
+div.blogOverviewDay > a.dayDate {
+    color: ivory;
+}
+
+div.blogOverviewDayTitle {
+    background-color: #a08000;
+	color: #ffff80;
+}
+
+div.blogListDayTitle {
+	color: #ffff80;
+}
+
 div.blogTitlePic {
     box-shadow: none;
 }
@@ -64,6 +87,7 @@ body.blog input[type="button"],
 .blogPublishForm input[type="button"], 
 .blogGeoMapFrame input[type="button"], 
 .blogCommentForm input[type="button"], 
+.dayTitleForm input[type="button"],
 .blogSettingsForm input[type="button"], 
 input.blogUploadFileSelButton, 
 #subscribeCont input[type="button"], 
@@ -83,7 +107,8 @@ div.urlInput input[type="button"] {
 div.commentContHead, 
 div.blogSettingsHead,
 div.uploadContHead,
-div.promptHead {
+div.promptHead,
+div.dayTitleContHead {
     background-color: #c08000;
     color: #ffffff;
 }
@@ -150,7 +175,8 @@ div.searchResultCont {
     border: 2px ridge #ffffff;
 }
 
-table.blogCommentForm {
+table.blogCommentForm,
+table.dayTitleForm {
     background-color: #002060;
 }
 
@@ -249,5 +275,9 @@ span.unseenCommentCount {
 div.gotoTopOfPage a,
 div.gotoBottomOfPage a {
     color: #ffff80;
+}
+
+div.blogDayTitleCont {
+    background-color: #002060;
 }
 

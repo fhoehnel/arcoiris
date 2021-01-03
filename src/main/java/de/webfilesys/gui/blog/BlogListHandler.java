@@ -343,6 +343,11 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         XmlUtil.setChildText(blogDateElement, "plainDate", blogDate, false);
                         XmlUtil.setChildText(blogDateElement, "formattedDate", formatBlogDate(day), false);
 
+                        String dayTitle = metaInfMgr.getDayTitle(getCwd(), blogDate);
+                        if (!CommonUtils.isEmpty(dayTitle)) {
+                            XmlUtil.setChildText(blogDateElement, "dayTitle", dayTitle, true);
+                        }
+
                         ArrayList<File> entriesOfDay = blogDays.get(blogDate);
 
                         if ((entriesOfDay != null) && (entriesOfDay.size() > 0)) {

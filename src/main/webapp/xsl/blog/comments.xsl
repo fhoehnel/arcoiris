@@ -9,17 +9,6 @@
 <!-- root node-->
 <xsl:template match="/">
 
-<script language="javascript">
-  function limitText()
-  {  
-      if (document.form1.newComment.value.length > 2048)
-      {  
-          document.form1.newComment.value=document.form1.newComment.value.substring(0,2048);
-      }
-  }
-  
-</script>
-
 <div class="blogComments">
 
   <div class="commentContHead">
