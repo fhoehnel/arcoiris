@@ -37,6 +37,14 @@ public class ActivateUserRequestHandler extends UserRequestHandler {
             return;
         }
 
+        String userAgent = req.getHeader("user-agent");
+        if ((userAgent != null) && userAgent.contains("BingPreview")) {
+            // the hotmail/outlook web client fetches the activation link automatically when opening the registration e-mail
+            // the user's click on the activation link is the second one - and fails
+            // what a bullshit!
+            return;
+        }
+
         UserManager userMgr = ArcoirisBlog.getInstance().getUserMgr();
 
         try {
@@ -57,9 +65,6 @@ public class ActivateUserRequestHandler extends UserRequestHandler {
         } catch (UserMgmtException ex) {
             Logger.getLogger(getClass()).warn("user activation attempt failed", ex);
 
-            // the hotmail web client fetches the activation link automatically when opening the registration e-mail
-            // the user's click on the activation link is the second one - and fails
-            // what a bullshit!
             /*
             try {
                 resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);

@@ -36,8 +36,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import de.webfilesys.ResourceBundleHandler;
 import de.webfilesys.ArcoirisBlog;
+import de.webfilesys.ResourceBundleHandler;
 import de.webfilesys.gui.admin.AdminAddUserRequestHandler;
 import de.webfilesys.gui.admin.AdminChangeUserRequestHandler;
 import de.webfilesys.gui.admin.AdminEditUserRequestHandler;
@@ -87,6 +87,7 @@ import de.webfilesys.gui.blog.BlogSaveSettingsHandler;
 import de.webfilesys.gui.blog.BlogSearchHandler;
 import de.webfilesys.gui.blog.BlogSetDescrHandler;
 import de.webfilesys.gui.blog.BlogSetTitlePicHandler;
+import de.webfilesys.gui.blog.BlogShareSinglePicHandler;
 import de.webfilesys.gui.blog.BlogShowSettingsHandler;
 import de.webfilesys.gui.blog.BlogStatisticsHandler;
 import de.webfilesys.gui.blog.BlogSubscribeHandler;
@@ -597,6 +598,9 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             } else if (cmd.equals("changeDayTitle")) {
                 (new BlogChangeDayTitleHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
+            } else if (cmd.equals("shareSinglePic")) {
+                (new BlogShareSinglePicHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
                 Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);

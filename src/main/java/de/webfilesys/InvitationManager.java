@@ -242,7 +242,51 @@ public class InvitationManager extends Thread {
 
         return (accessCode);
     }
+    
+    public String addSinglePictureInvitation(String filePath, int expirationDays) {
+        String accessCode = generateAccessCode();
 
+        Document doc = invitationRoot.getOwnerDocument();
+
+        Element invitationElement = doc.createElement("invitation");
+
+        invitationElement.setAttribute("accessCode", accessCode);
+
+        Element pathElement = doc.createElement("path");
+
+        XmlUtil.setElementText(pathElement, filePath);
+
+        invitationElement.appendChild(pathElement);
+
+        long expiration = System.currentTimeMillis() + (((long) expirationDays) * 24l * 60l * 60l * 1000l);
+
+        Element expiresElement = doc.createElement("expires");
+
+        XmlUtil.setElementText(expiresElement, "" + expiration);
+
+        invitationElement.appendChild(expiresElement);
+        
+        Element typeElement = doc.createElement("type");
+
+        XmlUtil.setElementText(typeElement, "file");
+
+        invitationElement.appendChild(typeElement);
+
+        invitationRoot.appendChild(invitationElement);
+
+        changed = true;
+
+        return (accessCode);
+    }
+    
+    public String getFilePathByAccessCode(String accessCode) {
+        Element invitationElement = getInvitationElement(accessCode);
+        if (invitationElement == null) {
+            return null;
+        }
+        return XmlUtil.getChildText(invitationElement, "path");
+    }
+    
     private Element getInvitationElement(String code) {
         NodeList invitationList = invitationRoot.getElementsByTagName("invitation");
 

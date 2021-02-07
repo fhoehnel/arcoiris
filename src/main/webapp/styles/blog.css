@@ -505,6 +505,20 @@ div.blogPublishCont {
     background-color: #ffffe0;
     visibility: hidden;
     width: 488px;
+    padding-bottom: 4px;
+}
+
+div.blogPublishCont div {
+    padding: 8px 0;
+}
+
+div.blogPublishCont > div {
+    padding-left: 8px;
+	padding-right: 8px;
+}
+
+div.blogPublishCont label {
+    font-size: 1rem;
 }
 
 table.blogPublishForm {
@@ -1026,6 +1040,7 @@ canvas.gpsProfileLegend {
 	height: 200px;
 }
 
+div.gpsChartText,
 td.gpsChartText {
     font-size: 13px;
     font-family: Arial,Helvetica;
@@ -1035,7 +1050,6 @@ td.gpsChartText {
 a.emailLink {
     float: right;
     position: relative;
-    top: -10px;
 }
 
 div.filePreviewCont {

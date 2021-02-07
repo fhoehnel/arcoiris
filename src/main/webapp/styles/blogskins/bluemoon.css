@@ -123,6 +123,10 @@ div.blogPublishCont {
     background-color: #002060;
 }
 
+div.blogPublishCont label {
+    color: ivory;
+}
+
 html.blog td.formParm1, 
 html.blog td.formParm2 {
 	color: ivory;

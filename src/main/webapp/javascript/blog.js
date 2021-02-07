@@ -1046,6 +1046,12 @@ function copyPublicUrlToClip() {
     hidePublishForm();
 }
 
+function copyPicUrlToClip() {
+    document.getElementById("sharedPicUrl").select();
+    document.execCommand("Copy");
+    hidePublishForm();
+}
+
 function unpublish() {
     if (!confirm(resourceBundle["blog.confirmUnpublish"])) {
         return;
@@ -1076,99 +1082,167 @@ function handleUnpublishResult(req) {
     }
 }
 
+function createDiv(parentNode, id, text, cssClass) {
+    const div = document.createElement("div");
+    if (id) {
+    	div.id = id;
+    }
+    if (cssClass) {
+        div.setAttribute("class", cssClass);
+    }
+    if (text) {
+    	const label = document.createElement("label");
+    	div.appendChild(label);
+        label.innerHTML = text;
+    }
+    parentNode.appendChild(div);
+    return div;
+}
+
 function shareBlogEntry(entryFileName) {
 
-    var publishCont = document.getElementById("publishCont");
+    let publishCont = document.getElementById("publishCont");
         
     if (!publishCont) {
-        alert('publishCont is not defined');
+        console.error("publishCont is not defined");
         return;
     }
     
-	var entryDate = new Date(entryFileName.substring(0, 10));
+	let entryDate = new Date(entryFileName.substring(0, 10));
 	
-	var beforeDay = new Date(entryDate.getTime() + (24 * 60 * 60 * 1000));
+	let beforeDay = new Date(entryDate.getTime() + (24 * 60 * 60 * 1000));
 	
-	var beforeDayStr = beforeDay.toISOString().substring(0,10);  
+	let beforeDayStr = beforeDay.toISOString().substring(0,10);  
     
-    var shareUrl = publicUrl + "?beforeDay=" + beforeDayStr + "&positionToFile=" + entryFileName; 
+    let shareUrl = publicUrl + "?beforeDay=" + beforeDayStr + "&positionToFile=" + entryFileName; 
     
     publishCont.innerHTML = "";
     
-    var publishHead = document.createElement("div");
+    let publishHead = document.createElement("div");
     publishHead.setAttribute("class", "promptHead");    
     publishHead.innerHTML = resourceBundle["blog.shareTitle"];
     publishCont.appendChild(publishHead);
     
-    var publishTable = document.createElement("table");
-    publishTable.id = "publishTable";
-    publishTable.setAttribute("class", "blogPublishForm");    
-    publishCont.appendChild(publishTable);
+    const shareTextDiv = createDiv(publishCont, null, resourceBundle["blog.shareURL"] + ":", null);
     
-    var tableRow = document.createElement("tr");
-    document.getElementById("publishTable").appendChild(tableRow);
+    const mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailSubject"] + "&body=" + encodeURIComponent(shareUrl);
 
-    var tableCell = document.createElement("td");
-    tableCell.setAttribute("class", "formParm1");
-    tableCell.setAttribute("colspan", "2");
-    tableCell.innerHTML = resourceBundle["blog.shareURL"] + ":";
-    tableRow.appendChild(tableCell);
-    
-    var mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailSubject"] + "&body=" + encodeURIComponent(shareUrl);
-
-    var emailLink = document.createElement("a");
+    let emailLink = document.createElement("a");
     emailLink.setAttribute("href", mailtoUrl);
     emailLink.setAttribute("class", "icon-font icon-email emailLink");
     emailLink.setAttribute("title", resourceBundle["blog.shareByEmail"]);
-    tableCell.appendChild(emailLink);
-
-    tableRow = document.createElement("tr");
-    document.getElementById("publishTable").appendChild(tableRow);
-
-    tableCell = document.createElement("td");
-    tableCell.setAttribute("class", "formParm2");
-    tableCell.setAttribute("colspan", "2");
-    tableRow.appendChild(tableCell);
+    shareTextDiv.appendChild(emailLink);
     
-    var urlInput = document.createElement("textarea");
+    const shareUrlDiv = createDiv(publishCont, null, null, null);
+
+    const urlInput = document.createElement("textarea");
     urlInput.id = "publicUrl";
     urlInput.setAttribute("class", "publicLinkCopyField");
     urlInput.setAttribute("readonly", "readonly");
     urlInput.value = shareUrl;
-    tableCell.appendChild(urlInput);
-                
-    tableRow = document.createElement("tr");
-    document.getElementById("publishTable").appendChild(tableRow);
-
-    tableCell = document.createElement("td");
-    tableCell.style.paddingTop = "20px";
-    tableCell.style.paddingLeft = "8px";
-    tableRow.appendChild(tableCell);
-
-    var closeButton = document.createElement("input");
-    closeButton.setAttribute("type", "button");
-    closeButton.setAttribute("value", resourceBundle["button.cancel"]);
-    closeButton.setAttribute("onclick", "hidePublishForm()");
-    closeButton.style.marginBottom = "10px";
-    tableCell.appendChild(closeButton);
+    shareUrlDiv.appendChild(urlInput);
     
-    tableCell = document.createElement("td");
-    tableCell.style.paddingTop = "20px";
-    tableCell.style.textAlign = "right";
-    tableRow.appendChild(tableCell);
-    
-    var copyButton = document.createElement("input");
+    const copyButtonDiv = createDiv(publishCont, null, null, null);
+
+    let copyButton = document.createElement("input");
     copyButton.setAttribute("type", "button");
     copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
     copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
-    copyButton.style.marginBottom = "10px";
-    tableCell.appendChild(copyButton);
+    copyButton.style.float = "right";
+    copyButtonDiv.appendChild(copyButton);
+
+    const sharePicButtonDiv = createDiv(publishCont, null, null, null);
+    sharePicButtonDiv.style.clear = "both";
+    
+    let sharePicButton = document.createElement("input");
+    sharePicButton.setAttribute("type", "button");
+    sharePicButton.setAttribute("value", resourceBundle["blog.shareSinglePic"]);
+    sharePicButton.setAttribute("onclick", "shareSinglePic('" + entryFileName + "')");
+    sharePicButtonDiv.appendChild(sharePicButton);
+
+    const sharePicCont = createDiv(publishCont, "sharePicCont", null, null);
+    sharePicCont.style.display = "none";
+    
+    const sharePicTextDiv = createDiv(sharePicCont, null, resourceBundle["blog.sharedPicURL"] + ":", null);
+
+    const picEmailLink = document.createElement("a");
+    picEmailLink.id = "picEmailLink";
+    picEmailLink.setAttribute("href", "javascript:void(0)");
+    picEmailLink.setAttribute("class", "icon-font icon-email emailLink");
+    picEmailLink.setAttribute("title", resourceBundle["blog.shareByEmail"]);
+    sharePicTextDiv.appendChild(picEmailLink);
+    
+    const sharePicUrlDiv = createDiv(sharePicCont, null, null, null);
+
+    const sharedPicUrl = document.createElement("textarea");
+    sharedPicUrl.id = "sharedPicUrl";
+    sharedPicUrl.setAttribute("class", "publicLinkCopyField");
+    sharedPicUrl.setAttribute("readonly", "readonly");
+    sharePicUrlDiv.appendChild(sharedPicUrl);
+    
+    const copyPicButtonDiv = createDiv(sharePicCont, null, null, null);
+
+    const copyPicButton = document.createElement("input");
+    copyPicButton.setAttribute("type", "button");
+    copyPicButton.setAttribute("value", resourceBundle["blog.copyPublicPicLink"]);
+    copyPicButton.setAttribute("onclick", "copyPicUrlToClip()");
+    copyPicButton.style.float = "right";
+    copyPicButtonDiv.appendChild(copyPicButton);
+    
+    const closeButtonDiv = createDiv(publishCont, null, null, null);
+    closeButtonDiv.style.clear = "both";
+    
+    let closeButton = document.createElement("input");
+    closeButton.setAttribute("type", "button");
+    closeButton.setAttribute("value", resourceBundle["button.cancel"]);
+    closeButton.setAttribute("onclick", "hidePublishForm()");
+    closeButtonDiv.appendChild(closeButton);
     
     centerBox(publishCont);
     
     publishCont.style.visibility = "visible";
 
     urlInput.select();
+}
+
+function shareSinglePic(fileName) {  
+    
+    showHourGlass();
+    
+    var url = getContextRoot() + "/servlet?command=blog&cmd=shareSinglePic&fileName=" + encodeURIComponent(fileName);
+    
+    xmlRequest(url, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+			    var responseXml = req.responseXML;
+    
+                var success = null;
+                var successItem = responseXml.getElementsByTagName("success")[0];
+                if (successItem) {
+                    success = successItem.firstChild.nodeValue;
+                }         
+    
+                if ((success != null) && (success == "true")) {
+                    var publicUrlItem = responseXml.getElementsByTagName("publicUrl")[0];
+                    if (publicUrlItem) {
+                    	const publicUrl = publicUrlItem.firstChild.nodeValue;
+                        document.getElementById("sharedPicUrl").value = publicUrl;
+                        document.getElementById("sharePicCont").style.display = "block";
+                        
+                        const mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailPicSubject"] + "&body=" + encodeURIComponent(publicUrl);
+                        document.getElementById("picEmailLink").setAttribute("href", mailtoUrl);
+                    }         
+                } else {
+                    alert("failed to publish picture");
+                }
+
+                hideHourGlass();    
+            } else {
+                alert(resourceBundle["alert.communicationFailure"]);
+                hideHourGlass();    
+            }
+        }
+    });
 }
 
 function blogComments(fileName, posInPage) {
