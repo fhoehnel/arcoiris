@@ -9,17 +9,6 @@
 <!-- root node-->
 <xsl:template match="/">
 
-<script language="javascript">
-  function limitText()
-  {  
-      if (document.form1.newComment.value.length > 2048)
-      {  
-          document.form1.newComment.value=document.form1.newComment.value.substring(0,2048);
-      }
-  }
-  
-</script>
-
 <div class="blogComments">
 
   <div class="commentContHead">
@@ -95,9 +84,12 @@
                         <td class="formParm1">
                           <span resource="label.addcomment"></span>:
                         </td>
+                        <td style="text-align:right">
+                          <a href="javascript:switchEmojiSelection('newComment')" class="icon-font icon-smiley blogEmojiSel" titleResource="blog.showEmojis"></a>
+                        </td>
                       </tr>
                       <tr>
-                        <td class="formParm2">
+                        <td class="formParm2" colspan="2">
                           <textarea id="newComment" name="newComment" cols="100" rows="4" wrap="virtual" class="commentText" 
                               onKeyup="limitCommentText()" onChange="limitCommentText()"></textarea>
                         </td>
@@ -119,6 +111,13 @@
                 <span resource="label.commentAuthor"></span>:
                 &#160;
                 <input type="text" name="author" style="width:150px" />
+              </td>
+            </tr>
+            <tr>
+              <td class="formParm1">
+                <label for="notifyOnAnswerEmail" resource="label.commentNotifyEmail"></label>:
+                &#160;
+                <input type="email" id="notifyOnAnswerEmail" name="notifyOnAnswerEmail" style="width:220px" />
               </td>
             </tr>
           </xsl:if>
@@ -149,10 +148,6 @@
                 <xsl:attribute name="onclick">closeBlogComments()</xsl:attribute>
               </input>
               
-              <xsl:if test="/fileComments/modifyPermission">
-                <a href="javascript:switchEmojiSelection('newComment')" class="icon-font icon-smiley blogEmojiSel" titleResource="blog.showEmojis"></a>
-              </xsl:if>              
-
 		    </div>
           </td>
         </tr>

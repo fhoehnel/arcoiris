@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.arcoiris"
-    android:versionCode="12" android:versionName="0.8.3">
+    android:versionCode="12" android:versionName="0.9.6">
 
+    <!--
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18"/>
+    -->
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -41,7 +43,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="NU3aLS5WExv39HtuvNF6Ryj1NSGbcL4W4fjs9ao" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="Hkdaökd87sdhdgGF454hdghsagdhAN6343" />
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 
         <uses-library android:name="com.google.android.maps" />

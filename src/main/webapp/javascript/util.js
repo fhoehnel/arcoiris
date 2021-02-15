@@ -408,3 +408,11 @@ function cancelFullScreen(elem) {
 		document.msExitFullscreen();
 	}
 }
+
+function gotoTopOfPage() {
+	window.scrollTo(0, 0);
+}
+
+function gotoBottomOfPage() {
+	window.scrollTo(0, 1000000);
+}

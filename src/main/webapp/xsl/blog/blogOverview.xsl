@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">	
+<xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" />
+
+<xsl:strip-space elements="blog" />
+
+<!-- root node-->
+<xsl:template match="/">
+
+  <html class="blog">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+      <meta http-equiv="expires" content="0" />
+
+      <!--        
+      <meta name="viewport" content="width=800, initial-scale=1.0, user-scalable=yes" />
+      -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+      <title>arcoiris blog</title>
+
+      <link rel="shortcut icon">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/images/arcoiris-icon.png</xsl:attribute>
+      </link>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/common.css</xsl:attribute>
+      </link>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blog.css</xsl:attribute>
+      </link>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/icons.css</xsl:attribute>
+      </link>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
+      </link>
+
+      <link rel="stylesheet" type="text/css">
+        <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
+      </link>
+      
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/util.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/xmlUtil.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxCommon.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/popupPicture.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/calendar/CalendarPopup.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/calendar/AnchorPosition.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/calendar/date.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/calendar/PopupWindow.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/geoMap.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/blog.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/blogOverview.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/previewFile.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/jquery/jquery.min.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/servlet?command=getResourceBundle&amp;lang=<xsl:value-of select="/blog/language" /></xsl:attribute>
+      </script>
+      
+      <script type="text/javascript">
+        const contextRoot = '<xsl:value-of select="//contextRoot" />';
+      
+        var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
+        
+        var lowBandwidthMode = false;
+        <xsl:if test="/blog/lowBandwidthMode">
+          lowBandwidthMode = true;
+        </xsl:if>
+      
+        var cal1x;
+
+        function prepareCalenderPopup() {
+            cal1x = new CalendarPopup("calDiv");
+            cal1x.setReturnFunction("gotoSelectedDate");
+            cal1x.showYearNavigation();
+            <xsl:if test="/blog/language = 'German'">
+              cal1x.setWeekStartDay(1);
+            </xsl:if>
+        }
+   
+        function gotoSelectedDate(y, m, d) { 
+            var selectedDate = new Date();
+            selectedDate.setYear(y);
+            selectedDate.setMonth(m - 1);
+            selectedDate.setDate(d);
+            
+            var dayParamName;
+            if (sortOrder == 1) {
+                selectedDate.setMilliseconds(selectedDate.getMilliseconds() + (24 * 60 * 60 * 1000));
+                dayParamName = "beforeDay";
+            } else {
+                selectedDate.setMilliseconds(selectedDate.getMilliseconds() - (24 * 60 * 60 * 1000));
+                dayParamName = "afterDay";
+            }
+
+            var dayParamVal = selectedDate.getFullYear() + "-" + LZ(selectedDate.getMonth() + 1) + "-" + LZ(selectedDate.getDate());
+
+            window.location.href = "<xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;" + dayParamName + "=" + dayParamVal;
+        }
+
+      </script>
+      
+    </head>
+
+    <body class="blog">
+      <xsl:if test="not(/blog/readonly)">
+        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();queryGeoData();attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="/blog/readonly">
+        <xsl:attribute name="onload">prepareCalenderPopup();queryGeoData();queryPublicLink(true);attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
+      </xsl:if>
+      
+      <div class="blogCont">
+      
+        <xsl:if test="/blog/blogTitlePic">
+          <div>
+            <xsl:attribute name="style">background-image:url('<xsl:value-of select="/blog/blogTitlePic" />');background-size:100%;</xsl:attribute>
+            <xsl:if test="/blog/readonly">
+              <xsl:attribute name="class">blogTitlePic</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="not(/blog/readonly)">
+              <xsl:attribute name="class">blogTitlePic blogTitlePointer</xsl:attribute>
+              <xsl:attribute name="onclick">unsetTitlePic()</xsl:attribute>
+              <xsl:attribute name="titleResource">blog.unsetTitlePic</xsl:attribute>
+            </xsl:if>
+          </div>
+        </xsl:if>
+      
+        <div class="blogHeadline">
+          <xsl:value-of select="/blog/blogTitle" />
+        </div> 
+      
+        <xsl:if test="not(/blog/readonly)">
+          <a href="javascript:void(0)" class="icon-font icon-menu blogMenu" titleResource="blog.settingsHeadline">
+            <xsl:attribute name="onClick">showSettings()</xsl:attribute>
+          </a>
+          
+          <a href="javascript:showSearchForm()" class="icon-font icon-search blogMenu" titleResource="blog.search" />
+
+          <a href="javascript:void(0)" class="icon-font icon-stats blogMenu" titleResource="blog.statisticIcon">
+            <xsl:attribute name="onClick">statistics()</xsl:attribute>
+          </a>
+          
+          <xsl:if test="not(/blog/lowBandwidthMode)">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-wifi blogMenu" titleResource="blog.lowBandwith" />
+          </xsl:if>
+          <xsl:if test="/blog/lowBandwidthMode">
+            <a id="switchBandwidthLink" href="javascript:switchLowBandwidthMode()" class="icon-font icon-signal blogMenu" titleResource="blog.highBandwith" />
+          </xsl:if>
+
+        </xsl:if>
+
+        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
+        
+        <div class="blogCalenderCont">
+          <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
+            <xsl:attribute name="onClick">selectDate()</xsl:attribute>
+          </a>
+          <input type="text" id="blogDate" style="display:none" />
+        </div>
+
+        <xsl:if test="not(/blog/readonly)">
+          <a id="unseenCommentLink" href="javascript:void(0)" class="icon-font icon-comment blogMenu unseenComments" style="display:none" 
+              titleResource="blog.linkToUnseenComment">
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
+          </a>
+          <span id="unseenCommentCount" class="unseenCommentCount" titleResource="blog.linkToUnseenComment">
+            <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
+          </span>
+        </xsl:if>
+
+        <div class="rightAlignedButton blogButtonCont">
+          <xsl:if test="not(/blog/readonly)">
+          
+            <xsl:if test="/blog/blogEntries/blogDate">
+              <input id="unpublishButton" type="button" resource="blog.buttonUnpublish" onclick="javascript:unpublish()" style="display:none" />
+
+              <input id="publicURLButton" type="button" resource="blog.buttonPublicLink" onclick="showPublicURL()" style="display:none" />
+              <input id="publishBlogButton" type="button" resource="blog.buttonPublish" onclick="publishBlog()" style="display:none"/>
+            </xsl:if>
+
+            <input type="button" resource="blog.buttonCreate">
+              <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;cmd=post'</xsl:attribute>
+            </input> 
+
+            <input type="button" resource="blog.showSubscribers" onclick="showSubscribers()" />
+
+            <input type="button" id="mapAllLink" resource="blog.buttonMapAll" onclick="googleMapAll()" style="display:none" />
+
+            <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/staged">
+              <input type="button" resource="blog.publishNewEntries" onclick="publishNewEntries()" />
+            </xsl:if>
+
+            <input type="button" resource="blog.buttonlogout">
+              <xsl:attribute name="onclick">window.location.href='<xsl:value-of select="//contextRoot" />/servlet?command=logout'</xsl:attribute>
+            </input>
+          </xsl:if>
+          <xsl:if test="/blog/readonly">
+            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMapAll" style="display:none;" titleResource="blog.mapAll" />
+            <a href="javascript:showSubscribeForm()" class="icon-font icon-watch blogSubscribe" titleResource="blog.subscribe" />
+            <a href="javascript:showSearchForm()" class="icon-font icon-search blogSearch" titleResource="blog.search" />
+            <a class="icon-font icon-exit blogExit" titleResource="blog.buttonlogout">
+              <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=logout</xsl:attribute>
+            </a>
+          </xsl:if>
+        </div>   
+    
+        <div style="height:12px;clear:both;"></div>
+    
+        <xsl:if test="/blog/blogEntries/blogDate">
+    
+          <xsl:for-each select="/blog/blogEntries/blogDate">
+        
+            <div class="blogOverviewDayCont">
+        
+              <div class="blogOverviewDay">
+                <a titleResource="blog.overviewLinkToDay" class="dayDate">
+                  <xsl:if test="/blog/sortOrder='1'">
+                    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;beforeDay=<xsl:value-of select="dayAfter" /></xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="/blog/sortOrder='2'">
+                    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;afterDay=<xsl:value-of select="dayBefore" /></xsl:attribute>
+                  </xsl:if>
+                  <xsl:value-of select="formattedDate" />
+                </a>
+                
+                <xsl:if test="dayEntries/file/staged">
+                  <a class="publishDayLink icon-font icon-check-circle" titleResource="blog.publishDayLink">
+                    <xsl:attribute name="href">javascript:publishDay('<xsl:value-of select="plainDate" />')</xsl:attribute>    
+                  </a>
+                </xsl:if>
+                
+                <xsl:if test="not(/blog/readonly)">
+                  <a class="publishDayLink icon-font icon-edit" titleResource="label.dayTitle">
+                    <xsl:attribute name="href">javascript:dayTitle('<xsl:value-of select="plainDate" />')</xsl:attribute>
+                  </a>
+                </xsl:if>
+              </div>
+
+              <div class="blogOverviewDayTitle">
+                <xsl:attribute name="id">dayTitle-<xsl:value-of select="plainDate" /></xsl:attribute>
+                <xsl:if test="dayTitle">
+                  <xsl:value-of select="dayTitle" />
+                </xsl:if>
+                <xsl:if test="not(dayTitle)">
+                  <xsl:attribute name="style">display:none</xsl:attribute>
+                </xsl:if>
+              </div>
+
+              <div class="blogOverviewPicCont">
+          
+                <xsl:for-each select="dayEntries/file">
+
+                  <div class="blogOverviewPic"> 
+                    <a>
+                      <xsl:attribute name="href">javascript:picturePopupSelfSized('<xsl:value-of select="imgPathForScript" />')</xsl:attribute>
+                          
+                      <img border="0" titleResource="blog.showFullSize">
+                        <xsl:attribute name="id">pic-<xsl:value-of select="@id" /></xsl:attribute>
+                        <xsl:attribute name="imgPath"><xsl:value-of select="imgPath" /></xsl:attribute>
+                        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/space.gif</xsl:attribute>                
+                      </img>
+                    </a>
+                  </div>
+        
+                </xsl:for-each>
+          
+              </div>
+            </div>
+        
+          </xsl:for-each>
+
+        </xsl:if>
+        
+        <xsl:if test="not(/blog/blogEntries/blogDate)">
+          <xsl:if test="/blog/empty">
+            <div class="blogEmpty" resource="blog.empty"></div>
+          </xsl:if>
+          <xsl:if test="not(/blog/empty)">
+            <div class="blogEmpty" resource="blog.dateRangeEmpty"></div>
+          </xsl:if>
+        </xsl:if>
+    
+      </div>
+      
+      <div class="poweredBy">
+        powered by arcoiris blog
+        <a href="http://www.webfilesys.de/arcoiris" target="_blank"> (www.webfilesys.de/arcoiris)</a>
+      </div>
+    
+      <script type="text/javascript">
+        var thumbnails = new Array();
+        
+        <xsl:for-each select="/blog/blogEntries/blogDate">
+          <xsl:for-each select="dayEntries/file">
+            thumbnails.push("pic-<xsl:value-of select="@id" />");
+          </xsl:for-each>
+        </xsl:for-each>          
+      </script>    
+    
+    </body>
+    
+    <div id="calDiv"></div>
+    
+    <div id="publishCont" class="blogPublishCont"></div>
+    
+    <xsl:if test="not(/blog/readonly)">
+      <div id="blogDayTitleCont" class="blogDayTitleCont"></div>
+    </xsl:if>
+
+    <div id="picturePopup" style="position:absolute;top:50px;left:150px;width:400px;height:400px;background-color:#c0c0c0;padding:0px;visibility:hidden;border-style:ridge;border-color:white;border-width:6px;z-index:2;box-sizing:content-box;">
+      <img id="zoomPic" src="" border="0" style="width:100%;height:100%;" onclick="hidePopupPicture()"/>
+      <div id="popupClose" style="position:absolute;top:5px;left:5px;width:16px;height:14px;padding:0px;visibility:hidden;border-style:none;z-index:3">
+        <img border="0" width="16" height="14" onclick="hidePopupPicture()">
+          <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/images/winClose.gif</xsl:attribute>
+        </img>
+      </div>
+    </div>
+    
+    <xsl:if test="not(/blog/readonly)">
+      <div id="settingsCont" class="blogSettingsCont"></div>
+    </xsl:if>    
+
+    <xsl:if test="not(/blog/readonly)">
+      <div id="subscribeCont" class="blogSubscribeCont">
+      </div>
+    </xsl:if>
+
+    <xsl:if test="/blog/readonly">
+      <div id="subscribeCont" class="blogSubscribeCont">
+        <form id="subscribeForm" method="post" class="blogSubscribeForm">
+          <xsl:attribute name="action"><xsl:value-of select="//contextRoot" />/servlet</xsl:attribute>
+          
+          <input type="hidden" name="command" value="blog" />
+          <input type="hidden" name="cmd" value="subscribe" />
+          <ul class="subscribeForm">
+            <li>
+              <label resource="blog.subscribePrompt"></label>
+            </li>
+            <li>
+              <input type="text" id="subscriberEmail" name="subscriberEmail" onkeypress="return subscribeKeyPress(event);" />
+            </li>
+            <li>
+              <input type="button" resource="blog.subscribeButton" onclick="submitSubscription()" />
+              <input type="button" resource="button.cancel" onclick="hideSubscribeForm() "/>
+            </li>
+            <li>
+              <span class="blogSmall" resource="blog.unsubscribeHint"></span>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </xsl:if>    
+    
+    <div id="searchFormCont" class="blogSearchFormCont">
+      <form id="searchForm" method="post" class="blogSubscribeForm">
+          <xsl:attribute name="action"><xsl:value-of select="//contextRoot" />/servlet</xsl:attribute>
+
+          <input type="hidden" name="command" value="blog" />
+          <input type="hidden" name="cmd" value="search" />
+          <ul class="subscribeForm">
+            <li>
+              <label resource="blog.labelSearchArg"></label>
+            </li>
+            <li>
+              <input type="text" id="searchArg" name="searchArg" onkeypress="return searchKeyPress(event);" />
+            </li>
+            <li>
+              <input type="checkbox" id="searchComments" name="searchComments" />
+              <span resource="blog.searchIncludeComments"></span>
+            </li>
+            <li>
+              <input type="button" resource="blog.searchButton" onclick="submitSearch()" />
+              <input type="button" resource="button.cancel" onclick="hideSearchForm()" style="float: right" />
+            </li>
+          </ul>
+        </form>
+    </div>
+    
+    <script type="text/javascript">
+      setBundleResources();
+    </script>
+    
+  </html>
+
+</xsl:template>
+
+</xsl:stylesheet>

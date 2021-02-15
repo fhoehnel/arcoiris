@@ -23,7 +23,7 @@
 </link>
   
 <script type="text/javascript">
-  <xsl:attribute name="src">http://www.openlayers.org/api/OpenLayers.js</xsl:attribute>
+  <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers.js</xsl:attribute>
 </script>
 
 <title>arcoiris blog</title>

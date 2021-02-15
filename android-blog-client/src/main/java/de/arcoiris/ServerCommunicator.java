@@ -123,10 +123,12 @@ public class ServerCommunicator {
         return false;
     }
 
-    public boolean sendPicture(String serverUrl, String userid, String password, String destFileName, InputStream pictureIn) {
+    public boolean sendPicture(String serverUrl, String userid, String password, String destFileName, InputStream pictureIn, long fileSize) {
         String response = "";
         try {
             HttpURLConnection conn = prepareUrlConnection(serverUrl + "/blogpost/picture/" + destFileName, userid, password);
+
+            conn.setRequestProperty("Content-Length", Long.toString(fileSize));
 
             OutputStream os = null;
             BufferedOutputStream buffOut = null;
@@ -148,6 +150,7 @@ public class ServerCommunicator {
 
             } catch (Exception ioex) {
                 Log.e("arcoiris", "failed to post picture data to blog", ioex);
+                return false;
             } finally {
                 if (buffIn != null) {
                     try {

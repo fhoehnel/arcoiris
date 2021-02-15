@@ -183,7 +183,7 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             Date beforeDate = dateFormat.parse(fileNamePrefixFromDate);
-            beforeDate.setTime(beforeDate.getTime() + (24l * 60l * 60l * 1000l));
+            beforeDate.setTime(beforeDate.getTime() + (25l * 60l * 60l * 1000l));   // 25 hours because of change summer to winter time
             setParameter("beforeDay", dateFormat.format(beforeDate));
         } catch (Exception ex) {
             Logger.getLogger(getClass()).warn("invalid date format", ex);

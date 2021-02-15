@@ -193,6 +193,10 @@
 
         </xsl:if>
 
+        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
+        
+        <a id="overviewLink" href="javascript:allDayOverview()" class="icon-font icon-overview blogMenu blogOverview" titleResource="blog.linkToOverview" />
+
         <div class="blogCalenderCont">
           <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
             <xsl:attribute name="onClick">selectDate()</xsl:attribute>
@@ -209,7 +213,7 @@
             <xsl:attribute name="onClick">javascript:void(0)</xsl:attribute>
           </span>
         </xsl:if>
-        
+
         <div class="blogDateRange">
           <xsl:if test="/blog/dateRangeFrom">
             <span><xsl:value-of select="/blog/dateRangeFrom" /></span>
@@ -249,9 +253,12 @@
             </input>
           </xsl:if>
           <xsl:if test="/blog/readonly">
-            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-globe blogMapAll" style="display:none;" titleResource="blog.mapAll" />
+            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMapAll" style="display:none;" titleResource="blog.mapAll" />
             <a href="javascript:showSubscribeForm()" class="icon-font icon-watch blogSubscribe" titleResource="blog.subscribe" />
             <a href="javascript:showSearchForm()" class="icon-font icon-search blogSearch" titleResource="blog.search" />
+            <a class="icon-font icon-exit blogExit" titleResource="blog.buttonlogout">
+              <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/servlet?command=logout</xsl:attribute>
+            </a>
           </xsl:if>
         </div>   
     
@@ -272,14 +279,41 @@
           <div class="blogDate">
             <xsl:value-of select="formattedDate" />
             
-            <xsl:if test="dayEntries/file/staged">
-              <a class="publishDayLink icon-font icon-check" titleResource="blog.publishDayLink">
-                <xsl:attribute name="href">javascript:publishDay('<xsl:value-of select="plainDate" />')</xsl:attribute>    
+            <xsl:if test="not(position() = last())">
+              <a class="linkToNextDay icon-font icon-next" titleResource="blog.linkToNextDay">
+                <xsl:attribute name="onclick">gotoNextDay(this)</xsl:attribute>    
               </a>
             </xsl:if>
             
+            <xsl:if test="dayEntries/file/staged">
+              <a class="publishDayLink icon-font icon-check-circle" titleResource="blog.publishDayLink">
+                <xsl:attribute name="href">javascript:publishDay('<xsl:value-of select="plainDate" />')</xsl:attribute>    
+              </a>
+            </xsl:if>
+
+            <xsl:if test="not(position() = 1)">
+              <a class="linkToPrevDay icon-font icon-prev" titleResource="blog.linkToPrevDay">
+                <xsl:attribute name="onclick">gotoPrevDay(this)</xsl:attribute>    
+              </a>
+            </xsl:if>
+
+            <xsl:if test="not(/blog/readonly)">
+              <a class="publishDayLink icon-font icon-edit" titleResource="label.dayTitle">
+                <xsl:attribute name="href">javascript:dayTitle('<xsl:value-of select="plainDate" />')</xsl:attribute>
+              </a>
+            </xsl:if>
+                        
+            <div class="blogListDayTitle">
+              <xsl:attribute name="id">dayTitle-<xsl:value-of select="plainDate" /></xsl:attribute>
+              <xsl:if test="dayTitle">
+                <xsl:value-of select="dayTitle" />
+              </xsl:if>
+              <xsl:if test="not(dayTitle)">
+                <xsl:attribute name="style">display:none</xsl:attribute>
+              </xsl:if>
+            </div>
           </div>
-        
+          
           <xsl:for-each select="dayEntries/file">
           
             <div>
@@ -580,6 +614,10 @@
     <div id="publishCont" class="blogPublishCont"></div>
 
     <div id="commentCont" class="blogCommentCont"></div>
+
+    <xsl:if test="not(/blog/readonly)">
+      <div id="blogDayTitleCont" class="blogDayTitleCont"></div>
+    </xsl:if>
     
     <xsl:if test="not(/blog/readonly)">
       <div id="settingsCont" class="blogSettingsCont"></div>
@@ -679,6 +717,20 @@
   
       </div>
     
+    </xsl:if>
+    
+    <xsl:if test="/blog/showTopBottomLinks">
+      <div id="linkToBottomOfPage" class="gotoBottomOfPage">
+        <a class="icon-font icon-arrow-bottom" titleResource="blog.gotoBottomOfPage">
+            <xsl:attribute name="href">javascript:gotoBottomOfPage()</xsl:attribute>
+        </a>
+      </div>
+
+      <div id="linkToTopOfPage" class="gotoTopOfPage">
+        <a class="icon-font icon-arrow-top" titleResource="blog.gotoTopOfPage">
+            <xsl:attribute name="href">javascript:gotoTopOfPage()</xsl:attribute>
+        </a>
+      </div>
     </xsl:if>
     
     <script type="text/javascript">

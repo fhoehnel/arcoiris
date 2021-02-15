@@ -26,6 +26,7 @@ a.blogMenu::before,
 a.blogSubscribe, 
 a.blogMapAll, 
 a.blogSearch, 
+a.blogExit,
 a.blogEmojiSel::before,
 a.blogLinkIns::before,
 a.emailLink:before {
@@ -54,6 +55,29 @@ div.blogDate {
     color: ivory;
 }
 
+div.blogOverviewDayCont {
+	border: 2px solid #a08000;
+	background-color: #a08000;
+    box-shadow: none;
+}
+
+div.blogOverviewDay {
+    background-color: #a08000;
+}
+
+div.blogOverviewDay > a.dayDate {
+    color: ivory;
+}
+
+div.blogOverviewDayTitle {
+    background-color: #a08000;
+	color: #ffff80;
+}
+
+div.blogListDayTitle {
+	color: #ffff80;
+}
+
 div.blogTitlePic {
     box-shadow: none;
 }
@@ -63,6 +87,7 @@ body.blog input[type="button"],
 .blogPublishForm input[type="button"], 
 .blogGeoMapFrame input[type="button"], 
 .blogCommentForm input[type="button"], 
+.dayTitleForm input[type="button"],
 .blogSettingsForm input[type="button"], 
 input.blogUploadFileSelButton, 
 #subscribeCont input[type="button"], 
@@ -82,7 +107,8 @@ div.urlInput input[type="button"] {
 div.commentContHead, 
 div.blogSettingsHead,
 div.uploadContHead,
-div.promptHead {
+div.promptHead,
+div.dayTitleContHead {
     background-color: #c08000;
     color: #ffffff;
 }
@@ -95,6 +121,10 @@ div.blogPublishCont input[type="checkbox"],
 
 div.blogPublishCont {
     background-color: #002060;
+}
+
+div.blogPublishCont label {
+    color: ivory;
 }
 
 html.blog td.formParm1, 
@@ -149,7 +179,8 @@ div.searchResultCont {
     border: 2px ridge #ffffff;
 }
 
-table.blogCommentForm {
+table.blogCommentForm,
+table.dayTitleForm {
     background-color: #002060;
 }
 
@@ -231,7 +262,9 @@ div.statisticList table tr.statisticDateRange td {
     font-weight: bold;
 }
 
-a.publishDayLink {
+a.publishDayLink,
+a.linkToNextDay,
+a.linkToPrevDay {
 	color: #ffff80;
 }
 
@@ -242,3 +275,13 @@ a.blogMenu.unseenComments:before {
 span.unseenCommentCount {
 	color: #ffffff;
 }
+
+div.gotoTopOfPage a,
+div.gotoBottomOfPage a {
+    color: #ffff80;
+}
+
+div.blogDayTitleCont {
+    background-color: #002060;
+}
+

@@ -4,13 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -25,13 +24,13 @@ public class LanguageManager {
 
     private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
-    private Hashtable resourceTable;
+    private HashMap<String, Properties> resourceTable;
 
     private ArrayList<String> availableLanguages;
 
     private String defaultLanguage;
 
-    private Hashtable dateFormats;
+    private HashMap<String, SimpleDateFormat> dateFormats;
 
     private static LanguageManager languageMgr = null;
 
@@ -40,13 +39,13 @@ public class LanguageManager {
     private LanguageManager(String defaultLang) {
         languagePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + LANGUAGE_DIR;
 
-        resourceTable = new Hashtable(5);
+        resourceTable = new HashMap<String, Properties>(5);
 
         availableLanguages = new ArrayList<String>();
 
         defaultLanguage = defaultLang;
 
-        dateFormats = new Hashtable(5);
+        dateFormats = new HashMap<String, SimpleDateFormat>(5);
 
         readAvailableLanguages();
     }
@@ -106,7 +105,7 @@ public class LanguageManager {
             return (defaultValue);
         }
 
-        Properties langResources = (Properties) resourceTable.get(language);
+        Properties langResources = resourceTable.get(language);
 
         if (langResources == null) {
             String resourceFileName = languagePath + "/" + language + "." + "resources";
@@ -122,7 +121,7 @@ public class LanguageManager {
     }
 
     public Properties getLanguageResources(String language) {
-        Properties langResources = (Properties) resourceTable.get(language);
+        Properties langResources = resourceTable.get(language);
 
         if (langResources == null) {
             String resourceFileName = languagePath + "/" + language + "." + "resources";
@@ -136,13 +135,13 @@ public class LanguageManager {
     }
 
     protected synchronized boolean loadResources(String configFilename, Properties langResources, String language) {
-        FileInputStream configFile = null;
+        InputStreamReader configFile = null;
 
         Logger.getLogger(getClass()).info("Loading Resources from " + configFilename);
 
         try {
-            configFile = new FileInputStream(configFilename);
-
+            configFile = new InputStreamReader(new FileInputStream(configFilename), "UTF-8");
+            
             langResources.load(configFile);
 
             resourceTable.put(language, langResources);
@@ -180,12 +179,8 @@ public class LanguageManager {
                 return;
             }
         }
-
-        Enumeration<Object> defaultLangKeys = defaultLangResources.keys();
-
-        while (defaultLangKeys.hasMoreElements()) {
-            Object defaultLangKey = defaultLangKeys.nextElement();
-
+        
+        for (Object defaultLangKey :defaultLangResources.keySet()) {
             if (!langResources.containsKey(defaultLangKey)) {
                 langResources.put(defaultLangKey, defaultLangResources.get(defaultLangKey));
             }
@@ -201,7 +196,7 @@ public class LanguageManager {
             return (DEFAULT_DATE_FORMAT);
         }
 
-        SimpleDateFormat dateFormat = (SimpleDateFormat) dateFormats.get(language);
+        SimpleDateFormat dateFormat = dateFormats.get(language);
 
         if (dateFormat == null) {
             return (DEFAULT_DATE_FORMAT);

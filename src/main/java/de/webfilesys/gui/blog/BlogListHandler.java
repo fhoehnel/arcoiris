@@ -343,6 +343,11 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         XmlUtil.setChildText(blogDateElement, "plainDate", blogDate, false);
                         XmlUtil.setChildText(blogDateElement, "formattedDate", formatBlogDate(day), false);
 
+                        String dayTitle = metaInfMgr.getDayTitle(getCwd(), blogDate);
+                        if (!CommonUtils.isEmpty(dayTitle)) {
+                            XmlUtil.setChildText(blogDateElement, "dayTitle", dayTitle, true);
+                        }
+
                         ArrayList<File> entriesOfDay = blogDays.get(blogDate);
 
                         if ((entriesOfDay != null) && (entriesOfDay.size() > 0)) {
@@ -562,10 +567,22 @@ public class BlogListHandler extends XslRequestHandlerBase {
                 }
 
                 if (dateRangeFrom != null) {
-                    XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeFrom));
+                    if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                        XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeFrom));
+                    } else {
+                        XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeFrom));
+                    }
                 }
                 if (dateRangeUntil != null) {
-                    XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeUntil));
+                    if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                        XmlUtil.setChildText(blogElement, "dateRangeUntil", formatBlogDate(dateRangeUntil));
+                    } else {
+                        XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeUntil));
+                    }
+                }
+                
+                if (globalEntryCounter > 10) {
+                    XmlUtil.setChildText(blogElement, "showTopBottomLinks", "true", false);
                 }
             } else {
                 if (pageBeforeDay != null) {

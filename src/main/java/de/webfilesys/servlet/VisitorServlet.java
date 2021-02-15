@@ -96,10 +96,14 @@ public class VisitorServlet extends BlogWebServlet {
 
         String logEntry = null;
 
-        HttpSession session = null;
-
         // if (userMgr.checkReadonlyPassword(visitorUserId, password)) {
         if (userMgr.checkPassword(visitorUserId, password)) {
+            
+            HttpSession session = req.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            
             session = req.getSession(true);
 
             setSessionInfo(req, session);
@@ -111,8 +115,6 @@ public class VisitorServlet extends BlogWebServlet {
             session.setAttribute("readonly", "true");
 
             session.setAttribute("cwd", userMgr.getDocumentRoot(visitorUserId));
-
-            session.removeAttribute("startIdx");
 
             logEntry = clientIP + ": visitor login user " + visitorUserId;
 

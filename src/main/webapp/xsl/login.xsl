@@ -42,6 +42,10 @@
 </script>
 
 <script type="text/javascript">
+  <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/util.js</xsl:attribute>
+</script>
+
+<script type="text/javascript">
   <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>
 </script>
 <script type="text/javascript">
@@ -64,7 +68,7 @@
   </xsl:if>
 
   <xsl:if test="/login/activationSuccess">
-    alert(resourceBundle["activationSuccessful"]);
+    customAlert(resourceBundle["activationSuccessful"]);
   </xsl:if>
 
   document.cookie = 'CookieTest=1;';

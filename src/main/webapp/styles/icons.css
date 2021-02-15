@@ -109,6 +109,14 @@ a.icon-font {
 	content: '\f063';
 }
 
+.icon-arrow-top:before {
+	content: '\f102';
+}
+
+.icon-arrow-bottom:before {
+	content: '\f103';
+}
+
 .icon-rotate-left:before {
 	content: '\f0e2';
 }
@@ -226,8 +234,24 @@ a.icon-font {
 	content: '\f051';
 }
 
+.icon-prev:before {
+	content: '\f053';
+}
+
+.icon-next:before {
+	content: '\f054';
+}
+
 .icon-check:before {
 	content: '\f00c';
+}
+
+.icon-check-circle:before {
+	content: '\f058';
+}
+
+.icon-overview:before {
+	content: '\f02d';
 }
 
 a.icon-paging {

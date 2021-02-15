@@ -272,83 +272,46 @@ public class OfflineQueueManager {
     }
 
     public QueueSendResult sendQueuedEntries(HashMap<String, String> checkedLogins, boolean simulate) {
-
-        File queuePathFile = new File(queuePath);
-
-        File[] filesOfDir = queuePathFile.listFiles();
-
-        List<File> fileList = Arrays.asList(filesOfDir);
-
-        HashMap<String, File> pictureFileMap = new HashMap<String, File>();
-
         int sentCount = 0;
         int entriesToSend = 0;
-
-        ArrayList<File> metadataFileList = new ArrayList<File>();
-
-        for (File file : fileList) {
-            if (file.isFile()) {
-                if (file.getName().endsWith(METADATA_FILE_EXT)) {
-                    metadataFileList.add(file);
-                } else {
-                    String key = file.getName().substring(0, file.getName().lastIndexOf('.'));
-                    pictureFileMap.put(key, file);
-                }
-            }
-        }
-
-        Collections.sort(metadataFileList, new FileComparator(SORT_BY_FILENAME));
-
         int errorCount = 0;
 
-        for (File metadataFile : metadataFileList) {
-            String key = metadataFile.getName().substring(0, metadataFile.getName().lastIndexOf('.'));
-            File pictureFile = pictureFileMap.get(key);
+        for (OfflineQueueEntryInfo queuedFile : getQueuedFiles()) {
 
-            BufferedReader metadataIn = null;
+            OfflineQueueMetaDataElem metaData = queuedFile.getMetaData();
 
-            try {
-                metadataIn = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"));
+            String loginKey = metaData.getServerUrl() + "~" + metaData.getUserid();
 
-                Gson gson = new Gson();
+            String password = checkedLogins.get(loginKey);
 
-                OfflineQueueMetaDataElem metaData = gson.fromJson(metadataIn, OfflineQueueMetaDataElem.class);
+            if (password != null) {
+                if (simulate) {
+                    entriesToSend++;
+                } else {
+                    if (sendBlogEntry(queuedFile.getQueueImgFile(), metaData, password, sentCount)) {
 
-                String loginKey = metaData.getServerUrl() + "~" + metaData.getUserid();
+                        Log.d("arcoiris", "picture file and meta data for blog entry " + queuedFile.getQueueImgFile().getAbsolutePath() + " sent to server " + metaData.getServerUrl());
 
-                String password = checkedLogins.get(loginKey);
+                        sentCount++;
 
-                if (password != null) {
-                    if (simulate) {
-                        entriesToSend++;
-                    } else {
-                        if (sendBlogEntry(pictureFile, metaData, password, sentCount)) {
+                        String queueFileName = queuedFile.getQueueImgFile().getName().substring(0, queuedFile.getQueueImgFile().getName().lastIndexOf('.'));
 
-                            Log.d("arcoiris", "about to send metadata file " + metadataFile.getAbsolutePath() + " and picture file " + pictureFile.getAbsolutePath() + " to server " + metaData.getServerUrl());
-
-                            sentCount++;
-
-                            if (!pictureFile.delete()) {
-                                Log.e("arcoiris", "failed to delete queued picture file " + pictureFile.getAbsolutePath());
-                            }
-                            if (!metadataFile.delete()) {
-                                Log.e("arcoiris", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
-                            }
-                        } else {
-                            errorCount++;
-                            if (errorCount > MAX_ERROR_COUNT) {
-                                break;
-                            }
+                        if (!queuedFile.getQueueImgFile().delete()) {
+                            Log.e("arcoiris", "failed to delete queued picture file " + queuedFile.getQueueImgFile().getAbsolutePath());
                         }
-                    }
-                }
-            } catch (IOException ioex) {
-                Log.e("arcoiris", "failed to load  metadata from offline queue", ioex);
-            } finally {
-                if (metadataIn != null) {
-                    try {
-                        metadataIn.close();
-                    } catch (IOException ioex) {
+
+                        String metadataFileName = queueFileName + METADATA_FILE_EXT;
+
+                        File metadataFile = new File(queuePath, metadataFileName);
+
+                        if (!metadataFile.delete()) {
+                            Log.e("arcoiris", "failed to delete queued metadata file " + metadataFile.getAbsolutePath());
+                        }
+                    } else {
+                        errorCount++;
+                        if (errorCount > MAX_ERROR_COUNT) {
+                            break;
+                        }
                     }
                 }
             }
@@ -485,7 +448,10 @@ public class OfflineQueueManager {
             File pictureFile = pictureFileMap.get(key);
 
             if (pictureFile == null) {
-                Log.e("arcoiris", "zombie metadata file without image file: " + metadataFile.getName());
+                Log.e("arcoiris", "deleting zombie metadata file without image file: " + metadataFile.getName());
+                if (!metadataFile.delete()) {
+                    Log.e("arcoiris", "failed to delete zombie metadata file " + metadataFile.getAbsolutePath());
+                }
             } else {
                 BufferedReader metadataIn = null;
 
@@ -529,6 +495,7 @@ public class OfflineQueueManager {
         Date now = new Date();
 
         Date blogDate = new Date(metaData.getBlogDate().getTime());
+
         blogDate.setHours(now.getHours());
         blogDate.setMinutes(now.getMinutes());
         blogDate.setSeconds(now.getSeconds());
@@ -542,7 +509,7 @@ public class OfflineQueueManager {
 
             InputStream pictureIn = new FileInputStream(pictureFile);
 
-            if (serverCommunicator.sendPicture(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, pictureIn)) {
+            if (serverCommunicator.sendPicture(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, pictureIn, pictureFile.length())) {
 
                 if (serverCommunicator.sendDescription(metaData.getServerUrl(), metaData.getUserid(), password, destFileName, metaData.getBlogText(), metaData.getGeoLocation())) {
 

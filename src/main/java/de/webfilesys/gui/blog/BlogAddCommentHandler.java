@@ -60,17 +60,25 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
             return;
         }
 
-        String newComment = getParameter("newComment");
+        String newCommentText = getParameter("newComment");
 
         boolean commentCreated = false;
 
         int newCommentCount = 0;
 
-        if (!CommonUtils.isEmpty(newComment)) {
+        if (!CommonUtils.isEmpty(newCommentText)) {
 
-            newComment = CommonUtils.filterForbiddenChars(newComment);
+            newCommentText = CommonUtils.filterForbiddenChars(newCommentText);
 
-            MetaInfManager.getInstance().addComment(filePath, new Comment(commentAuthor, new Date(), newComment));
+            Comment newComment = new Comment(commentAuthor, new Date(), newCommentText);
+            
+            String notifyOnAnswerEmail = getParameter("notifyOnAnswerEmail");
+            
+            if (!CommonUtils.isEmpty(notifyOnAnswerEmail)) {
+                newComment.setNotifyOnAnswerEmail(notifyOnAnswerEmail);
+            }
+            
+            MetaInfManager.getInstance().addComment(filePath, newComment);
 
             newCommentCount = MetaInfManager.getInstance().countComments(filePath);
 
@@ -81,6 +89,8 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
                 MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
             }
 
+            InvitationManager.getInstance().queueCommentAnswerNotification(uid, filePath);
+            
             commentCreated = true;
         }
 
