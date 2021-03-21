@@ -29,6 +29,10 @@ public class GPXTrackHandler extends UserRequestHandler {
 	private static final int DISTANCE_SMOOTH_FACTOR = 12;
 
 	private static final Logger LOG = Logger.getLogger(GPXTrackHandler.class);
+	
+    private static final int SPEED_SMOOTH_FACTOR = 5;
+	  
+	private static final double MIN_SPEED_IN_MOTION = 0.1;
 
 	public GPXTrackHandler(
     		HttpServletRequest req, 
@@ -86,12 +90,16 @@ public class GPXTrackHandler extends UserRequestHandler {
 			double totalDist = 0.0f;
 			double distFromStart = Double.MIN_VALUE;
 			double speed = Double.MIN_VALUE;
-			
+
+	        double smoothedRecordedSpeed = Double.MIN_VALUE;
+
 			String elevation = null;
 
 			String tagName = null;
 
-			boolean documentEnd = false;
+		    String recordedSpeed = null;
+
+		    boolean documentEnd = false;
 
 			String ignoreUnknownTag = null;
 			boolean invalidTime = false;
@@ -118,7 +126,17 @@ public class GPXTrackHandler extends UserRequestHandler {
 			
 			boolean hasSpeed = false;
 			
-			while (!documentEnd) {
+		    boolean hasRecordedSpeed = false;
+		      
+		    boolean fatalError = false;
+		      
+		    double calculatedSpeedInMotionSum = 0;
+		    int calculatedSpeedInMotionValueCount = 0;
+
+		    double recordedSpeedInMotionSum = 0;
+		    int recordedSpeedInMotionValueCount = 0;
+
+	        while (!documentEnd && !fatalError) {
 				try {
 					int event = parser.next();
 
@@ -167,7 +185,8 @@ public class GPXTrackHandler extends UserRequestHandler {
 							if ((!tagName.equals("gpx")) && (!tagName.equals("trk")) && (!tagName.equals("trkseg"))
 									&& (!tagName.equals("trkpt")) && (!tagName.equals("wpt")) && (!tagName.equals("ele"))
 									&& (!tagName.equals("time")) && (!tagName.equals("metadata"))
-									&& (!tagName.equals("name")) && (!tagName.equals("desc"))) {
+									&& (!tagName.equals("name")) && (!tagName.equals("desc"))
+				                    && (!tagName.equals("speed"))) {
 								ignoreUnknownTag = tagName;
 								break;
 							}
@@ -187,6 +206,8 @@ public class GPXTrackHandler extends UserRequestHandler {
 									speed = Double.MIN_VALUE;
 									
 									elevation = null;
+
+									recordedSpeed = null;
 									
 									timestamp = 0;
 
@@ -292,6 +313,26 @@ public class GPXTrackHandler extends UserRequestHandler {
 								if (timestamp > 0) {
 									output.print(",\n\"time\": \"" + timestamp + "\"");
 								}
+				                if (recordedSpeed != null) {
+				                    try {
+				                        double recordedSpeedVal = Double.parseDouble(recordedSpeed);
+				                      
+				                        if (recordedSpeedVal > MIN_SPEED_IN_MOTION) {
+				                            recordedSpeedInMotionSum += recordedSpeedVal;
+				                            recordedSpeedInMotionValueCount++;
+				                        }
+				                      
+				                        if (smoothedRecordedSpeed == Double.MIN_VALUE) {
+				                            smoothedRecordedSpeed = recordedSpeedVal;
+				                        } else {
+				                            smoothedRecordedSpeed = (smoothedRecordedSpeed * SPEED_SMOOTH_FACTOR + recordedSpeedVal) / (SPEED_SMOOTH_FACTOR + 1);
+				                        }
+				                        output.print(",\n\"recordedSpeed\": \"" + smoothedRecordedSpeed + "\"");
+				                    } catch (NumberFormatException ex) {
+				                      LOG.warn("invalid speed value: " + recordedSpeed, ex);
+				                      output.print(",\n\"recordedSpeed\": \"" + recordedSpeed + "\"");
+				                    }
+				                }
 								output.println("}");
 							} else if (tagName.equals("trk")) {
 								output.println("\n]");
@@ -314,8 +355,14 @@ public class GPXTrackHandler extends UserRequestHandler {
 
 								if (hasSpeed) {
 									output.print(",\n\"hasSpeed\": true");
+					                output.print(",\n\"averageCalculatedSpeedInMotion\": " + (calculatedSpeedInMotionSum / calculatedSpeedInMotionValueCount));
 								}
 								
+				                if (hasRecordedSpeed) {
+				                    output.print(",\n\"hasRecordedSpeed\": true");
+				                    output.print(",\n\"averageRecordedSpeedInMotion\": " + (recordedSpeedInMotionSum / recordedSpeedInMotionValueCount));
+			                    }
+
 							    if (invalidTime) {
 									output.print(",\n\"invalidTime\": true");
 								}
@@ -392,6 +439,11 @@ public class GPXTrackHandler extends UserRequestHandler {
 
 													speed = bufferedDistance / (bufferedDuration / 1000f);
 												}
+												
+						                        if (speed > MIN_SPEED_IN_MOTION) {
+						                            calculatedSpeedInMotionSum += speed;
+						                            calculatedSpeedInMotionValueCount++;
+						                        }
 											}
 											
 											hasSpeed = true;
@@ -404,7 +456,12 @@ public class GPXTrackHandler extends UserRequestHandler {
 										prevTime = 0L;
 									}
 								}
-							}
+			                } else if (currentElementName.equals("speed")) {
+			                    if (elementText.length() > 0) {
+			                        recordedSpeed = elementText;
+			                        hasRecordedSpeed = true;
+			                    }
+			                }
 						}
 						
 						break;
@@ -413,7 +470,7 @@ public class GPXTrackHandler extends UserRequestHandler {
 					}
 				} catch (WstxParsingException epex) {
 					Logger.getLogger(getClass()).warn("GPX parsing error", epex);
-					documentEnd = true;
+					fatalError = true;
 				}
 			}
 
