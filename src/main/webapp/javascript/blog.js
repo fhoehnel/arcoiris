@@ -496,32 +496,20 @@ function deleteBlogEntry(fileName) {
         return;
     }
 
-    showHourGlass();
+    const parameters = { "cmd": "deleteEntry", "fileName": encodeURIComponent(fileName) };
     
-    var url = getContextRoot() + "/servlet?command=blog&cmd=deleteEntry&fileName=" + encodeURIComponent(fileName);
+	xmlPostRequest("blog", parameters, function(responseXml) {
     
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-			    var responseXml = req.responseXML;
+        let success = null;
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        if (successItem) {
+            success = successItem.firstChild.nodeValue;
+        }         
     
-                var success = null;
-                var successItem = responseXml.getElementsByTagName("success")[0];
-                if (successItem) {
-                    success = successItem.firstChild.nodeValue;
-                }         
-    
-                hideHourGlass();    
-    
-                if (success == "deleted") {
-                    window.location.href = getContextRoot() + "/servlet?command=blog";
-                } else {
-                    alert(resourceBundle["blog.deleteError"]);
-                }
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
-            }
+        if (success == "deleted") {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["blog.deleteError"]);
         }
     });
 }
@@ -536,38 +524,26 @@ function moveBlogEntryDown(fileName, posInPage) {
 
 function moveBlogEntry(fileName, direction, posInPage) {
 
-    showHourGlass();
+    const parameters = { "cmd": "moveEntry", "fileName": encodeURIComponent(fileName), "direction": direction };
     
-    var url = getContextRoot() + "/servlet?command=blog&cmd=moveEntry&fileName=" + encodeURIComponent(fileName) + "&direction=" + direction;
+	xmlPostRequest("blog", parameters, function(responseXml) {
     
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-			    var responseXml = req.responseXML;
+        let success = null;
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        if (successItem) {
+            success = successItem.firstChild.nodeValue;
+        }         
     
-                var success = null;
-                var successItem = responseXml.getElementsByTagName("success")[0];
-                if (successItem) {
-                    success = successItem.firstChild.nodeValue;
-                }         
-    
-                hideHourGlass();    
-    
-                if (success == "true") {
-                    if ((direction == "up") && (posInPage > 1)) {
-                        posInPage--;
-                    } else if (direction == "down") {
-                        posInPage++;
-                    }
-    
-                    window.location.href = getContextRoot() + "/servlet?command=blog&random=" + (new Date().getTime()) + "#entry-" + posInPage;
-                } else {
-                    alert(resourceBundle["blog.moveError"]);
-                }
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
+        if (success == "true") {
+            if ((direction == "up") && (posInPage > 1)) {
+                posInPage--;
+            } else if (direction == "down") {
+                posInPage++;
             }
+    
+            window.location.href = getContextRoot() + "/servlet?command=blog&random=" + (new Date().getTime()) + "#entry-" + posInPage;
+        } else {
+            alert(resourceBundle["blog.moveError"]);
         }
     });
 }
@@ -2194,25 +2170,19 @@ function queryUnseenComments() {
 }
 
 function showUnseenComment() {
-    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=getFirstUnseenComment";
+	
+    const parameters = { "method": "getFirstUnseenComment" };
     
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var responseXml = req.responseXML;
-                var resultItem = responseXml.getElementsByTagName("fileName")[0];
-                var fileName = resultItem.firstChild.nodeValue;  
+	xmlGetRequest("ajaxRPC", parameters, function(responseXml) {
+        let resultItem = responseXml.getElementsByTagName("fileName")[0];
+        const fileName = resultItem.firstChild.nodeValue;  
 
-                var resultItem = responseXml.getElementsByTagName("linkDate")[0];
-                var linkDate = resultItem.firstChild.nodeValue;  
+        resultItem = responseXml.getElementsByTagName("linkDate")[0];
+        const linkDate = resultItem.firstChild.nodeValue;  
                 
-            	var targetUrl = getContextRoot() + "/servlet?command=blog&beforeDay=" + linkDate + "&positionToFile=" + fileName;
+       	const targetUrl = getContextRoot() + "/servlet?command=blog&beforeDay=" + linkDate + "&positionToFile=" + fileName;
             	
-            	window.location.href = targetUrl;
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-            }
-        }
+       	window.location.href = targetUrl;
     });          
 }
 

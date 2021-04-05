@@ -16,7 +16,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.MetaInfManager;
@@ -60,10 +59,6 @@ public class XslOpenStreetMapHandler extends XslRequestHandlerBase {
         Element geoTagElement = doc.createElement("geoTag");
 
         doc.appendChild(geoTagElement);
-
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/openStreetMap.xsl\"");
-
-        doc.insertBefore(xslRef, geoTagElement);
 
         XmlUtil.setChildText(geoTagElement, "css", userMgr.getCSS(uid), false);
         XmlUtil.setChildText(geoTagElement, "skin", userMgr.getCSS(uid), false);

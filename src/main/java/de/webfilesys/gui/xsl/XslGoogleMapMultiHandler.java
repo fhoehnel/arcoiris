@@ -16,8 +16,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
-
 import de.webfilesys.GeoTag;
 import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
@@ -43,10 +41,6 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
         Element geoDataElement = doc.createElement("geoData");
 
         doc.appendChild(geoDataElement);
-
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/googleMapMulti.xsl\"");
-
-        doc.insertBefore(xslRef, geoDataElement);
 
         XmlUtil.setChildText(geoDataElement, "language", language, false);
         XmlUtil.setChildText(geoDataElement, "skin", userMgr.getCSS(uid), false);

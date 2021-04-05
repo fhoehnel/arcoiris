@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
@@ -24,10 +23,6 @@ public class BlogPostHandler extends XslRequestHandlerBase {
         Element blogElement = doc.createElement("blog");
 
         doc.appendChild(blogElement);
-
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/blog/blogPost.xsl\"");
-
-        doc.insertBefore(xslRef, blogElement);
 
         XmlUtil.setChildText(blogElement, "language", language, false);
         XmlUtil.setChildText(blogElement, "skin", userMgr.getCSS(uid), false);
@@ -65,7 +60,7 @@ public class BlogPostHandler extends XslRequestHandlerBase {
         
         XmlUtil.setChildText(blogElement, "uploadLimit", Long.toString(ArcoirisBlog.getInstance().getUploadLimit()));
         
-        processResponse("blog/blogPost.xsl", req, true);
+        processResponse("blog/blogPost.xsl", req);
     }
 
 }

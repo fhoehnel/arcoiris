@@ -84,6 +84,14 @@ a.icon-font {
 	content: '\f0ac';
 }
 
+.icon-mail:before {
+	content: '\f0e0';
+}
+
+.icon-hddrive:before {
+	content: '\f1c0';
+}
+
 .icon-folderOpen:before {
 	content: '\f115';
 }

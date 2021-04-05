@@ -10,8 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
-
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.MetaInfManager;
 import de.webfilesys.servlet.UploadServlet;
@@ -38,10 +36,6 @@ public class MultiGPXTrackHandler extends XslRequestHandlerBase {
 
         doc.appendChild(gpxTrackElem);
         
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/multiGPXTracks.xsl\"");
-
-        doc.insertBefore(xslRef, gpxTrackElem);
-
         Element gpxFileListElem = doc.createElement("gpxFiles");
         
         gpxTrackElem.appendChild(gpxFileListElem);

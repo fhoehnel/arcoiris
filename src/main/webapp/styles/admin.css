@@ -41,16 +41,24 @@ td.tableData {
     padding: 4px;
 }
 
-table.adminMenu td a {
-    font-family: 'Kite One';
-    font-size: 20px;
-    font-weight: bold;
-    color: #a05000;
-    text-decoration: none;
+div.adminMenuEntry {
+    margin: 6px 0;
 }
 
-table.adminMenu td a:hover {
-    text-decoration: underline;
+div.adminMenuEntry a {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 24px;
+    color: #6080c0;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.iconAdminMenu:before {
+    font-size: 32px;
+    color: #6080c0;
+    width: 50px;
+    display: inline-block;
+    margin-left: 10px;
 }
 
 div.userDiskQuota {

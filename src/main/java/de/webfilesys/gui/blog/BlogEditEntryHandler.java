@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.GeoTag;
@@ -54,10 +53,6 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         Element blogElement = doc.createElement("blog");
 
         doc.appendChild(blogElement);
-
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/blog/blogEditEntry.xsl\"");
-
-        doc.insertBefore(xslRef, blogElement);
 
         XmlUtil.setChildText(blogElement, "language", language, false);
         XmlUtil.setChildText(blogElement, "skin", userMgr.getCSS(uid), false);
@@ -166,7 +161,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(blogEntryElement, "posInPage", posInPage);
         }
 
-        processResponse("blog/blogEditEntry.xsl", req, true);
+        processResponse("blog/blogEditEntry.xsl", req);
     }
 
 }

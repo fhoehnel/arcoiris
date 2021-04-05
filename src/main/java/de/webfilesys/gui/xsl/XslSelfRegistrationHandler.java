@@ -4,16 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
-
 import de.webfilesys.LanguageManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.gui.CSSManager;
@@ -205,14 +201,9 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
 
         doc.appendChild(rootElement);
 
-        ProcessingInstruction xslRef = doc
-                        .createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/registrationConfirmation.xsl\"");
-
-        doc.insertBefore(xslRef, rootElement);
-
         XmlUtil.setChildText(rootElement, "language", language, false);
 
-        processResponse("registrationConfirmation.xsl", req, false);
+        processResponse("registrationConfirmation.xsl", req);
     }
 
     protected void selfRegistrationForm(HttpServletRequest req, HttpSession session) {
@@ -227,10 +218,6 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
         Element rootElement = doc.createElement("registration");
 
         doc.appendChild(rootElement);
-
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/registerUser.xsl\"");
-
-        doc.insertBefore(xslRef, rootElement);
 
         if (validationElement != null) {
             // validation errors occured
@@ -333,6 +320,6 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
 
         addMsgResource("label.selectLanguage", langMgr.getResource(primaryLanguage, "label.selectLanguage", "- select language -"));
 
-        processResponse("registerUser.xsl", req, true);
+        processResponse("registerUser.xsl", req);
     }
 }

@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
-
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.gui.CSSManager;
 import de.webfilesys.util.XmlUtil;
@@ -30,10 +28,6 @@ public class XslLogonHandler extends XslRequestHandlerBase {
 
         doc.appendChild(loginElement);
 
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/login.xsl\"");
-
-        doc.insertBefore(xslRef, loginElement);
-
         XmlUtil.setChildText(loginElement, "css", CSSManager.DEFAULT_LAYOUT, false);
         XmlUtil.setChildText(loginElement, "localHost", ArcoirisBlog.getInstance().getLocalHostName(), false);
         XmlUtil.setChildText(loginElement, "version", ArcoirisBlog.VERSION, false);
@@ -52,6 +46,6 @@ public class XslLogonHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(loginElement, "openRegistration", "true", false);
         }
 
-        processResponse("login.xsl", req, false);
+        processResponse("login.xsl", req);
     }
 }

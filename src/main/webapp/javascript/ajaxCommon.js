@@ -24,6 +24,56 @@ function xmlRequestPost(url, params, callBackFunction) {
     } 
 }
 
+function xmlGetRequest(command, parameters, successCallBack, failureCallBack) {
+	showHourGlass();
+    
+    let url = getContextRoot() + "/servlet?command=" + command;
+    for (const key in parameters) {
+        url = url + "&" + key + "=" + parameters[key];
+   	}
+	
+    xmlRequest(url, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+            	successCallBack(req.responseXML);
+                hideHourGlass();
+            } else {
+            	hideHourGlass();
+            	if (typeof failureCallback !== 'undefined') {
+            		failureCallback();
+            	} else {
+                    customAlert(resourceBundle["alert.communicationFailure"]);
+            	}
+            }
+        }
+    });
+}
+
+function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
+	showHourGlass();
+
+	let postData = "command=" + command;
+    for (const key in parameters) {
+    	postData = postData + "&" + key + "=" + parameters[key];
+   	}
+	
+	xmlRequestPost(getContextRoot() + "/servlet", postData, function(req) {
+        if (req.readyState == 4) {
+            if (req.status == 200) {
+            	successCallBack(req.responseXML);
+                hideHourGlass();
+            } else {
+            	hideHourGlass();
+            	if (typeof failureCallback !== 'undefined') {
+            		failureCallback();
+            	} else {
+                    customAlert(resourceBundle["alert.communicationFailure"]);
+            	}
+            }
+        }
+    });
+}
+
 function htmlFragmentByXslt(xmlUrl, xslUrl, fragmentCont, callback) {
     if (window.ActiveXObject !== undefined) {
         // MSIE  

@@ -25,48 +25,42 @@ public class AdminMenuRequestHandler extends AdminRequestHandler {
 
         output.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + req.getContextPath() + "/styles/admin.css\">");
 
+        output.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + req.getContextPath() + "/styles/icons.css\">");
+
         output.println("</head>");
         output.println("<body>");
 
         headLine("arcoiris Blog Administration");
 
         output.println("<br>");
-
-        output.println("<table class=\"adminMenu\">");
-
-        output.println("<tr>");
-        output.println("<td>");
+        
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-user iconAdminMenu\"></span>");
         output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=userList&initial=true\">User Management</a>");
-        output.println("</td>");
-        output.println("</tr>");
+        output.println("</div>");
+        
 
-        output.println("<tr>");
-        output.println("<td>");
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-watch iconAdminMenu\"></span>");
         output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=sessionList\">Active Sessions</a>");
-        output.println("</td>");
-        output.println("</tr>");
+        output.println("</div>");
 
         if (ArcoirisBlog.getInstance().getMailHost() != null) {
-            output.println("<tr>");
-            output.println("<td>");
+            output.println("<div class=\"adminMenuEntry\">");
+            output.println("<span class=\"icon-font icon-mail iconAdminMenu\"></span>");
             output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=broadcast\">Broadcast e-mail</a>");
-            output.println("</td>");
-            output.println("</tr>");
+            output.println("</div>");
         }
-
-        output.println("<tr>");
-        output.println("<td>");
+        
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-hddrive iconAdminMenu\"></span>");
         output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=viewLog\">View Event Log</a>");
-        output.println("</td>");
-        output.println("</tr>");
-
-        output.println("<tr>");
-        output.println("<td>");
+        output.println("</div>");
+        
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-exit iconAdminMenu\"></span>");
         output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=loginHistory\">Login/Logout Events</a>");
-        output.println("</td>");
-        output.println("</tr>");
-
-        output.println("</table><br>");
+        output.println("</div>");
 
         output.println("<br/>");
 

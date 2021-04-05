@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
 
 import de.webfilesys.InvitationManager;
 import de.webfilesys.MetaInfManager;
@@ -45,10 +44,6 @@ public class BlogUnsubscribeHandler extends XslRequestHandlerBase {
 
         doc.appendChild(blogElement);
 
-        ProcessingInstruction xslRef = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"" + req.getContextPath() + "/xsl/blog/unsubscribe.xsl\"");
-
-        doc.insertBefore(xslRef, blogElement);
-
         XmlUtil.setChildText(blogElement, "css", userMgr.getCSS(virtualUser), false);
 
         XmlUtil.setChildText(blogElement, "language", userMgr.getLanguage(virtualUser), false);
@@ -63,6 +58,6 @@ public class BlogUnsubscribeHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(blogElement, "success", "true");
         }
 
-        processResponse("blog/unsubscribe.xsl", req, true);
+        processResponse("blog/unsubscribe.xsl", req);
     }
 }
