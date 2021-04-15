@@ -466,7 +466,7 @@
                 
               </xsl:if>
               
-              <xsl:if test="not(staged)">
+              <xsl:if test="not(/blog/readonly) and not(staged)">
                 &#160;
                 <a style="display:none">
                   <xsl:attribute name="class">icon-font icon-share icon-blog-share</xsl:attribute>

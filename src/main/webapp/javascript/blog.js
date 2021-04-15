@@ -1029,33 +1029,24 @@ function copyPicUrlToClip() {
 }
 
 function unpublish() {
-    if (!confirm(resourceBundle["blog.confirmUnpublish"])) {
-        return;
-    }
+    customConfirm(resourceBundle["blog.confirmUnpublish"], 
+                  resourceBundle["button.cancel"], 
+                  resourceBundle["button.ok"], 
+                  () => {
+        const parameters = { "cmd": "unpublish" };
     
-    var url = getContextRoot() + "/servlet?command=blog&cmd=unpublish";
-
-    xmlRequest(url, handleUnpublishResult);
-}
-
-function handleUnpublishResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+	    xmlPostRequest("blog", parameters, function(responseXml) {
+    
+            const resultElem = responseXml.getElementsByTagName("result")[0];            
+            const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
 
             if (success == 'true') {
-                document.getElementById("unpublishButton").style.display = "none";
-                document.getElementById("publicURLButton").style.display = "none";
-                document.getElementById("publishBlogButton").style.display = "inline";
-                publicUrl = null;
-                
                 window.location.href = getContextRoot() + "/servlet?command=blog&cmd=list";
             } else {
-                alert("failed to unpublish blog");
+                customAlert("failed to unpublish blog");
             }
-        }
-    }
+        });
+    });
 }
 
 function createDiv(parentNode, id, text, cssClass) {
@@ -1183,40 +1174,28 @@ function shareBlogEntry(entryFileName) {
 
 function shareSinglePic(fileName) {  
     
-    showHourGlass();
+    const parameters = { "cmd": "shareSinglePic", "fileName": encodeURIComponent(fileName) };
     
-    var url = getContextRoot() + "/servlet?command=blog&cmd=shareSinglePic&fileName=" + encodeURIComponent(fileName);
+    xmlPostRequest("blog", parameters, function(responseXml) {
     
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-			    var responseXml = req.responseXML;
+        let success = null;
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        if (successItem) {
+            success = successItem.firstChild.nodeValue;
+        }         
     
-                var success = null;
-                var successItem = responseXml.getElementsByTagName("success")[0];
-                if (successItem) {
-                    success = successItem.firstChild.nodeValue;
-                }         
-    
-                if ((success != null) && (success == "true")) {
-                    var publicUrlItem = responseXml.getElementsByTagName("publicUrl")[0];
-                    if (publicUrlItem) {
-                    	const publicUrl = publicUrlItem.firstChild.nodeValue;
-                        document.getElementById("sharedPicUrl").value = publicUrl;
-                        document.getElementById("sharePicCont").style.display = "block";
+        if ((success != null) && (success == "true")) {
+            const publicUrlItem = responseXml.getElementsByTagName("publicUrl")[0];
+            if (publicUrlItem) {
+              	const publicUrl = publicUrlItem.firstChild.nodeValue;
+                document.getElementById("sharedPicUrl").value = publicUrl;
+                document.getElementById("sharePicCont").style.display = "block";
                         
-                        const mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailPicSubject"] + "&body=" + encodeURIComponent(publicUrl);
-                        document.getElementById("picEmailLink").setAttribute("href", mailtoUrl);
-                    }         
-                } else {
-                    alert("failed to publish picture");
-                }
-
-                hideHourGlass();    
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
-            }
+                const mailtoUrl = "mailto:nobody@nowhere.com?subject=" + resourceBundle["blog.shareEmailPicSubject"] + "&body=" + encodeURIComponent(publicUrl);
+                document.getElementById("picEmailLink").setAttribute("href", mailtoUrl);
+            }         
+        } else {
+            customAlert("failed to publish picture");
         }
     });
 }
