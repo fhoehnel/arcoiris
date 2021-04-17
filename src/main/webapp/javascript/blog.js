@@ -492,26 +492,28 @@ function jsComments(path) {
 }
 
 function deleteBlogEntry(fileName) {
-    if (!confirm(resourceBundle["blog.confirmDelete"])) {
-        return;
-    }
 
-    const parameters = { "cmd": "deleteEntry", "fileName": encodeURIComponent(fileName) };
+    customConfirm(resourceBundle["blog.confirmDelete"], 
+                  resourceBundle["button.cancel"], 
+                  resourceBundle["button.ok"], 
+                  () => {
+        const parameters = { "cmd": "deleteEntry", "fileName": encodeURIComponent(fileName) };
     
-	xmlPostRequest("blog", parameters, function(responseXml) {
+	    xmlPostRequest("blog", parameters, function(responseXml) {
     
-        let success = null;
-        const successItem = responseXml.getElementsByTagName("success")[0];
-        if (successItem) {
-            success = successItem.firstChild.nodeValue;
-        }         
+            let success = null;
+            const successItem = responseXml.getElementsByTagName("success")[0];
+            if (successItem) {
+                success = successItem.firstChild.nodeValue;
+            }         
     
-        if (success == "deleted") {
-            window.location.href = getContextRoot() + "/servlet?command=blog";
-        } else {
-            alert(resourceBundle["blog.deleteError"]);
-        }
-    });
+            if (success == "deleted") {
+                window.location.href = getContextRoot() + "/servlet?command=blog";
+            } else {
+                alert(resourceBundle["blog.deleteError"]);
+            }
+        });
+	});
 }
 
 function moveBlogEntryUp(fileName, posInPage) {
@@ -1288,46 +1290,36 @@ function limitCommentText() {
 }
   
 function confirmDelComments(fileName) {  
-    if (!confirm(resourceBundle["confirm.delcomments"])) { 
-        return;
-    }
-    
-    showHourGlass();
-    
-    var url = getContextRoot() + "/servlet?command=blog&cmd=delComments&fileName=" + encodeURIComponent(fileName);
-    
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-			    var responseXml = req.responseXML;
-    
-                var success = null;
-                var successItem = responseXml.getElementsByTagName("success")[0];
-                if (successItem) {
-                    success = successItem.firstChild.nodeValue;
-                }         
-    
-                if ((success != null) && (success == "true")) {
-                    var posInPage = document.getElementById("posInPage").value;
-                    document.getElementById("comment-" + posInPage).innerHTML = "0";
-                
-                    var commentNewLabel = document.getElementById("newComment-" + posInPage);
-                    if (commentNewLabel) {
-                        commentNewLabel.style.display = 'none';
-                    }
-    
-                    var commentCont = document.getElementById("commentCont");
-                    commentCont.style.visibility = "hidden";
-                } else {
-                    alert("failed to delete comments");
-                }
 
-                hideHourGlass();    
+    customConfirm(resourceBundle["confirm.delcomments"], 
+                  resourceBundle["button.cancel"], 
+                  resourceBundle["button.ok"], 
+                  () => {
+        const parameters = { "cmd": "delComments", "fileName": encodeURIComponent(fileName) };
+    
+	    xmlPostRequest("blog", parameters, function(responseXml) {
+    
+            let success = null;
+            const successItem = responseXml.getElementsByTagName("success")[0];
+            if (successItem) {
+                success = successItem.firstChild.nodeValue;
+            }         
+    
+            if ((success != null) && (success == "true")) {
+                const posInPage = document.getElementById("posInPage").value;
+                document.getElementById("comment-" + posInPage).innerHTML = "0";
+                
+                const commentNewLabel = document.getElementById("newComment-" + posInPage);
+                if (commentNewLabel) {
+                    commentNewLabel.style.display = 'none';
+                }
+    
+                const commentCont = document.getElementById("commentCont");
+                commentCont.style.visibility = "hidden";
             } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
+                alert("failed to delete comments");
             }
-        }
+        });
     });
 }
 
@@ -1348,40 +1340,30 @@ function dayTitle(day) {
 function submitDayTitle() {
 	const dayTitleCont = document.getElementById("blogDayTitleCont");
 	dayTitleCont.style.visibility = "hidden";
-
-    xmlRequestPost(getContextRoot() + "/servlet", getFormData(document.getElementById("dayTitleForm")), showPostDayTitleResult);
-}
-
-function showPostDayTitleResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            const resultElem = req.responseXML.getElementsByTagName("result")[0];
-            const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-            if (success == 'true') {
-                const day = resultElem.getElementsByTagName("day")[0].firstChild.nodeValue;
-                const titleTextElem = resultElem.getElementsByTagName("titleText")[0].firstChild;
-                let titleText = "";
-                if (titleTextElem) {
-                	titleText = titleTextElem.nodeValue;
-                }
-                if (day) {
-                	const dayTitle = document.getElementById("dayTitle-" + day);
-                	if (dayTitle) {
-              		    dayTitle.innerHTML = titleText;
-              		    if (titleText.length > 0) {
-                  		    dayTitle.style.display = "block";
-              		    } else {
-                  		    dayTitle.style.display = "none";
-              		    }
-                	}
-                }
+    
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("dayTitleForm")), function(responseXml) {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success == 'true') {
+            const day = resultElem.getElementsByTagName("day")[0].firstChild.nodeValue;
+            const titleTextElem = resultElem.getElementsByTagName("titleText")[0].firstChild;
+            let titleText = "";
+            if (titleTextElem) {
+             	titleText = titleTextElem.nodeValue;
             }
-            const dayTitleCont = document.getElementById("blogDayTitleCont");
-            dayTitleCont.style.visibility = "hidden";
-        } else {
-            customAlert("failed to save title text");
+            if (day) {
+              	const dayTitle = document.getElementById("dayTitle-" + day);
+               	if (dayTitle) {
+          		    dayTitle.innerHTML = titleText;
+          		    if (titleText.length > 0) {
+              		    dayTitle.style.display = "block";
+          		    } else {
+              		    dayTitle.style.display = "none";
+          		    }
+             	}
+            }
         }
-    }
+    });
 }
 
 function closeDayTitle() {
@@ -1440,25 +1422,17 @@ function submitSubscription() {
         return;
     }
     
-    var formData = getFormData(document.getElementById("subscribeForm"));
-	
-	xmlRequestPost(getContextRoot() + "/servlet", formData, handleSubscribeResult)	    
-}
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("subscribeForm")), function(responseXml) {
+        const resultElem = responseXml.getElementsByTagName("result")[0];            
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
 
-function handleSubscribeResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-            if (success == 'true') {
-                toast(resourceBundle["blog.subscribeSuccess"], 3000);
-            } else {
-                alert(resourceBundle["blog.subscribeError"]);
-            }
-            hideSubscribeForm();
+        if (success == 'true') {
+            toast(resourceBundle["blog.subscribeSuccess"], 3000);
+        } else {
+            alert(resourceBundle["blog.subscribeError"]);
         }
-    }
+        hideSubscribeForm();
+    });
 }
 
 function subscribeKeyPress(e) {

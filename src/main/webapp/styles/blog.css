@@ -579,6 +579,7 @@ div.dayTitleContHead {
 textarea.commentText {
     width: 100%;
     height: 75px;
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
 }
 
 div.blogDayTitleCont {

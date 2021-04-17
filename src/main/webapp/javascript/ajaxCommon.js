@@ -52,9 +52,12 @@ function xmlGetRequest(command, parameters, successCallBack, failureCallBack) {
 function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
 	showHourGlass();
 
-	let postData = "command=" + command;
+    let postData = "";
+    if (command) {
+	    postData = "command=" + command;
+    }
     for (const key in parameters) {
-    	postData = postData + "&" + key + "=" + parameters[key];
+    	postData = postData + (postData.length > 0 ? "&" : "") + key + "=" + parameters[key];
    	}
 	
 	xmlRequestPost(getContextRoot() + "/servlet", postData, function(req) {
@@ -234,6 +237,36 @@ function getFormData(formObj)
     }
     
     return(buff);
+}
+
+function getFormDataAsProps(formObj) {
+    const formParams = {};
+	
+    var elemNum = formObj.elements.length;
+	
+    for (let i = 0; i < elemNum; i++) {
+	    let formElem = formObj.elements[i];
+
+	    switch (formElem.type) {
+	        case 'checkbox' :
+	            if (formElem.checked) {
+                    formParams[formElem.name] = encodeURIComponent(formElem.value);
+	            }
+	      
+	            break;
+	      
+	        case 'text':
+	        case 'select-one':
+	        case 'hidden':
+	        case 'password':
+	        case 'email':
+	        case 'textarea':
+                formParams[formElem.name] = encodeURIComponent(formElem.value);
+	            break;
+	    }
+    }
+    
+    return formParams;
 }
 
 function getPageYScrolled()
