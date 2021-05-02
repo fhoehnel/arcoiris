@@ -17,6 +17,7 @@ import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.CameraExifData;
+import de.webfilesys.graphics.ImageTransform;
 import de.webfilesys.graphics.ImageTransformUtil;
 import de.webfilesys.gui.xsl.XslLogonHandler;
 import de.webfilesys.util.UTF8URLDecoder;
@@ -158,6 +159,26 @@ public class UploadServlet extends BlogWebServlet {
                 geoTag = new GeoTag();
                 geoTag.setLatitude(gpsLatitude);
                 geoTag.setLongitude(gpsLongitude);
+            }
+            
+            if (exifData.getOrientation() > 0) {
+                String degrees = null;
+                if (exifData.getOrientation() == 8) {
+                    degrees = "270";
+                } else if (exifData.getOrientation() == 6) {
+                    degrees = "90";
+                } else if (exifData.getOrientation() == 3) {
+                    degrees = "180";
+                }
+                
+                if (degrees != null) {
+                    ImageTransform imgTrans = new ImageTransform(origImgPath, "rotate", degrees);
+                    String rotatedImgName = imgTrans.execute(false);
+                    File rotatedImgFile = new File(currentPath, rotatedImgName);
+                    if (!rotatedImgFile.renameTo(new File(origImgPath))) {
+                        Logger.getLogger(getClass()).error("failed to rename rotated image file " + rotatedImgFile);
+                    }
+                }
             }
         }
 
