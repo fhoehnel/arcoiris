@@ -114,6 +114,7 @@ error.createUser=failed to create new user
 error.email=a valid e-mail address is required
 error.invalidpassword=the current password is invalid
 error.missingLanguage=language is required
+error.publishNewEntries=failed to publish new entries
 
 # disk quota labels
 label.accountSize=Account Size Usage

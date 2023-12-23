@@ -115,6 +115,7 @@ error.createUser=Error al crear el nuevo usuario.
 error.email=se requiere una dirección e-mail válida
 error.invalidpassword=la contraseña no es válida
 error.missingLanguage=se requiere la lengua
+error.publishNewEntries=Error al publicar nuevas entradas
 
 # disk quota labels
 label.accountSize=Uso de la cuota de disco

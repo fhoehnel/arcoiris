@@ -2235,15 +2235,37 @@ function publishNewEntries() {
         return;
     }
     
-    window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishNewEntries";
+    xmlPostRequest("blog", {"cmd": "publishNewEntries"}, function(responseXml) {
+        let success = null;
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        if (successItem) {
+            success = successItem.firstChild.nodeValue;
+        }         
+        if (success === "published") {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["error.publishNewEntries"]);
+        }
+    });
 }
 
 function publishDay(dayToPublish) {
     if (!confirm(resourceBundle["blog.confirmPublishDay"])) {
         return;
     }
-    
-    window.location.href = getContextRoot() + "/servlet?command=blog&cmd=publishDay&day=" + dayToPublish;
+
+    xmlPostRequest("blog", {"cmd": "publishDay", "day": dayToPublish}, function(responseXml) {
+        let success = null;
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        if (successItem) {
+            success = successItem.firstChild.nodeValue;
+        }         
+        if (success === "published") {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["error.publishNewEntries"]);
+        }
+    });
 }
 
 function switchLowBandwidthMode() {

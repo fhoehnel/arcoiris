@@ -8,23 +8,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
 import de.webfilesys.MetaInfManager;
-import de.webfilesys.gui.user.UserRequestHandler;
+import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
+import de.webfilesys.util.XmlUtil;
 
 /**
  * @author Frank Hoehnel
  */
-public class BlogPublishDayHandler extends UserRequestHandler {
-    protected HttpServletRequest req = null;
-
-    protected HttpServletResponse resp = null;
+public class BlogPublishDayHandler extends XmlRequestHandlerBase {
 
     public BlogPublishDayHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
-        this.req = req;
-        this.resp = resp;
     }
 
     protected void process() {
@@ -42,9 +39,9 @@ public class BlogPublishDayHandler extends UserRequestHandler {
         
         MetaInfManager metaInfMgr = MetaInfManager.getInstance();
 
-        if (metaInfMgr.isStagedPublication(currentPath)) {
+        boolean anyNewPublished = false;
 
-            boolean anyNewPublished = false;
+        if (metaInfMgr.isStagedPublication(currentPath)) {
 
             File blogDir = new File(currentPath);
 
@@ -72,7 +69,13 @@ public class BlogPublishDayHandler extends UserRequestHandler {
             }
         }
 
-        (new BlogListHandler(req, resp, session, output, uid)).handleRequest();
+        Element resultElement = doc.createElement("result");
+        if (anyNewPublished) {
+            XmlUtil.setChildText(resultElement, "success", "published");
+        }
+        doc.appendChild(resultElement);
+
+        processResponse();
     }
 
 }

@@ -114,6 +114,7 @@ error.createUser=Fehler beim Anlegen des neuen Nutzers
 error.email=eine gültige e-mail Adresse ist erforderlich
 error.invalidpassword=Das alte Passwort ist falsch
 error.missingLanguage=Sprache ist ein Pflichtfeld
+error.publishNewEntries=Das Freigeben der neuen Einträge ist fehlgeschlagen.
 
 # disk quota labels
 label.accountSize=Speicherplatznutzung
