@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.mail.Session;
+import jakarta.mail.Session;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
