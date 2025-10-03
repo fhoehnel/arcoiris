@@ -101,6 +101,12 @@ div.blogCont {
     min-width: 400px;
 }
 
+div.sideCont {
+    position: fixed;
+    top: 160px;
+    right: 10px;
+}
+
 div.blogTitlePic {
     width: 100%;
     max-width: 960px;
@@ -1069,6 +1075,49 @@ div.filePreviewCont {
 
 div.filePreviewCont img {
 	display: none;
+}
+
+div.sideMapCont {
+    margin-top: 16px;
+}
+
+div.sideMap {
+    border: 2px ridge #808080;
+    width: 260px;
+    height: 280px
+}
+
+div.sideMapFullScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+div.fullScreenToggle {
+    position: absolute;
+    top: 300px;
+    right: 8px;
+    color: black;
+}
+
+div.fullScreenOffToggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: black;
+}
+
+i.fullScreenIcon {
+    position: relative;
+    font-size: 1.5rem;
+    z-index: 3001;
+}
+
+i.fullScreenIcon:before {
+    position: relative;
+    z-index: 3002;
+    font-style: normal;
+    font-size: 1.5rem;
 }
 
 @media (max-width: 500px) {

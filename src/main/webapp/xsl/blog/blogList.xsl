@@ -44,7 +44,13 @@
       <link rel="stylesheet" type="text/css">
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/calendarPopup.css</xsl:attribute>
       </link>
-      
+
+      <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/geoTag">
+        <script type="text/javascript">
+          <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers-2.13.1.js</xsl:attribute>
+        </script>
+      </xsl:if>
+
       <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/browserCheck.js</xsl:attribute>
       </script>
@@ -82,6 +88,9 @@
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/blog.js</xsl:attribute>
       </script>
       <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/sideCont.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/jquery/jquery.min.js</xsl:attribute>
       </script>
       <script type="text/javascript">
@@ -92,7 +101,11 @@
       </script>
       
       <script type="text/javascript">
+        var language = "<xsl:value-of select="/blog/language" />";
+
         var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
+
+        var googleMapsAPIKey = '<xsl:value-of select="/blog/googleMapsAPIKey" />';
         
         var lowBandwidthMode = false;
         <xsl:if test="/blog/lowBandwidthMode">
@@ -103,8 +116,20 @@
   
         var cal1x;
 
+        var geoCoordinates = [];
+
+        <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/geoTag">
+            <xsl:for-each select="/blog/blogEntries/blogDate">
+                <xsl:for-each select="dayEntries/file">
+                    <xsl:if test="geoTag">
+                        geoCoordinates.push([<xsl:value-of select="geoTag/latitude"/>, <xsl:value-of select="geoTag/longitude"/>, '<xsl:value-of select="../../formattedDate"/>']);
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:if>
+
         function prepareCalenderPopup() {
-            cal1x = new CalendarPopup("calDiv");
+            cal1x = new CalendarPopup("calDiv", true);
             cal1x.setReturnFunction("gotoSelectedDate");
             cal1x.showYearNavigation();
             <xsl:if test="/blog/language = 'German'">
@@ -144,10 +169,10 @@
 
     <body class="blog">
       <xsl:if test="not(/blog/readonly)">
-        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryPublicLink(true);attachScrollHandler();</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryPublicLink(true);attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       
       <div class="blogCont">
@@ -199,7 +224,7 @@
 
         <div class="blogCalenderCont">
           <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
-            <xsl:attribute name="onClick">selectDate()</xsl:attribute>
+            <xsl:attribute name="onClick">selectDate(cal1x, "blogDate", "anchorDate", true)</xsl:attribute>
           </a>
           <input type="text" id="blogDate" style="display:none" />
         </div>
@@ -585,7 +610,13 @@
         powered by arcoiris blog
         <a href="http://www.webfilesys.de/arcoiris" target="_blank"> (www.webfilesys.de/arcoiris)</a>
       </div>
-    
+
+      <div id="sideCont" class="sideCont">
+          <a href="javascript:void(0)" name="anchorSideDate" id="anchorSideDate" class="display:none"></a>
+
+          <input type="text" id="sideContDate" style="display:none" />
+      </div>
+
       <script type="text/javascript">
         var thumbnails = new Array();
         
@@ -600,7 +631,7 @@
     
     </body>
     
-    <div id="calDiv"></div>
+    <div id="calDiv" class="calendarCont"></div>
     
     <div id="picturePopup" style="position:absolute;top:50px;left:150px;width:400px;height:400px;background-color:#c0c0c0;padding:0px;visibility:hidden;border-style:ridge;border-color:white;border-width:6px;z-index:2;box-sizing:content-box;">
       <img id="zoomPic" src="" border="0" style="width:100%;height:100%;" onclick="hidePopupPicture()"/>

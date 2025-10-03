@@ -49,7 +49,7 @@ public class BlogShareSinglePicHandler extends XmlRequestHandlerBase {
         
         String expiration = getParameter("expirationDays");
 
-        int expDays = InvitationManager.EXPIRATION;
+        int expDays = InvitationManager.DEFAULT_EXPIRATION_DAYS;
 
         if ((expiration != null) && expiration.trim().length() > 0) {
             try {

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Base64;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -400,7 +401,7 @@ public class BlogAppServlet extends BlogWebServlet {
     }
 
     private String authenticateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
-        sun.misc.BASE64Decoder base64Decoder = new sun.misc.BASE64Decoder();
+        Base64.Decoder base64Decoder = Base64.getDecoder();
 
         String userid = null;
 
@@ -412,7 +413,7 @@ public class BlogAppServlet extends BlogWebServlet {
             String paramParts[] = basicHttpAuthParm.split(" ");
             if (paramParts.length > 1) {
                 String encodedAuthToken = paramParts[1];
-                String decodedAuthToken = new String(base64Decoder.decodeBuffer(encodedAuthToken));
+                String decodedAuthToken = new String(base64Decoder.decode(encodedAuthToken));
                 String useridPassword[] = decodedAuthToken.split(":");
                 if (useridPassword.length == 2) {
                     userid = useridPassword[0];

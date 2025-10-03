@@ -1868,11 +1868,11 @@ div.gotoBottomOfPage {
 }
 
 div.gotoTopOfPage {
-	bottom: 20px;
+	top: 20px;
 }
 
 div.gotoBottomOfPage {
-	top: 20px;
+	top: 50px;
 }
 
 div.gotoTopOfPage a,
@@ -1883,6 +1883,10 @@ div.gotoBottomOfPage a {
 
 .gpxAllTracksLink {
 	display: none;
+}
+
+#OpenLayers_Control_Attribution_7 {
+    display: none;
 }
 
 @media (max-width: 400px) {

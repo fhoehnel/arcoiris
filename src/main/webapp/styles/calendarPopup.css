@@ -108,6 +108,7 @@ A.cpTodayText {
 .cpBorder {
 	border: 2px ridge #808080;
 	border-collapse: collapse;
+    width: 100%;
 }
 
 .cpBorder > tbody > tr > td {
@@ -115,67 +116,107 @@ A.cpTodayText {
 }
 
 #calDiv {
-    background-color: ivory;
     position: absolute;
+}
+
+.calendarCont {
+    background-color: ivory;
     layer-background-color: ivory;
     visibility: hidden;
 }
 
-#calDiv .cpDayColumnHeader, 
-#calDiv .cpYearNavigation, 
-#calDiv .cpMonthNavigation, 
-#calDiv .cpCurrentMonthDate, 
-#calDiv .cpCurrentMonthDateDisabled, 
-#calDiv .cpOtherMonthDate, 
-#calDiv .cpOtherMonthDateDisabled, 
-#calDiv .cpCurrentDate, 
-#calDiv .cpCurrentDateDisabled, 
-#calDiv .cpTodayText, 
-#calDiv .cpTodayTextDisabled, 
+#calDiv .cpDayColumnHeader,
+#calDiv .cpYearNavigation,
+#calDiv .cpMonthNavigation,
+#calDiv .cpCurrentMonthDate,
+#calDiv .cpCurrentMonthDateDisabled,
+#calDiv .cpOtherMonthDate,
+#calDiv .cpOtherMonthDateDisabled,
+#calDiv .cpCurrentDate,
+#calDiv .cpCurrentDateDisabled,
+#calDiv .cpTodayText,
+#calDiv .cpTodayTextDisabled,
 #calDiv .cpText {
-    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
     font-size: 1.2rem;
     padding: 6px;
+}
+
+#sideCalCont .cpDayColumnHeader,
+#sideCalCont .cpYearNavigation,
+#sideCalCont .cpMonthNavigation,
+#sideCalCont .cpCurrentMonthDate,
+#sideCalCont .cpCurrentMonthDateDisabled,
+#sideCalCont .cpOtherMonthDate,
+#sideCalCont .cpOtherMonthDateDisabled,
+#sideCalCont .cpCurrentDate,
+#sideCalCont .cpCurrentDateDisabled,
+#sideCalCont .cpTodayText,
+#sideCalCont .cpTodayTextDisabled,
+#sideCalCont .cpText {
+    font-size: 1rem;
+    padding: 4px;
+}
+
+.calendarCont .cpDayColumnHeader, 
+.calendarCont .cpYearNavigation, 
+.calendarCont .cpMonthNavigation, 
+.calendarCont .cpCurrentMonthDate, 
+.calendarCont .cpCurrentMonthDateDisabled, 
+.calendarCont .cpOtherMonthDate, 
+.calendarCont .cpOtherMonthDateDisabled, 
+.calendarCont .cpCurrentDate, 
+.calendarCont .cpCurrentDateDisabled, 
+.calendarCont .cpTodayText, 
+.calendarCont .cpTodayTextDisabled, 
+.calendarCont .cpText {
+    font-family: "Kite One",Verdana,Arial,Helvetica,sans-serif;
     white-space: nowrap;
 }
 
+#sideCalCont table.dayCont {
+    width: 250px;
+}
+
 #calDiv table.dayCont {
-	width: 350px;
+    width: 350px;
+}
+
+.calendarCont table.dayCont {
     border-collapse: collapse;
 }
 
-#calDiv table table:first-child {
+.calendarCont table table:first-child {
     width: 100%;
     border-bottom: 1px solid #000060;
     border-collapse: collapse;
 }
 
-#calDiv table table:last-child tr:last-child {
+.calendarCont table table:last-child tr:last-child {
     background-color: #ffffc0;
     background: linear-gradient(#b0b0b0, #f0f0f0);
 }
 
-#calDiv table table:last-child tr:last-child td{
+.calendarCont table table:last-child tr:last-child td{
     border-top: 1px solid #000060;
 }
 
-#calDiv .cpMonthNavigation,
-#calDiv .cpYearNavigation {
+.calendarCont .cpMonthNavigation,
+.calendarCont .cpYearNavigation {
     color: #000060;
     background-color: #ffffc0;
     background: linear-gradient(#f0f0f0, #b0b0b0);
 }
 
-#calDiv .cpMonthNavigation a:hover,
-#calDiv .cpTodayText a:hover {
+.calendarCont .cpMonthNavigation a:hover,
+.calendarCont .cpTodayText a:hover {
     color: #a00000;
 }
 
-#calDiv .cpDayColumnHeader {
+.calendarCont .cpDayColumnHeader {
     font-weight: bold;
 }
 
-#calDiv a.cpTodayText {
+.calendarCont a.cpTodayText {
     color: #000060;
     text-decoration: none;
     font-weight: bold;

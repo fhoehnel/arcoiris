@@ -36,7 +36,7 @@ import de.webfilesys.util.XmlUtil;
 public class InvitationManager extends Thread {
     public static final String INVITATION_FILE_NAME = "invitations.xml";
 
-    public static final int EXPIRATION = 30; // expires after 30 days
+    public static final int DEFAULT_EXPIRATION_DAYS = 30; // expires after 30 days
 
     public static final String INVITATION_TYPE_COMMON = "common";
     public static final String INVITATION_TYPE_PICTURE = "picture";
@@ -159,10 +159,8 @@ public class InvitationManager extends Thread {
             inputSource.setEncoding("UTF-8");
 
             doc = builder.parse(inputSource);
-        } catch (SAXException saxex) {
-            Logger.getLogger(getClass()).error("failed to load invitation registry file : " + invitationFile.getAbsolutePath(), saxex);
-        } catch (IOException ioex) {
-            Logger.getLogger(getClass()).error("failed to load invitation registry file : " + invitationFile.getAbsolutePath(), ioex);
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(getClass()).error("failed to load invitation registry file : " + invitationFile.getAbsolutePath(), ex);
         } finally {
             if (fis != null) {
                 try {

@@ -23,7 +23,7 @@
 </link>
   
 <script type="text/javascript">
-  <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers.js</xsl:attribute>
+  <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers-2.13.1.js</xsl:attribute>
 </script>
 
 <title>

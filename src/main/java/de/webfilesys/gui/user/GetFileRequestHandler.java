@@ -71,11 +71,8 @@ public class GetFileRequestHandler extends UserRequestHandler {
 
             try {
                 PrintWriter output = new PrintWriter(resp.getWriter());
-
-                output.println("File not found or not readable: " + filePath);
-
+                output.println("File not found or not readable");
                 output.flush();
-
                 return;
             } catch (IOException ioEx) {
                 Logger.getLogger(getClass()).warn(ioEx);

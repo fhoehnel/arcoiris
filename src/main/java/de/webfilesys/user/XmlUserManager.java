@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -777,9 +774,9 @@ public class XmlUserManager extends UserManagerBase {
 
             byte[] encryptedPassword = md.digest(cleartextPassword.getBytes());
 
-            sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
+            Base64.Encoder mimeEncoder = Base64.getMimeEncoder();
 
-            return encoder.encodeBuffer(encryptedPassword).trim();
+            return mimeEncoder.encodeToString(encryptedPassword).trim();
         } catch (java.security.NoSuchAlgorithmException nsaEx) {
             Logger.getLogger(getClass()).error("failed to encrypt password", nsaEx);
             return "";

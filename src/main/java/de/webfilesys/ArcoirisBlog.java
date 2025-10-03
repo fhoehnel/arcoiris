@@ -83,7 +83,9 @@ public class ArcoirisBlog {
 
     private boolean mailNotifyWelcome = false;
 
-    private String mailHost = null;
+    private String mailHost;
+
+    private String mailPort;
 
     private boolean smtpAuth = false;
 
@@ -253,6 +255,7 @@ public class ArcoirisBlog {
         loginErrorPage = config.getProperty("LoginErrorURL");
 
         mailHost = config.getProperty("SmtpMailHost");
+        mailPort = config.getProperty("SmtpMailPort");
 
         if ((mailHost != null) && (mailHost.trim().length() > 0)) {
             Logger.getLogger(getClass()).info("SMTP mail host: " + mailHost);
@@ -421,6 +424,10 @@ public class ArcoirisBlog {
 
         mailProps.put("mail.transport.protocol", "smtp");
         mailProps.put("mail.smtp.host", getMailHost());
+
+        if (mailPort != null && !mailPort.trim().isEmpty()) {
+            mailProps.put("mail.smtp.port", mailPort);
+        }
 
         mailProps.put("mail.smtp.starttls.enable", isSmtpSecure());
 

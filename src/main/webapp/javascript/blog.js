@@ -612,14 +612,18 @@ function handleMovedToPos(req) {
     }
 }
 
-function loadGoogleMapsAPIScriptCode(googleMapsAPIKey) {
-    var script = document.createElement("script");
+function loadGoogleMapsAPIScriptCode(googleMapsAPIKey, apiReadyCallback) {
+    const script = document.createElement("script");
     script.type = "text/javascript";
 
-    if (window.location.href.indexOf("https") == 0) {
-        script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&key=" + googleMapsAPIKey;
+    if (!apiReadyCallback) {
+        apiReadyCallback = "handleGoogleMapsApiReady";
+    }
+
+    if (window.location.href.indexOf("https") === 0) {
+        script.src = "https://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&key=" + googleMapsAPIKey + "&libraries=marker";
     } else {
-        script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&key=" + googleMapsAPIKey;
+        script.src = "http://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&key=" + googleMapsAPIKey + "&libraries=marker";
     }        
     document.body.appendChild(script);
 }
@@ -1796,7 +1800,7 @@ function showSaveSettingsResult(req) {
     }
 }
    
-function selectDate() {
+function selectDate(calPopup, dateInputElemId, linkAnchorId, centerCalDiv) {
 	daysWithEntries = new Array();	
 	
     var url = getContextRoot() + "/servlet?command=blog&cmd=datesWithEntries";
@@ -1822,9 +1826,11 @@ function selectDate() {
             	} else {
             		dateFormat = "dd.MM.yyyy";
             	}
-            	
-                cal1x.select(document.getElementById("blogDate"), "anchorDate", dateFormat);
-                centerBox(document.getElementById("calDiv"));
+
+                calPopup.select(document.getElementById(dateInputElemId), linkAnchorId, dateFormat);
+                if (centerCalDiv) {
+                    centerBox(document.getElementById("calDiv"));
+                }
             }
         }
     });          

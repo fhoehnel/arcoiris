@@ -187,10 +187,10 @@ NOTES:
 */ 
 
 // CONSTRUCTOR for the CalendarPopup Object
-function CalendarPopup() {
+function CalendarPopup(contDiv, autoHide) {
 	var c;
 	if (arguments.length>0) {
-		c = new PopupWindow(arguments[0]);
+		c = new PopupWindow(arguments[0], autoHide);
 		}
 	else {
 		c = new PopupWindow();

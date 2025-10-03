@@ -107,7 +107,7 @@
         var cal1x;
 
         function prepareCalenderPopup() {
-            cal1x = new CalendarPopup("calDiv");
+            cal1x = new CalendarPopup("calDiv", true);
             cal1x.setReturnFunction("gotoSelectedDate");
             cal1x.showYearNavigation();
             <xsl:if test="/blog/language = 'German'">
@@ -191,7 +191,7 @@
         
         <div class="blogCalenderCont">
           <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
-            <xsl:attribute name="onClick">selectDate()</xsl:attribute>
+            <xsl:attribute name="onClick">selectDate(cal1x, "blogDate", "anchorDate", true)</xsl:attribute>
           </a>
           <input type="text" id="blogDate" style="display:none" />
         </div>
@@ -337,7 +337,7 @@
     
     </body>
     
-    <div id="calDiv"></div>
+    <div id="calDiv" class="calendarCont"></div>
     
     <div id="publishCont" class="blogPublishCont"></div>
     

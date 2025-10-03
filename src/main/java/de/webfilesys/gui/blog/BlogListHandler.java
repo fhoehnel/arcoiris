@@ -79,6 +79,17 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(blogElement, "attachmentMaxSize", Long.toString(ArcoirisBlog.getInstance().getAttachmentMaxSize()));
 
+        String googleMapsAPIKey;
+        if (req.getScheme().equalsIgnoreCase("https")) {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+        } else {
+            googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+        }
+
+        if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+            XmlUtil.setChildText(blogElement, "googleMapsAPIKey", googleMapsAPIKey, false);
+        }
+
         String posInPage = req.getParameter("posInPage");
         
         if ((posInPage != null) && (!posInPage.isEmpty())) {

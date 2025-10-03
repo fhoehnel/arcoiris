@@ -288,7 +288,7 @@ function PopupWindow_attachListener() {
 	}
 // CONSTRUCTOR for the PopupWindow object
 // Pass it a DIV name to use a DHTML popup, otherwise will default to window popup
-function PopupWindow() {
+function PopupWindow(contDiv, autoHide) {
 	if (!window.popupWindowIndex) { window.popupWindowIndex = 0; }
 	if (!window.popupWindowObjects) { window.popupWindowObjects = new Array(); }
 	if (!window.listenerAttached) {
@@ -334,6 +334,10 @@ function PopupWindow() {
 	this.hidePopup = PopupWindow_hidePopup;
 	this.setSize = PopupWindow_setSize;
 	this.isClicked = PopupWindow_isClicked;
-	this.autoHide = PopupWindow_autoHide;
+    if (autoHide) {
+        this.autoHide = PopupWindow_autoHide;
+    } else {
+        this.autoHide = () => {};
+    }
 	this.hideIfNotClicked = PopupWindow_hideIfNotClicked;
 	}
