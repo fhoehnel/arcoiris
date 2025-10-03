@@ -177,7 +177,7 @@
         <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryPublicLink(true);attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       
-      <div class="blogCont">
+      <div id="blogCont" class="blogCont">
       
         <xsl:if test="/blog/blogTitlePic">
           <div>

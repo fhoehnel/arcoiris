@@ -1,9 +1,16 @@
 var osmMap;
 
 function fillSideCont() {
-    console.log("winWidth: " + getWinWidth());
-    if (getWinWidth() < 1530) {
-        return;
+	const MIN_WIDTH_FOR_SIDE_CONT = 1260;
+	const MIN_WIDTH_CENTERED = 1530;
+	const UNCENTERED_RANGE = MIN_WIDTH_CENTERED - MIN_WIDTH_FOR_SIDE_CONT;
+	const diffToMinWidth = getWinWidth() - MIN_WIDTH_FOR_SIDE_CONT;
+	if (getWinWidth() < MIN_WIDTH_FOR_SIDE_CONT) {
+	    return;
+	}
+    if (getWinWidth() < MIN_WIDTH_CENTERED) {
+		document.getElementById("blogCont").style.position = "relative";
+		document.getElementById("blogCont").style.left = "-" + ((UNCENTERED_RANGE - diffToMinWidth) / 2) + "px";
     }
     createSideCalendar();
     createSideMap();
