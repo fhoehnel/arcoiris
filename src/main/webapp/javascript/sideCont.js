@@ -37,9 +37,11 @@ function createSideMap() {
         sideMap.setAttribute("class", "sideMap");
         sideMapCont.appendChild(sideMap);
 
-        // loadGoogleMapsAPIScriptCode(googleMapsAPIKey, "handleSideMapsApiReady");
-
-        createSideOsmMap();
+        if (sideContMapType === 2) {
+            loadGoogleMapsAPIScriptCode(googleMapsAPIKey, "handleSideMapsApiReady");
+        } else {
+            createSideOsmMap();
+        }
     }
 }
 

@@ -106,7 +106,9 @@
         var sortOrder = <xsl:value-of select="/blog/sortOrder" />;
 
         var googleMapsAPIKey = '<xsl:value-of select="/blog/googleMapsAPIKey" />';
-        
+
+        var sideContMapType =  <xsl:value-of select="/blog/sideContMapType" />
+
         var lowBandwidthMode = false;
         <xsl:if test="/blog/lowBandwidthMode">
           lowBandwidthMode = true;

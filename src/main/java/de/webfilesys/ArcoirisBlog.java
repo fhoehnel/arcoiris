@@ -1,4 +1,4 @@
-/*  
+/*
  * arcoiris blog
  * Copyright (C) 2016 Frank Hoehnel
 
@@ -39,7 +39,7 @@ import de.webfilesys.util.CommonUtils;
 public class ArcoirisBlog {
     private static ArcoirisBlog instance = null;
 
-    public static final String VERSION = "Version 2.22.0-beta3 (02 May 2021)";
+    public static final String VERSION = "Version 2.23.0-beta1 (3 Oct 2025)";
 
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
@@ -57,6 +57,11 @@ public class ArcoirisBlog {
     
     // default disk quota: 16 MB
     private static long DEFAULT_DISK_QUOTA = 16l * 1024l * 1024l;
+
+    public static final int MAP_TYPE_OSM = 1;
+    public static final int MAP_TYPE_GOOGLE = 2;
+
+    private int sideContMapType = MAP_TYPE_OSM;
 
     private long defaultDiskQuota = DEFAULT_DISK_QUOTA;
 
@@ -253,6 +258,11 @@ public class ArcoirisBlog {
         logoutURL = config.getProperty("LogoutPageURL");
 
         loginErrorPage = config.getProperty("LoginErrorURL");
+
+        temp = config.getProperty("sideContMapType");
+        if ("google".equals(temp)) {
+            sideContMapType = MAP_TYPE_GOOGLE;
+        }
 
         mailHost = config.getProperty("SmtpMailHost");
         mailPort = config.getProperty("SmtpMailPort");
@@ -510,6 +520,10 @@ public class ArcoirisBlog {
 
     public SimpleDateFormat getLogDateFormat() {
         return logDateFormat;
+    }
+
+    public int getSideContMapType() {
+        return sideContMapType;
     }
 
     public String getConfigBaseDir() {
