@@ -8,12 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.daytitle.DayTitleManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
-import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
 /**
@@ -48,7 +47,7 @@ public class BlogDayTitleHandler extends XmlRequestHandlerBase {
 
         XmlUtil.setChildText(dayTitleElement, "displayDate", formatBlogDate(dayDate), false);
 
-        String dayTitle = MetaInfManager.getInstance().getDayTitle(getCwd(), day);
+        String dayTitle = DayTitleManager.getInstance().getDayTitle(getCwd(), day);
         if (dayTitle == null) {
             dayTitle = "";
         }

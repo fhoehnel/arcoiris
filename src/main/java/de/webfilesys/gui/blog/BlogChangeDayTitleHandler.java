@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.daytitle.DayTitleManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -35,10 +35,10 @@ public class BlogChangeDayTitleHandler extends XmlRequestHandlerBase {
         
         if (!CommonUtils.isEmpty(titleText) && !CommonUtils.isEmpty(day)) {
             titleText = CommonUtils.filterForbiddenChars(titleText);
-            MetaInfManager.getInstance().setDayTitle(getCwd(), day, titleText);
+            DayTitleManager.getInstance().setDayTitle(getCwd(), day, titleText);
             titleChanged = true;
         } else {
-            MetaInfManager.getInstance().removeDayTitle(getCwd(), day);
+            DayTitleManager.getInstance().deleteDayTitle(getCwd(), day);
             titleChanged = true;
         }
 

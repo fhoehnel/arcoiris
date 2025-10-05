@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.daytitle.DayTitleManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import de.webfilesys.FileComparator;
@@ -151,7 +152,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
                     Date theDayBefore = new Date(day.getTime() - DAY_OFFSET_BEFORE);
                     XmlUtil.setChildText(blogDateElement, "dayBefore", dateFormat.format(theDayBefore), false);
                     
-                    String dayTitle = metaInfMgr.getDayTitle(getCwd(), blogDate);
+                    String dayTitle = DayTitleManager.getInstance().getDayTitle(getCwd(), blogDate);
                     if (!CommonUtils.isEmpty(dayTitle)) {
                         XmlUtil.setChildText(blogDateElement, "dayTitle", dayTitle, true);
                     }

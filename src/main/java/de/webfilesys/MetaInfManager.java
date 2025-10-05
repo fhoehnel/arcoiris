@@ -385,6 +385,8 @@ public class MetaInfManager extends Thread {
         }
     }
 
+    // remove when all blogs have been migrated to JSON format
+    @Deprecated
     private Element getDayTitleRoot(String path, boolean createIfMissing) {
         Element metaInfElement = getMetaInfElement(path, ".");
 
@@ -407,7 +409,9 @@ public class MetaInfManager extends Thread {
 
         return dayTitlesElem;
     }
-    
+
+    // remove when all blogs have been migrated to JSON format
+    @Deprecated
     private Element getDayTitleElem(String path, String day, boolean createIfMissing) {
         Element dayTitlesRoot = getDayTitleRoot(path, createIfMissing);
 
@@ -437,13 +441,9 @@ public class MetaInfManager extends Thread {
         dayTitlesRoot.appendChild(dayTitleElem);
         return dayTitleElem;
     }
-    
-    public void setDayTitle(String path, String day, String titleText) {
-        Element dayTitleElem = getDayTitleElem(path, day, true);
-        XmlUtil.setElementText(dayTitleElem, titleText, true);
-        cacheDirty.put(path, Boolean.TRUE);
-    }
-    
+
+    // remove when all blogs have been migrated to JSON format
+    @Deprecated
     public String getDayTitle(String path, String day) {
         Element dayTitleElem = getDayTitleElem(path, day, false);
         if (dayTitleElem != null) {
@@ -451,15 +451,7 @@ public class MetaInfManager extends Thread {
         }
         return null;        
     }
-    
-    public void removeDayTitle(String path, String day) {
-        Element dayTitleElem = getDayTitleElem(path, day, false);
-        if (dayTitleElem != null) {
-            dayTitleElem.getParentNode().removeChild(dayTitleElem);
-            cacheDirty.put(path, Boolean.TRUE);
-        }
-    }
-    
+
     public void setTitlePic(String path, String titlePicFileName) {
         synchronized (this) {
             Element metaInfElement = getMetaInfElement(path, ".");
