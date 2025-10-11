@@ -7,11 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.XmlUtil;
 
@@ -37,11 +38,9 @@ public class BlogPublishDayHandler extends XmlRequestHandlerBase {
             currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
         }
         
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         boolean anyNewPublished = false;
 
-        if (metaInfMgr.isStagedPublication(currentPath)) {
+        if (BlogConfigManager.getInstance().isStagedPublication(currentPath)) {
 
             File blogDir = new File(currentPath);
 
@@ -50,8 +49,8 @@ public class BlogPublishDayHandler extends XmlRequestHandlerBase {
             for (int i = 0; i < filesInDir.length; i++) {
                 if (filesInDir[i].isFile() && filesInDir[i].canRead()) {
                     if (filesInDir[i].getName().startsWith(dayToPublish)) {
-                        if (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) == MetaInfManager.STATUS_BLOG_EDIT) {
-                            metaInfMgr.setStatus(filesInDir[i].getAbsolutePath(), MetaInfManager.STATUS_BLOG_PUBLISHED);
+                        if (BlogMetaInfManager.getInstance().getStatus(filesInDir[i].getAbsolutePath()) == BlogMetaInfManager.STATUS_BLOG_EDIT) {
+                            BlogMetaInfManager.getInstance().setStatus(filesInDir[i].getAbsolutePath(), BlogMetaInfManager.STATUS_BLOG_PUBLISHED);
                             anyNewPublished = true;
                         }
                     }

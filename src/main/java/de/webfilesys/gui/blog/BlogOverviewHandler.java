@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfig;
+import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.daytitle.DayTitleManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import de.webfilesys.FileComparator;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.UTF8URLEncoder;
@@ -40,9 +42,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
             session.setAttribute("cwd", currentPath);
         }
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
-        String blogTitle = metaInfMgr.getDescription(currentPath, ".");
+        String blogTitle = BlogConfigManager.getInstance().getConfig(currentPath).getTitleText();
 
         if (CommonUtils.isEmpty(blogTitle)) {
             blogTitle = "arcoiris blog";
@@ -66,7 +66,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(blogElement, "blogTitle", blogTitle, false);
 
-        String blogTitlePic = metaInfMgr.getTitlePic(currentPath);
+        String blogTitlePic = BlogConfigManager.getInstance().getTitlePic(currentPath);
 
         if (!CommonUtils.isEmpty(blogTitlePic)) {
 
@@ -86,16 +86,16 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
 
         blogElement.appendChild(blogEntriesElement);
 
-        int sortOrder = metaInfMgr.getSortOrder(currentPath);        
-        if (sortOrder == 0) {
-            sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        int sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        if (BlogConfigManager.getInstance().getSortOrder(currentPath) == BlogConfig.SortOrder.DIARY) {
+            sortOrder = BlogDateComparator.SORT_ORDER_DIARY;
         }
-        
+
         XmlUtil.setChildText(blogElement, "sortOrder", Integer.toString(sortOrder), false);
         
         TreeMap<String, ArrayList<File>> blogDays = new TreeMap<String, ArrayList<File>>(new BlogDateComparator(sortOrder));
 
-        boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
+        boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(currentPath);
 
         File blogDir = new File(currentPath);
         
@@ -111,7 +111,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
 
                 if (CommonUtils.isPictureFile(filesInDir[i])) {
 
-                    if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
+                    if ((!readonly) || (!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(filesInDir[i].getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
 
                         String fileName = filesInDir[i].getName();
                         if (fileName.length() >= 10) {
@@ -189,7 +189,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
                             
                             XmlUtil.setChildText(fileElement, "imgPath", thumbSrcUrl);
 
-                            if (stagedPublication && (!readonly) && (metaInfMgr.getStatus(file.getAbsolutePath()) == MetaInfManager.STATUS_BLOG_EDIT)) {
+                            if (stagedPublication && (!readonly) && (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) == BlogMetaInfManager.STATUS_BLOG_EDIT)) {
                                 XmlUtil.setChildText(fileElement, "staged", "true");
                             }
                             

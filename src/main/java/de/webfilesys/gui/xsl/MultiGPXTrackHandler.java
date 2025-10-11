@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import de.webfilesys.ArcoirisBlog;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.servlet.UploadServlet;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -30,8 +30,6 @@ public class MultiGPXTrackHandler extends XslRequestHandlerBase {
 	protected void process() {
 		String currentPath = getCwd();
         
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         Element gpxTrackElem = doc.createElement("gpxTracks");
 
         doc.appendChild(gpxTrackElem);
@@ -46,7 +44,7 @@ public class MultiGPXTrackHandler extends XslRequestHandlerBase {
         File[] fileList = folderFile.listFiles();
 
         for (File file : fileList) {
-            List<String> attachments = metaInfMgr.getListOfAttachments(file.getAbsolutePath());
+            List<String> attachments = AttachmentManager.getInstance().getAttachments(file.getAbsolutePath());
             if (attachments != null) {
                 for (String attachment : attachments) {
                     if (isGpsTrack(attachment)) {

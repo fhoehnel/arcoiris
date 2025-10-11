@@ -12,11 +12,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.CameraExifData;
@@ -127,7 +128,7 @@ public class BlogAppServlet extends BlogWebServlet {
 
             String path = currentPath.replace('/', File.separatorChar);
 
-            if (!MetaInfManager.getInstance().isStagedPublication(path)) {
+            if (!BlogConfigManager.getInstance().isStagedPublication(path)) {
 
                 String accessCode = InvitationManager.getInstance().getInvitationCode(userid, path);
                 if (accessCode != null) {
@@ -139,8 +140,8 @@ public class BlogAppServlet extends BlogWebServlet {
         } else if (command.equals("publish")) {
             receiveAndIgnoreParams(req, resp);
             String path = currentPath.replace('/', File.separatorChar);
-            if (MetaInfManager.getInstance().isStagedPublication(path)) {
-                MetaInfManager.getInstance().setStatus(path, fileName, MetaInfManager.STATUS_BLOG_PUBLISHED);
+            if (BlogConfigManager.getInstance().isStagedPublication(path)) {
+                BlogMetaInfManager.getInstance().setStatus(path, fileName, BlogMetaInfManager.STATUS_BLOG_PUBLISHED);
 
                 String accessCode = InvitationManager.getInstance().getInvitationCode(userid, path);
                 if (accessCode != null) {
@@ -157,7 +158,7 @@ public class BlogAppServlet extends BlogWebServlet {
             File fileToCancel = new File(osDepPath, fileName);
             
             if (fileToCancel.exists()) {
-                MetaInfManager.getInstance().removeDescription(fileToCancel.getAbsolutePath());
+                BlogMetaInfManager.getInstance().removeDescription(fileToCancel.getAbsolutePath());
 
                 if (fileToCancel.delete()) {
                     if (LOG.isDebugEnabled()) {
@@ -215,7 +216,7 @@ public class BlogAppServlet extends BlogWebServlet {
                                 + longitudeParam + " desc=" + description);
             }
 
-            MetaInfManager.getInstance().setDescription(osDepPath, fileName, description.toString());
+            BlogMetaInfManager.getInstance().setDescription(osDepPath, fileName, description.toString());
 
             if ((latitudeParam != null) && (longitudeParam != null)) {
                 latitudeParam = latitudeParam.replace(',', '.');
@@ -226,8 +227,7 @@ public class BlogAppServlet extends BlogWebServlet {
 
                     GeoTag geoTag = new GeoTag(latitude, longitude, 10);
 
-                    MetaInfManager.getInstance().setGeoTag(osDepPath, fileName, geoTag);
-
+                    BlogMetaInfManager.getInstance().setGeoTag(osDepPath, fileName, geoTag);
                 } catch (Exception ex) {
                     LOG.warn("invalid geo coordinate values: " + latitudeParam + " - " + longitudeParam);
                 }
@@ -360,13 +360,13 @@ public class BlogAppServlet extends BlogWebServlet {
         }
 
         if (geoTag != null) {
-            MetaInfManager.getInstance().setGeoTag(origImgPath, geoTag);
+            BlogMetaInfManager.getInstance().setGeoTag(origImgPath, geoTag);
         }
 
         String path = currentPath.replace('/', File.separatorChar);
 
-        if (MetaInfManager.getInstance().isStagedPublication(path)) {
-            MetaInfManager.getInstance().setStatus(origImgPath, MetaInfManager.STATUS_BLOG_EDIT);
+        if (BlogConfigManager.getInstance().isStagedPublication(path)) {
+            BlogMetaInfManager.getInstance().setStatus(origImgPath, BlogMetaInfManager.STATUS_BLOG_EDIT);
         }
 
         BlogThumbnailHandler.getInstance().createBlogThumbnail(origImgPath);

@@ -7,9 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.util.CommonUtils;
 
 /**
@@ -24,8 +25,13 @@ public class DeleteUserRequestHandler extends AdminRequestHandler {
         String userToBeDeleted = getParameter("userToBeDeleted");
 
         if (!CommonUtils.isEmpty(userToBeDeleted)) {
-            if (!delDirTree(userMgr.getDocumentRoot(userToBeDeleted))) {
+            String userHomeDir = userMgr.getDocumentRoot(userToBeDeleted);
+            if (!delDirTree(userHomeDir)) {
                 Logger.getLogger(getClass()).error("failed to delete home directory of user " + userToBeDeleted + ": " + userMgr.getDocumentRoot(userToBeDeleted));
+            } else {
+                String path = userHomeDir.replace('/', File.separatorChar);
+                BlogMetaInfManager.getInstance().removeAllMetaInfOfUserFromCache(path);
+                AttachmentManager.getInstance().removeAllAttachmentsOfUserFromCache(path);
             }
 
             userMgr.removeUser(userToBeDeleted);
@@ -55,8 +61,6 @@ public class DeleteUserRequestHandler extends AdminRequestHandler {
                     if (!file.delete()) {
                         deleteError = true;
                         Logger.getLogger(getClass()).error("cannot delete " + file.getAbsolutePath());
-                    } else {
-                        MetaInfManager.getInstance().removeMetaInf(absolutePath);
                     }
                 }
             }
@@ -65,7 +69,6 @@ public class DeleteUserRequestHandler extends AdminRequestHandler {
         if (!dirToBeDeleted.delete()) {
             deleteError = true;
         } else {
-            MetaInfManager.getInstance().releaseMetaInf(path);
         }
 
         return !deleteError;

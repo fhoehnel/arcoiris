@@ -3,16 +3,16 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfig;
+import de.webfilesys.config.BlogConfigManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.LanguageManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.CSSManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.XmlUtil;
@@ -36,9 +36,9 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
 
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
+        BlogConfig blogConfig = BlogConfigManager.getInstance().getConfig(currentPath);
 
-        String blogTitle = metaInfMgr.getDescription(currentPath, ".");
+        String blogTitle = blogConfig.getTitleText();
 
         XmlUtil.setChildText(settingsElement, "blogTitleText", blogTitle, true);
 
@@ -52,21 +52,21 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
 
         XmlUtil.setChildText(settingsElement, "daysPerPage", Integer.toString(daysPerPage), false);
 
-        boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
+        boolean stagedPublication = blogConfig.isStagedPublication();
 
         if (stagedPublication) {
             XmlUtil.setChildText(settingsElement, "stagedPublication", "true", false);
         }
 
-        boolean notifyOnNewComment = metaInfMgr.isNotifyOnNewComment(currentPath);
+        boolean notifyOnNewComment = blogConfig.isNotifyOnNewComment();
 
         if (notifyOnNewComment) {
             XmlUtil.setChildText(settingsElement, "notifyOnNewComment", "true", false);
         }
-        
-        int sortOrder = metaInfMgr.getSortOrder(currentPath);
-        if (sortOrder == 0) {
-            sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+
+        int sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        if (blogConfig.getSortOrder() == BlogConfig.SortOrder.DIARY) {
+            sortOrder = BlogDateComparator.SORT_ORDER_DIARY;
         }
         XmlUtil.setChildText(settingsElement, "sortOrder", Integer.toString(sortOrder), false);
         

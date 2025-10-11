@@ -9,11 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.gui.user.UserRequestHandler;
 import de.webfilesys.util.CommonUtils;
@@ -66,11 +67,9 @@ public class BlogSetDescrHandler extends UserRequestHandler {
             Logger.getLogger(getClass()).debug("firstUploadFileName: " + firstUploadFileName + " blogText: " + blogText);
         }
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         if (!CommonUtils.isEmpty(blogText)) {
             blogText = CommonUtils.filterForbiddenChars(blogText);
-            metaInfMgr.setDescription(currentPath, firstUploadFileName, blogText);
+            BlogMetaInfManager.getInstance().setDescription(currentPath, firstUploadFileName, blogText);
         }
 
         String geoDataSwitcher = req.getParameter("geoDataSwitcher");
@@ -129,13 +128,13 @@ public class BlogSetDescrHandler extends UserRequestHandler {
                     geoTag.setInfotext(infoText);
                 }
 
-                metaInfMgr.setGeoTag(currentPath, firstUploadFileName, geoTag);
+                BlogMetaInfManager.getInstance().setGeoTag(currentPath, firstUploadFileName, geoTag);
             }
         }
 
         setParameter("positionToFile", firstUploadFileName);        
         
-        if (!metaInfMgr.isStagedPublication(currentPath)) {
+        if (!BlogConfigManager.getInstance().isStagedPublication(currentPath)) {
             String accessCode = InvitationManager.getInstance().getInvitationCode(uid, currentPath);
 
             if (accessCode != null) {

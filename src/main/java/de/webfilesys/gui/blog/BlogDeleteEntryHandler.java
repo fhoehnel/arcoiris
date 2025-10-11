@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
@@ -50,7 +51,8 @@ public class BlogDeleteEntryHandler extends XmlRequestHandlerBase {
             Logger.getLogger(getClass()).error("blog entry file to be deleted is not a writable file: " + fileToBeDeleted.getAbsolutePath());
         } else {
             if (fileToBeDeleted.delete()) {
-                MetaInfManager.getInstance().removeMetaInf(currentPath, fileName);
+                BlogMetaInfManager.getInstance().removeMetaInf(currentPath, fileName);
+                AttachmentManager.getInstance().removeAttachments(currentPath, fileName);
                 BlogThumbnailHandler.getInstance().deleteThumbnail(deletedFilePath);
                 success = "deleted";
             } else {

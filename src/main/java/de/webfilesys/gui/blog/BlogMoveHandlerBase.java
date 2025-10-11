@@ -9,10 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.FileComparator;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
@@ -105,11 +107,12 @@ public abstract class BlogMoveHandlerBase extends XmlRequestHandlerBase {
             return false;
         }
 
-        MetaInfManager.getInstance().moveMetaInf(currentPath, fileToMove, newFileName);
+        BlogMetaInfManager.getInstance().moveMetaInf(currentPath, fileToMove, newFileName);
+        AttachmentManager.getInstance().moveAttachments(currentPath, fileToMove, newFileName);
 
-        String titlePic = MetaInfManager.getInstance().getTitlePic(currentPath);
+        String titlePic = BlogConfigManager.getInstance().getTitlePic(currentPath);
         if ((titlePic != null) && titlePic.equals(fileToMove)) {
-            MetaInfManager.getInstance().setTitlePic(currentPath, newFileName);
+            BlogConfigManager.getInstance().setTitlePic(currentPath, newFileName);
         }
 
         BlogThumbnailHandler.getInstance().renameThumbnail(sourceFile.getAbsolutePath(), newFileName);

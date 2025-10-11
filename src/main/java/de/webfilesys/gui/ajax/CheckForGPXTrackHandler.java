@@ -1,16 +1,14 @@
 package de.webfilesys.gui.ajax;
 
-import java.io.File;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.util.XmlUtil;
 
 /**
@@ -26,6 +24,7 @@ public class CheckForGPXTrackHandler extends XmlRequestHandlerBase {
     protected void process() {
         String path = getCwd();
 
+        /*
         MetaInfManager metaInfMgr = MetaInfManager.getInstance();
 
         boolean gpxTrackExist = false;
@@ -44,6 +43,9 @@ public class CheckForGPXTrackHandler extends XmlRequestHandlerBase {
                 }
             }
         }
+        */
+
+        boolean gpxTrackExist = AttachmentManager.getInstance().gpxTracksExist(path);
 
         Element resultElement = doc.createElement("result");
 

@@ -6,9 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.state.BlogStateManager;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.util.XmlUtil;
 
 /**
@@ -24,8 +24,8 @@ public class AjaxCheckForUnseenCommentsHandler extends XmlRequestHandlerBase {
     protected void process() {
         String path = getCwd();
 
-        int unseenCommentCount = MetaInfManager.getInstance().getUnseenCommentCount(path);
-        
+        int unseenCommentCount = BlogStateManager.getInstance().getUnseenCommentCount(path);
+
         Element resultElement = doc.createElement("result");
 
         XmlUtil.setElementText(resultElement, Integer.toString(unseenCommentCount));

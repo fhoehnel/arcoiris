@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -45,7 +45,7 @@ public class BlogSetTitlePicHandler extends XmlRequestHandlerBase {
             return;
         }
 
-        MetaInfManager.getInstance().setTitlePic(currentPath, imgName);
+        BlogConfigManager.getInstance().setTitlePic(currentPath, imgName);
 
         boolean success = true;
 

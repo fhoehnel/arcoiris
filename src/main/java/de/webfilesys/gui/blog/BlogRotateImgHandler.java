@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.ImageTransform;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -72,7 +73,8 @@ public class BlogRotateImgHandler extends XmlRequestHandlerBase {
         boolean success = false;
 
         if (resultImageName != null) {
-            MetaInfManager.getInstance().moveMetaInf(currentPath, imgName, resultImageName);
+            BlogMetaInfManager.getInstance().moveMetaInf(currentPath, imgName, resultImageName);
+            AttachmentManager.getInstance().moveAttachments(currentPath, imgName, resultImageName);
 
             // TODO: test which method results in better image quality:
             // - rotate (lossy) the existing thumbnail image

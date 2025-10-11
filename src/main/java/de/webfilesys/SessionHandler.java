@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.user.UserManager;
@@ -96,7 +97,7 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
 
         ((UserManagerBase) userMgr).interrupt();
 
-        MetaInfManager.getInstance().interrupt();
+        BlogMetaInfManager.getInstance().interrupt();
 
         InvitationManager.getInstance().interrupt();
         

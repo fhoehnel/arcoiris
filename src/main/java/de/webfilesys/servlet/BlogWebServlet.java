@@ -34,23 +34,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.gui.admin.*;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.ResourceBundleHandler;
-import de.webfilesys.gui.admin.AdminAddUserRequestHandler;
-import de.webfilesys.gui.admin.AdminChangeUserRequestHandler;
-import de.webfilesys.gui.admin.AdminEditUserRequestHandler;
-import de.webfilesys.gui.admin.AdminMenuRequestHandler;
-import de.webfilesys.gui.admin.AdminRegisterUserRequestHandler;
-import de.webfilesys.gui.admin.AdminSendEmailRequestHandler;
-import de.webfilesys.gui.admin.BroadcastRequestHandler;
-import de.webfilesys.gui.admin.DeleteUserRequestHandler;
-import de.webfilesys.gui.admin.LoginLogoutHistoryHandler;
-import de.webfilesys.gui.admin.SessionListHandler;
-import de.webfilesys.gui.admin.UserDiskQuotaHandler;
-import de.webfilesys.gui.admin.UserListRequestHandler;
-import de.webfilesys.gui.admin.ViewLogRequestHandler;
 import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
@@ -95,7 +83,6 @@ import de.webfilesys.gui.blog.BlogSwitchLowBandwidthHandler;
 import de.webfilesys.gui.blog.BlogUnpublishHandler;
 import de.webfilesys.gui.blog.BlogUnsetTitlePicHandler;
 import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
-import de.webfilesys.gui.google.GoogleEarthDirPlacemarkHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.gui.user.ActivateUserRequestHandler;
 import de.webfilesys.gui.user.GPXTrackHandler;
@@ -460,6 +447,9 @@ public class BlogWebServlet extends ServletBase {
             } else if (cmd.equals("userDiskQuota")) {
                 (new UserDiskQuotaHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
+            } else if (cmd.equals("migrate")) {
+                (new MigrateUserRequestHandler(req, resp, session, output, userid)).handleRequest();
+                return true;
             }
             
             Logger.getLogger(getClass()).info("unknown admin comamnd: " + cmd);
@@ -661,11 +651,6 @@ public class BlogWebServlet extends ServletBase {
             return true;
         }
 
-        if (command.equals("googleEarthDirPlacemarks")) {
-            (new GoogleEarthDirPlacemarkHandler(req, resp, session, output, userid)).handleRequest();
-            return true;
-        }
-        
         if (command.equals("viewGPX")) {
             (new GPXViewHandler(req, resp, session, output, userid)).handleRequest();
             return(true);

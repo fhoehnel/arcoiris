@@ -7,20 +7,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfig;
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.user.TransientUser;
 import de.webfilesys.user.UserMgmtException;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
-/**
- * Delete a folder tree. Mobile version.
- */
 public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
     public BlogSaveSettingsHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
@@ -31,20 +30,18 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             return;
         }
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
+        boolean configChanged = false;
 
-        boolean blogTitleChanged = false;
+        String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
+
+        BlogConfig blogConfig = BlogConfigManager.getInstance().getConfig(currentPath);
 
         String newBlogTitle = req.getParameter("blogTitle");
 
         if (!CommonUtils.isEmpty(newBlogTitle)) {
-            String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
-
-            String oldBlogTitle = metaInfMgr.getDescription(currentPath, ".");
-
-            if (!newBlogTitle.equals(oldBlogTitle)) {
-                metaInfMgr.setDescription(currentPath, ".", newBlogTitle);
-                blogTitleChanged = true;
+            if (!newBlogTitle.equals(blogConfig.getTitleText())) {
+                blogConfig.setTitleText(newBlogTitle);
+                configChanged = true;
             }
         }
 
@@ -76,14 +73,10 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             Logger.getLogger(getClass()).warn("missing parameter blog page size");
         }
 
-        String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
-
-        boolean stagingChanged = false;
-
         String stagedPublication = req.getParameter("stagedPublication");
 
         if (stagedPublication == null) {
-            if (metaInfMgr.isStagedPublication(currentPath)) {
+            if (blogConfig.isStagedPublication()) {
 
                 File blogDir = new File(currentPath);
 
@@ -91,37 +84,44 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
 
                 for (int i = 0; i < filesInDir.length; i++) {
                     if (filesInDir[i].isFile() && filesInDir[i].canRead()) {
-                        if (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) == MetaInfManager.STATUS_BLOG_EDIT) {
-                            metaInfMgr.setStatus(filesInDir[i].getAbsolutePath(), MetaInfManager.STATUS_BLOG_PUBLISHED);
+                        if (BlogMetaInfManager.getInstance().getStatus(filesInDir[i].getAbsolutePath()) == BlogMetaInfManager.STATUS_BLOG_EDIT) {
+                            BlogMetaInfManager.getInstance().setStatus(filesInDir[i].getAbsolutePath(), BlogMetaInfManager.STATUS_BLOG_PUBLISHED);
                         }
                     }
                 }
-                stagingChanged = true;
+                configChanged = true;
             }
-
-            metaInfMgr.setStagedPublication(currentPath, false);
+            blogConfig.setStagedPublication(false);
         } else {
-            if (!metaInfMgr.isStagedPublication(currentPath)) {
-                metaInfMgr.setStagedPublication(currentPath, true);
-                stagingChanged = true;
+            if (!blogConfig.isStagedPublication()) {
+                blogConfig.setStagedPublication(true);
+                configChanged = true;
             }
         }
 
         boolean notifyOnNewComment = (getParameter("notifyOnNewComment") != null);
-        if (metaInfMgr.isNotifyOnNewComment(currentPath) != notifyOnNewComment) {
-            metaInfMgr.setNotifyOnNewComment(currentPath, notifyOnNewComment);
+
+        if (blogConfig.isNotifyOnNewComment() != notifyOnNewComment) {
+            blogConfig.setNotifyOnNewComment(notifyOnNewComment);
+            configChanged = true;
         }
-        
-        boolean sortOrderChanged = false;
-        
+
         String sortOrderParam = getParameter("sortOrder");
         if (sortOrderParam != null) {
             try {
                 int sortOrder = Integer.parseInt(sortOrderParam);
-                if (metaInfMgr.getSortOrder(currentPath) != sortOrder) {
-                    sortOrderChanged = true;
+
+                if (sortOrder == BlogDateComparator.SORT_ORDER_BLOG) {
+                    if (blogConfig.getSortOrder() == BlogConfig.SortOrder.DIARY) {
+                        blogConfig.setSortOrder(BlogConfig.SortOrder.BLOG);
+                        configChanged = true;
+                    }
+                } else {
+                    if (blogConfig.getSortOrder() == BlogConfig.SortOrder.BLOG) {
+                        blogConfig.setSortOrder(BlogConfig.SortOrder.DIARY);
+                        configChanged = true;
+                    }
                 }
-                metaInfMgr.setSortOrder(currentPath, sortOrder);
             } catch (NumberFormatException ex) {
             }
         }
@@ -203,16 +203,17 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             }
         }
 
+        if (configChanged) {
+            BlogConfigManager.getInstance().setConfig(currentPath, blogConfig);
+        }
+
+        boolean anythingChanged = configChanged || pageSizeChanged || skinChanged || languageChanged;
+
         Element resultElement = doc.createElement("result");
 
         XmlUtil.setChildText(resultElement, "success", Boolean.toString(!passwordMismatch));
-        XmlUtil.setChildText(resultElement, "pageSizeChanged", Boolean.toString(pageSizeChanged));
-        XmlUtil.setChildText(resultElement, "blogTitleChanged", Boolean.toString(blogTitleChanged));
-        XmlUtil.setChildText(resultElement, "stagingChanged", Boolean.toString(stagingChanged));
-        XmlUtil.setChildText(resultElement, "skinChanged", Boolean.toString(skinChanged));
-        XmlUtil.setChildText(resultElement, "languageChanged", Boolean.toString(languageChanged));
-        XmlUtil.setChildText(resultElement, "sortOrderChanged", Boolean.toString(sortOrderChanged));
-        
+        XmlUtil.setChildText(resultElement, "configChanged", Boolean.toString(anythingChanged));
+
         doc.appendChild(resultElement);
 
         processResponse();

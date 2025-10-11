@@ -904,7 +904,7 @@ img.storyPicture {
 
 span.likeCount {
     color: #004040;
-    margin-left: 10px;
+    font-weight: bold;
 }
 
 div.urlInputCont {

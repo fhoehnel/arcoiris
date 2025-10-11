@@ -1,5 +1,6 @@
 package de.webfilesys.gui.admin;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.ArcoirisBlog;
+import de.webfilesys.MetaInfManager;
+import de.webfilesys.user.UserManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.LanguageManager;
@@ -306,6 +310,15 @@ public class AdminEditUserRequestHandler extends AdminRequestHandler {
         output.println("<tr><td class=\"formButton\">");
         output.println("<input type=\"button\" name=\"changebutton\" value=\"&nbsp;Save&nbsp;\" onclick=\"validateUser(true);\">");
         output.println("</td><td class=\"formButton\" align=\"right\">");
+
+        String userHomeDir = userMgr.getDocumentRoot(user.getUserid()).replace('/', File.separatorChar);
+        String oldMetaInfFilePath = userHomeDir + File.separator + MetaInfManager.METAINF_FILE;
+        File oldMetaInfFile = new File(oldMetaInfFilePath);
+        if (oldMetaInfFile.exists()) {
+            output.println("<input type=\"button\" value=\"Simulate Migration\" onclick=\"window.location.href='" + req.getContextPath() + "/servlet?command=admin&cmd=migrate&userid=" + login + "&simulate=true'\">");
+            output.println("<input type=\"button\" value=\"Migrate\" onclick=\"window.location.href='" + req.getContextPath() + "/servlet?command=admin&cmd=migrate&userid=" + login + "'\">");
+        }
+
         output.println("<input type=\"button\" value=\"Cancel\" onclick=\"javascript:window.location.href='" + req.getContextPath() + "/servlet?command=admin&cmd=userList'\">");
         output.println("</td></tr>");
 

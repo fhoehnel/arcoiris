@@ -7,12 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
-import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
 /**
@@ -42,7 +40,7 @@ public class BlogDeleteCommentsHandler extends XmlRequestHandlerBase {
 
         String osSpecificPath = filePath.replace('/', File.separatorChar);
 
-        MetaInfManager.getInstance().removeComments(osSpecificPath);
+        BlogMetaInfManager.getInstance().removeComments(osSpecificPath);
 
         XmlUtil.setChildText(resultElement, "success", "true");
 

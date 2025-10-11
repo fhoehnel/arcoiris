@@ -2,7 +2,6 @@ package de.webfilesys.daytitle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.webfilesys.MetaInfManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -27,13 +26,14 @@ public class DayTitleManager {
         return instance;
     }
 
-    // key: path (different per user), value: map of title texts for blog days
+    // key: path (unique per user), value: map of title texts for blog days
     private HashMap<String, HashMap<String, DayTitle>> dayTitleMap = new HashMap<>();
 
     public void setDayTitle(String path, String day, String titleText) {
         HashMap<String, DayTitle> userDayTitles = dayTitleMap.get(path);
         if (userDayTitles == null) {
             userDayTitles = new HashMap<>();
+            dayTitleMap.put(path, userDayTitles);
         }
         DayTitle newDayTitle = new DayTitle();
         newDayTitle.setDay(day);
@@ -55,17 +55,10 @@ public class DayTitleManager {
         HashMap<String, DayTitle> userDayTitles = dayTitleMap.get(path);
         if (userDayTitles == null) {
             userDayTitles = loadDayTitles(path);
-            if (userDayTitles == null) {
-                return migrateDayTitle(path, day);
-            } else {
-                dayTitleMap.put(path, userDayTitles);
-            }
+            dayTitleMap.put(path, userDayTitles);
         }
         DayTitle dayTitle = userDayTitles.get(day);
-        if (dayTitle == null) {
-            return migrateDayTitle(path, day);
-        }
-        return dayTitle.getTitle();
+        return dayTitle != null ? dayTitle.getTitle() : null;
     }
 
     private void saveDayTitles(String path, HashMap<String, DayTitle> userDayTitles) {
@@ -75,7 +68,7 @@ public class DayTitleManager {
             String jsonResult = mapper.writeValueAsString(userDayTitles);
             Files.write(Paths.get(dayTitleNewFilePath), jsonResult.getBytes(StandardCharsets.UTF_8));
             File newFile = new File(dayTitleNewFilePath);
-            if (newFile.exists() && newFile.canRead()) {
+            if (newFile.exists() && newFile.canWrite()) {
                 boolean renameSuccess = true;
                 File dayTitleFile = new File(path + File.separator + DAY_TITLES_JSON_FILE_NAME);
                 if (dayTitleFile.exists()) {
@@ -94,7 +87,6 @@ public class DayTitleManager {
             }
         } catch (IOException ex) {
             LOG.error("failed to write day titles to path " + path, ex);
-
         }
     }
 
@@ -113,15 +105,5 @@ public class DayTitleManager {
             LOG.error("failed to read day titles for path " + path, ex);
             return new HashMap<>();
         }
-    }
-
-    private String migrateDayTitle(String path, String day) {
-        String dayTitle = MetaInfManager.getInstance().getDayTitle(path, day);
-        if (dayTitle != null && !dayTitle.isEmpty()) {
-            // migrate from old XML storage to new JSON storge
-            setDayTitle(path, day, dayTitle);
-            return dayTitle;
-        }
-        return null;
     }
 }

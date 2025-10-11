@@ -3,21 +3,21 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
+import de.webfilesys.state.BlogStateManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.Comment;
 import de.webfilesys.InvitationManager;
 import de.webfilesys.LanguageManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
-import de.webfilesys.util.UTF8URLEncoder;
 import de.webfilesys.util.XmlUtil;
 
 /**
@@ -77,17 +77,19 @@ public class BlogListCommentsHandler extends XmlRequestHandlerBase {
 
         fileCommentsElement.appendChild(commentListElement);
 
-        Vector listOfComments = MetaInfManager.getInstance().getListOfComments(filePath);
+        if (!BlogMetaInfManager.getInstance().isCommentsSeenByOwner(filePath)) {
+            BlogStateManager.getInstance().decrUnseenCommentCount(normalizedPath);
+        }
+        BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
+        List<Comment> comments = BlogMetaInfManager.getInstance().getComments(filePath);
 
-        if ((listOfComments != null) && (listOfComments.size() > 0)) {
+        if ((comments != null) && (!comments.isEmpty())) {
             SimpleDateFormat dateFormat = LanguageManager.getInstance().getDateFormat(language);
 
-            for (int i = 0; i < listOfComments.size(); i++) {
-                Comment comment = (Comment) listOfComments.elementAt(i);
-
+            for (Comment comment : comments) {
                 String login = comment.getUser();
 
-                StringBuffer userString = new StringBuffer();
+                StringBuilder userString = new StringBuilder();
 
                 if (!userMgr.userExists(login)) {
                     // anonymous guest who entered his name
@@ -98,7 +100,7 @@ public class BlogListCommentsHandler extends XmlRequestHandlerBase {
                     String firstName = userMgr.getFirstName(login);
                     String lastName = userMgr.getLastName(login);
 
-                    if ((lastName != null) && (lastName.trim().length() > 0)) {
+                    if ((lastName != null) && (!lastName.trim().isEmpty())) {
                         if (firstName != null) {
                             userString.append(firstName);
                             userString.append(" ");
@@ -125,8 +127,8 @@ public class BlogListCommentsHandler extends XmlRequestHandlerBase {
         }
 
         if (!userMgr.getUserType(uid).equals("virtual")) {
-            MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
-            MetaInfManager.getInstance().setUnnotifiedComments(normalizedPath, false);
+            BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
+            BlogStateManager.getInstance().setUnnotifiedComments(normalizedPath, false);
         }
 
         processResponse();

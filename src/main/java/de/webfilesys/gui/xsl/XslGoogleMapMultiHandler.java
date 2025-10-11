@@ -14,10 +14,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.CameraExifData;
 import de.webfilesys.util.CommonUtils;
@@ -51,84 +51,77 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(mapDataElement, "zoomLevel", Integer.toString(3));
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         Element markersElement = doc.createElement("markers");
 
         geoDataElement.appendChild(markersElement);
 
-        String metaInfPath = path + File.separatorChar + ".";
-
-        GeoTag geoTag = metaInfMgr.getGeoTag(metaInfPath);
-
-        if (geoTag != null) {
-            addMarker(markersElement, geoTag.getLatitude(), geoTag.getLongitude(), geoTag.getInfoText(), null);
-        }
-
         File[] fileList = folderFile.listFiles();
 
-        for (File file : fileList) {
-            geoTag = metaInfMgr.getGeoTag(file.getAbsolutePath());
+        if (fileList != null) {
+            for (File file : fileList) {
+                if (CommonUtils.isPictureFile(file)) {
+                    GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(file.getAbsolutePath());
+                    if (geoTag != null) {
+                        String infoText = geoTag.getInfoText();
 
-            if (geoTag != null) {
-                String infoText = geoTag.getInfoText();
+                        if (infoText != null) {
+                            infoText = removeEmojis(infoText);
+                        }
 
-                if (infoText != null) {
-                    infoText = removeEmojis(infoText);
-                }
+                        /*
+                         * if (CommonUtils.isEmpty(infoText)) { infoText =
+                         * metaInfMgr.getDescription(file.getAbsolutePath()); if
+                         * (!CommonUtils.isEmpty(infoText)) { infoText =
+                         * removeEmojis(infoText); if (infoText.length() >
+                         * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
+                         * infoText.substring(0, INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) +
+                         * " ..."; } } }
+                         */
 
-                /*
-                 * if (CommonUtils.isEmpty(infoText)) { infoText =
-                 * metaInfMgr.getDescription(file.getAbsolutePath()); if
-                 * (!CommonUtils.isEmpty(infoText)) { infoText =
-                 * removeEmojis(infoText); if (infoText.length() >
-                 * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
-                 * infoText.substring(0, INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) +
-                 * " ..."; } } }
-                 */
+                        addMarker(markersElement, geoTag.getLatitude(), geoTag.getLongitude(), infoText, file.getName());
+                    } else {
+                        String fileExt = CommonUtils.getFileExtension(file.getName());
 
-                addMarker(markersElement, geoTag.getLatitude(), geoTag.getLongitude(), infoText, file.getName());
-            } else {
-                String fileExt = CommonUtils.getFileExtension(path);
+                        if (fileExt.equals(".jpg") || fileExt.equals(".jpeg")) {
+                            // use GPS coordinates from Exif data if present in the JPEG
+                            // file
+                            CameraExifData exifData = new CameraExifData(path);
 
-                if (fileExt.equals(".jpg") || fileExt.equals(".jpeg")) {
-                    // use GPS coordinates from Exif data if present in the JPEG
-                    // file
-                    CameraExifData exifData = new CameraExifData(path);
+                            if (exifData.hasExifData()) {
+                                float gpsLatitude = exifData.getGpsLatitude();
+                                float gpsLongitude = exifData.getGpsLongitude();
 
-                    if (exifData.hasExifData()) {
-                        float gpsLatitude = exifData.getGpsLatitude();
-                        float gpsLongitude = exifData.getGpsLongitude();
+                                if ((gpsLatitude >= 0.0f) && (gpsLongitude >= 0.0f)) {
+                                    String latitudeRef = exifData.getGpsLatitudeRef();
 
-                        if ((gpsLatitude >= 0.0f) && (gpsLongitude >= 0.0f)) {
-                            String latitudeRef = exifData.getGpsLatitudeRef();
+                                    if ((latitudeRef != null) && latitudeRef.equalsIgnoreCase("S")) {
+                                        gpsLatitude = (-gpsLatitude);
+                                    }
 
-                            if ((latitudeRef != null) && latitudeRef.equalsIgnoreCase("S")) {
-                                gpsLatitude = (-gpsLatitude);
+                                    String longitudeRef = exifData.getGpsLongitudeRef();
+
+                                    if ((longitudeRef != null) && longitudeRef.equalsIgnoreCase("W")) {
+                                        gpsLongitude = (-gpsLongitude);
+                                    }
+
+                                    /*
+                                     * String infoText =
+                                     * metaInfMgr.getDescription(file.getAbsolutePath
+                                     * ()); if (!CommonUtils.isEmpty(infoText)) {
+                                     * infoText = removeEmojis(infoText); if
+                                     * (infoText.length() >
+                                     * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
+                                     * infoText.substring(0,
+                                     * INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) + " ..."; }
+                                     * }
+                                     *
+                                     * addMarker(markersElement, gpsLatitude,
+                                     * gpsLongitude, infoText);
+                                     */
+
+                                    addMarker(markersElement, gpsLatitude, gpsLongitude, null, file.getName());
+                                }
                             }
-
-                            String longitudeRef = exifData.getGpsLongitudeRef();
-
-                            if ((longitudeRef != null) && longitudeRef.equalsIgnoreCase("W")) {
-                                gpsLongitude = (-gpsLongitude);
-                            }
-
-                            /*
-                             * String infoText =
-                             * metaInfMgr.getDescription(file.getAbsolutePath
-                             * ()); if (!CommonUtils.isEmpty(infoText)) {
-                             * infoText = removeEmojis(infoText); if
-                             * (infoText.length() >
-                             * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
-                             * infoText.substring(0,
-                             * INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) + " ..."; }
-                             * }
-                             * 
-                             * addMarker(markersElement, gpsLatitude,
-                             * gpsLongitude, infoText);
-                             */
-
-                            addMarker(markersElement, gpsLatitude, gpsLongitude, null, file.getName());
                         }
                     }
                 }

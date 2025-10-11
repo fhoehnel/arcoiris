@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.ScaledImage;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
@@ -100,9 +100,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         XmlUtil.setChildText(blogEntryElement, "thumbnailWidth", Integer.toString(thumbWidth));
         XmlUtil.setChildText(blogEntryElement, "thumbnailHeight", Integer.toString(thumbHeight));
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
-        String blogText = metaInfMgr.getDescription(picFile.getAbsolutePath());
+        String blogText = BlogMetaInfManager.getInstance().getDescription(picFile.getAbsolutePath());
 
         XmlUtil.setChildText(blogEntryElement, "blogText", blogText, true);
 
@@ -129,8 +127,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         
         int zoomFactor = 10;
 
-        GeoTag geoTag = metaInfMgr.getGeoTag(picFile.getAbsolutePath());
-
+        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(picFile.getAbsolutePath());
         if (geoTag != null) {
             XmlUtil.setChildText(geoTagElement, "latitude", Float.toString(geoTag.getLatitude()));
             XmlUtil.setChildText(geoTagElement, "longitude", Float.toString(geoTag.getLongitude()));

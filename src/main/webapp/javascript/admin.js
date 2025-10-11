@@ -4,7 +4,7 @@ var PASSWORD_MIN_LENGTH = 5;
 var PASSWORD_MAX_LENGTH = 32;
 
 function confirmDelete(delUser, userHomeDir) {
-    if (confirm("Are you sure you want to delete user " + delUser + " ?\nThis will delete all data in the home directory of this user:\n" + userHomeDir)) {
+    if (confirm("Are you sure you want to delete user " + delUser + " ?\nThis will delete all data in the home directory of this user.")) {
         window.location.href = getContextRoot() + "/servlet?command=admin&cmd=deleteUser&userToBeDeleted=" + encodeURIComponent(delUser);
     }
 }

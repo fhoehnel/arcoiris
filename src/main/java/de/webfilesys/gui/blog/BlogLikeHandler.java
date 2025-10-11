@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.servlet.VisitorServlet;
 import de.webfilesys.util.CommonUtils;
@@ -54,9 +54,9 @@ public class BlogLikeHandler extends XmlRequestHandlerBase {
             String visitorId = (String) req.getSession().getAttribute(VisitorServlet.SESSION_ATTRIB_VISITOR_ID);
 
             if (visitorId != null) {
-                MetaInfManager.getInstance().addIdentifiedVisitorRating(visitorId, imgFile.getAbsolutePath(), 5);
+                BlogMetaInfManager.getInstance().addLiker(imgFile.getAbsolutePath(), visitorId);
             } else {
-                MetaInfManager.getInstance().addVisitorRating(currentPath, imgName, 5);
+                // MetaInfManager.getInstance().addVisitorRating(currentPath, imgName, 5);
             }
 
             ratedPictures.put(imgFile.getAbsolutePath(), new Boolean(true));
@@ -68,7 +68,7 @@ public class BlogLikeHandler extends XmlRequestHandlerBase {
 
         XmlUtil.setChildText(resultElement, "success", Boolean.toString(success));
 
-        int newVoteCount = MetaInfManager.getInstance().getVisitorRatingCount(imgFile.getAbsolutePath());
+        int newVoteCount = BlogMetaInfManager.getInstance().getLikerCount(imgFile.getAbsolutePath());
 
         XmlUtil.setChildText(resultElement, "newVoteCount", Integer.toString(newVoteCount));
 

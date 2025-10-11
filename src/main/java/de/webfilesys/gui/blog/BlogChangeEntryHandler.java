@@ -4,17 +4,17 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
-import de.webfilesys.Comment;
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.gui.user.UserRequestHandler;
 import de.webfilesys.util.CommonUtils;
@@ -59,18 +59,14 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
 
         String oldFilePath = oldFile.getAbsolutePath();
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         String newFileName = fileName;
 
         String fileNamePrefixFromDate = getFileNamePrefixFromDate();
 
-        int savedStatus = (-1);
-
         if (!fileNamePrefixFromDate.equals(fileName.substring(0, 10))) {
             Logger.getLogger(getClass()).debug("date has changed");
 
-            savedStatus = metaInfMgr.getStatus(oldFilePath);
+            BlogMetaInfManager blogMetaInfMgr = BlogMetaInfManager.getInstance();
 
             // newFileName = fileNamePrefixFromDate + fileName.substring(10);
             newFileName = fileNamePrefixFromDate + "-" + System.currentTimeMillis() + CommonUtils.getFileExtension(fileName);
@@ -82,36 +78,25 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
                 return;
             } else {
                 BlogThumbnailHandler.getInstance().renameThumbnail(oldFilePath, newFileName);
-            }
+                blogMetaInfMgr.moveMetaInf(currentPath, fileName, newFileName);
+                AttachmentManager.getInstance().moveAttachments(currentPath, fileName, newFileName);
 
-            metaInfMgr.removeDescription(oldFilePath);
-
-            metaInfMgr.removeGeoTag(currentPath, fileName);
-
-            Vector<Comment> comments = metaInfMgr.getListOfComments(oldFilePath);
-            if ((comments != null) && (comments.size() > 0)) {
-                for (Comment comment : comments) {
-                    metaInfMgr.addComment(currentPath, newFileName, comment);
+                String titlePic = BlogConfigManager.getInstance().getTitlePic(currentPath);
+                if ((titlePic != null) && titlePic.equals(fileName)) {
+                    BlogConfigManager.getInstance().setTitlePic(currentPath, newFileName);
                 }
             }
-
-            metaInfMgr.removeComments(oldFilePath);
         }
 
         String blogText = req.getParameter("blogText");
-
         if (!CommonUtils.isEmpty(blogText)) {
             blogText = CommonUtils.filterForbiddenChars(blogText);
-            metaInfMgr.setDescription(currentPath, newFileName, blogText);
+            BlogMetaInfManager.getInstance().setDescription(currentPath, newFileName, blogText);
         } else {
-            metaInfMgr.setDescription(currentPath, newFileName, "");
+            BlogMetaInfManager.getInstance().setDescription(currentPath, newFileName, "");
         }
 
-        if (savedStatus == MetaInfManager.STATUS_BLOG_EDIT) {
-            metaInfMgr.setStatus(currentPath, newFileName, MetaInfManager.STATUS_BLOG_EDIT);
-        }
-
-        setParameter("positionToFile", newFileName);        
+        setParameter("positionToFile", newFileName);
         
         String geoDataSwitcher = req.getParameter("geoDataSwitcher");
 
@@ -168,20 +153,18 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
                     infoText = CommonUtils.filterForbiddenChars(infoText);
                     geoTag.setInfotext(infoText);
                 }
-
-                metaInfMgr.setGeoTag(currentPath, newFileName, geoTag);
+                BlogMetaInfManager.getInstance().setGeoTag(currentPath, newFileName, geoTag);
             }
         } else {
             if (newFileName.equals(fileName)) {
-                if (metaInfMgr.getGeoTag(currentPath, newFileName) != null) {
-                    metaInfMgr.removeGeoTag(currentPath, newFileName);
+                if (BlogMetaInfManager.getInstance().getGeoTag(currentPath, newFileName) != null) {
+                    BlogMetaInfManager.getInstance().removeGeoTag(currentPath, newFileName);
                 }
             }
         }
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
             Date beforeDate = dateFormat.parse(fileNamePrefixFromDate);
             beforeDate.setTime(beforeDate.getTime() + (25l * 60l * 60l * 1000l));   // 25 hours because of change summer to winter time
             setParameter("beforeDay", dateFormat.format(beforeDate));
