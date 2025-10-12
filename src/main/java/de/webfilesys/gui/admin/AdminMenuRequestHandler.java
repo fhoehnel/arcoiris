@@ -62,6 +62,16 @@ public class AdminMenuRequestHandler extends AdminRequestHandler {
         output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=loginHistory\">Login/Logout Events</a>");
         output.println("</div>");
 
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-process iconAdminMenu\"></span>");
+        output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=migrate&allUsers=true&simulate=true\">Migrate all Users (simulate)</a>");
+        output.println("</div>");
+
+        output.println("<div class=\"adminMenuEntry\">");
+        output.println("<span class=\"icon-font icon-process iconAdminMenu\"></span>");
+        output.println("<a href=\"" + req.getContextPath() + "/servlet?command=admin&cmd=migrate&allUsers=true\">Migrate all Users</a>");
+        output.println("</div>");
+
         output.println("<br/>");
 
         output.println("<form>");

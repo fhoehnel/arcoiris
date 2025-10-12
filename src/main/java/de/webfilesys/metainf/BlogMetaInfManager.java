@@ -330,6 +330,9 @@ public class BlogMetaInfManager extends Thread {
     private MetaInfData getOrCreateMetaInf(String path, String fileName) {
         MetaInfData metaInfData = metaInfCache.get(getCacheKey(path, fileName));
         if (metaInfData == null) {
+            metaInfData = loadMetaInfFromFile(path, fileName);
+        }
+        if (metaInfData == null) {
             limitCacheSize();
             metaInfData = new MetaInfData();
             metaInfCache.put(getCacheKey(path, fileName), metaInfData);
