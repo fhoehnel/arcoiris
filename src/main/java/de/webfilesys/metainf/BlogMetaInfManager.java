@@ -20,6 +20,8 @@ public class BlogMetaInfManager extends Thread {
 
     private static final Logger LOG = Logger.getLogger(BlogMetaInfManager.class);
 
+    private static final char CACHE_KEY_SEP = '/';
+    
     public static final int STATUS_NONE = 0;
     public static final int STATUS_BLOG_EDIT = 1;
     public static final int STATUS_BLOG_PUBLISHED = 2;
@@ -46,7 +48,7 @@ public class BlogMetaInfManager extends Thread {
     }
 
     private String getCacheKey(String path, String fileName) {
-        return path + "/" + fileName;
+        return path + CACHE_KEY_SEP + fileName;
     }
 
     public void setDescription(String path, String fileName, String newDescription) {
@@ -371,10 +373,13 @@ public class BlogMetaInfManager extends Thread {
             LOG.error("inconsistent cache dirty entry for key " + cacheKey);
             return;
         }
-        String[] partsOfPath = cacheKey.split("/");
-        String filePath = getMetaInfFilePath(partsOfPath[0], partsOfPath[1]);
+        
+        int sepIdx = cacheKey.lastIndexOf(CACHE_KEY_SEP);
+        String cachePath = cacheKey.substring(0, sepIdx);
+        String cacheFileName = cacheKey.substring(sepIdx + 1);        
+        String filePath = getMetaInfFilePath(cachePath, cacheFileName);
         String newFilePath = filePath + "-new";
-        LOG.info("saving meta info to file " + filePath);
+        LOG.debug("saving meta info to file " + filePath);
         ObjectMapper mapper = new ObjectMapper();
         try {
             String jsonResult = mapper.writeValueAsString(metaInfData);
@@ -415,6 +420,8 @@ public class BlogMetaInfManager extends Thread {
                 cacheDirty.keySet().forEach(this::saveMetaInfToFile);
                 Logger.getLogger(getClass()).debug("BlogMetaInfManager ready for shutdown");
                 stop = true;
+            } catch (Throwable t) {
+                LOG.error("unhandled exception in run", t);
             }
         }
     }
