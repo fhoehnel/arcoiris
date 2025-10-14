@@ -331,9 +331,15 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                 int globalEntryCounter = 0;
 
+                Date calendarStartDate = null;
+
                 for (String blogDate : daysOnPage) {
                     try {
                         Date day = dateFormat.parse(blogDate);
+
+                        if (calendarStartDate == null) {
+                            calendarStartDate = day;
+                        }
 
                         if (dateRangeUntil == null) {
                             dateRangeUntil = day;
@@ -582,7 +588,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeUntil));
                     }
                 }
-                
+
+                if (calendarStartDate != null) {
+                    XmlUtil.setChildText(blogElement, "calStartYear", Integer.toString(calendarStartDate.getYear() + 1900));
+                    XmlUtil.setChildText(blogElement, "calStartMonth", Integer.toString(calendarStartDate.getMonth() + 1));
+                }
+
                 if (globalEntryCounter > 10) {
                     XmlUtil.setChildText(blogElement, "showTopBottomLinks", "true", false);
                 }

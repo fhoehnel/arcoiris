@@ -130,6 +130,9 @@
             </xsl:for-each>
         </xsl:if>
 
+        var calStartYear = <xsl:value-of select="/blog/calStartYear" />;
+        var calStartMonth = <xsl:value-of select="/blog/calStartMonth" />;
+
         function prepareCalenderPopup() {
             cal1x = new CalendarPopup("calDiv", true);
             cal1x.setReturnFunction("gotoSelectedDate");
