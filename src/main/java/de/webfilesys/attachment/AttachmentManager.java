@@ -103,8 +103,10 @@ public class AttachmentManager {
             }
         }
         HashMap<String, List<BlogAttachment>> userAttachmentMap = attachmentMap.get(path);
-        userAttachmentMap.put(blogPicFileName, new  ArrayList<>());
-        saveAttachmentsOfUser(path, userAttachmentMap);
+        if (userAttachmentMap != null) {
+            userAttachmentMap.remove(blogPicFileName);
+            saveAttachmentsOfUser(path, userAttachmentMap);
+        }
         return overAllSuccess;
     }
 
