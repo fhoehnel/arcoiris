@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.CameraExifData;
 import de.webfilesys.util.CommonUtils;
 
@@ -46,14 +46,13 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
             return;
         }
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
-        GeoTag geoTag = metaInfMgr.getGeoTag(filePath);
+        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(filePath);
 
         float latitude = Float.NEGATIVE_INFINITY;
         float longitude = Float.NEGATIVE_INFINITY;
         String infoText = "";
-        String description = metaInfMgr.getDescription(filePath);
+
+        String description = BlogMetaInfManager.getInstance().getDescription(filePath);
         if ((description == null) || (description.trim().length() == 0)) {
             description = fileName;
         }

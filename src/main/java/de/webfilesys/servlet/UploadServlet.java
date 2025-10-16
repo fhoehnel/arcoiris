@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.CameraExifData;
@@ -203,11 +205,11 @@ public class UploadServlet extends BlogWebServlet {
         }
 
         if (geoTag != null) {
-            MetaInfManager.getInstance().setGeoTag(origImgPath, geoTag);
+            BlogMetaInfManager.getInstance().setGeoTag(origImgPath, geoTag);
         }
 
-        if (MetaInfManager.getInstance().isStagedPublication(currentPath)) {
-            MetaInfManager.getInstance().setStatus(origImgPath, MetaInfManager.STATUS_BLOG_EDIT);
+        if (BlogConfigManager.getInstance().isStagedPublication(currentPath)) {
+            BlogMetaInfManager.getInstance().setStatus(origImgPath, BlogMetaInfManager.STATUS_BLOG_EDIT);
         }
     }
 
@@ -289,7 +291,7 @@ public class UploadServlet extends BlogWebServlet {
             }
         }
         
-        MetaInfManager.getInstance().addAttachment(currentPath, blogFileName, attachmentFileName);
+        AttachmentManager.getInstance().addAttachment(currentPath, blogFileName, attachmentFileName);
     }
     
     private String replaceIllegalChars(String fileName) {

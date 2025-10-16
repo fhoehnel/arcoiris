@@ -11,12 +11,12 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.CameraExifData;
 import de.webfilesys.gui.user.UserRequestHandler;
@@ -86,14 +86,12 @@ public abstract class GoogleEarthHandlerBase extends UserRequestHandler {
     protected abstract ArrayList createPlacemarkXml();
 
     protected Element createPlacemark(String imgPath) {
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
 
-        String description = metaInfMgr.getDescription(imgPath);
+        String description = BlogMetaInfManager.getInstance().getDescription(imgPath);
 
         StringBuffer coordinatesBuff = new StringBuffer();
 
-        GeoTag geoTag = metaInfMgr.getGeoTag(imgPath);
-
+        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(imgPath);
         if (geoTag != null) {
             coordinatesBuff.append(Float.toString(geoTag.getLongitude()));
             coordinatesBuff.append(',');

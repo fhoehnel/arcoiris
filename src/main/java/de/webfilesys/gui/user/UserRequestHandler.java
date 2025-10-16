@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.LanguageManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ProtectedRequestHandler;
 import de.webfilesys.util.FileEncodingMap;
 import de.webfilesys.util.HTTPUtils;
@@ -115,40 +114,6 @@ public class UserRequestHandler extends ProtectedRequestHandler {
             Logger.getLogger(UserRequestHandler.class).warn(ioex);
             return (false);
         }
-    }
-
-    protected boolean delDirTree(String path) {
-        boolean deleteError = false;
-
-        File dirToBeDeleted = new File(path);
-        String fileList[] = dirToBeDeleted.list();
-
-        if (fileList != null) {
-            for (int i = 0; i < fileList.length; i++) {
-                File tempFile = new File(path + File.separator + fileList[i]);
-                if (tempFile.isDirectory()) {
-                    if (!delDirTree(path + File.separator + fileList[i]))
-                        deleteError = true;
-                } else {
-                    String absolutePath = tempFile.getAbsolutePath();
-
-                    if (!tempFile.delete()) {
-                        deleteError = true;
-                        Logger.getLogger(getClass()).warn("cannot delete " + tempFile);
-                    } else {
-                        MetaInfManager.getInstance().removeMetaInf(absolutePath);
-                    }
-                }
-            }
-        }
-
-        if (!dirToBeDeleted.delete()) {
-            deleteError = true;
-        } else {
-            MetaInfManager.getInstance().releaseMetaInf(path);
-        }
-
-        return (!(deleteError));
     }
 
     protected boolean isMobile() {

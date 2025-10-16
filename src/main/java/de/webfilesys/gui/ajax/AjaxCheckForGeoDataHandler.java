@@ -2,55 +2,48 @@ package de.webfilesys.gui.ajax;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.w3c.dom.Element;
 
-import de.webfilesys.Constants;
-import de.webfilesys.FileComparator;
-import de.webfilesys.FileContainer;
-import de.webfilesys.FileLinkSelector;
-import de.webfilesys.FileSelectionStatus;
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.CameraExifData;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
-/**
- * @author Frank Hoehnel
- * 
- */
 public class AjaxCheckForGeoDataHandler extends XmlRequestHandlerBase {
-    private static final int MAX_FILE_NUM = 10000;
 
     public AjaxCheckForGeoDataHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
     }
 
     protected void process() {
-        String path = getCwd();
-
         boolean geoDataExist = false;
 
-        FileLinkSelector fileSelector = new FileLinkSelector(path, FileComparator.SORT_BY_FILENAME, true);
+        String path = getCwd();
 
-        FileSelectionStatus selectionStatus = fileSelector.selectFiles(Constants.imgFileMasks, -1, MAX_FILE_NUM, 0);
+        boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(path);
 
-        Vector selectedFiles = selectionStatus.getSelectedFiles();
+        File dirFile = new File(path);
 
-        if (selectedFiles != null) {
-            for (int i = 0; (!geoDataExist) && (i < selectedFiles.size()); i++) {
-                FileContainer fileCont = (FileContainer) selectedFiles.elementAt(i);
+        File[] fileList = dirFile.listFiles();
 
-                File imgFile = fileCont.getRealFile();
-
-                if (hasGeoData(imgFile.getAbsolutePath())) {
-                    geoDataExist = true;
+        if (fileList != null) {
+            for (File file : fileList) {
+                if (file.isFile() && file.canRead()) {
+                    if (CommonUtils.isPictureFile(file)) {
+                        if ((!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
+                            if (hasGeoData(file.getAbsolutePath())) {
+                                geoDataExist = true;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -65,8 +58,7 @@ public class AjaxCheckForGeoDataHandler extends XmlRequestHandlerBase {
     }
 
     private boolean hasGeoData(String imgPath) {
-        GeoTag geoTag = MetaInfManager.getInstance().getGeoTag(imgPath);
-
+        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(imgPath);
         if (geoTag != null) {
             return true;
         }

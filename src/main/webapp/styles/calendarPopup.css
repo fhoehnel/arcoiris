@@ -154,7 +154,7 @@ A.cpTodayText {
 #sideCalCont .cpTodayTextDisabled,
 #sideCalCont .cpText {
     font-size: 1rem;
-    padding: 4px;
+    padding: 4px 2px;
 }
 
 .calendarCont .cpDayColumnHeader, 
@@ -174,7 +174,7 @@ A.cpTodayText {
 }
 
 #sideCalCont table.dayCont {
-    width: 250px;
+    width: 260px;
 }
 
 #calDiv table.dayCont {

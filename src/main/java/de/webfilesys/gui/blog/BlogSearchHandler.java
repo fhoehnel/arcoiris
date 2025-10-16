@@ -2,21 +2,19 @@ package de.webfilesys.gui.blog;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.Comment;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -113,9 +111,7 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
 
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
-        boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
+        boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(currentPath);
 
         File blogFolder = new File(currentPath);
 
@@ -125,44 +121,45 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
 
         for (int i = 0; i < blogFiles.length; i++) {
             if (blogFiles[i].isFile()) {
+                if (CommonUtils.isPictureFile(blogFiles[i])) {
+                    if ((!readonly) || (!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(blogFiles[i].getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
 
-                if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(blogFiles[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
+                        String blogText = BlogMetaInfManager.getInstance().getDescription(currentPath, blogFiles[i].getName());
+                        if (blogText != null) {
+                            ArrayList<SearchResultData> hitList = searchInBlogText(blogText, searchArg);
 
-                    String blogText = metaInfMgr.getDescription(currentPath, blogFiles[i].getName());
-                    if (blogText != null) {
-                        ArrayList<SearchResultData> hitList = searchInBlogText(blogText, searchArg);
-
-                        if (searchComments) {
-                            ArrayList<SearchResultData> commentHitList = searchInComments(currentPath, blogFiles[i].getName(), searchArg);
-                            if (commentHitList.size() > 0) {
-                                hitList.addAll(commentHitList);
-                            }
-                        }
-
-                        String blogDateStr = blogFiles[i].getName().substring(0, 10);
-
-                        Date blogDate;
-                        try {
-                            blogDate = linkDateFormat.parse(blogDateStr);
-
-                            Date linkDate = new Date(blogDate.getTime() + (25l * 60l * 60l * 1000l));  // 25 hours for daylight saving time switch
-
-                            String linkDateStr = linkDateFormat.format(linkDate);
-
-                            for (SearchResultData searchHit : hitList) {
-                                searchHit.setLinkDate(linkDateStr);
-                                searchHit.setDisplayDate(blogDate);
-                                searchHit.setFileName(blogFiles[i].getName());
+                            if (searchComments) {
+                                ArrayList<SearchResultData> commentHitList = searchInComments(currentPath, blogFiles[i].getName(), searchArg);
+                                if (commentHitList.size() > 0) {
+                                    hitList.addAll(commentHitList);
+                                }
                             }
 
-                            ArrayList<SearchResultData> existingList = resultMap.get(linkDateStr);
-                            if (existingList != null) {
-                                existingList.addAll(hitList);
-                            } else {
-                                resultMap.put(linkDateStr, hitList);
+                            String blogDateStr = blogFiles[i].getName().substring(0, 10);
+
+                            Date blogDate;
+                            try {
+                                blogDate = linkDateFormat.parse(blogDateStr);
+
+                                Date linkDate = new Date(blogDate.getTime() + (25l * 60l * 60l * 1000l));  // 25 hours for daylight saving time switch
+
+                                String linkDateStr = linkDateFormat.format(linkDate);
+
+                                for (SearchResultData searchHit : hitList) {
+                                    searchHit.setLinkDate(linkDateStr);
+                                    searchHit.setDisplayDate(blogDate);
+                                    searchHit.setFileName(blogFiles[i].getName());
+                                }
+
+                                ArrayList<SearchResultData> existingList = resultMap.get(linkDateStr);
+                                if (existingList != null) {
+                                    existingList.addAll(hitList);
+                                } else {
+                                    resultMap.put(linkDateStr, hitList);
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(getClass()).error("invalid blog date format: " + blogDateStr, ex);
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(getClass()).error("invalid blog date format: " + blogDateStr, ex);
                         }
                     }
                 }
@@ -217,7 +214,7 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
     public ArrayList<SearchResultData> searchInComments(String currentPath, String fileName, String searchArg) {
         ArrayList<SearchResultData> resultList = new ArrayList<SearchResultData>();
 
-        Vector<Comment> comments = MetaInfManager.getInstance().getListOfComments(currentPath, fileName);
+        List<Comment> comments = BlogMetaInfManager.getInstance().getComments(currentPath, fileName);
         if (comments != null) {
             for (Comment comment : comments) {
                 if (comment.getMessage() != null) {

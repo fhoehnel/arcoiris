@@ -8,12 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
+import de.webfilesys.state.BlogState;
+import de.webfilesys.state.BlogStateManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.Comment;
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -78,15 +80,16 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
                 newComment.setNotifyOnAnswerEmail(notifyOnAnswerEmail);
             }
             
-            MetaInfManager.getInstance().addComment(filePath, newComment);
+            BlogMetaInfManager.getInstance().addComment(filePath, newComment);
 
-            newCommentCount = MetaInfManager.getInstance().countComments(filePath);
+            newCommentCount = BlogMetaInfManager.getInstance().getComments(filePath).size();
 
             if (readonly) {
-                MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, false);
-                MetaInfManager.getInstance().setUnnotifiedComments(normalizedPath, true);
+                BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, false);
+                BlogStateManager.getInstance().setUnnotifiedComments(normalizedPath, true);
+                BlogStateManager.getInstance().incrUnseenCommentCount(normalizedPath);
             } else {
-                MetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
+                BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
             }
 
             InvitationManager.getInstance().queueCommentAnswerNotification(uid, filePath);

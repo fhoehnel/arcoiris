@@ -2,18 +2,18 @@ package de.webfilesys.gui.blog;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Vector;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.BlogStatistic;
 import de.webfilesys.Comment;
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.StatisticManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
@@ -97,8 +97,6 @@ public class BlogStatisticsHandler extends XmlRequestHandlerBase {
             return;
         }
         
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         long now = System.currentTimeMillis();
 
         File[] filesInDir = blogDir.listFiles();
@@ -108,8 +106,7 @@ public class BlogStatisticsHandler extends XmlRequestHandlerBase {
 
                 if (CommonUtils.isPictureFile(filesInDir[i])) {
 
-                    Vector<Comment> commentList = metaInfMgr.getListOfComments(filesInDir[i].getAbsolutePath());
-
+                    List<Comment> commentList = BlogMetaInfManager.getInstance().getComments(filesInDir[i].getAbsolutePath());
                     if (commentList != null) {
                         for (Comment comment : commentList) {
                             if (!comment.getUser().equals(uid)) {

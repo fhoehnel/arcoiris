@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.XmlUtil;
 
@@ -30,7 +30,7 @@ public class BlogUnsetTitlePicHandler extends XmlRequestHandlerBase {
 
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
-        MetaInfManager.getInstance().unsetTitlePic(currentPath);
+        BlogConfigManager.getInstance().unsetTitlePic(currentPath);
 
         boolean success = true;
 

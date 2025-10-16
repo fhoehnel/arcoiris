@@ -2,18 +2,16 @@ package de.webfilesys.gui.blog;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
-import de.webfilesys.servlet.UploadServlet;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
@@ -42,7 +40,8 @@ public class BlogDetachHandler extends XmlRequestHandlerBase {
             Logger.getLogger(getClass()).error("img file is not a readable file: " + imgFile.getAbsolutePath());
             return;
         }
-        
+
+        /*
         ArrayList<String> attachmentNames = MetaInfManager.getInstance().getListOfAttachments(currentPath, imgName);
         
         if (attachmentNames != null) {
@@ -71,12 +70,13 @@ public class BlogDetachHandler extends XmlRequestHandlerBase {
                 }
             }
         }
-        
-        MetaInfManager.getInstance().removeAttachments(currentPath, imgName);
+        */
+
+        boolean success = AttachmentManager.getInstance().removeAttachments(currentPath, imgName);
         
         Element resultElement = doc.createElement("result");
 
-        XmlUtil.setChildText(resultElement, "success", Boolean.TRUE.toString());
+        XmlUtil.setChildText(resultElement, "success", Boolean.valueOf(success).toString());
 
         doc.appendChild(resultElement);
 

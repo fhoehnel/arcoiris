@@ -14,10 +14,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import de.webfilesys.GeoTag;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.CameraExifData;
 import de.webfilesys.util.CommonUtils;
@@ -61,12 +61,9 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
         XmlUtil.setChildText(geoTagElement, "language", language, false);
         XmlUtil.setChildText(geoTagElement, "skin", userMgr.getCSS(uid), false);
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
         boolean geoLocationDefined = false;
 
-        GeoTag geoTag = metaInfMgr.getGeoTag(filePath);
-
+        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(filePath);
         if (geoTag != null) {
             XmlUtil.setChildText(geoTagElement, "latitude", Float.toString(geoTag.getLatitude()), false);
             XmlUtil.setChildText(geoTagElement, "longitude", Float.toString(geoTag.getLongitude()), false);

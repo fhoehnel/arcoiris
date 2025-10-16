@@ -30,6 +30,13 @@ function createSideCalendar() {
     }
 
     selectDate(sideCal,"sideContDate", "anchorSideDate");
+
+    if (calStartMonth) {
+        setTimeout(() => {
+            sideCal.populate(sideCal.getCalendar(calStartMonth, calStartYear));
+            sideCal.refresh();
+        }, 1000);
+    }
 }
 
 function createSideMap() {

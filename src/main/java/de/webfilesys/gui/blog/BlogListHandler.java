@@ -5,18 +5,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.config.BlogConfig;
+import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.daytitle.DayTitleManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
@@ -25,7 +24,6 @@ import de.webfilesys.Constants;
 import de.webfilesys.FileComparator;
 import de.webfilesys.GeoTag;
 import de.webfilesys.IconManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.graphics.ScaledImage;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
@@ -54,9 +52,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
             session.setAttribute("cwd", currentPath);
         }
 
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-
-        String blogTitle = metaInfMgr.getDescription(currentPath, ".");
+        String blogTitle = BlogConfigManager.getInstance().getConfig(currentPath).getTitleText();
 
         if (CommonUtils.isEmpty(blogTitle)) {
             blogTitle = "arcoiris blog";
@@ -72,7 +68,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         if (readonly) {
             XmlUtil.setChildText(blogElement, "readonly", "true", false);
         }
-        
+
         Boolean lowBandwidth = (Boolean) session.getAttribute(BlogSwitchLowBandwidthHandler.SESSION_KEY_LOW_BANDWIDTH);
         if (lowBandwidth != null) {
             XmlUtil.setChildText(blogElement, "lowBandwidthMode", "true");
@@ -94,7 +90,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         XmlUtil.setChildText(blogElement, "sideContMapType", Integer.toString(ArcoirisBlog.getInstance().getSideContMapType()), false);
 
         String posInPage = req.getParameter("posInPage");
-        
+
         if ((posInPage != null) && (!posInPage.isEmpty())) {
             XmlUtil.setChildText(blogElement, "posInPage", posInPage, false);
         }
@@ -103,7 +99,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(blogElement, "blogTitle", blogTitle, false);
 
-        String blogTitlePic = metaInfMgr.getTitlePic(currentPath);
+        String blogTitlePic = BlogConfigManager.getInstance().getTitlePic(currentPath);
 
         if (!CommonUtils.isEmpty(blogTitlePic)) {
 
@@ -123,16 +119,16 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
         blogElement.appendChild(blogEntriesElement);
 
-        int sortOrder = metaInfMgr.getSortOrder(currentPath);        
-        if (sortOrder == 0) {
-            sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        int sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
+        if (BlogConfigManager.getInstance().getSortOrder(currentPath) == BlogConfig.SortOrder.DIARY) {
+            sortOrder = BlogDateComparator.SORT_ORDER_DIARY;
         }
-        
+
         XmlUtil.setChildText(blogElement, "sortOrder", Integer.toString(sortOrder), false);
         
         TreeMap<String, ArrayList<File>> blogDays = new TreeMap<String, ArrayList<File>>(new BlogDateComparator(sortOrder));
 
-        boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
+        boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(currentPath);
 
         File blogDir = new File(currentPath);
         
@@ -148,7 +144,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                 if (CommonUtils.isPictureFile(filesInDir[i])) {
 
-                    if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
+                    if ((!readonly) || (!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(filesInDir[i].getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
 
                         String fileName = filesInDir[i].getName();
                         if (fileName.length() >= 10) {
@@ -335,9 +331,15 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                 int globalEntryCounter = 0;
 
+                Date calendarStartDate = null;
+
                 for (String blogDate : daysOnPage) {
                     try {
                         Date day = dateFormat.parse(blogDate);
+
+                        if (calendarStartDate == null) {
+                            calendarStartDate = day;
+                        }
 
                         if (dateRangeUntil == null) {
                             dateRangeUntil = day;
@@ -397,9 +399,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                     XmlUtil.setChildText(fileElement, "align", "left");
                                 }
 
-                                String description = null;
-
-                                description = metaInfMgr.getDescription(file.getAbsolutePath());
+                                String description = BlogMetaInfManager.getInstance().getDescription(file.getAbsolutePath());
 
                                 if ((description != null) && (description.trim().length() > 0)) {
                                     Element descrElem = doc.createElement("description");
@@ -407,19 +407,19 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                     appendDescrFragments(description, descrElem);
                                 }
 
-                                int commentCount = metaInfMgr.countComments(file.getAbsolutePath());
+                                int commentCount = BlogMetaInfManager.getInstance().getCommentCount(file.getAbsolutePath());
 
                                 XmlUtil.setChildText(fileElement, "comments", Integer.toString(commentCount));
 
                                 if (!readonly) {
-                                    if ((commentCount > 0) && (!metaInfMgr.isCommentsSeenByOwner(file.getAbsolutePath()))) {
+                                    if ((commentCount > 0) && (!BlogMetaInfManager.getInstance().isCommentsSeenByOwner(file.getAbsolutePath()))) {
                                         XmlUtil.setChildText(fileElement, "newComments", "true");
                                     }
                                 }
 
-                                int voteCount = metaInfMgr.getVisitorRatingCount(file.getAbsolutePath());
+                                int likerCount = BlogMetaInfManager.getInstance().getLikerCount(file.getAbsolutePath());
 
-                                XmlUtil.setChildText(fileElement, "voteCount", Integer.toString(voteCount));
+                                XmlUtil.setChildText(fileElement, "voteCount", Integer.toString(likerCount));
 
                                 boolean imgFound = true;
 
@@ -499,8 +499,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
 
                                     XmlUtil.setChildText(fileElement, "imgPathForScript", srcPathForScript);
 
-                                    ArrayList<String> attachments = metaInfMgr.getListOfAttachments(file.getAbsolutePath());
-                                    
+                                    List<String> attachments = AttachmentManager.getInstance().getAttachments(file.getAbsolutePath());
+
                                     if ((attachments != null) && (attachments.size() > 0)) {
                                         String attachmentFileName = attachments.get(0);
                                         if (isGpsTrack(attachmentFileName)) {
@@ -514,8 +514,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                         }
                                     }
                                     
-                                    GeoTag geoTag = metaInfMgr.getGeoTag(file.getAbsolutePath());
-
+                                    GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(file.getAbsolutePath());
                                     if (geoTag != null) {
                                         Element geoTagElement = doc.createElement("geoTag");
                                         fileElement.appendChild(geoTagElement);
@@ -550,7 +549,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                         if (!alreadyRated) {
                                             String visitorId = (String) session.getAttribute(VisitorServlet.SESSION_ATTRIB_VISITOR_ID);
                                             if (visitorId != null) {
-                                                if (metaInfMgr.getIdentifiedVisitorRating(visitorId, file.getAbsolutePath()) > 0) {
+                                                if (BlogMetaInfManager.getInstance().alreadyLiked(file.getAbsolutePath(), visitorId)) {
                                                     alreadyRated = true;
                                                 }
                                             }
@@ -561,7 +560,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                         }
                                     }
 
-                                    if (stagedPublication && (!readonly) && (metaInfMgr.getStatus(file.getAbsolutePath()) == MetaInfManager.STATUS_BLOG_EDIT)) {
+                                    if (stagedPublication && (!readonly) && (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) == BlogMetaInfManager.STATUS_BLOG_EDIT)) {
                                         XmlUtil.setChildText(fileElement, "staged", "true");
                                     }
                                 }
@@ -589,7 +588,12 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         XmlUtil.setChildText(blogElement, "dateRangeFrom", formatBlogDate(dateRangeUntil));
                     }
                 }
-                
+
+                if (calendarStartDate != null) {
+                    XmlUtil.setChildText(blogElement, "calStartYear", Integer.toString(calendarStartDate.getYear() + 1900));
+                    XmlUtil.setChildText(blogElement, "calStartMonth", Integer.toString(calendarStartDate.getMonth() + 1));
+                }
+
                 if (globalEntryCounter > 10) {
                     XmlUtil.setChildText(blogElement, "showTopBottomLinks", "true", false);
                 }

@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -33,10 +34,8 @@ public class BlogGetDatesWithEntriesHandler extends XmlRequestHandlerBase {
 
         doc.appendChild(dateListElem);
         
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-        
-        boolean stagedPublication = metaInfMgr.isStagedPublication(currentPath);
-        
+        boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(currentPath);
+
         File blogDir = new File(currentPath);
         
         if (!blogDir.exists() || (!blogDir.isDirectory()) || (!blogDir.canRead())) {
@@ -53,7 +52,8 @@ public class BlogGetDatesWithEntriesHandler extends XmlRequestHandlerBase {
 
                 if (CommonUtils.isPictureFile(filesInDir[i])) {
 
-                    if ((!readonly) || (!stagedPublication) || (metaInfMgr.getStatus(filesInDir[i].getAbsolutePath()) != MetaInfManager.STATUS_BLOG_EDIT)) {
+                    if ((!readonly) || (!stagedPublication) ||
+                            (BlogMetaInfManager.getInstance().getStatus(filesInDir[i].getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
 
                         String fileName = filesInDir[i].getName();
                         if (fileName.length() >= 10) {

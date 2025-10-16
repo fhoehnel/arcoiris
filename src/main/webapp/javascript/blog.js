@@ -1766,33 +1766,23 @@ function validateSettingsForm() {
 }
 
 function showSaveSettingsResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
+    if (req.readyState === 4) {
+        if (req.status === 200) {
             var resultElem = req.responseXML.getElementsByTagName("result")[0];            
             var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
 
-            if (success != 'true') {
+            if (success !== 'true') {
                 alert("failed to save settings");
             }
-
-            var pageSizeChanged = resultElem.getElementsByTagName("pageSizeChanged")[0].firstChild.nodeValue;
-            var blogTitleChanged = resultElem.getElementsByTagName("blogTitleChanged")[0].firstChild.nodeValue;
-            var stagingChanged = resultElem.getElementsByTagName("stagingChanged")[0].firstChild.nodeValue;
-            var skinChanged = resultElem.getElementsByTagName("skinChanged")[0].firstChild.nodeValue;
-            var languageChanged = resultElem.getElementsByTagName("languageChanged")[0].firstChild.nodeValue;
-            var sortOrderChanged = resultElem.getElementsByTagName("sortOrderChanged")[0].firstChild.nodeValue;
 
             var settingsCont = document.getElementById("settingsCont");
             settingsCont.style.visibility = "hidden";
             
             hideHourGlass();
 
-            if ((pageSizeChanged && (pageSizeChanged == "true")) || 
-                (blogTitleChanged && (blogTitleChanged == "true")) ||
-                (stagingChanged && (stagingChanged == "true")) ||
-                (languageChanged && (languageChanged == "true")) ||
-                (sortOrderChanged && (sortOrderChanged == "true")) ||
-                (skinChanged && (skinChanged == "true"))) {
+            const configChanged = resultElem.getElementsByTagName("configChanged")[0].firstChild.nodeValue;
+
+            if (configChanged && configChanged === "true") {
                 window.location.href = getContextRoot() + "/servlet?command=blog";
             }
         }

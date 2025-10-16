@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 
@@ -29,7 +29,7 @@ public class GetFileDescriptionHandler extends XmlRequestHandlerBase {
             return;
         }
 
-        String description = MetaInfManager.getInstance().getDescription(getCwd(), fileName);
+        String description = BlogMetaInfManager.getInstance().getDescription(getCwd(), fileName);
 
         Element resultElement = doc.createElement("result");
 

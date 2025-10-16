@@ -5,17 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.metainf.BlogMetaInfManager;
+import de.webfilesys.state.BlogStateManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -720,17 +718,14 @@ public class InvitationManager extends Thread {
     }
 
     private void checkNewCommentNotifications() {
-        MetaInfManager metaInfMgr = MetaInfManager.getInstance();
-        
-        ArrayList<TransientUser> allUsers = ArcoirisBlog.getInstance().getUserMgr().getRealUsers(); 
+        ArrayList<TransientUser> allUsers = ArcoirisBlog.getInstance().getUserMgr().getRealUsers();
         
         for (TransientUser user : allUsers) {
             String userHomeDir = user.getDocumentRoot();
-            if (metaInfMgr.isNotifyOnNewComment(userHomeDir)) {
-                if (metaInfMgr.hasUnnotifiedComments(userHomeDir)) {
+            if (BlogConfigManager.getInstance().isNotifyOnNewComment(userHomeDir)) {
+                if (BlogStateManager.getInstance().hasUnnotifiedComments(userHomeDir)) {
                     sendNewCommentNotification(user);
-                    
-                    metaInfMgr.setUnnotifiedComments(userHomeDir, false);
+                    BlogStateManager.getInstance().setUnnotifiedComments(userHomeDir, false);
                 }
             }
         }
@@ -740,9 +735,9 @@ public class InvitationManager extends Thread {
             for (CommentAnswerQueueElem queueElem : commentAnswerQueue) {
                 TransientUser blogUser = ArcoirisBlog.getInstance().getUserMgr().getUser(queueElem.getBlogUser()); 
                 if (blogUser != null) {
-                    Vector<Comment> commentList = metaInfMgr.getListOfComments(queueElem.getFilePath());
-                    if (commentList != null) {
-                        Comment lastComment = (Comment) commentList.get(commentList.size() - 1);
+                    List<Comment> commentList = BlogMetaInfManager.getInstance().getComments(queueElem.getFilePath());
+                    if (commentList != null && !commentList.isEmpty()) {
+                        Comment lastComment = commentList.get(commentList.size() - 1);
                         HashMap<String, Boolean> usersToNotify = new HashMap<String, Boolean>(); // prevent multiple e-mails to the same user
                         for (int i = 0; i < commentList.size() - 1; i++) {
                             Comment comment = commentList.get(i);
@@ -772,7 +767,8 @@ public class InvitationManager extends Thread {
 
             MailTemplate notificationTemplate = new MailTemplate(templateFilePath);
 
-            String blogTitle = MetaInfManager.getInstance().getDescription(user.getDocumentRoot(), ".");
+            String userBasePath = user.getDocumentRoot().replace('/', File.separatorChar);
+            String blogTitle = BlogConfigManager.getInstance().getConfig(userBasePath).getTitleText();
             if (CommonUtils.isEmpty(blogTitle)) {
                 blogTitle = user.getUserid();
             }
@@ -806,7 +802,8 @@ public class InvitationManager extends Thread {
             String templateFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/languages/commentAnswerNotification_" + user.getLanguage() + ".template";
             MailTemplate notificationTemplate = new MailTemplate(templateFilePath);
 
-            String blogTitle = MetaInfManager.getInstance().getDescription(user.getDocumentRoot(), ".");
+            String userBasePath = user.getDocumentRoot().replace('/', File.separatorChar);
+            String blogTitle = BlogConfigManager.getInstance().getConfig(userBasePath).getTitleText();
             if (CommonUtils.isEmpty(blogTitle)) {
                 blogTitle = user.getUserid();
             }
@@ -898,7 +895,7 @@ public class InvitationManager extends Thread {
 
                                     String virtualUser = XmlUtil.getChildText(invitationElem, "virtualUser");
 
-                                    String blogTitle = MetaInfManager.getInstance().getDescription(blogPath, ".");
+                                    String blogTitle = BlogConfigManager.getInstance().getConfig(blogPath).getTitleText();
                                     if (CommonUtils.isEmpty(blogTitle)) {
                                         blogTitle = virtualUser;
                                     }

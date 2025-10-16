@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.config.BlogConfigManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
-import de.webfilesys.MetaInfManager;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
@@ -50,7 +50,7 @@ public class BlogUnsubscribeHandler extends XslRequestHandlerBase {
 
         String currentPath = userMgr.getDocumentRoot(virtualUser).replace('/', File.separatorChar);
 
-        String blogTitle = MetaInfManager.getInstance().getDescription(currentPath, ".");
+        String blogTitle = BlogConfigManager.getInstance().getConfig(currentPath).getTitleText();
 
         XmlUtil.setChildText(blogElement, "blogTitle", blogTitle, false);
 

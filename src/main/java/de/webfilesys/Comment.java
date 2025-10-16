@@ -1,5 +1,7 @@
 package de.webfilesys;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class Comment {
@@ -10,6 +12,8 @@ public class Comment {
     private String message = null;
     
     private String notifyOnAnswerEmail = null;
+
+    public Comment() {}
 
     public Comment(String user, Date creationDate, String message) {
         this.user = user;
@@ -25,6 +29,7 @@ public class Comment {
         return (creationDate);
     }
 
+    @JsonIgnore
     public long getCreationTime() {
         return (creationDate.getTime());
     }
