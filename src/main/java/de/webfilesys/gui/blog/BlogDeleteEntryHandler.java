@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
+import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -54,6 +55,10 @@ public class BlogDeleteEntryHandler extends XmlRequestHandlerBase {
                 BlogMetaInfManager.getInstance().removeMetaInf(currentPath, fileName);
                 AttachmentManager.getInstance().removeAttachments(currentPath, fileName);
                 BlogThumbnailHandler.getInstance().deleteThumbnail(deletedFilePath);
+                String titlePic = BlogConfigManager.getInstance().getTitlePic(currentPath);
+                if (titlePic != null && titlePic.equals(fileName)) {
+                    BlogConfigManager.getInstance().unsetTitlePic(currentPath);
+                }
                 success = "deleted";
             } else {
                 Logger.getLogger(getClass()).error("failed to delete blog entry file " + fileToBeDeleted.getAbsolutePath());
