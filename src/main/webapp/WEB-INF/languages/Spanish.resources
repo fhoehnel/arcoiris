@@ -275,6 +275,7 @@ blog.searchAgain=nueva búsqueda
 blog.searchIncludeComments=incluir comentarios en la búsqueda
 blog.stagedPublication=publicar nuevas entradas explícitamente
 blog.notifyOnNewComment=notificación por e-mail sobre nuevos comentarios
+blog.showSideCont=mostrar calendario y mapa de forma permanente
 blog.entryUnpublished=(todavia no publicado)
 blog.publishNewEntries=Publicar nuevas entradas
 blog.confirmPublishNewEntries=¿Seguro que quieres publicar las nuevas entradas?

@@ -42,6 +42,12 @@ public class BlogConfigManager {
         saveBlogConfig(path, config);
     }
 
+    public void setShowSideCont(String path, boolean showSideCont) {
+        BlogConfig config = getOrLoadBlogConfig(path);
+        config.setShowSideCont(showSideCont);
+        saveBlogConfig(path, config);
+    }
+
     public void setSortOrder(String path, BlogConfig.SortOrder sortOrder) {
         BlogConfig config = getOrLoadBlogConfig(path);
         config.setSortOrder(sortOrder);
@@ -74,6 +80,11 @@ public class BlogConfigManager {
     public boolean isNotifyOnNewComment(String path) {
         BlogConfig config = getOrLoadBlogConfig(path);
         return config.isNotifyOnNewComment();
+    }
+
+    public boolean isShowSideCont(String path) {
+        BlogConfig config = getOrLoadBlogConfig(path);
+        return config.isShowSideCont();
     }
 
     public BlogConfig.SortOrder getSortOrder(String path) {
