@@ -1,6 +1,9 @@
 var osmMap;
 
 function fillSideCont() {
+    if (!showSideCont) {
+        return;
+    }
 	const MIN_WIDTH_FOR_SIDE_CONT = 1260;
 	const MIN_WIDTH_CENTERED = 1530;
 	const UNCENTERED_RANGE = MIN_WIDTH_CENTERED - MIN_WIDTH_FOR_SIDE_CONT;

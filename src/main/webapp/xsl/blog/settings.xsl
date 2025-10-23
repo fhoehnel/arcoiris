@@ -132,6 +132,17 @@
       </tr>
 
       <tr>
+        <td class="formParm1" colspan="2" nowrap="nowrap">
+          <input type="checkbox" id="showSideCont" name="showSideCont">
+            <xsl:if test="/settings/showSideCont">
+              <xsl:attribute name="checked">checked</xsl:attribute>
+            </xsl:if>
+          </input>
+          <label for="showSideCont" resource="blog.showSideCont" />
+        </td>
+      </tr>
+
+      <tr>
         <td class="formParm1">
           <label for="password" resource="blog.newPassword" />:
         </td>

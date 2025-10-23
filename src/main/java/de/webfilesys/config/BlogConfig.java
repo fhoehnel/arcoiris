@@ -9,6 +9,7 @@ public class BlogConfig {
 
     private boolean stagedPublication = false;
     private boolean notifyOnNewComment = false;
+    private boolean showSideCont = true;
     private SortOrder sortOrder = SortOrder.BLOG;
     private String titlePic = null;
     private String titleText = null;
@@ -27,6 +28,14 @@ public class BlogConfig {
 
     public void setNotifyOnNewComment(boolean notifyOnNewComment) {
         this.notifyOnNewComment = notifyOnNewComment;
+    }
+
+    public boolean isShowSideCont() {
+        return showSideCont;
+    }
+
+    public void setShowSideCont(boolean showSideCont) {
+        this.showSideCont = showSideCont;
     }
 
     public SortOrder getSortOrder() {

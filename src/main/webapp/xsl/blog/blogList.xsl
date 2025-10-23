@@ -107,7 +107,9 @@
 
         var googleMapsAPIKey = '<xsl:value-of select="/blog/googleMapsAPIKey" />';
 
-        var sideContMapType =  <xsl:value-of select="/blog/sideContMapType" />
+        var sideContMapType = <xsl:value-of select="/blog/sideContMapType" />;
+
+        var showSideCont = <xsl:value-of select="/blog/showSideCont" />;
 
         var lowBandwidthMode = false;
         <xsl:if test="/blog/lowBandwidthMode">

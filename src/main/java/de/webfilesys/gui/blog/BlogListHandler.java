@@ -87,6 +87,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(blogElement, "googleMapsAPIKey", googleMapsAPIKey, false);
         }
 
+        XmlUtil.setChildText(blogElement, "showSideCont", Boolean.toString(BlogConfigManager.getInstance().isShowSideCont(currentPath)), false);
+
         XmlUtil.setChildText(blogElement, "sideContMapType", Integer.toString(ArcoirisBlog.getInstance().getSideContMapType()), false);
 
         String posInPage = req.getParameter("posInPage");

@@ -106,6 +106,13 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             configChanged = true;
         }
 
+        boolean showSideCont = (getParameter("showSideCont") != null);
+
+        if (blogConfig.isShowSideCont() != showSideCont) {
+            blogConfig.setShowSideCont(showSideCont);
+            configChanged = true;
+        }
+
         String sortOrderParam = getParameter("sortOrder");
         if (sortOrderParam != null) {
             try {

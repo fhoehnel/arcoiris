@@ -64,6 +64,12 @@ public class BlogShowSettingsHandler extends XmlRequestHandlerBase {
             XmlUtil.setChildText(settingsElement, "notifyOnNewComment", "true", false);
         }
 
+        boolean showSideCont = blogConfig.isShowSideCont();
+
+        if (showSideCont) {
+            XmlUtil.setChildText(settingsElement, "showSideCont", "true", false);
+        }
+
         int sortOrder = BlogDateComparator.SORT_ORDER_BLOG;
         if (blogConfig.getSortOrder() == BlogConfig.SortOrder.DIARY) {
             sortOrder = BlogDateComparator.SORT_ORDER_DIARY;
