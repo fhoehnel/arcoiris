@@ -4,9 +4,6 @@
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" 
     doctype-public="html" />
 
-<xsl:strip-space elements="dayTitle" />
-
-<!-- root node-->
 <xsl:template match="/">
 
 <div class="dayTitleFormPopup">

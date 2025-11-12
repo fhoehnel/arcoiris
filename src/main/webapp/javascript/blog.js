@@ -563,8 +563,8 @@ function changeBlogEntryPosition(fileName, posInPage) {
 
     var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=altPositions&fileName=" + encodeURIComponent(fileName);
         
-    var xslUrl = getContextRoot() + "/xsl/blog/altPositions.xsl";    
-        
+    const xslUrl = getContextRoot() + "/xsl/blog/altPositions.xsl";
+
     htmlFragmentByXslt(xmlUrl, xslUrl, changePosCont, function() {
         setBundleResources();
         centerBox(changePosCont);
@@ -1220,6 +1220,9 @@ function blogComments(fileName, posInPage) {
         setBundleResources();
     
         centerBox(commentCont);
+
+        document.getElementById("newComment").value = "";
+        document.getElementById("newComment").focus();
 
         commentCont.style.visibility = "visible";
     });

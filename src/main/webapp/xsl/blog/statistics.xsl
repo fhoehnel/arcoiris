@@ -6,7 +6,7 @@
 <!-- root node-->
 <xsl:template match="/">
 
-  <div class="promptHead" resource="blog.headlineStatistics"></div>
+  <div class="promptHead" resource="blog.headlineStatistics">placeholder</div>
   
   <div class="statisticList">
     <xsl:if test="//statisticEntry">

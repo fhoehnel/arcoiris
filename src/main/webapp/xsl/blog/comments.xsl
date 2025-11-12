@@ -4,8 +4,6 @@
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" 
     doctype-public="html" />
 
-<xsl:strip-space elements="fileComments" />
-
 <!-- root node-->
 <xsl:template match="/">
 
@@ -91,7 +89,7 @@
                       <tr>
                         <td class="formParm2" colspan="2">
                           <textarea id="newComment" name="newComment" cols="100" rows="4" wrap="virtual" class="commentText" 
-                              onKeyup="limitCommentText()" onChange="limitCommentText()"></textarea>
+                              onKeyup="limitCommentText()" onChange="limitCommentText()">placeholder</textarea>
                         </td>
                       </tr>
                     </table>

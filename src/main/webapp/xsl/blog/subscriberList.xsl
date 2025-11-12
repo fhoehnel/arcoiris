@@ -3,10 +3,9 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">	
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" />
 
-<!-- root node-->
 <xsl:template match="/">
 
-  <div class="promptHead" resource="blog.headlineSubscribers"></div>
+  <div class="promptHead" resource="blog.headlineSubscribers">placeholder</div>
   
   <div class="subscriberList">
     <xsl:if test="/blog/subscriberList/subscriber">
@@ -19,7 +18,7 @@
       </ul>
     </xsl:if>
     <xsl:if test="not(/blog/subscriberList/subscriber)">
-      <span resource="blog.noSubscribers"></span>
+      <span resource="blog.noSubscribers">placeholder</span>
     </xsl:if>
   </div>  
   

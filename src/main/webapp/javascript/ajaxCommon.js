@@ -78,6 +78,13 @@ function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
 }
 
 function htmlFragmentByXslt(xmlUrl, xslUrl, fragmentCont, callback) {
+    // native XSLT processing will be removed in 2026 from all major browsers:
+    // https://developer.chrome.com/docs/web-platform/deprecating-xslt?hl=de
+
+    // XSLT with Javascript (google ajaxslt)
+    htmlFragmentByXsltJavascript(xmlUrl, xslUrl, fragmentCont, callback);
+
+    /*
     if (window.ActiveXObject !== undefined) {
         // MSIE  
         htmlFragmentByXsltMSIE(xmlUrl, xslUrl, fragmentCont, callback);
@@ -95,8 +102,10 @@ function htmlFragmentByXslt(xmlUrl, xslUrl, fragmentCont, callback) {
             }
         }
     }
+    */
 }
 
+// deprecated
 function htmlFragmentByXsltMozilla(xmlUrl, xslUrl, fragmentCont, callback) {
 
 	xmlRequest(xslUrl, function(req) {
@@ -134,6 +143,7 @@ function htmlFragmentByXsltMozilla(xmlUrl, xslUrl, fragmentCont, callback) {
     });
 }
 
+// deprecated
 function htmlFragmentByXsltMSIE(xmlUrl, xslUrl, fragmentCont, callback) {
     fragmentCont.innerHTML = browserXsltMSIE(xmlUrl, xslUrl);
     
@@ -144,18 +154,18 @@ function htmlFragmentByXsltMSIE(xmlUrl, xslUrl, fragmentCont, callback) {
 
 function htmlFragmentByXsltJavascript(xmlUrl, xslUrl, fragmentCont, callback) {
 
+    console.log("htmlFragmentByXsltJavascript start");
+
 	xmlRequest(xslUrl, function(req) {
         if (req.readyState == 4) {
             if (req.status == 200) {
-			    var xslStyleSheet = req.responseXML;
+			    const xslStyleSheet = req.responseXML;
 
 	            xmlRequest(xmlUrl, function(req) {
                     if (req.readyState == 4) {
                         if (req.status == 200) {
-			                var xmlDoc = req.responseXML;
-
-                            // browser-independend client-side XSL transformation with google ajaxslt 
-       
+			                const xmlDoc = req.responseXML;
+                            // browser-independend client-side XSL transformation with google ajaxslt
                             fragmentCont.innerHTML = xsltProcess(xmlDoc, xslStyleSheet);
                             
                             if (callback) {

@@ -94,6 +94,21 @@
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/jquery/jquery.min.js</xsl:attribute>
       </script>
       <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxslt/util.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxslt/xmltoken.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxslt/dom.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxslt/xpath.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
+        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxslt/xslt.js</xsl:attribute>
+      </script>
+      <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>
       </script>
       <script type="text/javascript">

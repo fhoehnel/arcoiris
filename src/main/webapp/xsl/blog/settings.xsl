@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">	
-<xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8"
     doctype-public="html" />
 
-<xsl:strip-space elements="settings" />
-
-<!-- root node-->
 <xsl:template match="/">
-
-<script language="javascript">
-</script>
 
 <div class="blogSettings">
 
   <div class="blogSettingsHead">
-    <span resource="blog.settingsHeadline"></span>
+    <span resource="blog.settingsHeadline">placeholder</span>
   </div>
 
   <form accept-charset="utf-8" id="blogSettingsForm" name="blogSettingsForm" method="post" class="blogSettingsForm">

@@ -606,6 +606,8 @@ html.blog td.formParm2 {
 
 div.blogSettingsCont {
     position: absolute;
+    width: 476px;
+    height: 480px;
     left: 0;
     top: 0;
     border: 2px ridge #808080;

@@ -4,8 +4,6 @@
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" 
     doctype-public="html" />
 
-<xsl:strip-space elements="emojiList" />
-
 <!-- root node-->
 <xsl:template match="/">
 
