@@ -81,9 +81,9 @@ public class BlogListCommentsHandler extends XmlRequestHandlerBase {
             if (!BlogMetaInfManager.getInstance().isCommentsSeenByOwner(filePath)) {
                 BlogStateManager.getInstance().decrUnseenCommentCount(normalizedPath);
             }
+            BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
         }
 
-        BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
         List<Comment> comments = BlogMetaInfManager.getInstance().getComments(filePath);
 
         if ((comments != null) && (!comments.isEmpty())) {

@@ -1984,57 +1984,36 @@ function queryGeoData() {
 }
 
 function queryGPXTracks() {
-    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForGPXTracks";
-	    
-	xmlRequest(url, function(req) {
-	    if (req.readyState == 4) {
-	        if (req.status == 200) {
-	            var responseXml = req.responseXML;
-	            var resultItem = responseXml.getElementsByTagName("result")[0];
-	            var result = resultItem.firstChild.nodeValue;  
-	                
-	            if (result && (result == "true")) {
-	                document.getElementById("gpxAllTracksLink").style.display = "inline";
-	            } 
-	        }
-	        
-            // cascading ajax calls for performance reasons
-            if (document.getElementById("unseenCommentLink")) {
-                queryUnseenComments();
-            }
+	xmlGetRequest("ajaxRPC", { method: "checkForGPXTracks" }, responseXml => {
+	    const resultItem = responseXml.getElementsByTagName("result")[0];
+	    const result = resultItem.firstChild.nodeValue;
+	    if (result && result == "true") {
+	        document.getElementById("gpxAllTracksLink").style.display = "inline";
+	    }
+        // cascading ajax calls for performance reasons
+        if (document.getElementById("unseenCommentLink")) {
+            queryUnseenComments();
         }
-    });          
+    });
 }
 
 function queryUnseenComments() {
-    var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForUnseenComments";
-	    
-	xmlRequest(url, function(req) {
-	    if (req.readyState == 4) {
-	        if (req.status == 200) {
-	            var responseXml = req.responseXML;
-	            var resultItem = responseXml.getElementsByTagName("result")[0];
-	            var result = resultItem.firstChild.nodeValue;  
-	                
-               	var unseenCommentLink = document.getElementById("unseenCommentLink");
-               	var unseenCommentCount = document.getElementById("unseenCommentCount");
-
-               	if (result && (result != "0")) {
-	               	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
-	               	unseenCommentLink.style.display = "inline";
-	                    	
-	               	unseenCommentCount.innerText = result;
-	               	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
-	               	unseenCommentCount.style.display = "inline";
-	            } else {
-	               	unseenCommentLink.style.display = "none";
-	               	unseenCommentCount.style.display = "none";
-	            }
-	        } else {
-	            alert(resourceBundle["alert.communicationFailure"]);
-	        }
+	xmlGetRequest("ajaxRPC", { method: "checkForUnseenComments" }, responseXml => {
+	    const resultItem = responseXml.getElementsByTagName("result")[0];
+	    const result = resultItem.firstChild.nodeValue;
+       	const unseenCommentLink = document.getElementById("unseenCommentLink");
+       	const unseenCommentCount = document.getElementById("unseenCommentCount");
+       	if (result && result != "0") {
+	       	unseenCommentLink.setAttribute("onclick", "showUnseenComment()");
+	       	unseenCommentLink.style.display = "inline";
+	       	unseenCommentCount.innerText = result;
+	       	unseenCommentCount.setAttribute("onclick", "showUnseenComment()");
+	       	unseenCommentCount.style.display = "inline";
+	    } else {
+	       	unseenCommentLink.style.display = "none";
+	       	unseenCommentCount.style.display = "none";
 	    }
-	});          
+	});
 }
 
 function showUnseenComment() {
@@ -2184,35 +2163,17 @@ function publishDay(dayToPublish) {
 }
 
 function switchLowBandwidthMode() {
-    showHourGlass();
-
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=switchLowBandwidthMode";
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            hideHourGlass();
-            if (req.status == 200) {
-                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-
-                var newMode = resultElem.getElementsByTagName("newBandwidthMode")[0].firstChild.nodeValue;
-
-            	var switchBandwidthLink = document.getElementById("switchBandwidthLink");
-                if (newMode == "low") {
-                	/*
-                	switchBandwidthLink.setAttribute("class", "icon-font icon-signal blogMenu");
-                	switchBandwidthLink.setAttribute("title", resourceBundle["blog.highBandwith"]);
-                    */
-                    window.location.href = getContextRoot() + "/servlet?command=blog";
-                } else {
-                	switchBandwidthLink.setAttribute("class", "icon-font icon-wifi blogMenu");
-                	switchBandwidthLink.setAttribute("title", resourceBundle["blog.lowBandwith"]);
-                	lowBandwidthMode = false;
-                	attachScrollHandler();
-                }
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
-            }
+    xmlGetRequest("blog", { cmd: "switchLowBandwidthMode" }, responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const newMode = resultElem.getElementsByTagName("newBandwidthMode")[0].firstChild.nodeValue;
+        const switchBandwidthLink = document.getElementById("switchBandwidthLink");
+        if (newMode == "low") {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+           	switchBandwidthLink.setAttribute("class", "icon-font icon-wifi blogMenu");
+           	switchBandwidthLink.setAttribute("title", resourceBundle["blog.lowBandwith"]);
+           	lowBandwidthMode = false;
+           	attachScrollHandler();
         }
     });
 }
@@ -2222,41 +2183,31 @@ function detachFile(imgName, posInPage) {
         return;
     }
      
-    showHourGlass();
-
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=detach&imgName=" + imgName;
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            hideHourGlass();
-            if (req.status == 200) {
-                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-                var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-                if (success == 'true') {
-                	var attachmentLink = document.getElementById("attachment-" + posInPage);
-                	attachmentLink.setAttribute("class", "icon-font icon-attachment icon-blog-attachment");
-                	attachmentLink.removeAttribute("onclick");
-                	attachmentLink.onclick = function() {attachFile(imgName, posInPage)};
-                	attachmentLink.title = resourceBundle["blog.attach"];
+    const parameters = {
+        cmd: "detach",
+        imgName
+    }
+    xmlGetRequest("blog", parameters, responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success == 'true') {
+           	const attachmentLink = document.getElementById("attachment-" + posInPage);
+           	attachmentLink.setAttribute("class", "icon-font icon-attachment icon-blog-attachment");
+           	attachmentLink.removeAttribute("onclick");
+           	attachmentLink.onclick = function() {attachFile(imgName, posInPage)};
+           	attachmentLink.title = resourceBundle["blog.attach"];
                 	
-                	var geoTrackLink = document.getElementById("geoTrackLink-" + posInPage);
-                	if (geoTrackLink) {
-                		geoTrackLink.parentNode.removeChild(geoTrackLink);
-                	} else {
-                		attachmentIcon = document.getElementById("viewAttachmentIcon-" + posInPage);
-                		if (attachmentIcon) {
-                			attachmentIcon.parentNode.removeChild(attachmentIcon);
-                		}
-                	}
-                } else {
-                	// TODO: resourceBundle
-                    alert("failed to detach file");
-                }
-            } else {
-                alert(resourceBundle["alert.communicationFailure"]);
-                hideHourGlass();    
-            }
+           	const geoTrackLink = document.getElementById("geoTrackLink-" + posInPage);
+           	if (geoTrackLink) {
+           		geoTrackLink.parentNode.removeChild(geoTrackLink);
+           	} else {
+           		attachmentIcon = document.getElementById("viewAttachmentIcon-" + posInPage);
+          		if (attachmentIcon) {
+           			attachmentIcon.parentNode.removeChild(attachmentIcon);
+           		}
+           	}
+        } else {
+            alert("failed to detach file");
         }
     });
 }

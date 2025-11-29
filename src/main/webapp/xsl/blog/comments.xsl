@@ -49,14 +49,14 @@
               <td class="formParm2" style="padding-left:20px;">
               
                 <xsl:for-each select="msg/*">
-                  <xsl:if test="local-name(.) = 'emoji'">
+                  <xsl:if test="name(.) = 'emoji'">
                     <xsl:text> </xsl:text>
                     <img class="blogEmoticon">
                       <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/emoticons/<xsl:value-of select="." />.png</xsl:attribute>
                     </img>
                     <xsl:text> </xsl:text>
                   </xsl:if>
-                  <xsl:if test="local-name(.) = 'fragment'">
+                  <xsl:if test="name(.) = 'fragment'">
                     <xsl:value-of select="." />
                   </xsl:if>
                 </xsl:for-each>
@@ -106,14 +106,14 @@
 		  <xsl:if test="/fileComments/virtualUser">
             <tr>
               <td class="formParm1">
-                <span resource="label.commentAuthor"></span>:
+                <label for="author" resource="label.commentAuthor">placeholder</label>:
                 &#160;
-                <input type="text" name="author" style="width:150px" />
+                <input id="author" type="text" name="author" style="width:150px" />
               </td>
             </tr>
             <tr>
               <td class="formParm1">
-                <label for="notifyOnAnswerEmail" resource="label.commentNotifyEmail"></label>:
+                <label for="notifyOnAnswerEmail" resource="label.commentNotifyEmail">placeholder</label>:
                 &#160;
                 <input type="email" id="notifyOnAnswerEmail" name="notifyOnAnswerEmail" style="width:220px" />
               </td>

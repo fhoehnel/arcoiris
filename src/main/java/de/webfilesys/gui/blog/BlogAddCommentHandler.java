@@ -70,6 +70,14 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
 
         if (!CommonUtils.isEmpty(newCommentText)) {
 
+            if (readonly) {
+                if (BlogMetaInfManager.getInstance().getCommentCount(filePath) == 0 ||
+                        BlogMetaInfManager.getInstance().isCommentsSeenByOwner(filePath)) {
+                    // if multiple new comments exist for one blog entry - increment unseen count only once
+                    BlogStateManager.getInstance().incrUnseenCommentCount(normalizedPath);
+                }
+            }
+
             newCommentText = CommonUtils.filterForbiddenChars(newCommentText);
 
             Comment newComment = new Comment(commentAuthor, new Date(), newCommentText);
@@ -87,7 +95,6 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
             if (readonly) {
                 BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, false);
                 BlogStateManager.getInstance().setUnnotifiedComments(normalizedPath, true);
-                BlogStateManager.getInstance().incrUnseenCommentCount(normalizedPath);
             } else {
                 BlogMetaInfManager.getInstance().setCommentsSeenByOwner(filePath, true);
             }
