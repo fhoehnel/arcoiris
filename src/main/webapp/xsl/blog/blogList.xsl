@@ -194,7 +194,7 @@
         <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryPublicLink(true);attachScrollHandler();fillSideCont()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       
       <div id="blogCont" class="blogCont">

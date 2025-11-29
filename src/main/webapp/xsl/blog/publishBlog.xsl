@@ -6,7 +6,7 @@
 <!-- root node-->
 <xsl:template match="/">
 
-<div class="promptHead" resource="blog.publishTitle"></div>
+<div class="promptHead" resource="blog.publishTitle">placeholder</div>
     
 <form accept-charset="utf-8" name="publishForm" id="publishForm" method="post" style="display:inline;">
   <xsl:attribute name="action"><xsl:value-of select="//contextRoot" />/servlet</xsl:attribute>

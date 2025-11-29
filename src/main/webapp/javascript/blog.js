@@ -891,55 +891,22 @@ function showPublishResult(req) {
     }
 }
 
-function queryPublicLink(userIsVisitor) {
-    var url = getContextRoot() + "/servlet?command=blog&cmd=getPublicURL";
-    
-    if (userIsVisitor) {
-        xmlRequest(url, handleVisitorPublicLinkResult);
-    } else {
-        xmlRequest(url, handleQueryPublicLinkResult);
-    }
-}
+function queryPublicLink() {
 
-function handleVisitorPublicLinkResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-            if (success == 'true') {
-                publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;   
-                jQuery(".icon-blog-share").css("display", "inline");
-            }
+    xmlGetRequest("blog", { cmd: "getPublicURL" }, responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;
+            document.getElementById("publicURLButton").style.display = "inline";
+            document.getElementById("unpublishButton").style.display = "inline";
+            jQuery(".icon-blog-share").css("display", "inline");
         } else {
-        	if (console.log) {
-        		console.log("failed to query public link");
-        	}
-        }
-    }
-}
-
-function handleQueryPublicLinkResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-            if (success == 'true') {
-                publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;   
-                document.getElementById("publicURLButton").style.display = "inline";
-                document.getElementById("unpublishButton").style.display = "inline";
-                jQuery(".icon-blog-share").css("display", "inline");
-            } else {
-                if (document.getElementById("publishBlogButton")) {
-                    document.getElementById("publishBlogButton").style.display = "inline";
-                }
+            if (document.getElementById("publishBlogButton")) {
+                document.getElementById("publishBlogButton").style.display = "inline";
             }
-        } else {
-        	if (console.log) {
-        		console.log("failed to query public link");
-        	}
         }
-    }
+    });
 }
 
 function showPublicURL() {
@@ -1681,25 +1648,17 @@ function previewSearchResult(fileName) {
    	
     searchPreviewActive = true;
 
-    var ajaxUrl = getContextRoot() + "/servlet?command=getFileDesc&fileName=" + encodeURIComponent(fileName);
-    
-	xmlRequest(ajaxUrl, function(req) {
-        if (req.readyState == 4) {
-        	if (searchPreviewActive) {
-                if (req.status == 200) {
-                    var fileDescription = req.responseXML.getElementsByTagName("result")[0].firstChild.nodeValue;        
-                    if (fileDescription && (fileDescription.length > 0)) {
-                        var searchPreviewText = document.getElementById("searchPreviewText");
-                        if (searchPreviewText) {
-                        	searchPreviewText.innerText = shortText(fileDescription, 170);
-                        }
-                    }
-                } else {
-                    alert(resourceBundle["alert.communicationFailure"]);
+    xmlGetRequest("getFileDesc", { fileName: encodeURIComponent(fileName) }, responseXml => {
+       	if (searchPreviewActive) {
+            const fileDescription = responseXml.getElementsByTagName("result")[0].firstChild.nodeValue;
+            if (fileDescription && (fileDescription.length > 0)) {
+                const searchPreviewText = document.getElementById("searchPreviewText");
+                if (searchPreviewText) {
+                    searchPreviewText.innerText = shortText(fileDescription, 170);
                 }
-        	}
+            }
         }
-	});
+    });
 }
 
 function cancelSearchPreview() {
@@ -1854,28 +1813,22 @@ function setSelectedDate(y, m, d) {
 
 function rotateBlogPic(imgName, direction) {
 
-    showHourGlass();
+    const parameters = {
+        cmd: "rotate",
+        imgName,
+        direction
+    }
 
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=rotate&imgName=" + imgName + "&direction=" + direction;
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var successItem = req.responseXML.getElementsByTagName("success")[0];            
-                var success = successItem.firstChild.nodeValue;
-             
-                if (success == 'true') {
-                    window.location.href = getContextRoot() + "/servlet?command=blog";
-                } else {
-                    alert(resourceBundle["blog.rotateError"]);
-                }
-                hideHourGlass();
-            } else {
-                hideHourGlass();
-                alert(resourceBundle["blog.rotateError"]);
-            }
+    xmlGetRequest("blog", parameters, responseXml => {
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        const success = successItem.firstChild.nodeValue;
+        if (success === 'true') {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["blog.rotateError"]);
         }
-    });   
+        hideHourGlass();
+    });
 }
 
 function like(imgName, posInPage) {
@@ -1883,29 +1836,22 @@ function like(imgName, posInPage) {
         return;
     }
      
-    showHourGlass();
+    const parameters = {
+        cmd: "like",
+        imgName
+    }
 
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=like&imgName=" + imgName;
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            hideHourGlass();
-            if (req.status == 200) {
-                var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-                var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-                if (success == 'true') {
-                    var newVoteCount = resultElem.getElementsByTagName("newVoteCount")[0].firstChild.nodeValue;
-                    document.getElementById("voteCount-" + posInPage).innerHTML = newVoteCount;
-
-                    document.getElementById("likeLink-" + posInPage).onclick = function() {javascript:void(0)};
-                    document.getElementById("likeLink-" + posInPage).title = "";
-                
-                    toast(resourceBundle["blog.likeAdded"], 2000);
-                } else {
-                    alert("failed to like blog post");
-                }
-            }
+    xmlGetRequest("blog", parameters, responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            const newVoteCount = resultElem.getElementsByTagName("newVoteCount")[0].firstChild.nodeValue;
+            document.getElementById("voteCount-" + posInPage).innerHTML = newVoteCount;
+            document.getElementById("likeLink-" + posInPage).onclick = () => {};
+            document.getElementById("likeLink-" + posInPage).title = "";
+            toast(resourceBundle["blog.likeAdded"], 2000);
+        } else {
+            alert("failed to like blog post");
         }
     });
 }
@@ -1915,56 +1861,35 @@ function setTitlePic(imgName) {
         return;
     }
      
-    showHourGlass();
+    const parameters = {
+        cmd: "setTitlePic",
+        imgName
+    }
 
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=setTitlePic&imgName=" + imgName;
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var successItem = req.responseXML.getElementsByTagName("success")[0];            
-                var success = successItem.firstChild.nodeValue;
-             
-                if (success == 'true') {
-                    window.location.href = getContextRoot() + "/servlet?command=blog";
-                } else {
-                    alert(resourceBundle["blog.setTitlePicError"]);
-                }
-                hideHourGlass();
-            } else {
-                hideHourGlass();
-                alert(resourceBundle["blog.setTitlePicError"]);
-            }
+    xmlGetRequest("blog", parameters, responseXml => {
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        const success = successItem.firstChild.nodeValue;
+        if (success === 'true') {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["blog.setTitlePicError"]);
         }
-    });   
+    });
 }
 
 function unsetTitlePic() {
     if (!confirm(resourceBundle["blog.confirmUnsetTitlePic"])) {
         return;
     }
-    showHourGlass();
-
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=unsetTitlePic";
-
-	xmlRequest(xmlUrl, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var successItem = req.responseXML.getElementsByTagName("success")[0];            
-                var success = successItem.firstChild.nodeValue;
-             
-                if (success == 'true') {
-                    window.location.href = getContextRoot() + "/servlet?command=blog";
-                } else {
-                    alert(resourceBundle["blog.setTitlePicError"]);
-                }
-                hideHourGlass();
-            } else {
-                hideHourGlass();
-                alert(resourceBundle["blog.setTitlePicError"]);
-            }
+    xmlGetRequest("blog", { cmd: "unsetTitlePic" }, responseXml => {
+        const successItem = responseXml.getElementsByTagName("success")[0];
+        const success = successItem.firstChild.nodeValue;
+        if (success === 'true') {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["blog.setTitlePicError"]);
         }
-    });   
+    });
 }
 
 function firefoxJumpToIdWorkaround() {
@@ -2045,24 +1970,15 @@ function insertLink(textAreaId) {
 
 function queryGeoData() {
 	setTimeout(function() {
-	        var url = getContextRoot() + "/servlet?command=ajaxRPC&method=checkForGeoData";
-	    
-	        xmlRequest(url, function(req) {
-	            if (req.readyState == 4) {
-	                if (req.status == 200) {
-	                    var responseXml = req.responseXML;
-	                    var resultItem = responseXml.getElementsByTagName("result")[0];
-	                    var result = resultItem.firstChild.nodeValue;  
-	                
-	                    if (result && (result == "true")) {
-	                        document.getElementById("mapAllLink").style.display = "inline";
-	                    } 
-	                }
-	                
-	                // cascading ajax calls for performance reasons
-	                queryGPXTracks();
+            xmlGetRequest("ajaxRPC", { method: "checkForGeoData" }, responseXml => {
+	            const resultItem = responseXml.getElementsByTagName("result")[0];
+	            const result = resultItem.firstChild.nodeValue;
+	            if (result && result === "true") {
+	                document.getElementById("mapAllLink").style.display = "inline";
 	            }
-	        });          
+	            // cascading ajax calls for performance reasons
+	            queryGPXTracks();
+	        });
 		
 	    }, 500);
 }

@@ -159,7 +159,7 @@
         <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();queryGeoData();attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();queryGeoData();queryPublicLink(true);attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();queryGeoData();attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
       </xsl:if>
       
       <div class="blogCont">
