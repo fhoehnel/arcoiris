@@ -1,4 +1,4 @@
-var selectedForUpload = new Array();
+var selectedForUpload = [];
 
 var MAX_PICTURE_SIZE_SUM = 40000000;
 
@@ -8,16 +8,12 @@ var THUMB_SUBDIR_NAME = "_thumbnails400";
       
 var xhr;
       
-var lastUploadedFile;
-      
 var currentFileNum = 1;
 	  
 var totalSizeSum = 0;
 	  
 var totalLoaded = 0;
 	  
-var sizeOfCurrentFile = 0;
-
 var pictureFileSize = 0;
 
 var firefoxDragDrop = existFileReader();
@@ -201,7 +197,6 @@ function handleFiles(files) {
                     var listElemText = document.createTextNode(fileName);
                     listElem.appendChild(listElemText);
                     uploadFileList.appendChild(listElem);
-                          
                     selectedForUpload.push(file);
                 }
 
@@ -329,8 +324,8 @@ function sendFiles() {
       
 function singleFileBinaryUpload(file) {
       
-    var fileName;
-    var fileSize;
+    let fileName;
+    let fileSize;
     if (browserSafari) {
         fileName = file.fileName;
         fileSize = file.fileSize;
@@ -339,100 +334,84 @@ function singleFileBinaryUpload(file) {
         fileSize = file.size;
     }
       
-    sizeOfCurrentFile = fileSize;
-	  
-	checkMultiUploadTargetExists(fileName, 
-	    function() {
-            var nextFile = selectedForUpload.shift();
-            if (nextFile) {
-                singleFileBinaryUpload(nextFile)
-            }
-	    }, 
-	    function() {
-            lastUploadedFile = fileName;
-      
-            document.getElementById("currentFile").innerHTML = shortText(fileName, 50);
-          
-            document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
+    document.getElementById("currentFile").innerHTML = shortText(fileName, 50);
 
-            var statusWin = document.getElementById("uploadStatus");
-            statusWin.style.visibility = 'visible';
+    document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
 
-            var now = new Date();
+    const statusWin = document.getElementById("uploadStatus");
+    statusWin.style.visibility = 'visible';
 
-            var serverFileName = document.getElementById("dateYear").value + "-" +
-                                 document.getElementById("dateMonth").value + "-" +
-                                 document.getElementById("dateDay").value + "-" +
-                                 now.getTime() + "-" + currentFileNum + 
-                                 getFileNameExt(fileName).toLowerCase();
-                         
-            var firstUploadServerFileName = document.getElementById("firstUploadFileName");
-            if (firstUploadServerFileName.value.length == 0) {
-                firstUploadServerFileName.value = serverFileName;
-            }
+    const now = new Date();
 
-            var uploadUrl = getContextRoot() + "/upload/singleBinary/blog/" + serverFileName; 
+    const serverFileName = document.getElementById("dateYear").value + "-" +
+        document.getElementById("dateMonth").value + "-" +
+        document.getElementById("dateDay").value + "-" +
+        now.getTime() + "-" + currentFileNum +
+        getFileNameExt(fileName).toLowerCase();
 
-            xhr = new XMLHttpRequest();  
+    const firstUploadServerFileName = document.getElementById("firstUploadFileName");
+    if (firstUploadServerFileName.value.length === 0) {
+        firstUploadServerFileName.value = serverFileName;
+    }
 
-            xhr.onreadystatechange = handleUploadState;
-            xhr.upload.addEventListener("progress", updateProgress, false);
-            xhr.upload.addEventListener("load", uploadComplete, false);
+    const uploadUrl = getContextRoot() + "/upload/singleBinary/blog/" + serverFileName;
 
-            xhr.open("POST", uploadUrl, true);  
+    xhr = new XMLHttpRequest();
 
-	        if (!browserMSIE) {
-                xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');  
-	        }
-         
-            if (firefoxDragDrop) {
-                try {
-                    xhr.sendAsBinary(file.getAsBinary());    
-                } catch (ex) {
-                    // Chrome has no file.getAsBinary() function
-                    xhr.send(file);
-                }
-            } else {
-                xhr.send(file);
-            }    
-	    }
-	);
+    xhr.onreadystatechange = () => handleUploadState(fileName, fileSize);
+    xhr.upload.addEventListener("progress", updateProgress, false);
+    xhr.upload.addEventListener("load", uploadComplete, false);
+
+    xhr.open("POST", uploadUrl, true);
+
+    if (!browserMSIE) {
+        xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
+    }
+
+    if (firefoxDragDrop) {
+        try {
+            xhr.sendAsBinary(file.getAsBinary());
+        } catch (ex) {
+            // Chrome has no file.getAsBinary() function
+            xhr.send(file);
+        }
+    } else {
+        xhr.send(file);
+    }
 }
 
-function handleUploadState() {
-    if (xhr.readyState == 4) {
-        var statusWin = document.getElementById("uploadStatus");
+function handleUploadState(currentFileName, currentFileSize) {
+    if (xhr.readyState === 4) {
+        const statusWin = document.getElementById("uploadStatus");
         statusWin.style.visibility = 'hidden';
 
-        if (xhr.status == 200) {
-			  
-            totalLoaded += sizeOfCurrentFile;
-			  
+        if (xhr.status === 200) {
+            totalLoaded += currentFileSize;
+
             // start uploading the next file
-            var file = selectedForUpload.shift();
+            const file = selectedForUpload.shift();
             if (file) {
 		        currentFileNum++;
-                var currentFileNumCont = document.getElementById("currentFileNum");
-                currentFileNumCont.innerHTML = currentFileNum;  
-				  
+                const currentFileNumCont = document.getElementById("currentFileNum");
+                currentFileNumCont.innerHTML = currentFileNum.toString();
                 singleFileBinaryUpload(file)
             } else {
                 if (firefoxDragDrop || uploadStartedByButton) {
                     document.getElementById("blogForm").submit();
                 } else {
-                    document.getElementById('lastUploadedFile').innerHTML = lastUploadedFile;
+                    document.getElementById('lastUploadedFile').innerHTML = currentFileName;
                     document.getElementById('lastUploaded').style.visibility = 'visible';
                     document.getElementById('lastUploaded').style.display = 'block';
                     document.getElementById('doneButton').style.visibility = 'visible';
                 }
             }
         } else {
-            alert(resourceBundle["upload.error"] + " " + lastUploadedFile);
-            var file = selectedForUpload.shift();
+            alert(resourceBundle["upload.error"] + " " + currentFileName);
+            const file = selectedForUpload.shift();
             if (file) {
 		        currentFileNum++;
-                var currentFileNumCont = document.getElementById("currentFileNum");
-                currentFileNumCont.innerHTML = currentFileNum;  
+                const currentFileNumCont = document.getElementById("currentFileNum");
+                currentFileNumCont.innerHTML = currentFileNum.toString();
                 singleFileBinaryUpload(file)
 			}
         }
@@ -441,7 +420,7 @@ function handleUploadState() {
 
 function updateProgress(e) {
     if (e.lengthComputable) {  
-        var percent = Math.round((e.loaded * 100) / e.total);  
+        let percent = Math.round((e.loaded * 100) / e.total);
                 
         document.getElementById("statusText").innerHTML = formatDecimalNumber(e.loaded) + " " + resourceBundle["label.of"] + " " + formatDecimalNumber(e.total) + " bytes (" + percent + "%)";
 
@@ -469,15 +448,11 @@ function uploadComplete(e) {
       
 function returnToList() {
     if (confirm(resourceBundle["blog.confirmCancel"])) {
-
-        var returnURL = getContextRoot() + "/servlet?command=blog&cmd=list";
-    
-        var posInPage = document.getElementById("posInPage");
-    
+        let returnURL = getContextRoot() + "/servlet?command=blog&cmd=list";
+        const posInPage = document.getElementById("posInPage");
         if (posInPage && (posInPage.value.length > 0)) {
             returnURL = returnURL + "&random=" + ((new Date()).getTime()) + "#entry-" + posInPage.value;
         }
-    
         window.location.href = returnURL;
     }
 }
@@ -2266,8 +2241,8 @@ function attachFile(fileName, posInPage) {
 
 function uploadAttachment(file, blogFileName) {
     
-    var fileName;
-    var fileSize;
+    let fileName;
+    let fileSize;
     if (browserSafari) {
         fileName = file.fileName;
         fileSize = file.fileSize;
@@ -2276,7 +2251,7 @@ function uploadAttachment(file, blogFileName) {
         fileSize = file.size;
     }
      
-	var uploadCont = document.getElementById("uploadCont");
+	const uploadCont = document.getElementById("uploadCont");
     uploadCont.style.visibility = "hidden";
 	
 	if (fileSize > ATTACHMENT_MAX_SIZE) {
@@ -2285,27 +2260,21 @@ function uploadAttachment(file, blogFileName) {
     	return;
     }
     
-    sizeOfCurrentFile = fileSize;
-	  
-    lastUploadedFile = fileName;
-      
     document.getElementById("currentFile").innerHTML = shortText(fileName, 50);
           
     document.getElementById("statusText").innerHTML = "0 " + resourceBundle["label.of"] + " " + formatDecimalNumber(fileSize) + " bytes ( 0%)";
 
-    var statusWin = document.getElementById("uploadStatus");
+    const statusWin = document.getElementById("uploadStatus");
     centerBox(statusWin);
     statusWin.style.visibility = 'visible';
 
-    var now = new Date();
-
-    var serverFileName = "attach-" + now.getTime() + getFileNameExt(fileName).toLowerCase();
-                         
-    var uploadUrl = getContextRoot() + "/upload/attachment/" + serverFileName + "/" + blogFileName; 
+    const now = new Date();
+    const serverFileName = "attach-" + now.getTime() + getFileNameExt(fileName).toLowerCase();
+    const uploadUrl = getContextRoot() + "/upload/attachment/" + serverFileName + "/" + blogFileName;
 
     xhr = new XMLHttpRequest();  
 
-    xhr.onreadystatechange = handleAttachmentUploadState;
+    xhr.onreadystatechange = () => handleAttachmentUploadState(fileName);
     xhr.upload.addEventListener("progress", updateAttachmentUploadProgress, false);
     xhr.upload.addEventListener("load", uploadComplete, false);
 
@@ -2327,23 +2296,23 @@ function uploadAttachment(file, blogFileName) {
     }    
 }
 
-function handleAttachmentUploadState() {
-    if (xhr.readyState == 4) {
+function handleAttachmentUploadState(currentFileName) {
+    if (xhr.readyState === 4) {
         document.getElementById("uploadStatus").style.visibility = 'hidden';
         
-        if (xhr.status == 200) {
-        	var posInPage = uploadCont.getAttribute("posInPage");
-            var returnURL = getContextRoot() + "/servlet?command=blog&cmd=list&random=" + ((new Date()).getTime()) + "#entry-" + posInPage;
+        if (xhr.status === 200) {
+        	const posInPage = uploadCont.getAttribute("posInPage");
+            const returnURL = getContextRoot() + "/servlet?command=blog&cmd=list&random=" + ((new Date()).getTime()) + "#entry-" + posInPage;
         	window.location.href = returnURL;
         } else {
-            alert(resourceBundle["upload.error"] + " " + lastUploadedFile);
+            alert(resourceBundle["upload.error"] + " " + currentFileName);
         }
     }
 }
 
 function updateAttachmentUploadProgress(e) {
     if (e.lengthComputable) {  
-        var percent = Math.round((e.loaded * 100) / e.total);  
+        const percent = Math.round((e.loaded * 100) / e.total);
         document.getElementById("statusText").innerHTML = formatDecimalNumber(e.loaded) + " " + resourceBundle["label.of"] + " " + formatDecimalNumber(e.total) + " bytes (" + percent + "%)";
         document.getElementById("done").width = 3 * percent;
         document.getElementById("todo").width = 300 - (3 * percent);

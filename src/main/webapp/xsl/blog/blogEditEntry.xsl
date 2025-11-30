@@ -55,9 +55,6 @@
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxCommon.js</xsl:attribute>
       </script>
       <script type="text/javascript">
-        <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/ajaxUpload.js</xsl:attribute>
-      </script>
-      <script type="text/javascript">
         <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/popupPicture.js</xsl:attribute>
       </script>
       <script type="text/javascript">
