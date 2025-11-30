@@ -125,7 +125,7 @@ function drop(e) {
 
         var file = selectedForUpload.shift();
         if (file) {
-            new singleFileBinaryUpload(file); 
+            singleFileBinaryUpload(file);
         }
     }
 }     
@@ -345,7 +345,7 @@ function singleFileBinaryUpload(file) {
 	    function() {
             var nextFile = selectedForUpload.shift();
             if (nextFile) {
-                new singleFileBinaryUpload(nextFile)
+                singleFileBinaryUpload(nextFile)
             }
 	    }, 
 	    function() {
@@ -415,7 +415,7 @@ function handleUploadState() {
                 var currentFileNumCont = document.getElementById("currentFileNum");
                 currentFileNumCont.innerHTML = currentFileNum;  
 				  
-                new singleFileBinaryUpload(file)
+                singleFileBinaryUpload(file)
             } else {
                 if (firefoxDragDrop || uploadStartedByButton) {
                     document.getElementById("blogForm").submit();
@@ -433,7 +433,7 @@ function handleUploadState() {
 		        currentFileNum++;
                 var currentFileNumCont = document.getElementById("currentFileNum");
                 currentFileNumCont.innerHTML = currentFileNum;  
-                new singleFileBinaryUpload(file)
+                singleFileBinaryUpload(file)
 			}
         }
     }
@@ -1753,39 +1753,31 @@ function showSaveSettingsResult(req) {
 }
    
 function selectDate(calPopup, dateInputElemId, linkAnchorId, centerCalDiv) {
-	daysWithEntries = new Array();	
-	
-    var url = getContextRoot() + "/servlet?command=blog&cmd=datesWithEntries";
-    
-    xmlRequest(url, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-                var responseXml = req.responseXML;
-                var resultItem = responseXml.getElementsByTagName("datesWithEntries")[0];
+	daysWithEntries = [];
 
-                var listLength = resultItem.childNodes.length;
+    xmlGetRequest("blog", { cmd: "datesWithEntries"}, responseXml => {
+        const resultItem = responseXml.getElementsByTagName("datesWithEntries")[0];
+        const listLength = resultItem.childNodes.length;
                 
-                for (var i = 0; i < listLength; i++) {
-                	var childNode = resultItem.childNodes[i];
-                	if ((childNode.nodeType == 1) && (childNode.tagName == "date")) {
-                		daysWithEntries.push(childNode.firstChild.nodeValue);
-                	}
-                }
-                
-            	var dateFormat;
-            	if (window.navigator.language.indexOf("en") == 0) {
-            		dateFormat = "MM/dd/yyyy";
-            	} else {
-            		dateFormat = "dd.MM.yyyy";
-            	}
-
-                calPopup.select(document.getElementById(dateInputElemId), linkAnchorId, dateFormat);
-                if (centerCalDiv) {
-                    centerBox(document.getElementById("calDiv"));
-                }
-            }
+        for (let i = 0; i < listLength; i++) {
+          	const childNode = resultItem.childNodes[i];
+           	if (childNode.nodeType === 1 && childNode.tagName === "date") {
+           		daysWithEntries.push(childNode.firstChild.nodeValue);
+           	}
         }
-    });          
+                
+        let dateFormat;
+        if (window.navigator.language.indexOf("en") === 0) {
+        	dateFormat = "MM/dd/yyyy";
+        } else {
+        	dateFormat = "dd.MM.yyyy";
+        }
+
+        calPopup.select(document.getElementById(dateInputElemId), linkAnchorId, dateFormat);
+        if (centerCalDiv) {
+            centerBox(document.getElementById("calDiv"));
+        }
+    });
 }
 
 function setSelectedDate(y, m, d) { 
