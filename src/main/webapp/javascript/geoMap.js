@@ -170,38 +170,29 @@
     }
     
     function resizeAndShowPic() {
-    	var picOnMapElem = document.getElementById("picOnMap");
+    	const picOnMapElem = document.getElementById("picOnMap");
     	
-    	var thumbDimensions = calculateAspectRatioFit(picOnMapElem.width, picOnMapElem.height, 400, 400);
+    	const thumbDimensions = calculateAspectRatioFit(picOnMapElem.width, picOnMapElem.height, 400, 400);
     	picOnMapElem.style.width = thumbDimensions.width + "px";
     	picOnMapElem.style.height = thumbDimensions.height + "px";
     	
     	if (thumbDimensions.height < 399) {
-        	var picContElem = document.getElementById("picOnMapCont");
+        	const picContElem = document.getElementById("picOnMapCont");
         	picContElem.style.height = (thumbDimensions.height + 30) + "px";
     	}
     	if (thumbDimensions.width < 399) {
-        	var picContElem = document.getElementById("picOnMapCont");
+        	const picContElem = document.getElementById("picOnMapCont");
         	picContElem.style.width = thumbDimensions.width + "px";
     	}
     	
     	picOnMapElem.style.display = 'inline';
+
+    	const picFileName = picOnMapElem.getAttribute("picFileName");
     	
-    	
-    	var picFileName = picOnMapElem.getAttribute("picFileName");
-    	
-        var ajaxUrl = getContextRoot() + "/servlet?command=getFileDesc&fileName=" + encodeURIComponent(picFileName);
-        
-    	xmlRequest(ajaxUrl, function(req) {
-            if (req.readyState == 4) {
-                if (req.status == 200) {
-                    var fileDescription = req.responseXML.getElementsByTagName("result")[0].firstChild.nodeValue;        
-                    if (fileDescription && (fileDescription.length > 0)) {
-                        picOnMapElem.setAttribute("title", fileDescription);
-                    }
-                } else {
-                    alert(resourceBundle["alert.communicationFailure"]);
-	            }
+        xmlGetRequest("getFileDesc", { fileName: encodeURIComponent(picFileName)}, responseXml => {
+            const fileDescription = responseXml.getElementsByTagName("result")[0].firstChild.nodeValue;
+            if (fileDescription && fileDescription.length > 0) {
+                picOnMapElem.setAttribute("title", fileDescription);
             }
     	});
     }
