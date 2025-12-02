@@ -556,35 +556,21 @@ function hidePositionSelection() {
 }
 
 function selectTargetPosition(targetPos) {
-    showHourGlass();
-	
+
 	if (!targetPos) {
-		var targetPosSelect = document.getElementById("targetPos");
+		const targetPosSelect = document.getElementById("targetPos");
 		targetPos = targetPosSelect[targetPosSelect.selectedIndex].value;
 	}
 	
 	document.getElementById("newPos").value = targetPos;
 	
-	var formData = getFormData(document.getElementById("targetPosForm"));
-	
-	xmlRequestPost(getContextRoot() + "/servlet", formData, handleMovedToPos);	
-}
-
-function handleMovedToPos(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-            if (success == 'true') {
-                window.location.href = getContextRoot() + "/servlet?command=blog";
-            }
-            hideHourGlass();    
-        } else {
-            alert(resourceBundle["alert.communicationFailure"]);
-            hideHourGlass();    
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("targetPosForm")), responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
         }
-    }
+    });
 }
 
 function loadGoogleMapsAPIScriptCode(googleMapsAPIKey, apiReadyCallback) {
@@ -773,7 +759,7 @@ function hidePublishForm() {
 }
 
 function validatePublishFormAndSubmit() {
-    var daysPerPage = parseInt(document.getElementById("visitorDaysPerPage").value);
+    const daysPerPage = parseInt(document.getElementById("visitorDaysPerPage").value);
 
     if (isNaN(daysPerPage) || (daysPerPage < 1) || (daysPerPage > 32)) {
         alert(resourceBundle["blog.invalidDaysPerPageValue"]);
@@ -781,7 +767,7 @@ function validatePublishFormAndSubmit() {
         return;
     }
     
-    var expirationDays = parseInt(document.getElementById("expirationDays").value);
+    const expirationDays = parseInt(document.getElementById("expirationDays").value);
 
     if (isNaN(expirationDays) || (expirationDays < 1) || (expirationDays > 10000)) {
         alert(resourceBundle["blog.invalidExpirationDays"]);
@@ -789,81 +775,72 @@ function validatePublishFormAndSubmit() {
         return;
     }
     
-    if (document.getElementById("language").value.length == 0) {
+    if (document.getElementById("language").value.length === 0) {
         alert(resourceBundle["error.missingLanguage"]);
         document.getElementById("language").focus();
         return;
     }
     
-	var formData = getFormData(document.getElementById("publishForm"));
-	
-	xmlRequestPost(getContextRoot() + "/servlet", formData, showPublishResult);	
-}
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("publishForm")), responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            const publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;
 
-function showPublishResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+            document.getElementById("publishTable").innerHTML = "";
 
-            if (success == 'true') {
-                publicUrl = resultElem.getElementsByTagName("publicUrl")[0].firstChild.nodeValue;            
+            let tableRow = document.createElement("tr");
+            document.getElementById("publishTable").appendChild(tableRow);
 
-                document.getElementById("publishTable").innerHTML = "";
+            let tableCell = document.createElement("td");
+            tableCell.setAttribute("class", "formParm1");
+            tableCell.innerHTML = resourceBundle["blog.publicLink"] + ":";
+            tableRow.appendChild(tableCell);
 
-                var tableRow = document.createElement("tr");
-                document.getElementById("publishTable").appendChild(tableRow);
+            tableRow = document.createElement("tr");
+            document.getElementById("publishTable").appendChild(tableRow);
 
-                var tableCell = document.createElement("td");
-                tableCell.setAttribute("class", "formParm1");
-                tableCell.innerHTML = resourceBundle["blog.publicLink"] + ":";
-                tableRow.appendChild(tableCell);
+            tableCell = document.createElement("td");
+            tableCell.setAttribute("class", "formParm2");
+            tableRow.appendChild(tableCell);
 
-                tableRow = document.createElement("tr");
-                document.getElementById("publishTable").appendChild(tableRow);
+            const urlInput = document.createElement("textarea");
+            urlInput.id = "publicUrl";
+            urlInput.setAttribute("class", "publicLinkCopyField");
+            urlInput.setAttribute("readonly", "readonly");
+            urlInput.value = publicUrl;
+            tableCell.appendChild(urlInput);
 
-                tableCell = document.createElement("td");
-                tableCell.setAttribute("class", "formParm2");
-                tableRow.appendChild(tableCell);
-                
-                var urlInput = document.createElement("textarea");
-                urlInput.id = "publicUrl";
-                urlInput.setAttribute("class", "publicLinkCopyField");
-                urlInput.setAttribute("readonly", "readonly");
-                urlInput.value = publicUrl;
-                tableCell.appendChild(urlInput);
-                
-                urlInput.focus();
-                urlInput.select();
+            urlInput.focus();
+            urlInput.select();
 
-                tableRow = document.createElement("tr");
-                document.getElementById("publishTable").appendChild(tableRow);
+            tableRow = document.createElement("tr");
+            document.getElementById("publishTable").appendChild(tableRow);
 
-                tableCell = document.createElement("td");
-                tableCell.style.paddingTop = "20px";
-                tableRow.appendChild(tableCell);
+            tableCell = document.createElement("td");
+            tableCell.style.paddingTop = "20px";
+            tableRow.appendChild(tableCell);
 
-                var closeButton = document.createElement("input");
-                closeButton.setAttribute("type", "button");
-                closeButton.setAttribute("value", resourceBundle["button.closewin"]);
-                closeButton.setAttribute("onclick", "hidePublishForm()");
-                tableCell.appendChild(closeButton);
-                
-                var copyButton = document.createElement("input");
-                copyButton.setAttribute("type", "button");
-                copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
-                copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
-                copyButton.setAttribute("style", "float:right");
-                tableCell.appendChild(copyButton);
-                
-                document.getElementById("publishBlogButton").style.display = "none";                    
-                document.getElementById("unpublishButton").style.display = "inline";
-                document.getElementById("publicURLButton").style.display = "inline";
+            const closeButton = document.createElement("input");
+            closeButton.setAttribute("type", "button");
+            closeButton.setAttribute("value", resourceBundle["button.closewin"]);
+            closeButton.setAttribute("onclick", "hidePublishForm()");
+            tableCell.appendChild(closeButton);
 
-                centerBox(document.getElementById("publishCont"));
-            }
+            const copyButton = document.createElement("input");
+            copyButton.setAttribute("type", "button");
+            copyButton.setAttribute("value", resourceBundle["button.copyToClip"]);
+            copyButton.setAttribute("onclick", "copyPublicUrlToClip()");
+            copyButton.setAttribute("style", "float:right");
+            tableCell.appendChild(copyButton);
+
+            document.getElementById("publishBlogButton").style.display = "none";
+            document.getElementById("unpublishButton").style.display = "inline";
+            document.getElementById("publicURLButton").style.display = "inline";
+
+            centerBox(document.getElementById("publishCont"));
         }
-    }
+    });
 }
 
 function queryPublicLink() {
@@ -1183,12 +1160,12 @@ function closeBlogComments() {
 }
 
 function submitComment() {
-    if (document.getElementById("newComment").value.length == 0) {
+    if (document.getElementById("newComment").value.length === 0) {
         customAlert(resourceBundle["blog.newCommentEmpty"]);
         return;
     }
     
-    var emailInput = document.getElementById("notifyOnAnswerEmail")
+    const emailInput = document.getElementById("notifyOnAnswerEmail")
     if (emailInput) {
         if (!emailInput.validity.valid) {
         	customAlert(resourceBundle["alert.emailsyntax"]);
@@ -1196,38 +1173,28 @@ function submitComment() {
         }
     }
     
-    var commentCont = document.getElementById("commentCont");
+    const commentCont = document.getElementById("commentCont");
     commentCont.style.visibility = "hidden";
 
-    xmlRequestPost(getContextRoot() + "/servlet", getFormData(document.getElementById("blogCommentForm")), showPostCommentResult);
-}
-
-function showPostCommentResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-            if (success == 'true') {
-                var newCommentCount = resultElem.getElementsByTagName("newCommentCount")[0].firstChild.nodeValue;
-                var posInPage = document.getElementById("posInPage").value;
-                document.getElementById("comment-" + posInPage).innerHTML = newCommentCount;
-                
-                var commentNewLabel = document.getElementById("newComment-" + posInPage);
-                if (commentNewLabel) {
-                    commentNewLabel.style.display = 'none';
-                    queryUnseenComments();
-                }
-
-                var commentCont = document.getElementById("commentCont");
-                commentCont.style.visibility = "hidden";
-                
-                toast(resourceBundle["blog.commentAdded"], 2000);
-            } else {
-                alert("failed to create comment");
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("blogCommentForm")), responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            const newCommentCount = resultElem.getElementsByTagName("newCommentCount")[0].firstChild.nodeValue;
+            const posInPage = document.getElementById("posInPage").value;
+            document.getElementById("comment-" + posInPage).innerHTML = newCommentCount;
+            const commentNewLabel = document.getElementById("newComment-" + posInPage);
+            if (commentNewLabel) {
+                commentNewLabel.style.display = 'none';
+                queryUnseenComments();
             }
+            const commentCont = document.getElementById("commentCont");
+            commentCont.style.visibility = "hidden";
+            toast(resourceBundle["blog.commentAdded"], 2000);
+        } else {
+            alert("failed to create comment");
         }
-    }
+    });
 }
 
 function limitCommentText() { 
@@ -1411,120 +1378,102 @@ function hideSearchForm() {
 }
 
 function submitSearch() {
-    var searchArg = document.getElementById("searchArg");
-    
+    const searchArg = document.getElementById("searchArg");
     if (searchArg.value.length < 2) {
         alert(resourceBundle["blog.searchArgMinLength"]);
         document.getElementById("searchArg").focus();
         return;
     }
     
-    var formData = getFormData(document.getElementById("searchForm"));
-	
-	xmlRequestPost(getContextRoot() + "/servlet", formData, handleSearchResult)	    
-}
-
-function handleSearchResult(req) {
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-
-        	var resultElem = req.responseXML.getElementsByTagName("result")[0];            
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("searchForm")),
+        responseXml => {
+        	const resultElem = responseXml.getElementsByTagName("result")[0];
             // var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
             hideSearchForm();
         	
-           	var searchResultCont = document.createElement("div");
+           	const searchResultCont = document.createElement("div");
            	searchResultCont.id = "searchResultCont";
            	searchResultCont.setAttribute("class", "searchResultCont");
            	document.documentElement.appendChild(searchResultCont);
            	
-           	var searchArgLabel= document.createElement("label");
+           	const searchArgLabel= document.createElement("label");
            	searchArgLabel.id = "searchArgLabel";
            	searchArgLabel.setAttribute("class", "searchResultSearchArg");
            	searchResultCont.appendChild(searchArgLabel); 
 
-           	var searchArg = resultElem.getElementsByTagName("searchArg")[0].firstChild.nodeValue;
+           	const searchArg = resultElem.getElementsByTagName("searchArg")[0].firstChild.nodeValue;
            	
-           	var searchArgText = resourceBundle["blog.searchResultArg"] + ": " + searchArg;
-           	searchArgLabel.innerHTML = searchArgText;
+           	searchArgLabel.innerHTML = resourceBundle["blog.searchResultArg"] + ": " + searchArg;
 
-           	/*
-           	var brElem= document.createElement("br");
-           	searchResultCont.appendChild(brElem); 
-           	*/
-           	
-           	var hitCountLabel= document.createElement("label");
+           	const hitCountLabel= document.createElement("label");
            	hitCountLabel.id = "hitCountLabel";
            	hitCountLabel.setAttribute("class", "searchResultHitCount");
            	searchResultCont.appendChild(hitCountLabel); 
            	
-           	var hitCountText = resourceBundle["blog.searchHitCount"] + ": " + resultElem.getElementsByTagName("hitCount")[0].firstChild.nodeValue;
+           	const hitCountText = resourceBundle["blog.searchHitCount"] + ": " + resultElem.getElementsByTagName("hitCount")[0].firstChild.nodeValue;
            	hitCountLabel.innerHTML = hitCountText;
            	
-           	var searchResultScrollPane= document.createElement("div");
+           	const searchResultScrollPane= document.createElement("div");
            	searchResultScrollPane.id = "searchResultScrollPane";
            	searchResultScrollPane.setAttribute("class", "searchResultScrollPane");
            	searchResultCont.appendChild(searchResultScrollPane);
            	
-           	var buttonCont= document.createElement("div");
+           	const buttonCont= document.createElement("div");
            	buttonCont.setAttribute("class", "searchResultButtonCont");
            	searchResultCont.appendChild(buttonCont); 
            	
-        	var searchAgainButton = document.createElement("input");
+        	const searchAgainButton = document.createElement("input");
         	searchAgainButton.setAttribute("type", "button");
         	searchAgainButton.onclick = searchAgain;
         	searchAgainButton.value = resourceBundle["blog.searchAgain"];
         	buttonCont.appendChild(searchAgainButton);
 
-        	var closeButton = document.createElement("input");
+        	const closeButton = document.createElement("input");
         	closeButton.setAttribute("type", "button");
         	closeButton.onclick = closeSearchResults;
         	closeButton.setAttribute("class", "searchResultCloseButton");
         	closeButton.value = resourceBundle["button.closewin"];
         	buttonCont.appendChild(closeButton);
 
-           	var blogDayList = document.createElement("ul");
+           	const blogDayList = document.createElement("ul");
            	blogDayList.id = "blogDayList";
            	blogDayList.setAttribute("class", "searchHitDayList");
            	searchResultScrollPane.appendChild(blogDayList);
         	
-        	var searchResults = resultElem.getElementsByTagName("searchResults")[0];
+        	const searchResults = resultElem.getElementsByTagName("searchResults")[0];
 
-        	var daysWithSearchHits = getChildElementsByTagName(searchResults, "blogDay");
+        	const daysWithSearchHits = getChildElementsByTagName(searchResults, "blogDay");
         	
-        	for (var k = 0; k < daysWithSearchHits.length; k++) {
-        		var blogDayListEntry = document.createElement("li");
+        	for (let k = 0; k < daysWithSearchHits.length; k++) {
+        		const blogDayListEntry = document.createElement("li");
         		blogDayListEntry.setAttribute("class", "searchHit");
         		blogDayList.appendChild(blogDayListEntry);
 
-        		var blogLinkDate = getChildValueByTagName(daysWithSearchHits[k], "linkDate");
-        		var blogDisplayDate = getChildValueByTagName(daysWithSearchHits[k], "displayDate");
+        		const blogLinkDate = getChildValueByTagName(daysWithSearchHits[k], "linkDate");
+        		const blogDisplayDate = getChildValueByTagName(daysWithSearchHits[k], "displayDate");
  
-        		var dateElem = document.createElement("span");
+        		const dateElem = document.createElement("span");
                	dateElem.setAttribute("class", "searchHitDate");
                	dateElem.innerHTML = blogDisplayDate;
                	blogDayListEntry.appendChild(dateElem);
         		
-               	var searchHitsList = document.createElement("ul");
+               	const searchHitsList = document.createElement("ul");
                	// searchHitsList.id = "searchHitsList";
                	searchHitsList.setAttribute("class", "searchHitsList");
                	blogDayListEntry.appendChild(searchHitsList);
 
-            	var searchHits = getChildElementsByTagName(daysWithSearchHits[k], "searchHit");
+            	const searchHits = getChildElementsByTagName(daysWithSearchHits[k], "searchHit");
             	
-            	for (var i = 0; i < searchHits.length; i++) {
-            			
-               	    var beforeContext;
-                   	var afterContext;
-                   	
-                   	var searchHitListEntry = document.createElement("li");
+            	for (let i = 0; i < searchHits.length; i++) {
+                   	const searchHitListEntry = document.createElement("li");
                    	searchHitListEntry.setAttribute("class", "searchHit");
                    	searchHitsList.appendChild(searchHitListEntry);
 
-                   	var fileName = getChildValueByTagName(searchHits[i], "fileName");
+                   	const fileName = getChildValueByTagName(searchHits[i], "fileName");
 
-                   	var isComment = getChildValueByTagName(searchHits[i], "isComment");
+                   	const isComment = getChildValueByTagName(searchHits[i], "isComment");
                    	
-                   	var searchLinkElem = document.createElement("a");
+                   	const searchLinkElem = document.createElement("a");
                    	searchLinkElem.setAttribute("fileName", fileName);
                    	if (isComment) {
                        	searchLinkElem.setAttribute("class", "searchHitLink searchHitComment");
@@ -1532,7 +1481,7 @@ function handleSearchResult(req) {
                        	searchLinkElem.setAttribute("class", "searchHitLink");
                    	}
                    	searchLinkElem.onmouseover = function () {
-                   		var timeoutFunctionCall = "previewSearchResult('" + this.getAttribute("fileName") + "')";
+                   		const timeoutFunctionCall = "previewSearchResult('" + this.getAttribute("fileName") + "')";
                    		searchPreviewTimeout = setTimeout(timeoutFunctionCall, 500);
                    	};
                    	searchLinkElem.setAttribute("onmouseout", "cancelSearchPreview()");
@@ -1540,37 +1489,36 @@ function handleSearchResult(req) {
                    	searchLinkElem.setAttribute("href", getContextRoot() + "/servlet?command=blog&beforeDay=" + blogLinkDate + "&positionToFile=" + fileName);
                    	searchHitListEntry.appendChild(searchLinkElem);
                    	
-                   	var beforeContext = getChildValueByTagName(searchHits[i], "beforeContext");
+                   	const beforeContext = getChildValueByTagName(searchHits[i], "beforeContext");
                    	if (beforeContext) {
-                       	var beforeContextElem = document.createElement("span");
+                       	const beforeContextElem = document.createElement("span");
                        	beforeContextElem.setAttribute("class", "searchHitContext");
                        	beforeContextElem.innerHTML = beforeContext;
                        	searchLinkElem.appendChild(beforeContextElem);
                    	}
 
-                   	var matchingText = getChildValueByTagName(searchHits[i], "matchingText");
-                   	var searchArgElem = document.createElement("span");
+                   	const matchingText = getChildValueByTagName(searchHits[i], "matchingText");
+                   	const searchArgElem = document.createElement("span");
                    	searchArgElem.setAttribute("class", "searchHit");
                    	searchArgElem.innerHTML = matchingText;
                    	searchLinkElem.appendChild(searchArgElem);
                    	    
-                   	var afterContext = getChildValueByTagName(searchHits[i], "afterContext");
+                   	const afterContext = getChildValueByTagName(searchHits[i], "afterContext");
                    	if (afterContext) {
-                       	var afterContextElem = document.createElement("span");
+                       	const afterContextElem = document.createElement("span");
                        	afterContextElem.setAttribute("class", "searchHitContext");
                        	afterContextElem.innerHTML = afterContext;
                        	searchLinkElem.appendChild(afterContextElem);
                    	}
             	}
         	}
-        	
            	searchResultCont.style.visibility = "visible"
-        	
-        } else {
-        	alert("search error");
+        },
+        () => {
+            alert("search error");
             hideSearchForm();
         }
-    }
+    );
 }
 
 function closeSearchResults() {
@@ -1673,58 +1621,36 @@ function hideSettings() {
 }
 
 function validateSettingsForm() {
-    
-  	var daysPerPage = document.getElementById("daysPerPage").value;
-
-    var pageSize = parseInt(daysPerPage);
-
-    if ((daysPerPage == "") || isNaN(pageSize) || (pageSize < 1) || (pageSize > 64)) {
+  	const daysPerPage = document.getElementById("daysPerPage").value;
+    const pageSize = parseInt(daysPerPage);
+    if ((daysPerPage === "") || isNaN(pageSize) || (pageSize < 1) || (pageSize > 64)) {
         alert(resourceBundle["blog.invalidDaysPerPage"]);
     	return;
     }
-    
-    var newPassword = document.getElementById("newPassword").value;
-    
+    const newPassword = document.getElementById("newPassword").value;
     if ((newPassword.length > 0) && (newPassword.length < 5)) {
         alert(resourceBundle["error.passwordlength"]);
         return;
     }
-
-    var newPasswdConfirm = document.getElementById("newPasswdConfirm").value;
-    
-    if (newPassword != newPasswdConfirm) {
+    const newPasswdConfirm = document.getElementById("newPasswdConfirm").value;
+    if (newPassword !== newPasswdConfirm) {
         alert(resourceBundle["error.pwmissmatch"]);
         return;
     }
 
-    showHourGlass();
-
-    xmlRequestPost(getContextRoot() + "/servlet", getFormData(document.getElementById("blogSettingsForm")), showSaveSettingsResult);
-}
-
-function showSaveSettingsResult(req) {
-    if (req.readyState === 4) {
-        if (req.status === 200) {
-            var resultElem = req.responseXML.getElementsByTagName("result")[0];            
-            var success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
-
-            if (success !== 'true') {
-                alert("failed to save settings");
-            }
-
-            var settingsCont = document.getElementById("settingsCont");
-            settingsCont.style.visibility = "hidden";
-            
-            hideHourGlass();
-
-            const configChanged = resultElem.getElementsByTagName("configChanged")[0].firstChild.nodeValue;
-
-            if (configChanged && configChanged === "true") {
-                window.location.href = getContextRoot() + "/servlet?command=blog";
-            }
+    xmlPostRequest(null, getFormDataAsProps(document.getElementById("blogSettingsForm")), responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success !== 'true') {
+            alert("failed to save settings");
         }
-        hideHourGlass();
-    }
+        const settingsCont = document.getElementById("settingsCont");
+        settingsCont.style.visibility = "hidden";
+        const configChanged = resultElem.getElementsByTagName("configChanged")[0].firstChild.nodeValue;
+        if (configChanged && configChanged === "true") {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        }
+    });
 }
    
 function selectDate(calPopup, dateInputElemId, linkAnchorId, centerCalDiv) {

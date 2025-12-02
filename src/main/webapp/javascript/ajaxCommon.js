@@ -1,26 +1,9 @@
-// TODO: replace this global var by local var
-var req;
-
 function xmlRequest(url, callBackFunction) {
-    var req = new XMLHttpRequest();
-        
+    const req = new XMLHttpRequest();
     if (req) {
-        req.onreadystatechange = function() {callBackFunction(req)};
+        req.onreadystatechange = () => callBackFunction(req);
 	    req.open("GET", url, true);
 	    req.send("");
-    } 
-}
-
-function xmlRequestPost(url, params, callBackFunction) {
-    var req = new XMLHttpRequest();
-        
-    if (req) {
-        req.onreadystatechange = function() {callBackFunction(req)};
-	    req.open("POST", url, true);
-
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        
-	    req.send(params);
     } 
 }
 
@@ -74,31 +57,46 @@ function fetchGet(command, parameters, successCallBack, failureCallBack, skipWai
 }
 
 function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
-	showHourGlass();
+    showHourGlass();
 
     let postData = "";
     if (command) {
-	    postData = "command=" + command;
+        postData = "command=" + command;
     }
     for (const key in parameters) {
-    	postData = postData + (postData.length > 0 ? "&" : "") + key + "=" + parameters[key];
-   	}
-	
-	xmlRequestPost(getContextRoot() + "/servlet", postData, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
-            	successCallBack(req.responseXML);
-                hideHourGlass();
-            } else {
-            	hideHourGlass();
-            	if (typeof failureCallback !== 'undefined') {
-            		failureCallback();
-            	} else {
-                    customAlert(resourceBundle["alert.communicationFailure"]);
-            	}
+        postData = postData + (postData.length > 0 ? "&" : "") + key + "=" + parameters[key];
+    }
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: postData
+    };
+
+    fetch(getContextRoot() + "/servlet", requestOptions)
+        .then((response) => {
+            hideHourGlass();
+            if (response.ok) {
+                return response.text();
             }
-        }
-    });
+            if (typeof failureCallBack !== 'undefined') {
+                failureCallBack();
+            } else {
+                throw new Error('fetch communication error');
+            }
+        })
+        .then((data) => {
+            if (successCallBack) {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, 'text/xml');
+                successCallBack(xmlDoc);
+            }
+        })
+        .catch(error => {
+            hideHourGlass();
+            customAlert(resourceBundle["alert.communicationFailure"]);
+            console.error("communication error:", error);
+        });
 }
 
 function htmlFragmentByXslt(xmlUrl, xslUrl, fragmentCont, callback) {
@@ -110,17 +108,14 @@ function htmlFragmentByXslt(xmlUrl, xslUrl, fragmentCont, callback) {
 }
 
 function htmlFragmentByXsltJavascript(xmlUrl, xslUrl, fragmentCont, callback) {
-
-    console.log("htmlFragmentByXsltJavascript start");
-
 	xmlRequest(xslUrl, function(req) {
-        if (req.readyState == 4) {
-            if (req.status == 200) {
+        if (req.readyState === 4) {
+            if (req.status === 200) {
 			    const xslStyleSheet = req.responseXML;
 
 	            xmlRequest(xmlUrl, function(req) {
-                    if (req.readyState == 4) {
-                        if (req.status == 200) {
+                    if (req.readyState === 4) {
+                        if (req.status === 200) {
 			                const xmlDoc = req.responseXML;
                             // browser-independend client-side XSL transformation with google ajaxslt
                             fragmentCont.innerHTML = xsltProcess(xmlDoc, xslStyleSheet);
@@ -139,59 +134,19 @@ function htmlFragmentByXsltJavascript(xmlUrl, xslUrl, fragmentCont, callback) {
         }
     });
 }
-    
-function browserXsltMSIE(xmlUrl, xslUrl)
-{ 
-    var xsl = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.3.0');
-    xsl.async = false;
-    if (!xsl.load(xslUrl))
-    {
-        alert('cannot load xsl stylesheet from ' + xslUrl);
-        return;
-    }
 
-    var xslTemplate = new ActiveXObject("Msxml2.XSLTemplate.3.0");
-    xslTemplate.stylesheet = xsl;
-
-    xml = new ActiveXObject("Msxml2.DOMDocument.3.0");
-    xml.async = false;
-    if (!xml.load(xmlUrl))
-    {
-        alert('cannot load xml from ' + xmlUrl);
-        return;
-    }
-    
-    var newId = xml.documentElement.getAttribute('id');
-
-    var xslProcessor = xslTemplate.createProcessor();
-    
-    xslProcessor.input = xml;
-   
-    xslProcessor.transform();
-    
-    return(xslProcessor.output);
-}
-
-function getFormData(formObj) 
-{
-    var buff= '';
+function getFormData(formObj) {
+    let buff= '';
+    const elemNum = formObj.elements.length;
 	
-    var elemNum = formObj.elements.length;
-	
-    for (i = 0; i < elemNum; i++) 
-    {
+    for (let i = 0; i < elemNum; i++) {
 	    formElem = formObj.elements[i];
-
-	    switch (formElem.type) 
-	    {
+	    switch (formElem.type) {
 	        case 'checkbox' :
-	            if (formElem.checked)
-	            {
+	            if (formElem.checked) {
 	                buff += formElem.name + '=' + encodeURIComponent(formElem.value) + '&'
 	            }
-	      
 	            break;
-	      
 	        case 'text':
 	        case 'select-one':
 	        case 'hidden':
@@ -202,18 +157,15 @@ function getFormData(formObj)
 	            break;
 	    }
     }
-    
     return(buff);
 }
 
 function getFormDataAsProps(formObj) {
     const formParams = {};
-	
-    var elemNum = formObj.elements.length;
+    const elemNum = formObj.elements.length;
 	
     for (let i = 0; i < elemNum; i++) {
 	    let formElem = formObj.elements[i];
-
 	    switch (formElem.type) {
 	        case 'checkbox' :
 	            if (formElem.checked) {
@@ -232,7 +184,6 @@ function getFormDataAsProps(formObj) {
 	            break;
 	    }
     }
-    
     return formParams;
 }
 
@@ -257,11 +208,11 @@ function getPageXScrolled()
 }
 
 function showHourGlass() {
-    var waitDivElem = document.createElement('div');
+    const waitDivElem = document.createElement('div');
     
     waitDivElem.setAttribute("id", "waitDiv");
     
-    var hourGlassElem = document.createElement('img');
+    const hourGlassElem = document.createElement('img');
     
     hourGlassElem.setAttribute("src", getContextRoot() + "/images/hourglass.gif");
     hourGlassElem.setAttribute("width", "32");
@@ -270,8 +221,8 @@ function showHourGlass() {
     
     waitDivElem.appendChild(hourGlassElem);
     
-    var divWidth = 60;
-    var divHeight = 30;
+    const divWidth = 60;
+    const divHeight = 30;
 	
     waitDivElem.style.width = divWidth + "px";
     waitDivElem.style.height = divHeight + "px";
@@ -283,11 +234,9 @@ function showHourGlass() {
     waitDivElem.style.visibility = "visible";
 }
 
-function hideHourGlass()
-{
-    var waitDiv = document.getElementById("waitDiv");
-    if (waitDiv)
-    {
+function hideHourGlass() {
+    const waitDiv = document.getElementById("waitDiv");
+    if (waitDiv) {
         document.getElementsByTagName('body')[0].removeChild(waitDiv);
     }
 }
