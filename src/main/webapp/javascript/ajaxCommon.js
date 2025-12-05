@@ -81,6 +81,7 @@ function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
             }
             if (typeof failureCallBack !== 'undefined') {
                 failureCallBack();
+                successCallBack = undefined;
             } else {
                 throw new Error('fetch communication error');
             }
