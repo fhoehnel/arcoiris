@@ -137,23 +137,6 @@ public abstract class RequestHandler {
         return ((String) session.getAttribute("cwd"));
     }
 
-    /**
-     * Safari can handle XSLT but not via Javascript.
-     * 
-     * @return true if browser supports XSLT for XML+XSL files and via
-     *         Javascript
-     */
-    protected boolean isBrowserXslEnabled() {
-        // return ((browserManufacturer == BROWSER_MSIE) || (browserManufacturer == BROWSER_MOZILLA)) && (browserVersion >= 6);
-
-        // too much trouble with strange versions of browsers - do the XSLT always on server side
-        return false;
-
-        // (browserManufacturer == BROWSER_GOOGLE) || Chromium Issue 512827 xsl
-        // fails to load properly in iframe
-        // (browserManufacturer == BROWSER_SAFARI) ||
-    }
-
     protected int getIntParam(String paramName, int defaultValue) {
         int value = defaultValue;
 

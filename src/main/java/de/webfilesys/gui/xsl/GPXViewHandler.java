@@ -19,20 +19,18 @@ import org.apache.log4j.Logger;
 import com.ctc.wstx.exc.WstxParsingException;
 
 import de.webfilesys.ArcoirisBlog;
-import de.webfilesys.gui.user.UserRequestHandler;
 import de.webfilesys.servlet.UploadServlet;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.ProcessingInstruction;
 
 /**
  * GPS track file viewer.
  * 
  * @author Frank Hoehnel
  */
-public class GPXViewHandler extends UserRequestHandler {
-	private static final String STYLESHEET_REF = "<?xml-stylesheet type=\"text/xsl\" href=\"$contextRoot/xsl/gpxViewer.xsl\"?>";
-
-	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+public class GPXViewHandler extends XslRequestHandlerBase  {
 
 	public GPXViewHandler(
     		HttpServletRequest req, 
@@ -61,12 +59,15 @@ public class GPXViewHandler extends UserRequestHandler {
 	    
         String filePath = attachmentFilePath.toString();
         
-		String googleMapsAPIKey = null;
+		String googleMapsAPIKey;
 		if (req.getScheme().equalsIgnoreCase("https")) {
 			googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
 		} else {
 			googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
 		}
+
+        Element gpxElem = doc.createElement("gpx");
+        doc.appendChild(gpxElem);
 
 		BufferedReader gpxReader = null;
 
@@ -77,8 +78,6 @@ public class GPXViewHandler extends UserRequestHandler {
 
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLStreamReader parser = factory.createXMLStreamReader(gpxReader);
-
-			String tagName = null;
 
 			boolean documentEnd = false;
 
@@ -98,46 +97,28 @@ public class GPXViewHandler extends UserRequestHandler {
 						break;
 
 					case XMLStreamConstants.START_ELEMENT:
-						tagName = parser.getLocalName();
+						String tagName = parser.getLocalName();
 
-						if (tagName.equals("gpx")) {
-							output.println(XML_HEADER);
-							output.println(STYLESHEET_REF.replace("$contextRoot", req.getContextPath()));
-
-							output.println("<gpx>");
-
-							if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
-								output.println("  <googleMapsAPIKey>" + googleMapsAPIKey + "</googleMapsAPIKey>");
-							}
-							output.println("  <filePath>" + CommonUtils.escapeForJavascript(filePath) + "</filePath>");
-							output.println("  <language>" + language + "</language>");							
-                            output.println("  <contextRoot>" + req.getContextPath() + "</contextRoot>");
-						}
-
-						if (tagName.equals("trk")) {
-							output.println("<track>" + trackCounter + "</track>");
-							trackCounter++;
-						}
-
+                        if (tagName.equals("gpx")) {
+                            if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
+                                XmlUtil.setChildText(gpxElem, "googleMapsAPIKey", googleMapsAPIKey);
+                            }
+                            XmlUtil.setChildText(gpxElem, "filePath", CommonUtils.escapeForJavascript(filePath));
+                            XmlUtil.setChildText(gpxElem, "language", language);
+                            XmlUtil.setChildText(gpxElem, "contextRoot", req.getContextPath());
+                        }
+                        if (tagName.equals("trk")) {
+                            Element trackElem = doc.createElement("track");
+                            XmlUtil.setElementText(trackElem, Integer.toString(trackCounter));
+                            gpxElem.appendChild(trackElem);
+                            trackCounter++;
+                        }
 						break;
-
-					case XMLStreamConstants.END_ELEMENT:
-
-						tagName = parser.getLocalName();
-						if (tagName.equals("gpx")) {
-							output.println("</gpx>");
-						}
-						break;
-
-					default:
-						// System.out.println("unhandled event: " + event);
 					}
 				} catch (WstxParsingException epex) {
 					Logger.getLogger(getClass()).warn("GPX parsing error", epex);
 				}
 			}
-
-			output.flush();
 		} catch (IOException e) {
 			Logger.getLogger(getClass()).error("failed to read GPX file", e);
 		} catch (XMLStreamException xmlEx) {
@@ -152,5 +133,6 @@ public class GPXViewHandler extends UserRequestHandler {
 				}
 			}
 		}
+        processResponse("gpxViewer.xsl", req);
 	}
 }
