@@ -412,6 +412,10 @@ select[id^=geoLocSel-] {
     display: none;
 }
 
+select[id^=trackMapSel-] {
+    display: none;
+}
+
 td.blogFormLabel {
     color:black;
     font-size:13px;

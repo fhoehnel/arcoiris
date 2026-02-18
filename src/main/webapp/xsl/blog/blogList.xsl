@@ -565,7 +565,7 @@
                   
                     <select class="pictureAlbum">
                       <xsl:attribute name="id">geoLocSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
-                      <xsl:attribute name="onchange">geoMapFileSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                      <xsl:attribute name="onchange">geoMapTypeSelected('<xsl:value-of select="@name" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
                       <option value="0" resource="selectMapType" />
                       <option value="1" resource="mapTypeOSM" />
                       <option value="2" resource="mapTypeGoogleMap" />
@@ -574,12 +574,21 @@
                   </xsl:if>
 
                   <xsl:if test="geoTrack">
-                    <a class="blogGeoTagLink">
-                      <xsl:attribute name="id">geoTrackLink-<xsl:value-of select="pagePicCounter" /></xsl:attribute>
-                      <xsl:attribute name="href">javascript:void(0)</xsl:attribute>
-                      <xsl:attribute name="onclick">viewGeoTrack('<xsl:value-of select="@name" />', '<xsl:value-of select="geoTrack" />')</xsl:attribute>
-                      <span resource="geoTrackLink"></span>
-                    </a>
+                    <div>
+                      <xsl:attribute name="id">trackIcon-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                        <a class="blogGeoTagLink">
+                          <xsl:attribute name="href">javascript:showTrackMapSelection('<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                            <span resource="geoTrackLink"></span>
+                        </a>
+                    </div>
+
+                    <select class="pictureAlbum">
+                      <xsl:attribute name="id">trackMapSel-<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" /></xsl:attribute>
+                      <xsl:attribute name="onchange">trackMapTypeSelected('<xsl:value-of select="geoTrack" />', '<xsl:value-of select="$level1Position" />-<xsl:value-of select="position()" />')</xsl:attribute>
+                      <option value="0" resource="selectMapType" />
+                      <option value="1" resource="mapTypeOSM" />
+                      <option value="2" resource="mapTypeGoogleMap" />
+                    </select>
                   </xsl:if>
 
                   <xsl:if test="attachment">

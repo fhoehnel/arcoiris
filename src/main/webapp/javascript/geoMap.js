@@ -11,7 +11,17 @@
             document.getElementById("geoLocSel").style.display = "block";
         }
     }
-      
+
+    function showTrackMapSelection(counter) {
+        if (counter) {
+            document.getElementById("trackIcon-" + counter).style.display = "none";
+            document.getElementById("trackMapSel-" + counter).style.display = "block";
+        } else {
+            document.getElementById("trackIcon").style.display = "none";
+            document.getElementById("trackMapSel").style.display = "block";
+        }
+    }
+
     function geoMapFolderSelected(folderPath) 
     {
         var mapSel = document.getElementById("geoLocSel");
@@ -58,7 +68,7 @@
         }
     }  
 
-    function geoMapFileSelected(fileName, counter) 
+    function geoMapTypeSelected(fileName, counter)
     {
         var mapSel;
         if (counter) 
@@ -122,7 +132,45 @@
         {
             window.location.href = getContextRoot() + "/servlet?command=googleEarthPlacemark&fileName=" + fileName;
         }
-    }  
+    }
+
+    function trackMapTypeSelected(fileName, counter) {
+        let mapSel;
+        if (counter) {
+            mapSel = document.getElementById("trackMapSel-" + counter);
+        } else {
+            mapSel = document.getElementById("trackMapSel");
+        }
+        const idx = mapSel.selectedIndex;
+        const mapType = mapSel.options[idx].value;
+        mapSel.selectedIndex = 0;
+
+        let trackIcon;
+        if (counter) {
+            trackIcon = document.getElementById("trackIcon-" + counter)
+        } else {
+            trackIcon = document.getElementById("trackIcon")
+        }
+        if (trackIcon) {
+            mapSel.style.display = "none";
+            trackIcon.style.display = "inline";
+        }
+        const mapWinWidth = screen.availWidth - 20;
+        const mapWinHeight = screen.availHeight - 80;
+
+        let url;
+        if (mapType === "1") {
+            url = "/servlet?command=viewGPX&attachmentName=" + encodeURIComponent(fileName) + "&mapType=osm";
+        } else if (mapType === "2") {
+            url = "/servlet?command=viewGPX&attachmentName=" + encodeURIComponent(fileName);
+        }
+        const mapWin = window.open(getContextRoot() + url,'_blank','status=no,toolbar=no,location=no,menu=no,width=' + mapWinWidth + ',height=' + mapWinHeight + ',resizable=yes,left=1,top=1,screenX=1,screenY=1');
+        if (!mapWin) {
+            alert(resourceBundle["alert.enablePopups"]);
+        } else {
+            mapWin.focus();
+        }
+    }
 
     function showImageOnMap(picFileName) {
         removeImageFromMap();

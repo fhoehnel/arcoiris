@@ -23,7 +23,6 @@ import de.webfilesys.servlet.UploadServlet;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.XmlUtil;
 import org.w3c.dom.Element;
-import org.w3c.dom.ProcessingInstruction;
 
 /**
  * GPS track file viewer.
@@ -45,6 +44,8 @@ public class GPXViewHandler extends XslRequestHandlerBase  {
 	
         String attachmentName = getParameter("attachmentName");
 
+        String mapType = getParameter("mapType");
+
         String cwd = getCwd();
         
         StringBuffer attachmentFilePath = new StringBuffer(cwd);
@@ -59,12 +60,14 @@ public class GPXViewHandler extends XslRequestHandlerBase  {
 	    
         String filePath = attachmentFilePath.toString();
         
-		String googleMapsAPIKey;
-		if (req.getScheme().equalsIgnoreCase("https")) {
-			googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
-		} else {
-			googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
-		}
+		String googleMapsAPIKey = null;
+        if (!"osm".equalsIgnoreCase(mapType)) {
+            if (req.getScheme().equalsIgnoreCase("https")) {
+                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
+            } else {
+                googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTP();
+            }
+        }
 
         Element gpxElem = doc.createElement("gpx");
         doc.appendChild(gpxElem);
@@ -133,6 +136,7 @@ public class GPXViewHandler extends XslRequestHandlerBase  {
 				}
 			}
 		}
-        processResponse("gpxViewer.xsl", req);
+        String xslFileName = "osm".equalsIgnoreCase(mapType) ? "gpxOSMViewer.xsl" : "gpxViewer.xsl";
+        processResponse(xslFileName, req);
 	}
 }
