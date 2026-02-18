@@ -65,6 +65,7 @@
         var mapCenter = new google.maps.LatLng(centerLatitude, centerLongitude);
     
         var myOptions = {
+            mapId: "multiMarkerMap",
             zoom: zoomFactor,
             center: mapCenter,
             mapTypeId: google.maps.MapTypeId.HYBRID
@@ -81,7 +82,7 @@
 		  
 		  markerPos = new google.maps.LatLng(<xsl:value-of select="latitude" />, <xsl:value-of select="longitude" />);
 		
-          marker = new google.maps.Marker({
+          marker = new google.maps.marker.AdvancedMarkerElement({
               position: markerPos,
               title: resourceBundle["blog.mapMarkerTitle"]
           });
@@ -113,17 +114,17 @@
         if (infoWindowList.length == 0) {
             document.getElementById("hideInfoButton").style.display = "none";
         }
-	
-    }  
+    }
     
     function loadGoogleMapsAPIScriptCode(googleMapsAPIKey) {
         var script = document.createElement("script");
         script.type = "text/javascript";
+        script.setAttribute("async", "async");
 
         if (window.location.href.indexOf("https") == 0) {
-            script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;key=" + googleMapsAPIKey;
+            script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;loading=async&amp;key=" + googleMapsAPIKey + "&amp;libraries=marker";
         } else {
-            script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;key=" + googleMapsAPIKey;
+            script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapsApiReady&amp;loading=async&amp;key=" + googleMapsAPIKey + "&amp;libraries=marker";
         }        
         document.body.appendChild(script);
     }

@@ -6,13 +6,6 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
@@ -67,17 +60,6 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
                         if (infoText != null) {
                             infoText = removeEmojis(infoText);
                         }
-
-                        /*
-                         * if (CommonUtils.isEmpty(infoText)) { infoText =
-                         * metaInfMgr.getDescription(file.getAbsolutePath()); if
-                         * (!CommonUtils.isEmpty(infoText)) { infoText =
-                         * removeEmojis(infoText); if (infoText.length() >
-                         * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
-                         * infoText.substring(0, INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) +
-                         * " ..."; } } }
-                         */
-
                         addMarker(markersElement, geoTag.getLatitude(), geoTag.getLongitude(), infoText, file.getName());
                     } else {
                         String fileExt = CommonUtils.getFileExtension(file.getName());
@@ -104,21 +86,6 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
                                         gpsLongitude = (-gpsLongitude);
                                     }
 
-                                    /*
-                                     * String infoText =
-                                     * metaInfMgr.getDescription(file.getAbsolutePath
-                                     * ()); if (!CommonUtils.isEmpty(infoText)) {
-                                     * infoText = removeEmojis(infoText); if
-                                     * (infoText.length() >
-                                     * INFO_TEXT_FROM_DESCR_MAX_LENGTH) { infoText =
-                                     * infoText.substring(0,
-                                     * INFO_TEXT_FROM_DESCR_MAX_LENGTH - 4) + " ..."; }
-                                     * }
-                                     *
-                                     * addMarker(markersElement, gpsLatitude,
-                                     * gpsLongitude, infoText);
-                                     */
-
                                     addMarker(markersElement, gpsLatitude, gpsLongitude, null, file.getName());
                                 }
                             }
@@ -128,7 +95,7 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
             }
         }
 
-        String googleMapsAPIKey = null;
+        String googleMapsAPIKey;
         if (req.getScheme().equalsIgnoreCase("https")) {
             googleMapsAPIKey = ArcoirisBlog.getInstance().getGoogleMapsAPIKeyHTTPS();
         } else {
@@ -138,17 +105,10 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
         if (!CommonUtils.isEmpty(googleMapsAPIKey)) {
             XmlUtil.setChildText(geoDataElement, "googleMapsAPIKey", googleMapsAPIKey, false);
         }
-        
-        
-        // when XSLT processing is done by the browser, the Firefox browser and
-        // MSIE 7.0 hang up forever
-        // when loading the Google maps API Javascript functions from the Google
-        // server
-        // so we have to do the XSLT processing always on server side
 
         XmlUtil.setChildText(doc.getDocumentElement(), "contextRoot", req.getContextPath());
 
-        processResponse("googleMapMulti.xsl");
+        processResponse("googleMapMulti.xsl", req);
     }
 
     private void addMarker(Element markersElement, float latitude, float longitude, String infoText, String fileName) {
@@ -166,36 +126,6 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
         if (fileName != null) {
             XmlUtil.setChildText(markerElement, "fileName", fileName, false);
         }
-    }
-
-    /**
-     * We have to do the XSLT processing always on server side. See explanation
-     * above.
-     */
-    public void processResponse(String xslFile) {
-        String xslPath = ArcoirisBlog.getInstance().getWebAppRootDir() + "xsl" + File.separator + xslFile;
-
-        TransformerFactory tf = TransformerFactory.newInstance();
-
-        try {
-            Transformer t = tf.newTransformer(new StreamSource(new File(xslPath)));
-
-            long start = System.currentTimeMillis();
-
-            t.transform(new DOMSource(doc), new StreamResult(output));
-
-            long end = System.currentTimeMillis();
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("XSLTC transformation in " + (end - start) + " ms");
-            }
-        } catch (TransformerConfigurationException tex) {
-            LOG.warn(tex);
-        } catch (TransformerException tex) {
-            LOG.warn(tex);
-        }
-
-        output.flush();
     }
 
     private String removeEmojis(String infoText) {

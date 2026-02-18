@@ -61,11 +61,12 @@ function handleGoogleMapReady() {
 function loadGoogleMapsAPICode(googleMapsAPIKey) {
     var script = document.createElement("script");
     script.type = "text/javascript";
+    script.setAttribute("async", "async");
       
-    if (window.location.href.indexOf("https") == 0) {
-        script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapReady&key=" + googleMapsAPIKey;
+    if (window.location.href.indexOf("https") === 0) {
+        script.src = "https://maps.google.com/maps/api/js?callback=handleGoogleMapReady&loading=async&key=" + googleMapsAPIKey;
     } else {
-        script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapReady&key=" + googleMapsAPIKey;
+        script.src = "http://maps.google.com/maps/api/js?callback=handleGoogleMapReady&loading=async&key=" + googleMapsAPIKey;
     }      
     document.body.appendChild(script);
 }

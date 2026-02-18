@@ -26,6 +26,7 @@ import de.webfilesys.util.ISO8601DateParser;
  * GPS track file viewer.
  * 
  * @author Frank Hoehnel
+ * @deprecated use GPXViewHandler instead
  */
 public class GeoTrackViewHandler implements ViewHandler {
     private static final String STYLESHEET_REF = "<?xml-stylesheet type=\"text/xsl\" href=\"{contextpath}/xsl/gpxProfile.xsl\"?>";

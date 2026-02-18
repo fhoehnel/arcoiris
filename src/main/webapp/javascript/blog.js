@@ -576,15 +576,16 @@ function selectTargetPosition(targetPos) {
 function loadGoogleMapsAPIScriptCode(googleMapsAPIKey, apiReadyCallback) {
     const script = document.createElement("script");
     script.type = "text/javascript";
+    script.setAttribute("async", "async");
 
     if (!apiReadyCallback) {
         apiReadyCallback = "handleGoogleMapsApiReady";
     }
 
     if (window.location.href.indexOf("https") === 0) {
-        script.src = "https://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&key=" + googleMapsAPIKey + "&libraries=marker";
+        script.src = "https://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&loading=async&key=" + googleMapsAPIKey + "&libraries=marker";
     } else {
-        script.src = "http://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&key=" + googleMapsAPIKey + "&libraries=marker";
+        script.src = "http://maps.google.com/maps/api/js?callback=" + apiReadyCallback + "&loading=async&key=" + googleMapsAPIKey + "&libraries=marker";
     }        
     document.body.appendChild(script);
 }
