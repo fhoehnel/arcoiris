@@ -1882,6 +1882,7 @@ function queryGPXTracks() {
 	    const result = resultItem.firstChild.nodeValue;
 	    if (result && result == "true") {
 	        document.getElementById("gpxAllTracksLink").style.display = "inline";
+            document.getElementById("gpxOSMAllTracksLink").style.display = "inline";
 	    }
         // cascading ajax calls for performance reasons
         if (document.getElementById("unseenCommentLink")) {
@@ -2316,7 +2317,12 @@ function gotoPrevDay(clickTarget) {
 }
 
 function showAllGPXTracks() {
-    var geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiGPXTrack", "geoTrackWin");
+    const geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiGPXTrack", "geoTrackWin");
+    geoTrackWin.focus();
+}
+
+function showAllOSMTracks() {
+    const geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiOSMTrack", "geoTrackWin");
     geoTrackWin.focus();
 }
 

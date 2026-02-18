@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import de.webfilesys.gui.admin.*;
+import de.webfilesys.gui.xsl.*;
 import org.apache.log4j.Logger;
 
 import de.webfilesys.ArcoirisBlog;
@@ -90,13 +91,6 @@ import de.webfilesys.gui.user.GPXWayPointHandler;
 import de.webfilesys.gui.user.GetAttachmentRequestHandler;
 import de.webfilesys.gui.user.GetFileRequestHandler;
 import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
-import de.webfilesys.gui.xsl.GPXViewHandler;
-import de.webfilesys.gui.xsl.MultiGPXTrackHandler;
-import de.webfilesys.gui.xsl.XslGoogleMapHandler;
-import de.webfilesys.gui.xsl.XslGoogleMapMultiHandler;
-import de.webfilesys.gui.xsl.XslLogonHandler;
-import de.webfilesys.gui.xsl.XslOpenStreetMapHandler;
-import de.webfilesys.gui.xsl.XslSelfRegistrationHandler;
 import de.webfilesys.mail.SmtpEmail;
 import de.webfilesys.user.UserManager;
 import de.webfilesys.util.UTF8URLDecoder;
@@ -668,6 +662,11 @@ public class BlogWebServlet extends ServletBase {
         
         if (command.equals("multiGPXTrack")) {
             (new MultiGPXTrackHandler(req, resp, session, output, userid)).handleRequest();
+            return(true);
+        }
+
+        if (command.equals("multiOSMTrack")) {
+            (new MultiOSMTrackHandler(req, resp, session, output, userid)).handleRequest();
             return(true);
         }
 

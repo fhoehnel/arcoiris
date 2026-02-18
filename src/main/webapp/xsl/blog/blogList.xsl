@@ -238,7 +238,9 @@
         </xsl:if>
 
         <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
-        
+
+        <a id="gpxOSMAllTracksLink" href="javascript:showAllOSMTracks()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracksOSM" />
+
         <a id="overviewLink" href="javascript:allDayOverview()" class="icon-font icon-overview blogMenu blogOverview" titleResource="blog.linkToOverview" />
 
         <div class="blogCalenderCont">
