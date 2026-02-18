@@ -299,6 +299,7 @@ blog.linkToNextDay=al proximo día
 blog.linkToPrevDay=al dia anterior
 blog.multiGPXTracks=mostrar todas las pistas GPX en el mapa Google
 blog.multiGPXTracksOSM=mostrar todas las pistas GPX en el mapa Open Street Maps
+blog.multiGeoLocationOSM=mostrar todos los lugares GPX en el mapa Open Street Maps
 blog.overviewLinkToDay=mostrar entradas del este día
 label.dayTitle=titulo del día
 label.dayTitleDate=fecha

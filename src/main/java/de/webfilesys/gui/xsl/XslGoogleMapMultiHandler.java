@@ -29,6 +29,8 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
     protected void process() {
         String path = getCwd();
 
+        String mapType = getParameter("mapType");
+
         File folderFile = new File(path);
 
         Element geoDataElement = doc.createElement("geoData");
@@ -108,7 +110,13 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(doc.getDocumentElement(), "contextRoot", req.getContextPath());
 
-        processResponse("googleMapMulti.xsl", req);
+        String xslFileName;
+        if ("osm".equals(mapType)) {
+            xslFileName = "osmMapMulti.xsl";
+        } else {
+            xslFileName = "googleMapMulti.xsl";
+        }
+        processResponse(xslFileName, req);
     }
 
     private void addMarker(Element markersElement, float latitude, float longitude, String infoText, String fileName) {

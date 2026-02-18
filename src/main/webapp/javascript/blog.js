@@ -1869,6 +1869,7 @@ function queryGeoData() {
 	            const result = resultItem.firstChild.nodeValue;
 	            if (result && result === "true") {
 	                document.getElementById("mapAllLink").style.display = "inline";
+	                document.getElementById("gpxOSMAllLocationsLink").style.display = "inline";
 	            }
 	            // cascading ajax calls for performance reasons
 	            queryGPXTracks();
@@ -2325,6 +2326,11 @@ function showAllGPXTracks() {
 function showAllOSMTracks() {
     const geoTrackWin = window.open(getContextRoot() + "/servlet?command=multiOSMTrack", "geoTrackWin");
     geoTrackWin.focus();
+}
+
+function showAllOSMLocations() {
+    const locationWin = window.open(getContextRoot() + "/servlet?command=googleMapMulti&mapType=osm", "geoLocationWin");
+    locationWin.focus();
 }
 
 function allDayOverview() {

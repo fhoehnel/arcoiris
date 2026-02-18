@@ -298,6 +298,7 @@ blog.linkToNextDay=go to next day
 blog.linkToPrevDay=go to previous day
 blog.multiGPXTracks=show all GPX tracks on Google map
 blog.multiGPXTracksOSM=show all GPX tracks on Open Street Map
+blog.multiGeoLocationOSM=show all geo locations on Open Street Map
 blog.overviewLinkToDay=show blog entries of this day
 label.dayTitle=day title
 label.dayTitleDate=date
