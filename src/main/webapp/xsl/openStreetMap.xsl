@@ -21,7 +21,11 @@
 <link rel="stylesheet" type="text/css">
   <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/blogskins/<xsl:value-of select="/blog/skin" />.css</xsl:attribute>
 </link>
-  
+
+<link rel="stylesheet" type="text/css">
+  <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/osmap.css</xsl:attribute>
+</link>
+
 <script type="text/javascript">
   <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers-2.13.1.js</xsl:attribute>
 </script>

@@ -4,14 +4,10 @@
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes" encoding="UTF-8" 
     doctype-public="html" />
 
-<xsl:strip-space elements="geoData" />
-
 <xsl:template match="/">
 
 <html style="height:100%">
 <head>
-
-  <meta http-equiv="expires" content="0" />
 
   <link rel="stylesheet" type="text/css">
     <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/common.css</xsl:attribute>
@@ -19,6 +15,10 @@
 
   <link rel="stylesheet" type="text/css">
     <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/icons.css</xsl:attribute>
+  </link>
+
+  <link rel="stylesheet" type="text/css">
+    <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/styles/osmap.css</xsl:attribute>
   </link>
 
   <link rel="stylesheet" type="text/css">
@@ -50,21 +50,13 @@
   </script>
 
   <script type="text/javascript">
-    var geoCoordinates = [];
-
-    <xsl:for-each select="/geoData/markers/marker">
-        geoCoordinates.push({
-          lon: <xsl:value-of select="longitude" />,
-          lat: <xsl:value-of select="latitude" />,
-          infoText: '<xsl:value-of select="infoText" />'
-        });
-    </xsl:for-each>
-    
+    var contextRoot = '<xsl:value-of select="//contextRoot" />';
   </script>
 </head>
 
 <body style="margin:0px;height:100%;">
   <xsl:attribute name="onload">showLocationsOSM()</xsl:attribute>
+  <xsl:attribute name="class">multiLocation</xsl:attribute>
 
   <div id="mapDiv" class="gpsTrackMapCont"></div>
 

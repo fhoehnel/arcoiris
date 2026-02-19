@@ -2329,7 +2329,7 @@ function showAllOSMTracks() {
 }
 
 function showAllOSMLocations() {
-    const locationWin = window.open(getContextRoot() + "/servlet?command=googleMapMulti&mapType=osm", "geoLocationWin");
+    const locationWin = window.open(getContextRoot() + "/servlet?command=osmMapMulti", "geoLocationWin");
     locationWin.focus();
 }
 

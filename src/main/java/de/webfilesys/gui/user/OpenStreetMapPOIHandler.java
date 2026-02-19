@@ -2,11 +2,14 @@ package de.webfilesys.gui.user;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.webfilesys.LanguageManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
 
@@ -53,17 +56,14 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
         String infoText = "";
 
         String description = BlogMetaInfManager.getInstance().getDescription(filePath);
-        if ((description == null) || (description.trim().length() == 0)) {
-            description = fileName;
+        if (description == null || description.trim().isEmpty()) {
+            description = "";
         }
 
         if (geoTag != null) {
             latitude = geoTag.getLatitude();
             longitude = geoTag.getLongitude();
             infoText = geoTag.getInfoText();
-            if ((infoText == null) || (infoText.trim().length() == 0)) {
-                infoText = fileName;
-            }
         } else {
             String fileExt = CommonUtils.getFileExtension(fileName);
 
@@ -93,6 +93,10 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
             }
         }
 
+        if (infoText == null || infoText.trim().isEmpty()) {
+            infoText = getDateFromFileName(fileName);
+        }
+
         if ((longitude == Float.NEGATIVE_INFINITY) || (latitude == Float.NEGATIVE_INFINITY)) {
             Logger.getLogger(getClass()).error("No Geo Tag / GPS Exif data exists for file/folder " + filePath);
 
@@ -115,6 +119,18 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
         output.print('\t');
         output.println("-16,-16");
         output.flush();
+    }
+
+    private String getDateFromFileName(String fileName) {
+        try {
+            String datePartOfFileName = fileName.substring(0, 10);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date day = dateFormat.parse(datePartOfFileName);
+            return LanguageManager.getInstance().getDateFormat(language).format(day).substring(0, 10);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).warn("invalid date format", ex);
+            return "";
+        }
     }
 
 }

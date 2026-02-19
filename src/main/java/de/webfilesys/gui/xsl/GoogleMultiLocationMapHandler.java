@@ -19,17 +19,15 @@ import de.webfilesys.util.XmlUtil;
 /**
  * @author Frank Hoehnel
  */
-public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
-    private static final Logger LOG = Logger.getLogger(XslGoogleMapMultiHandler.class);
+public class GoogleMultiLocationMapHandler extends XslRequestHandlerBase {
+    private static final Logger LOG = Logger.getLogger(GoogleMultiLocationMapHandler.class);
 
-    public XslGoogleMapMultiHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
+    public GoogleMultiLocationMapHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
     }
 
     protected void process() {
         String path = getCwd();
-
-        String mapType = getParameter("mapType");
 
         File folderFile = new File(path);
 
@@ -110,13 +108,7 @@ public class XslGoogleMapMultiHandler extends XslRequestHandlerBase {
 
         XmlUtil.setChildText(doc.getDocumentElement(), "contextRoot", req.getContextPath());
 
-        String xslFileName;
-        if ("osm".equals(mapType)) {
-            xslFileName = "osmMapMulti.xsl";
-        } else {
-            xslFileName = "googleMapMulti.xsl";
-        }
-        processResponse(xslFileName, req);
+        processResponse("googleMapMulti.xsl", req);
     }
 
     private void addMarker(Element markersElement, float latitude, float longitude, String infoText, String fileName) {

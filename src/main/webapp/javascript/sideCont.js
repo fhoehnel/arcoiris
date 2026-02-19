@@ -82,7 +82,11 @@ function createSideOsmMap() {
                 osmMap.getProjectionObject() // to Spherical Mercator Projection
             );
 
-    var markers = new OpenLayers.Layer.Markers( "Markers" );
+    const markerIcon = new OpenLayers.Icon(getContextRoot() + "/images/OSMaps.png",
+        new OpenLayers.Pixel(32, 32),
+        new OpenLayers.Pixel(-16, -16));
+
+    const markers = new OpenLayers.Layer.Markers( "Markers" );
     osmMap.addLayer(markers);
 
     for (let i = 0; i < geoCoordinates.length; i++) {
@@ -92,7 +96,7 @@ function createSideOsmMap() {
                 osmMap.getProjectionObject()
             );
 
-        markers.addMarker(new OpenLayers.Marker(lonLat));
+        markers.addMarker(new OpenLayers.Marker(lonLat, markerIcon));
     }
 
     const zoom = 9;

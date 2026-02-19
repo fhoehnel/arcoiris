@@ -135,6 +135,13 @@ public class CommonUtils {
         return (longName);
     }
 
+    public static String truncate(String longText, int maxLength) {
+        if (longText.length() > maxLength) {
+            return longText.substring(0, maxLength -3) + "...";
+        }
+        return (longText);
+    }
+
     public static String getFileExtension(String fileName) {
         if (fileName == null) {
             return ("");

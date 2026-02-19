@@ -623,8 +623,11 @@ public class BlogWebServlet extends ServletBase {
         }
 
         if (command.equals("googleMapMulti")) {
-            (new XslGoogleMapMultiHandler(req, resp, session, output, userid)).handleRequest();
-
+            (new GoogleMultiLocationMapHandler(req, resp, session, output, userid)).handleRequest();
+            return true;
+        }
+        if (command.equals("osmMapMulti")) {
+            (new OSMMultiLocationMapHandler(req, resp, session, output, userid)).handleRequest();
             return true;
         }
 
@@ -637,6 +640,11 @@ public class BlogWebServlet extends ServletBase {
         if (command.equals("osmPOIList")) {
             (new OpenStreetMapPOIHandler(req, resp, session, output, userid)).handleRequest();
 
+            return true;
+        }
+
+        if (command.equals("osmMultiPOIList")) {
+            (new OpenStreetMapMultiPOIHandler(req, resp, session, output, userid)).handleRequest();
             return true;
         }
 
