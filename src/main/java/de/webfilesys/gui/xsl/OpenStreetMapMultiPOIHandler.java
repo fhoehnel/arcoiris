@@ -39,7 +39,7 @@ public class OpenStreetMapMultiPOIHandler extends UserRequestHandler {
                     GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(file.getAbsolutePath());
                     if (geoTag != null) {
                         String infoText = geoTag.getInfoText();
-                        if (infoText == null) {
+                        if (infoText == null || infoText.isEmpty()) {
                             infoText = BlogMetaInfManager.getInstance().getDescription(file.getAbsolutePath());
                         }
                         if (infoText == null) {
