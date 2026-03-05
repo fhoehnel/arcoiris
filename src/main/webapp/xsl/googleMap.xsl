@@ -79,7 +79,7 @@
 
     </head>
 
-    <body onload="loadGoogleMapsAPIScriptCode()" style="margin:0px;height:100%;">
+    <body style="margin:0px;height:100%;">
       <xsl:attribute name="onload">loadGoogleMapsAPIScriptCode('<xsl:value-of select="/geoTag/googleMapsAPIKey" />')</xsl:attribute>
 
       <div id="map" style="width:100%;height:100%;"></div>
