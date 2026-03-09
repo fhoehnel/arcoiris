@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import de.webfilesys.gui.admin.*;
+import de.webfilesys.gui.user.*;
 import de.webfilesys.gui.xsl.*;
 import org.apache.log4j.Logger;
 
@@ -45,7 +46,6 @@ import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
 import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
 import de.webfilesys.gui.ajax.CheckForGPXTrackHandler;
 import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
-import de.webfilesys.gui.ajax.XmlEmojiListHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
 import de.webfilesys.gui.blog.BlogAddCommentHandler;
 import de.webfilesys.gui.blog.BlogAltPositionsHandler;
@@ -85,12 +85,6 @@ import de.webfilesys.gui.blog.BlogUnpublishHandler;
 import de.webfilesys.gui.blog.BlogUnsetTitlePicHandler;
 import de.webfilesys.gui.blog.BlogUnsubscribeHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
-import de.webfilesys.gui.user.ActivateUserRequestHandler;
-import de.webfilesys.gui.user.GPXTrackHandler;
-import de.webfilesys.gui.user.GPXWayPointHandler;
-import de.webfilesys.gui.user.GetAttachmentRequestHandler;
-import de.webfilesys.gui.user.GetFileRequestHandler;
-import de.webfilesys.gui.user.OpenStreetMapPOIHandler;
 import de.webfilesys.mail.SmtpEmail;
 import de.webfilesys.user.UserManager;
 import de.webfilesys.util.UTF8URLDecoder;
@@ -545,7 +539,7 @@ public class BlogWebServlet extends ServletBase {
                 (new BlogMoveToPosHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else if (cmd.equals("emojiList")) {
-                (new XmlEmojiListHandler(req, resp, session, output, userid)).handleRequest();
+                (new EmojiListHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else if (cmd.equals("setTitlePic")) {
                 (new BlogSetTitlePicHandler(req, resp, session, output, userid)).handleRequest();

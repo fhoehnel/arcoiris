@@ -1802,19 +1802,37 @@ function firefoxJumpToIdWorkaround() {
 }
  
 function switchEmojiSelection(textareaId) {
-    var visible = (document.getElementById("emojiSelCont").style.display == "block");
-
+    const emojiSelCont = document.getElementById("emojiSelCont");
+    const visible = (document.getElementById("emojiSelCont").style.display == "block");
     if (visible) {
-        document.getElementById("emojiSelCont").style.display = "none";
+        emojiSelCont.style.display = "none";
+        emojiSelCont.innerHTML = "";
     } else {
-        var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=emojiList&textareaId=" + textareaId;
-    
-        var xslUrl = getContextRoot() + "/xsl/blog/emojiList.xsl";
-
-        htmlFragmentByXslt(xmlUrl, xslUrl, document.getElementById("emojiSelCont"), function() {
-            setBundleResources();
-            document.getElementById("emojiSelCont").style.display = "block";
-        });
+        fetchGet("blog", { cmd: "emojiList" },
+            responseText => {
+                const response = JSON.parse(responseText);
+                const emojiList = response.emojis;
+                if (emojiList && emojiList.length > 0) {
+                    for (let i = 0; i < emojiList.length; i++) {
+                        const emojiDiv = document.createElement("div");
+                        const emojiLink = document.createElement("a");
+                        emojiLink.setAttribute("class", "selectEmoji");
+                        emojiLink.setAttribute("href", "javascript:insertEmoji('" + textareaId + "', '" + emojiList[i] + "')");
+                        const emojiImg = document.createElement("img");
+                        emojiImg.setAttribute("class", "blogEmoticon");
+                        emojiImg.setAttribute("title", resourceBundle["blog.insertEmoji"]);
+                        emojiImg.setAttribute("src", getContextRoot() + "/emoticons/" + emojiList[i] + ".png");
+                        emojiLink.appendChild(emojiImg);
+                        emojiDiv.appendChild(emojiLink);
+                        emojiSelCont.appendChild(emojiDiv);
+                    }
+                    emojiSelCont.style.display = "block";
+                }
+            },
+            null,
+            true,
+            false
+        );
     }
 }
 
