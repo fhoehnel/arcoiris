@@ -1299,17 +1299,56 @@ function limitDayTitleText() {
 }
 
 function showSubscribers() {
-    var subscribeCont = document.getElementById("subscribeCont");
 
-    var xmlUrl = getContextRoot() + "/servlet?command=blog&cmd=listSubscribers";
-        
-    var xslUrl = getContextRoot() + "/xsl/blog/subscriberList.xsl";    
-        
-    htmlFragmentByXslt(xmlUrl, xslUrl, subscribeCont, function() {
-        setBundleResources();
-        centerBox(subscribeCont);
-        subscribeCont.style.visibility = "visible";
-    });
+    fetchGet("blog", { cmd: "listSubscribers" },
+        responseText => {
+            const response = JSON.parse(responseText);
+            const subscriberList = response.subscribers;
+
+            const subscribeCont = document.getElementById("subscribeCont");
+            const headlineDiv = document.createElement("div");
+            headlineDiv.setAttribute("class", "promptHead");
+            headlineDiv.setAttribute("resource", "blog.headlineSubscribers");
+            subscribeCont.appendChild(headlineDiv);
+
+            const subscriberListDiv = document.createElement("div");
+            subscriberListDiv.setAttribute("class", "subscriberList");
+            subscribeCont.appendChild(subscriberListDiv);
+
+            if (subscriberList && subscriberList.length > 0) {
+                const subscriberUL = document.createElement("ul");
+                subscriberListDiv.appendChild(subscriberUL);
+
+                for (let i = 0; i < subscriberList.length; i++) {
+                    const subscriberLI = document.createElement("li");
+                    const subscriberTextNode = document.createTextNode(subscriberList[i]);
+                    subscriberLI.appendChild(subscriberTextNode);
+                    subscriberUL.appendChild(subscriberLI);
+               }
+            } else {
+                const noSubscriberText = document.createElement("span");
+                noSubscriberText.setAttribute("resource", "blog.noSubscribers");
+                subscriberListDiv.appendChild(noSubscriberText);
+            }
+
+            const buttonContDiv = document.createElement("div");
+            buttonContDiv.setAttribute("style", "text-align:center;margin:10px 0;");
+            subscribeCont.appendChild(buttonContDiv);
+
+            const closeButton = document.createElement("input");
+            closeButton.setAttribute("type", "button");
+            closeButton.setAttribute("resource", "button.closewin");
+            closeButton.setAttribute("onclick", "hideSubscribeForm()");
+            buttonContDiv.appendChild(closeButton);
+
+            setBundleResources();
+            centerBox(subscribeCont);
+            subscribeCont.style.visibility = "visible";
+        },
+        null,
+        true,
+        false
+    );
 }
 
 function showSubscribeForm() {
@@ -1324,8 +1363,8 @@ function showSubscribeForm() {
 }
 
 function hideSubscribeForm() {
-    var subscribeCont = document.getElementById("subscribeCont");
-    
+    const subscribeCont = document.getElementById("subscribeCont");
+    subscribeCont.innerHTML = "";
     subscribeCont.style.visibility = "hidden";
 }
 
