@@ -56,6 +56,63 @@ function fetchGet(command, parameters, successCallBack, failureCallBack, skipWai
         });
 }
 
+function fetchPost(command, parameters, successCallBack, failureCallBack, skipWaitIndicator, responseIsXML) {
+    let postData = "";
+    if (command) {
+        postData = "command=" + command;
+    }
+    for (const key in parameters) {
+        postData = postData + (postData.length > 0 ? "&" : "") + key + "=" + parameters[key];
+    }
+    fetchPostData(postData, successCallBack, failureCallBack, skipWaitIndicator, responseIsXML);
+}
+
+function fetchPostData(postData, successCallBack, failureCallBack, skipWaitIndicator, responseIsXML) {
+    if (!skipWaitIndicator) {
+        showHourGlass();
+    }
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: postData
+    };
+
+    fetch(getContextRoot() + "/servlet", requestOptions)
+        .then((response) => {
+            if (!skipWaitIndicator) {
+                hideHourGlass();
+            }
+            if (response.ok) {
+                return response.text();
+            }
+            if (typeof failureCallBack !== 'undefined') {
+                failureCallBack();
+                successCallBack = undefined;
+            } else {
+                throw new Error('fetch communication error');
+            }
+        })
+        .then((data) => {
+            if (successCallBack) {
+                if (responseIsXML) {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, 'text/xml');
+                    successCallBack(xmlDoc);
+                } else {
+                    successCallBack(data);
+                }
+            }
+        })
+        .catch(error => {
+            if (!skipWaitIndicator) {
+                hideHourGlass();
+            }
+            customAlert(resourceBundle["alert.communicationFailure"]);
+            console.error("communication error:", error);
+        });
+}
+
 function xmlPostRequest(command, parameters, successCallBack, failureCallBack) {
     showHourGlass();
 

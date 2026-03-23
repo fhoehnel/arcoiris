@@ -467,27 +467,21 @@ function jsComments(path) {
 }
 
 function deleteBlogEntry(fileName) {
-
-    customConfirm(resourceBundle["blog.confirmDelete"], 
+    customConfirm(resourceBundle["blog.confirmDelete"],
                   resourceBundle["button.cancel"], 
                   resourceBundle["button.ok"], 
                   () => {
         const parameters = { "cmd": "deleteEntry", "fileName": encodeURIComponent(fileName) };
-    
-	    xmlPostRequest("blog", parameters, function(responseXml) {
-    
-            let success = null;
-            const successItem = responseXml.getElementsByTagName("success")[0];
-            if (successItem) {
-                success = successItem.firstChild.nodeValue;
-            }         
-    
-            if (success == "deleted") {
+        fetchPost("blog", parameters,
+            () => {
                 window.location.href = getContextRoot() + "/servlet?command=blog";
-            } else {
+            },
+            () => {
                 alert(resourceBundle["blog.deleteError"]);
-            }
-        });
+            },
+            false,
+            false
+        );
 	});
 }
 
@@ -1207,36 +1201,35 @@ function limitCommentText() {
 }
   
 function confirmDelComments(fileName) {  
-
-    customConfirm(resourceBundle["confirm.delcomments"], 
+    customConfirm(resourceBundle["confirm.delcomments"],
                   resourceBundle["button.cancel"], 
                   resourceBundle["button.ok"], 
                   () => {
         const parameters = { "cmd": "delComments", "fileName": encodeURIComponent(fileName) };
-    
-	    xmlPostRequest("blog", parameters, function(responseXml) {
-    
-            let success = null;
-            const successItem = responseXml.getElementsByTagName("success")[0];
-            if (successItem) {
-                success = successItem.firstChild.nodeValue;
-            }         
-    
-            if ((success != null) && (success == "true")) {
-                const posInPage = document.getElementById("posInPage").value;
-                document.getElementById("comment-" + posInPage).innerHTML = "0";
-                
-                const commentNewLabel = document.getElementById("newComment-" + posInPage);
-                if (commentNewLabel) {
-                    commentNewLabel.style.display = 'none';
+        fetchPost("blog", parameters,
+            responseXml => {
+                let success = null;
+                const successItem = responseXml.getElementsByTagName("success")[0];
+                if (successItem) {
+                    success = successItem.firstChild.nodeValue;
                 }
-    
-                const commentCont = document.getElementById("commentCont");
-                commentCont.style.visibility = "hidden";
-            } else {
-                alert("failed to delete comments");
-            }
-        });
+                if ((success != null) && (success == "true")) {
+                    const posInPage = document.getElementById("posInPage").value;
+                    document.getElementById("comment-" + posInPage).innerHTML = "0";
+                    const commentNewLabel = document.getElementById("newComment-" + posInPage);
+                    if (commentNewLabel) {
+                        commentNewLabel.style.display = 'none';
+                    }
+                    const commentCont = document.getElementById("commentCont");
+                    commentCont.style.visibility = "hidden";
+                } else {
+                    alert("failed to delete comments");
+                }
+            },
+            null,
+            false,
+            true
+        );
     });
 }
 

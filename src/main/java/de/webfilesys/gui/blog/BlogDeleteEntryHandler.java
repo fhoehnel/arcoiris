@@ -1,6 +1,7 @@
 package de.webfilesys.gui.blog;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,19 +10,14 @@ import javax.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
+import de.webfilesys.gui.user.UserRequestHandler;
 import de.webfilesys.metainf.BlogMetaInfManager;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 
 import de.webfilesys.graphics.BlogThumbnailHandler;
-import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
 import de.webfilesys.util.CommonUtils;
-import de.webfilesys.util.XmlUtil;
 
-/**
- * Delete a folder tree. Mobile version.
- */
-public class BlogDeleteEntryHandler extends XmlRequestHandlerBase {
+public class BlogDeleteEntryHandler extends UserRequestHandler {
     public BlogDeleteEntryHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
     }
@@ -40,9 +36,7 @@ public class BlogDeleteEntryHandler extends XmlRequestHandlerBase {
 
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
-        Element resultElement = doc.createElement("result");
-
-        String success = null;
+        boolean success = false;
 
         File fileToBeDeleted = new File(currentPath, fileName);
 
@@ -59,21 +53,17 @@ public class BlogDeleteEntryHandler extends XmlRequestHandlerBase {
                 if (titlePic != null && titlePic.equals(fileName)) {
                     BlogConfigManager.getInstance().unsetTitlePic(currentPath);
                 }
-                success = "deleted";
+                success = true;
             } else {
                 Logger.getLogger(getClass()).error("failed to delete blog entry file " + fileToBeDeleted.getAbsolutePath());
             }
         }
-
-        if (success == null) {
-            success = "false";
+        if (!success) {
+            try {
+                resp.sendError(HttpServletResponse.SC_CONFLICT);
+            } catch (IOException ex) {
+            }
         }
-
-        XmlUtil.setChildText(resultElement, "success", success);
-
-        doc.appendChild(resultElement);
-
-        this.processResponse();
     }
 
 }
