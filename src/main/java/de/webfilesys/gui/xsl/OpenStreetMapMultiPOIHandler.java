@@ -95,7 +95,7 @@ public class OpenStreetMapMultiPOIHandler extends UserRequestHandler {
     }
 
      private String removeEmojis(String text) {
-         return text.replaceAll("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", "");
+         return text.replaceAll("\\{emoji-[0-9][0-9]}", "");
      }
 
 }
