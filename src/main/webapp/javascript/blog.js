@@ -144,24 +144,16 @@ function handleFiles(files) {
     var dropZone = document.getElementById("dropZone");  
     var uploadFileList = document.getElementById("uploadFiles");
 
-    for (var i = 0; i < files.length; i++) {  
-        var file = files[i];  
-              
-        var fileName;
-        var fileSize;
-              
-        if (browserSafari) {
-            fileName = file.fileName;
-            file.size = file.fileSize;
-        } else {
-            fileName = file.name
-            fileSize = file.size;
-        }
-             
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        const fileName = browserSafari ? file.fileName : file.name;
+        const fileSize = browserSafari ? file.fileSize : file.size;
+
         if (!isPictureFile(file.type)) {
         	alert(fileName + ': ' + resourceBundle["blog.noPictureFile"]);
         } else {
-            if (file.size > SINGLE_FILE_MAX_SIZE) {
+            if (fileSize > SINGLE_FILE_MAX_SIZE) {
                 alert(fileName + ': ' + resourceBundle["blog.uploadFileTooLarge"]);
             } else {
                 if (!selectedDuplicate(fileName)) {
@@ -173,20 +165,17 @@ function handleFiles(files) {
                     }
 
                     if (firefoxDragDrop) {  
-                          
                         if (pictureFileSize < MAX_PICTURE_SIZE_SUM) {
-                            var img = document.createElement("img");  
-                          
+                            const img = document.createElement("img");
                             img.className += (img.className ? " " : "") + "uploadPreview";
-                          
-                            img.file = file;  
+                            img.file = file;
                             dropZone.appendChild(img);  
          
-                            var reader = new FileReader();  
-                            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);  
-                            reader.readAsDataURL(file);  
+                            const reader = new FileReader();
+                            reader.onload = e => img.src = e.target.result;
+                            reader.readAsDataURL(file);
                                   
-                            pictureFileSize += file.size;
+                            pictureFileSize += fileSize;
                          }
                     } 
                           
