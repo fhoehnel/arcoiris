@@ -5,15 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.ArcoirisBlog;
@@ -74,7 +75,7 @@ public class UploadServlet extends BlogWebServlet {
         String currentPath = (String) session.getAttribute("cwd");
 
         if (currentPath == null) {
-            Logger.getLogger(getClass()).error("current working directory unknown");
+            LogManager.getLogger(getClass()).error("current working directory unknown");
             return;
         }
 
@@ -90,8 +91,8 @@ public class UploadServlet extends BlogWebServlet {
 
         File outFile = new File(currentPath, fileName);
 
-        if (Logger.getLogger(getClass()).isDebugEnabled()) {
-            Logger.getLogger(getClass()).debug("ajax binary file upload: " + outFile.getAbsolutePath());
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("ajax binary file upload: " + outFile.getAbsolutePath());
         }
 
         long uploadSize = 0l;
@@ -110,7 +111,7 @@ public class UploadServlet extends BlogWebServlet {
             while ((bytesRead = input.read(buff)) > 0) {
                 uploadSize += bytesRead;
                 if (uploadSize > uploadLimit) {
-                    Logger.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
+                    LogManager.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
                     uploadOut.flush();
                     uploadOut.close();
                     outFile.delete();
@@ -123,7 +124,7 @@ public class UploadServlet extends BlogWebServlet {
             uploadOut.flush();
 
         } catch (IOException ex) {
-            Logger.getLogger(getClass()).error("error in ajax binary upload", ex);
+            LogManager.getLogger(getClass()).error("error in ajax binary upload", ex);
             throw ex;
         } finally {
             if (uploadOut != null) {
@@ -178,7 +179,7 @@ public class UploadServlet extends BlogWebServlet {
                     String rotatedImgName = imgTrans.execute(false);
                     File rotatedImgFile = new File(currentPath, rotatedImgName);
                     if (!rotatedImgFile.renameTo(new File(origImgPath))) {
-                        Logger.getLogger(getClass()).error("failed to rename rotated image file " + rotatedImgFile);
+                        LogManager.getLogger(getClass()).error("failed to rename rotated image file " + rotatedImgFile);
                     }
                 }
             }
@@ -195,11 +196,11 @@ public class UploadServlet extends BlogWebServlet {
 
             File origImgFile = new File(origImgPath);
             if (!origImgFile.delete()) {
-                Logger.getLogger(getClass()).error("failed to delete original image after scaling: " + origImgPath);
+                LogManager.getLogger(getClass()).error("failed to delete original image after scaling: " + origImgPath);
             } else {
                 File scaledImgFile = new File(scaledImgPath);
                 if (!scaledImgFile.renameTo(origImgFile)) {
-                    Logger.getLogger(getClass()).error("failed to rename scaled image file " + scaledImgPath + " to " + origImgPath);
+                    LogManager.getLogger(getClass()).error("failed to rename scaled image file " + scaledImgPath + " to " + origImgPath);
                 }
             }
         }
@@ -220,7 +221,7 @@ public class UploadServlet extends BlogWebServlet {
         String currentPath = (String) session.getAttribute("cwd");
 
         if (currentPath == null) {
-            Logger.getLogger(getClass()).error("current working directory unknown");
+            LogManager.getLogger(getClass()).error("current working directory unknown");
             return;
         }
 
@@ -240,15 +241,15 @@ public class UploadServlet extends BlogWebServlet {
         
         if (!attachmentDir.exists()) {
             if (!attachmentDir.mkdir()) {
-                Logger.getLogger(getClass()).error("failed to create attachment dir");
+                LogManager.getLogger(getClass()).error("failed to create attachment dir");
                 throw new ServletException("failed to create attachment dir");
             }
         }
         
         File outFile = new File(attachmentDir.getAbsolutePath(), attachmentFileName);
 
-        if (Logger.getLogger(getClass()).isDebugEnabled()) {
-            Logger.getLogger(getClass()).debug("attachment file upload: " + outFile.getAbsolutePath());
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("attachment file upload: " + outFile.getAbsolutePath());
         }
 
         long uploadSize = 0l;
@@ -267,7 +268,7 @@ public class UploadServlet extends BlogWebServlet {
             while ((bytesRead = input.read(buff)) > 0) {
                 uploadSize += bytesRead;
                 if (uploadSize > uploadLimit) {
-                    Logger.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
+                    LogManager.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
                     uploadOut.flush();
                     uploadOut.close();
                     outFile.delete();
@@ -280,7 +281,7 @@ public class UploadServlet extends BlogWebServlet {
             uploadOut.flush();
 
         } catch (IOException ex) {
-            Logger.getLogger(getClass()).error("error in attachment upload", ex);
+            LogManager.getLogger(getClass()).error("error in attachment upload", ex);
             throw ex;
         } finally {
             if (uploadOut != null) {
@@ -325,7 +326,7 @@ public class UploadServlet extends BlogWebServlet {
             return (true);
         }
 
-        Logger.getLogger(getClass()).warn("read-only user " + userid + " tried write access");
+        LogManager.getLogger(getClass()).warn("read-only user " + userid + " tried write access");
 
         return (false);
     }

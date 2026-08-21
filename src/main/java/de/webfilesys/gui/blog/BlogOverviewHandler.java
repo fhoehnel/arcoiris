@@ -9,15 +9,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfig;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.daytitle.DayTitleManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 import de.webfilesys.FileComparator;
 import de.webfilesys.gui.xsl.XslRequestHandlerBase;
@@ -100,7 +101,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
         File blogDir = new File(currentPath);
         
         if (!blogDir.exists() || (!blogDir.isDirectory()) || (!blogDir.canRead())) {
-            Logger.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
+            LogManager.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
             return;
         }
 
@@ -198,7 +199,7 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
                     }
 
                 } catch (ParseException pex) {
-                    Logger.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
+                    LogManager.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
                 }
             } 
         } else {

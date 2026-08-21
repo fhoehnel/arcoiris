@@ -14,11 +14,12 @@ import de.webfilesys.user.TransientUser;
 import de.webfilesys.user.UserManager;
 import de.webfilesys.util.CommonUtils;
 import de.webfilesys.util.UserMigrator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import javax.swing.*;
 import java.io.File;
 import java.io.PrintWriter;
@@ -28,7 +29,7 @@ import java.util.Vector;
 
 public class MigrateUserRequestHandler extends AdminRequestHandler {
 
-    private static final Logger LOG = Logger.getLogger(MigrateUserRequestHandler.class);
+    private static final Logger LOG = LogManager.getLogger(MigrateUserRequestHandler.class);
 
     public MigrateUserRequestHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);

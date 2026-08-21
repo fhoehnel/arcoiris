@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.mail.MailTemplate;
 import de.webfilesys.mail.SmtpEmail;
@@ -39,7 +40,7 @@ public class DiskQuotaInspector extends Thread {
     protected void inspectDiskQuotas() {
         long startTime = System.currentTimeMillis();
 
-        Logger.getLogger(getClass()).info("disk quota inspection for webspace users started");
+        LogManager.getLogger(getClass()).info("disk quota inspection for webspace users started");
 
         UserManager userMgr = ArcoirisBlog.getInstance().getUserMgr();
 
@@ -64,7 +65,7 @@ public class DiskQuotaInspector extends Thread {
                         Vector statList = fileSysStat.getStatistics();
 
                         if (fileSysStat.getTotalSizeSum() > diskQuota) {
-                            Logger.getLogger(getClass()).warn(
+                            LogManager.getLogger(getClass()).warn(
                                             "disk quota exceeded for user " + userid + " (" + (diskQuota / 1024l) + " / " + (fileSysStat.getTotalSizeSum() / 1024l) + ")");
 
                             if (ArcoirisBlog.getInstance().getMailHost() != null) {
@@ -127,7 +128,7 @@ public class DiskQuotaInspector extends Thread {
             (new SmtpEmail(adminUserEmailList, "Disk quota report " + ArcoirisBlog.getInstance().getLogDateFormat().format(new Date(endTime)), adminMailBuffer.toString())).send();
         }
 
-        Logger.getLogger(getClass()).info("disk quota inspection ended (" + ((endTime - startTime) / 1000) + " sec)");
+        LogManager.getLogger(getClass()).info("disk quota inspection ended (" + ((endTime - startTime) / 1000) + " sec)");
     }
 
 }

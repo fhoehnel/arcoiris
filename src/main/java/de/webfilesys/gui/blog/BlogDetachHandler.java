@@ -3,12 +3,13 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -30,14 +31,14 @@ public class BlogDetachHandler extends XmlRequestHandlerBase {
 
         String imgName = getParameter("imgName");
         if (CommonUtils.isEmpty(imgName)) {
-            Logger.getLogger(getClass()).error("missing parameter imgName");
+            LogManager.getLogger(getClass()).error("missing parameter imgName");
             return;
         }
 
         File imgFile = new File(currentPath, imgName);
 
         if ((!imgFile.exists()) || (!imgFile.isFile())) {
-            Logger.getLogger(getClass()).error("img file is not a readable file: " + imgFile.getAbsolutePath());
+            LogManager.getLogger(getClass()).error("img file is not a readable file: " + imgFile.getAbsolutePath());
             return;
         }
 
@@ -66,7 +67,7 @@ public class BlogDetachHandler extends XmlRequestHandlerBase {
                     }
                 }
                 if (!success) {
-                    Logger.getLogger(getClass()).error("failed to delete attachment file " + filePath);
+                    LogManager.getLogger(getClass()).error("failed to delete attachment file " + filePath);
                 }
             }
         }

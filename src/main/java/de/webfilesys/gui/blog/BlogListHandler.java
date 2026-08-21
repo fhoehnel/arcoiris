@@ -7,16 +7,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfig;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.daytitle.DayTitleManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.ArcoirisBlog;
@@ -68,6 +69,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
         if (readonly) {
             XmlUtil.setChildText(blogElement, "readonly", "true", false);
         }
+
+        XmlUtil.setChildText(blogElement, "version", ArcoirisBlog.VERSION, false);
 
         Boolean lowBandwidth = (Boolean) session.getAttribute(BlogSwitchLowBandwidthHandler.SESSION_KEY_LOW_BANDWIDTH);
         if (lowBandwidth != null) {
@@ -135,7 +138,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
         File blogDir = new File(currentPath);
         
         if (!blogDir.exists() || (!blogDir.isDirectory()) || (!blogDir.canRead())) {
-            Logger.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
+            LogManager.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
             return;
         }
 
@@ -184,7 +187,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     session.removeAttribute(SESSION_KEY_BEFORE_DAY);
                     session.setAttribute(SESSION_KEY_AFTER_DAY, pageAfterDay);
                 } catch (ParseException pex) {
-                    Logger.getLogger(getClass()).error("invalid date format in paging parameter " + afterDay, pex);
+                    LogManager.getLogger(getClass()).error("invalid date format in paging parameter " + afterDay, pex);
                 }
             }
 
@@ -198,7 +201,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                     session.removeAttribute(SESSION_KEY_AFTER_DAY);
                     session.setAttribute(SESSION_KEY_BEFORE_DAY, pageBeforeDay);
                 } catch (ParseException pex) {
-                    Logger.getLogger(getClass()).error("invalid date format in paging parameter " + beforeDay, pex);
+                    LogManager.getLogger(getClass()).error("invalid date format in paging parameter " + beforeDay, pex);
                 }
             }
 
@@ -287,7 +290,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         }
                     }
                 } catch (ParseException pex) {
-                    Logger.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
+                    LogManager.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
                 }
             }
             
@@ -430,7 +433,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                                 try {
                                     scaledImage = new ScaledImage(file.getAbsolutePath(), screenWidth - 100, screenHeight - 135);
                                 } catch (IOException io1) {
-                                    Logger.getLogger(getClass()).error("failed to get scaled image dimensions", io1);
+                                    LogManager.getLogger(getClass()).error("failed to get scaled image dimensions", io1);
                                     imgFound = false;
                                 }
 
@@ -572,7 +575,7 @@ public class BlogListHandler extends XslRequestHandlerBase {
                         }
 
                     } catch (ParseException pex) {
-                        Logger.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
+                        LogManager.getLogger(getClass()).error("invalid blog date format in " + blogDate, pex);
                     }
                 }
 

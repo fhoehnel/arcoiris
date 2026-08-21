@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.webfilesys.Comment;
 import de.webfilesys.GeoTag;
 import de.webfilesys.util.CommonUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class BlogMetaInfManager extends Thread {
 
-    private static final Logger LOG = Logger.getLogger(BlogMetaInfManager.class);
+    private static final Logger LOG = LogManager.getLogger(BlogMetaInfManager.class);
 
     private static final char CACHE_KEY_SEP = '/';
     
@@ -421,7 +422,7 @@ public class BlogMetaInfManager extends Thread {
                 cacheDirty.clear();
             } catch (InterruptedException e) {
                 cacheDirty.keySet().forEach(this::saveMetaInfToFile);
-                Logger.getLogger(getClass()).debug("BlogMetaInfManager ready for shutdown");
+                LogManager.getLogger(getClass()).debug("BlogMetaInfManager ready for shutdown");
                 stop = true;
             } catch (Throwable t) {
                 LOG.error("unhandled exception in run", t);

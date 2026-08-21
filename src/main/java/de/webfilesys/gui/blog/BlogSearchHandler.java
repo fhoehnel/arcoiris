@@ -5,13 +5,14 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.Comment;
@@ -39,7 +40,7 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
         String searchArg = getParameter("searchArg");
 
         if (CommonUtils.isEmpty(searchArg)) {
-            Logger.getLogger(getClass()).error("missing parameter searchArg");
+            LogManager.getLogger(getClass()).error("missing parameter searchArg");
             return;
         }
 
@@ -158,7 +159,7 @@ public class BlogSearchHandler extends XmlRequestHandlerBase {
                                     resultMap.put(linkDateStr, hitList);
                                 }
                             } catch (Exception ex) {
-                                Logger.getLogger(getClass()).error("invalid blog date format: " + blogDateStr, ex);
+                                LogManager.getLogger(getClass()).error("invalid blog date format: " + blogDateStr, ex);
                             }
                         }
                     }

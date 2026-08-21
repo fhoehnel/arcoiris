@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.util.CommonUtils;
@@ -27,7 +28,7 @@ public class GoogleEarthSinglePlacemarkHandler extends GoogleEarthHandlerBase {
         String fileName = getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).warn("fileName parameter missing");
+            LogManager.getLogger(getClass()).warn("fileName parameter missing");
             return placemarkElementList;
         }
 
@@ -41,7 +42,7 @@ public class GoogleEarthSinglePlacemarkHandler extends GoogleEarthHandlerBase {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            Logger.getLogger(getClass()).error("file not found: " + filePath);
+            LogManager.getLogger(getClass()).error("file not found: " + filePath);
             return placemarkElementList;
         }
 

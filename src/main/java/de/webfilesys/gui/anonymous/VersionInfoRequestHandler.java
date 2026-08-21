@@ -2,7 +2,7 @@ package de.webfilesys.gui.anonymous;
 
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.webfilesys.ArcoirisBlog;
 

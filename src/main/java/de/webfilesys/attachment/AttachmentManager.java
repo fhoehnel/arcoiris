@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.webfilesys.servlet.UploadServlet;
 import de.webfilesys.util.CommonUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class AttachmentManager {
 
-    private static final Logger LOG = Logger.getLogger(AttachmentManager.class);
+    private static final Logger LOG = LogManager.getLogger(AttachmentManager.class);
     public static final String ATTACHMENT_INDEX_JSON_FILE_NAME = "attachments.json";
     public static final String ATTACHMENT_INDEX_JSON_NEW_FILE_NAME = "attachments-new.json";
 
@@ -98,7 +99,7 @@ public class AttachmentManager {
                 }
             }
             if (!success) {
-                Logger.getLogger(getClass()).error("failed to delete attachment file " + filePath);
+                LogManager.getLogger(getClass()).error("failed to delete attachment file " + filePath);
                 overAllSuccess = false;
             }
         }

@@ -12,7 +12,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -49,7 +50,7 @@ public class XmlUserManager extends UserManagerBase {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException pcex) {
-            Logger.getLogger(getClass()).error(pcex.toString());
+            LogManager.getLogger(getClass()).error(pcex.toString());
         }
 
         userFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + USER_FILE_NAME;
@@ -70,8 +71,8 @@ public class XmlUserManager extends UserManagerBase {
             return;
         }
 
-        if (Logger.getLogger(getClass()).isDebugEnabled()) {
-            Logger.getLogger(getClass()).debug("saving user info to file: " + userFilePath);
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("saving user info to file: " + userFilePath);
         }
 
         synchronized (userRoot) {
@@ -88,7 +89,7 @@ public class XmlUserManager extends UserManagerBase {
 
                 modified = false;
             } catch (IOException io1) {
-                Logger.getLogger(getClass()).error("error saving user registry file " + userFilePath, io1);
+                LogManager.getLogger(getClass()).error("error saving user registry file " + userFilePath, io1);
             } finally {
                 if (xmlOutFile != null) {
                     try {
@@ -104,16 +105,16 @@ public class XmlUserManager extends UserManagerBase {
         File usersFile = new File(userFilePath);
 
         if (!usersFile.exists()) {
-            Logger.getLogger(getClass()).error("user database file is missing: " + userFilePath);
+            LogManager.getLogger(getClass()).error("user database file is missing: " + userFilePath);
             return (null);
         }
 
         if ((!usersFile.isFile()) || (!usersFile.canRead())) {
-            Logger.getLogger(getClass()).error("user database file " + userFilePath + " is not a readable file");
+            LogManager.getLogger(getClass()).error("user database file " + userFilePath + " is not a readable file");
             return (null);
         }
 
-        Logger.getLogger(getClass()).info("reading user database from file " + usersFile.getAbsolutePath());
+        LogManager.getLogger(getClass()).info("reading user database from file " + usersFile.getAbsolutePath());
 
         doc = null;
 
@@ -128,9 +129,9 @@ public class XmlUserManager extends UserManagerBase {
 
             doc = builder.parse(inputSource);
         } catch (SAXException saxex) {
-            Logger.getLogger(getClass()).error("failed to load user database from file " + usersFile.getAbsolutePath(), saxex);
+            LogManager.getLogger(getClass()).error("failed to load user database from file " + usersFile.getAbsolutePath(), saxex);
         } catch (IOException ioex) {
-            Logger.getLogger(getClass()).error("failed to load user database from file : " + usersFile.getAbsolutePath(), ioex);
+            LogManager.getLogger(getClass()).error("failed to load user database from file : " + usersFile.getAbsolutePath(), ioex);
         } finally {
             if (fis != null) {
                 try {
@@ -520,7 +521,7 @@ public class XmlUserManager extends UserManagerBase {
         try {
             createUser(virtualUser);
         } catch (UserMgmtException ex) {
-            Logger.getLogger(getClass()).warn("failed to create virtual user " + virtualUserId, ex);
+            LogManager.getLogger(getClass()).warn("failed to create virtual user " + virtualUserId, ex);
         }
 
         modified = true;
@@ -605,7 +606,7 @@ public class XmlUserManager extends UserManagerBase {
             try {
                 diskQuota = Long.parseLong(quotaString);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid disk quota " + quotaString);
+                LogManager.getLogger(getClass()).warn("invalid disk quota " + quotaString);
             }
         }
 
@@ -750,7 +751,7 @@ public class XmlUserManager extends UserManagerBase {
         if ((documentRoot.charAt(0) != '*') || (File.separatorChar == '/')) {
             File docRootFile = new File(documentRoot);
             if ((!docRootFile.exists()) || (!docRootFile.isDirectory())) {
-                Logger.getLogger(getClass()).warn("the document root directory " + documentRoot + " does not exist!");
+                LogManager.getLogger(getClass()).warn("the document root directory " + documentRoot + " does not exist!");
             }
         }
 
@@ -778,7 +779,7 @@ public class XmlUserManager extends UserManagerBase {
 
             return mimeEncoder.encodeToString(encryptedPassword).trim();
         } catch (java.security.NoSuchAlgorithmException nsaEx) {
-            Logger.getLogger(getClass()).error("failed to encrypt password", nsaEx);
+            LogManager.getLogger(getClass()).error("failed to encrypt password", nsaEx);
             return "";
         }
     }
@@ -902,7 +903,7 @@ public class XmlUserManager extends UserManagerBase {
             try {
                 lastLoginTime = new Date(Long.parseLong(timeString));
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid last login time " + timeString);
+                LogManager.getLogger(getClass()).warn("invalid last login time " + timeString);
             }
         }
 
@@ -948,8 +949,8 @@ public class XmlUserManager extends UserManagerBase {
                                 XmlUtil.setChildText(userElement, "activated", "true");
                                 modified = true;
 
-                                if (Logger.getLogger(getClass()).isInfoEnabled()) {
-                                    Logger.getLogger(getClass()).info("user activated: " + userElement.getAttribute("id"));
+                                if (LogManager.getLogger(getClass()).isInfoEnabled()) {
+                                    LogManager.getLogger(getClass()).info("user activated: " + userElement.getAttribute("id"));
                                 }
 
                                 return;
@@ -1114,8 +1115,8 @@ public class XmlUserManager extends UserManagerBase {
 
                 readyForShutdown = true;
 
-                if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                    Logger.getLogger(getClass()).debug("XmlUserManager ready for shuwdown");
+                if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                    LogManager.getLogger(getClass()).debug("XmlUserManager ready for shuwdown");
                 }
                 
                 exitFlag = true;

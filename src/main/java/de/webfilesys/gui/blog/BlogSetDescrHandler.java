@@ -5,13 +5,14 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.InvitationManager;
@@ -56,15 +57,15 @@ public class BlogSetDescrHandler extends UserRequestHandler {
 
             String placeholderPicSourcePath = ArcoirisBlog.getInstance().getWebAppRootDir() + "images" + File.separator + PLACEHOLDER_PIC_PATH;
 
-            Logger.getLogger(getClass()).debug("copying dummy pic file from " + placeholderPicSourcePath);
+            LogManager.getLogger(getClass()).debug("copying dummy pic file from " + placeholderPicSourcePath);
 
             copyFile(placeholderPicSourcePath, placeholderPicDestPath);
         }
 
         String blogText = req.getParameter("blogText");
 
-        if (Logger.getLogger(getClass()).isDebugEnabled()) {
-            Logger.getLogger(getClass()).debug("firstUploadFileName: " + firstUploadFileName + " blogText: " + blogText);
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("firstUploadFileName: " + firstUploadFileName + " blogText: " + blogText);
         }
 
         if (!CommonUtils.isEmpty(blogText)) {
@@ -140,7 +141,7 @@ public class BlogSetDescrHandler extends UserRequestHandler {
             if (accessCode != null) {
                 InvitationManager.getInstance().notifySubscribers(accessCode);
             } else {
-                Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + uid + " docRoot=" + currentPath);
+                LogManager.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + uid + " docRoot=" + currentPath);
             }
         }
 
@@ -154,7 +155,7 @@ public class BlogSetDescrHandler extends UserRequestHandler {
             beforeDate.setTime(beforeDate.getTime() + (25l * 60l * 60l * 1000l));   // 25 hours because of change summer to winter time
             setParameter("beforeDay", dateFormat.format(beforeDate));
         } catch (Exception ex) {
-            Logger.getLogger(getClass()).warn("invalid date format", ex);
+            LogManager.getLogger(getClass()).warn("invalid date format", ex);
         }
         
         (new BlogListHandler(req, resp, session, output, uid)).handleRequest();

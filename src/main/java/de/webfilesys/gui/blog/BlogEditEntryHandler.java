@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.ArcoirisBlog;
@@ -35,7 +36,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         String fileName = req.getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).error("missing parameter fileName");
+            LogManager.getLogger(getClass()).error("missing parameter fileName");
             return;
         }
 
@@ -46,7 +47,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
         File picFile = new File(currentPath, fileName);
 
         if ((!picFile.exists()) || (!picFile.isFile()) || (!picFile.canRead())) {
-            Logger.getLogger(getClass()).error("not a readable file: " + fileName);
+            LogManager.getLogger(getClass()).error("not a readable file: " + fileName);
             return;
         }
 
@@ -94,7 +95,7 @@ public class BlogEditEntryHandler extends XslRequestHandlerBase {
             thumbWidth = scaledImage.getScaledWidth();
             thumbHeight = scaledImage.getScaledHeight();
         } catch (IOException io1) {
-            Logger.getLogger(getClass()).error("failed to get scaled image dimensions", io1);
+            LogManager.getLogger(getClass()).error("failed to get scaled image dimensions", io1);
         }
 
         XmlUtil.setChildText(blogEntryElement, "thumbnailWidth", Integer.toString(thumbWidth));

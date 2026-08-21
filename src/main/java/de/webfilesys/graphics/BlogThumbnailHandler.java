@@ -3,11 +3,12 @@ package de.webfilesys.graphics;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class BlogThumbnailHandler {
 
-	private static final Logger LOG = Logger.getLogger(BlogThumbnailHandler.class);
+	private static final Logger LOG = LogManager.getLogger(BlogThumbnailHandler.class);
 	
 	public static final String BLOG_THUMB_PATH = "_thumbnails400";
 
@@ -34,7 +35,7 @@ public class BlogThumbnailHandler {
 			if (thumbnailDirFile.mkdir()) {
 				thumbnailDirOk = true;
 			} else {
-				Logger.getLogger(getClass()).error("failed to create directory for blog thumbnails");
+				LogManager.getLogger(getClass()).error("failed to create directory for blog thumbnails");
 			}
 		}
 		

@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.mail.EmailUtils;
@@ -121,7 +122,7 @@ public class AdminAddUserRequestHandler extends AdminRequestHandler {
 
         File docRootDir = new File(homeDir);
         if (!docRootDir.mkdirs()) {
-            Logger.getLogger(getClass()).error("Failed to create home directory " + homeDir + " for new user " + login);
+            LogManager.getLogger(getClass()).error("Failed to create home directory " + homeDir + " for new user " + login);
 
             errorMsgs.add("Failed to create home directory " + homeDir + ". ");
             (new AdminRegisterUserRequestHandler(req, resp, session, output, uid, errorMsgs)).handleRequest();
@@ -149,7 +150,7 @@ public class AdminAddUserRequestHandler extends AdminRequestHandler {
         try {
             userMgr.createUser(newUser);
         } catch (UserMgmtException ex) {
-            Logger.getLogger(getClass()).warn("failed to create new user " + newUser.getUserid(), ex);
+            LogManager.getLogger(getClass()).warn("failed to create new user " + newUser.getUserid(), ex);
             errorMsgs.add("Failed to create new user " + newUser.getUserid() + ". ");
             (new AdminRegisterUserRequestHandler(req, resp, session, output, uid, errorMsgs)).handleRequest();
             return;

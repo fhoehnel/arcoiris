@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class IconManager {
     private static final String ICON_FILE = "iconAssignment.conf";
@@ -38,7 +39,7 @@ public class IconManager {
     	File iconFile = new File(iconFilePath);
 
         if ((!iconFile.exists()) || (!iconFile.isFile()) || (!iconFile.canRead())) {
-             Logger.getLogger(getClass()).error("icon assignment file " + iconFilePath + " is not a readable file");
+             LogManager.getLogger(getClass()).error("icon assignment file " + iconFilePath + " is not a readable file");
              return;
          }
 
@@ -48,7 +49,7 @@ public class IconManager {
              fis = new FileInputStream(iconFile);
              iconTable.load(fis);
          } catch (IOException ioex) {
-        	 Logger.getLogger(getClass()).error("failed to load icon assignment file", ioex);
+        	 LogManager.getLogger(getClass()).error("failed to load icon assignment file", ioex);
          } finally {
  			if (fis != null) {
  				try {

@@ -8,13 +8,14 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.StatisticManager;
@@ -62,7 +63,7 @@ public class VisitorServlet extends BlogWebServlet {
         String requestPath = req.getRequestURI();
 
         if (requestPath.length() <= servletPathLength + 1) {
-            Logger.getLogger(getClass()).error("missing parameters");
+            LogManager.getLogger(getClass()).error("missing parameters");
             sendErrorPage(resp, "missing parameters");
             return;
         }
@@ -80,12 +81,12 @@ public class VisitorServlet extends BlogWebServlet {
             if (paramParser.hasMoreTokens()) {
                 password = paramParser.nextToken();
             } else {
-                Logger.getLogger(getClass()).error("missing parameter password");
+                LogManager.getLogger(getClass()).error("missing parameter password");
                 sendErrorPage(resp, "missing parameter");
                 return;
             }
         } else {
-            Logger.getLogger(getClass()).error("missing parameter userid");
+            LogManager.getLogger(getClass()).error("missing parameter userid");
             sendErrorPage(resp, "missing parameter");
             return;
         }
@@ -124,7 +125,7 @@ public class VisitorServlet extends BlogWebServlet {
                 logEntry = logEntry + " [" + userAgent + "]";
             }
 
-            Logger.getLogger(getClass()).info(logEntry);
+            LogManager.getLogger(getClass()).info(logEntry);
 
             if ((ArcoirisBlog.getInstance().getMailHost() != null) && ArcoirisBlog.getInstance().isMailNotifyLogin()) {
 

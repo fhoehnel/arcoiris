@@ -3,13 +3,14 @@ package de.webfilesys.gui.ajax;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,7 +45,7 @@ public class XmlRequestHandlerBase extends UserRequestHandler {
 
             doc = builder.newDocument();
         } catch (ParserConfigurationException pcex) {
-            Logger.getLogger(getClass()).error(pcex.toString());
+            LogManager.getLogger(getClass()).error(pcex.toString());
             System.out.println(pcex.toString());
         }
     }

@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.ctc.wstx.exc.WstxParsingException;
 
@@ -196,7 +197,7 @@ public class GeoTrackViewHandler implements ViewHandler {
                                         distFromStart = calculateDistance(startPointLat, startPointLon, latitude, longitude);
                                     }
                                 } catch (NumberFormatException numEx) {
-                                    Logger.getLogger(getClass()).error(numEx, numEx);
+                                    LogManager.getLogger(getClass()).error(numEx, numEx);
                                 }
                             }
                         }
@@ -314,7 +315,7 @@ public class GeoTrackViewHandler implements ViewHandler {
                                         double duration = trackPointTime - prevTime;
 
                                         if (duration < 0) {
-                                            Logger.getLogger(getClass()).warn("invalid trkpt time (before previous timestamp): " + elementText);
+                                            LogManager.getLogger(getClass()).warn("invalid trkpt time (before previous timestamp): " + elementText);
                                             invalidTime = true;
                                             speed = 0.0f;
                                         } else {
@@ -346,7 +347,7 @@ public class GeoTrackViewHandler implements ViewHandler {
 
                                     prevTime = trackPointTime;
                                 } catch (Exception ex) {
-                                    Logger.getLogger(getClass()).error(ex, ex);
+                                    LogManager.getLogger(getClass()).error(ex, ex);
 
                                     prevTime = 0L;
                                 }
@@ -372,18 +373,18 @@ public class GeoTrackViewHandler implements ViewHandler {
                         // System.out.println("unhandled event: " + event);
                     }
                 } catch (WstxParsingException epex) {
-                    Logger.getLogger(getClass()).warn("GPX parsing error", epex);
+                    LogManager.getLogger(getClass()).warn("GPX parsing error", epex);
                 }
             }
 
             xmlOut.flush();
             gpxReader.close();
         } catch (IOException e) {
-            Logger.getLogger(getClass()).error("failed to read target file", e);
+            LogManager.getLogger(getClass()).error("failed to read target file", e);
         } catch (XMLStreamException xmlEx) {
-            Logger.getLogger(getClass()).error("error parsing XML stream", xmlEx);
+            LogManager.getLogger(getClass()).error("error parsing XML stream", xmlEx);
         } catch (Exception e) {
-            Logger.getLogger(getClass()).error("failed to transform GPX file", e);
+            LogManager.getLogger(getClass()).error("failed to transform GPX file", e);
         }
     }
 
@@ -456,7 +457,7 @@ public class GeoTrackViewHandler implements ViewHandler {
      */
     public void processZipContent(String zipFilePath, InputStream zipIn, ViewHandlerConfig viewHandlerConfig, HttpServletRequest req, HttpServletResponse resp) {
         // not yet supported
-        Logger.getLogger(getClass()).warn("reading from ZIP archive not supported by ViewHandler " + this.getClass().getName());
+        LogManager.getLogger(getClass()).warn("reading from ZIP archive not supported by ViewHandler " + this.getClass().getName());
     }
 
     /**

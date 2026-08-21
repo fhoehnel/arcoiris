@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.InvitationManager;
 import de.webfilesys.util.MimeTypeMap;
@@ -32,7 +33,7 @@ public class SharedFileServlet extends HttpServlet {
         String requestPath = req.getRequestURI();
 
         if (requestPath.length() <= servletPathLength + 1) {
-            Logger.getLogger(getClass()).warn("missing parameters");
+            LogManager.getLogger(getClass()).warn("missing parameters");
             sendNotAuthorizedPage(resp);
             return;
         }
@@ -42,7 +43,7 @@ public class SharedFileServlet extends HttpServlet {
         String filePath = InvitationManager.getInstance().getFilePathByAccessCode(accessCode);
         
         if (filePath == null) {
-            Logger.getLogger(getClass()).warn("invalid access code: " + accessCode);
+            LogManager.getLogger(getClass()).warn("invalid access code: " + accessCode);
             sendNotAuthorizedPage(resp);
             return;
         }
@@ -50,12 +51,12 @@ public class SharedFileServlet extends HttpServlet {
         File fileToSend = new File(filePath);
 
         if (!fileToSend.exists()) {
-            Logger.getLogger(getClass()).warn("requested file does not exist: " + filePath);
+            LogManager.getLogger(getClass()).warn("requested file does not exist: " + filePath);
             sendNotFoundPage(resp);
             return;
         }
         if ((!fileToSend.isFile()) || (!fileToSend.canRead())) {
-            Logger.getLogger(getClass()).warn("requested file is not a readable file: " + filePath);
+            LogManager.getLogger(getClass()).warn("requested file is not a readable file: " + filePath);
             sendNotFoundPage(resp);
             return;
         }
@@ -93,14 +94,14 @@ public class SharedFileServlet extends HttpServlet {
             }
 
             if (bytesWritten != fileSize) {
-                Logger.getLogger(getClass()).warn("only " + bytesWritten + " bytes of " + fileSize + " have been written to output");
+                LogManager.getLogger(getClass()).warn("only " + bytesWritten + " bytes of " + fileSize + " have been written to output");
             }
 
             byteOut.flush();
 
             buffer = null;
         } catch (IOException ioEx) {
-            Logger.getLogger(getClass()).warn(ioEx);
+            LogManager.getLogger(getClass()).warn(ioEx);
         } finally {
             if (fileInput != null) {
                 try {

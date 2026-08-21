@@ -4,15 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.gui.user.UserRequestHandler;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import de.webfilesys.util.CommonUtils;
@@ -30,7 +31,7 @@ public class BlogDeleteEntryHandler extends UserRequestHandler {
         String fileName = getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).error("missing parameter fileName");
+            LogManager.getLogger(getClass()).error("missing parameter fileName");
             return;
         }
 
@@ -43,7 +44,7 @@ public class BlogDeleteEntryHandler extends UserRequestHandler {
         String deletedFilePath = fileToBeDeleted.getAbsolutePath();
 
         if ((!fileToBeDeleted.exists()) || (!fileToBeDeleted.isFile()) || (!fileToBeDeleted.canWrite())) {
-            Logger.getLogger(getClass()).error("blog entry file to be deleted is not a writable file: " + fileToBeDeleted.getAbsolutePath());
+            LogManager.getLogger(getClass()).error("blog entry file to be deleted is not a writable file: " + fileToBeDeleted.getAbsolutePath());
         } else {
             if (fileToBeDeleted.delete()) {
                 BlogMetaInfManager.getInstance().removeMetaInf(currentPath, fileName);
@@ -55,7 +56,7 @@ public class BlogDeleteEntryHandler extends UserRequestHandler {
                 }
                 success = true;
             } else {
-                Logger.getLogger(getClass()).error("failed to delete blog entry file " + fileToBeDeleted.getAbsolutePath());
+                LogManager.getLogger(getClass()).error("failed to delete blog entry file " + fileToBeDeleted.getAbsolutePath());
             }
         }
         if (!success) {

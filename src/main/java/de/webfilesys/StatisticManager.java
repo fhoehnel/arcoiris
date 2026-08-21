@@ -11,7 +11,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -25,7 +26,7 @@ public class StatisticManager extends Thread {
     
     private static final String STATISTIC_FILE_NAME = "statistics.xml";
     
-    private static final Logger LOG = Logger.getLogger(StatisticManager.class);
+    private static final Logger LOG = LogManager.getLogger(StatisticManager.class);
     
     public final static long DAY_MILLIS = 1000L * 60L * 60L * 24L;
     public final static long TWO_DAY_MILLIS = 2L * DAY_MILLIS;

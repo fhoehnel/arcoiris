@@ -5,14 +5,15 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.graphics.BlogThumbnailHandler;
@@ -47,13 +48,13 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
         String fileName = req.getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).error("missing parameter fileName");
+            LogManager.getLogger(getClass()).error("missing parameter fileName");
             return;
         }
 
         File oldFile = new File(currentPath, fileName);
         if ((!oldFile.exists()) || (!oldFile.isFile()) || (!oldFile.canWrite())) {
-            Logger.getLogger(getClass()).error("blog entry file not found: " + fileName);
+            LogManager.getLogger(getClass()).error("blog entry file not found: " + fileName);
             return;
         }
 
@@ -64,7 +65,7 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
         String fileNamePrefixFromDate = getFileNamePrefixFromDate();
 
         if (!fileNamePrefixFromDate.equals(fileName.substring(0, 10))) {
-            Logger.getLogger(getClass()).debug("date has changed");
+            LogManager.getLogger(getClass()).debug("date has changed");
 
             BlogMetaInfManager blogMetaInfMgr = BlogMetaInfManager.getInstance();
 
@@ -74,7 +75,7 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
             File newFile = new File(currentPath, newFileName);
 
             if (!oldFile.renameTo(newFile)) {
-                Logger.getLogger(getClass()).error("failed to rename blog file " + fileName + " to " + newFile.getName());
+                LogManager.getLogger(getClass()).error("failed to rename blog file " + fileName + " to " + newFile.getName());
                 return;
             } else {
                 BlogThumbnailHandler.getInstance().renameThumbnail(oldFilePath, newFileName);
@@ -169,7 +170,7 @@ public class BlogChangeEntryHandler extends UserRequestHandler {
             beforeDate.setTime(beforeDate.getTime() + (25l * 60l * 60l * 1000l));   // 25 hours because of change summer to winter time
             setParameter("beforeDay", dateFormat.format(beforeDate));
         } catch (Exception ex) {
-            Logger.getLogger(getClass()).warn("invalid date format", ex);
+            LogManager.getLogger(getClass()).warn("invalid date format", ex);
         }
         
         (new BlogListHandler(req, resp, session, output, uid)).handleRequest();

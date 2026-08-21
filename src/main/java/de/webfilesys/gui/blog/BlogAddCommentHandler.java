@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
 import de.webfilesys.state.BlogState;
 import de.webfilesys.state.BlogStateManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.Comment;
@@ -58,7 +59,7 @@ public class BlogAddCommentHandler extends XmlRequestHandlerBase {
         }
 
         if (!modifyPermission) {
-            Logger.getLogger(getClass()).warn("attempt to add comments for blog entry " + filePath + " from virtual user " + uid + " without permission");
+            LogManager.getLogger(getClass()).warn("attempt to add comments for blog entry " + filePath + " from virtual user " + uid + " without permission");
             return;
         }
 

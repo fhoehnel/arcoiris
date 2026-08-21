@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -39,7 +40,7 @@ public class BlogGetDatesWithEntriesHandler extends XmlRequestHandlerBase {
         File blogDir = new File(currentPath);
         
         if (!blogDir.exists() || (!blogDir.isDirectory()) || (!blogDir.canRead())) {
-            Logger.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
+            LogManager.getLogger(getClass()).error("home directory of user " + uid + " is not a readable directory: " + currentPath);
             return;
         }
 

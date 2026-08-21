@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.util.XmlUtil;
@@ -48,7 +49,7 @@ public class BlogMoveToPosHandler extends BlogMoveHandlerBase {
                     moveDown = true;
                 }
             } catch (Exception ex) {
-                Logger.getLogger(getClass()).error("invalid target pos for move: " + targetPos, ex);
+                LogManager.getLogger(getClass()).error("invalid target pos for move: " + targetPos, ex);
             }
         }
         
@@ -56,7 +57,7 @@ public class BlogMoveToPosHandler extends BlogMoveHandlerBase {
         
         if (currentFileAtTargetPos.equals("fileToMove")) {
             // should never happen
-            Logger.getLogger(getClass()).error("invalid target pos for move: " + targetPos);
+            LogManager.getLogger(getClass()).error("invalid target pos for move: " + targetPos);
             return;
         }
         

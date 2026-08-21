@@ -2,11 +2,12 @@ package de.webfilesys.gui;
 
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Frank Hoehnel
@@ -92,7 +93,7 @@ public abstract class RequestHandler {
         browserType = req.getHeader("User-Agent");
 
         if (browserType == null) {
-            Logger.getLogger(getClass()).debug("user agent of browser undefined");
+            LogManager.getLogger(getClass()).debug("user agent of browser undefined");
 
             browserType = "";
             browserManufacturer = BROWSER_NON_MSIE;

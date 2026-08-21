@@ -11,7 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.util.CommonUtils;
 
@@ -70,7 +71,7 @@ public class LanguageManager {
         File languageDir = new File(languagePath);
 
         if ((!languageDir.exists()) || (!languageDir.isDirectory()) || (!languageDir.canRead())) {
-            Logger.getLogger(getClass()).error("language directory not found or not readable: " + languageDir);
+            LogManager.getLogger(getClass()).error("language directory not found or not readable: " + languageDir);
 
             return;
         }
@@ -137,7 +138,7 @@ public class LanguageManager {
     protected synchronized boolean loadResources(String configFilename, Properties langResources, String language) {
         InputStreamReader configFile = null;
 
-        Logger.getLogger(getClass()).info("Loading Resources from " + configFilename);
+        LogManager.getLogger(getClass()).info("Loading Resources from " + configFilename);
 
         try {
             configFile = new InputStreamReader(new FileInputStream(configFilename), "UTF-8");
@@ -146,10 +147,10 @@ public class LanguageManager {
 
             resourceTable.put(language, langResources);
         } catch (FileNotFoundException fnfe) {
-            Logger.getLogger(getClass()).error("failed to load language resources", fnfe);
+            LogManager.getLogger(getClass()).error("failed to load language resources", fnfe);
             return (false);
         } catch (IOException ioex) {
-            Logger.getLogger(getClass()).error("failed to load language resources", ioex);
+            LogManager.getLogger(getClass()).error("failed to load language resources", ioex);
             return (false);
         } finally {
             if (configFile != null) {
@@ -208,7 +209,7 @@ public class LanguageManager {
     public void listAvailableLanguages() {
 
         for (String availableLang : availableLanguages) {
-            Logger.getLogger(getClass()).info("available language: " + availableLang);
+            LogManager.getLogger(getClass()).info("available language: " + availableLang);
         }
     }
 

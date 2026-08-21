@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Frank Hoehnel
@@ -188,7 +189,7 @@ public class CommonUtils {
         try {
             return (!(f.getCanonicalPath().equals(f.getAbsolutePath())));
         } catch (IOException ioex) {
-            Logger.getLogger(CommonUtils.class).error(ioex);
+            LogManager.getLogger(CommonUtils.class).error(ioex);
             return (false);
         }
     }
@@ -233,12 +234,12 @@ public class CommonUtils {
                 } else {
                     if (!tempFile.delete()) {
                         delError = true;
-                        Logger.getLogger(CommonUtils.class).warn("cannot delete " + tempFile);
+                        LogManager.getLogger(CommonUtils.class).warn("cannot delete " + tempFile);
                     }
                 }
             }
         } else {
-            Logger.getLogger(CommonUtils.class).warn("cannot get dir entries for " + actPath);
+            LogManager.getLogger(CommonUtils.class).warn("cannot get dir entries for " + actPath);
         }
 
         fileList = null;
