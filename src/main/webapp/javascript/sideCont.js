@@ -71,7 +71,7 @@ function createSideOsmMap() {
     }
 
     osmMap = new OpenLayers.Map("sideMap");
-    osmMap.addLayer(new OpenLayers.Layer.OSM());
+    osmMap.addLayer(createOSMBaseLayer());
     // does not work :-(
     // map.addControl(new OpenLayers.Control.FullScreen());
 

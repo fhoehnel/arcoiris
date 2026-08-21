@@ -1,6 +1,6 @@
 function showLocationsOSM() {
     osmMap = new OpenLayers.Map("mapDiv");
-    osmMap.addLayer(new OpenLayers.Layer.OSM());
+    osmMap.addLayer(createOSMBaseLayer());
     const pois = new OpenLayers.Layer.Text("My Points", {
         location: contextRoot + "/servlet?command=osmMultiPOIList",
         projection: osmMap.displayProjection
