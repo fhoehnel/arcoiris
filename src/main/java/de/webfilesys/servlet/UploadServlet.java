@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import de.webfilesys.util.CommonUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
@@ -27,8 +29,12 @@ import de.webfilesys.util.UTF8URLDecoder;
 
 public class UploadServlet extends BlogWebServlet {
     private static final long serialVersionUID = 1L;
-    
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     public static final String SUBDIR_ATTACHMENT = "attachments";
+
+    public static final String SESSION_KEY_FIRST_UPLOAD_FILE_NAME = "firstUploadFileName";
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, java.io.IOException {
         // prevent caching
@@ -83,9 +89,33 @@ public class UploadServlet extends BlogWebServlet {
 
         String requestPath = req.getRequestURI();
 
-        int lastPathDelimiterIdx = requestPath.lastIndexOf('/');
+        String[] partsOfPath = requestPath.split("/");
 
-        String fileName = UTF8URLDecoder.decode(requestPath.substring(lastPathDelimiterIdx + 1));
+        if (partsOfPath.length < 2) {
+            LogManager.getLogger(getClass()).error("invalid request path in upload URL");
+            return;
+        }
+
+        int paramIdx = partsOfPath.length - 1;
+        boolean forceDate = false;
+        String lastParam = UTF8URLDecoder.decode(partsOfPath[paramIdx]);
+        if ("forceDate".equals(lastParam)) {
+            forceDate = true;
+            paramIdx--;
+        }
+
+        String fileName = UTF8URLDecoder.decode(partsOfPath[paramIdx]);
+        if (CommonUtils.isEmpty(fileName)) {
+            LogManager.getLogger(getClass()).error("invalid request path in upload URL: fileName missing");
+            return;
+        }
+
+        paramIdx--;
+        String uploadId = UTF8URLDecoder.decode(partsOfPath[paramIdx]);
+        if (CommonUtils.isEmpty(uploadId)) {
+            LogManager.getLogger(getClass()).error("invalid request path in upload URL: uploadId missing");
+            return;
+        }
 
         fileName = replaceIllegalChars(fileName);
 
@@ -183,6 +213,18 @@ public class UploadServlet extends BlogWebServlet {
                     }
                 }
             }
+
+            if (!forceDate) {
+                Date exposureDate = exifData.getExposureDate();
+                if (exposureDate != null) {
+                    origImgPath = renameFileToExposureDate(origImgPath, exposureDate);
+                }
+            }
+        }
+
+        if (!"-".equals(uploadId)) {
+            // skip second and more picture files from the same blog post creation
+            req.getSession(true).setAttribute(SESSION_KEY_FIRST_UPLOAD_FILE_NAME, CommonUtils.extractFileName(origImgPath));
         }
 
         BlogThumbnailHandler.getInstance().createBlogThumbnail(origImgPath);
@@ -212,6 +254,30 @@ public class UploadServlet extends BlogWebServlet {
         if (BlogConfigManager.getInstance().isStagedPublication(currentPath)) {
             BlogMetaInfManager.getInstance().setStatus(origImgPath, BlogMetaInfManager.STATUS_BLOG_EDIT);
         }
+    }
+
+    private String renameFileToExposureDate(String origImgPath, Date exposureDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+
+        File origImgFile = new File(origImgPath);
+        String parentFolderPath = origImgFile.getParentFile().getAbsolutePath();
+
+        String fileExt = CommonUtils.getFileExtension(origImgPath);
+
+        String targetFilePath;
+        String targetFilePathBase = CommonUtils.joinFilesysPath(parentFolderPath, dateFormat.format(exposureDate) + "-" + exposureDate.getTime() + "-");
+        int appendix = 0;
+        do {
+            targetFilePath = targetFilePathBase + appendix + fileExt;
+            appendix++;
+        } while (new File(targetFilePath).exists());
+
+        File targetFile = new File(targetFilePath);
+        if (!origImgFile.renameTo(targetFile)) {
+            LogManager.getLogger(getClass()).error("failed to rename image file " + origImgPath + " to " + targetFilePath);
+            return origImgPath;
+        }
+        return targetFilePath;
     }
 
     public void handleAttachmentUpload(HttpServletRequest req, HttpServletResponse resp) 

@@ -330,6 +330,11 @@ function singleFileBinaryUpload(file) {
     const statusWin = document.getElementById("uploadStatus");
     statusWin.style.visibility = 'visible';
 
+    let forceDateParam = "";
+    if (document.getElementById("forceDate").checked) {
+        forceDateParam = "/forceDate"
+    }
+
     const now = new Date();
 
     const serverFileName = document.getElementById("dateYear").value + "-" +
@@ -338,12 +343,15 @@ function singleFileBinaryUpload(file) {
         now.getTime() + "-" + currentFileNum +
         getFileNameExt(fileName).toLowerCase();
 
-    const firstUploadServerFileName = document.getElementById("firstUploadFileName");
-    if (firstUploadServerFileName.value.length === 0) {
-        firstUploadServerFileName.value = serverFileName;
+    let uploadId = "-";
+
+    const firstUploadFileId = document.getElementById("firstUploadFileId");
+    if (firstUploadFileId.value.length === 0) {
+        uploadId = self.crypto.randomUUID();
+        firstUploadFileId.value = uploadId;
     }
 
-    const uploadUrl = getContextRoot() + "/upload/singleBinary/blog/" + serverFileName;
+    const uploadUrl = getContextRoot() + "/upload/singleBinary/blog/" + uploadId + "/" + serverFileName + forceDateParam;
 
     xhr = new XMLHttpRequest();
 
@@ -1704,24 +1712,23 @@ function selectDate(calPopup, dateInputElemId, linkAnchorId, centerCalDiv) {
 }
 
 function setSelectedDate(y, m, d) { 
-    document.getElementById("dateDay").value = LZ(d);        
+    console.log("setSelectedDate: " + y + "-" + m + "-" + d);
+
+    document.getElementById("dateDay").value = LZ(d);
     document.getElementById("dateMonth").value = LZ(m);        
     document.getElementById("dateYear").value = y;        
             
-    var selectedDate = new Date();
-    selectedDate.setYear(y);
-    selectedDate.setMonth(m - 1);
-    selectedDate.setDate(d);
-        
-    var now = new Date();
+    const selectedDate = new Date(y, m - 1, d);
+
+    const now = new Date();
            
     if (selectedDate.getTime() - (24 * 60 * 60 * 1000) > now.getTime()) {
         alert(resourceBundle["blog.dateInFuture"]);
     }
         
-    var options = {year: 'numeric', month: '2-digit', day: '2-digit' };
+    const options = {year: 'numeric', month: '2-digit', day: '2-digit' };
        
-    var language = (navigator.language || navigator.browserLanguage).split('-')[0];
+    const language = (navigator.language || navigator.browserLanguage).split('-')[0];
        
     document.getElementById("blogDate").value = selectedDate.toLocaleDateString(language, options);
 }

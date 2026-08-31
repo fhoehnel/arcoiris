@@ -5,13 +5,13 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.webfilesys.servlet.UploadServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
@@ -43,9 +43,11 @@ public class BlogSetDescrHandler extends UserRequestHandler {
 
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
-        String firstUploadFileName = req.getParameter("firstUploadFileName");
+        String firstUploadFileId = req.getParameter("firstUploadFileId");
 
-        if (CommonUtils.isEmpty(firstUploadFileName)) {
+        String firstUploadFileName;
+
+        if (CommonUtils.isEmpty(firstUploadFileId)) {
             firstUploadFileName = createDummyPicFileName();
 
             String placeholderPicDestPath;
@@ -60,6 +62,15 @@ public class BlogSetDescrHandler extends UserRequestHandler {
             LogManager.getLogger(getClass()).debug("copying dummy pic file from " + placeholderPicSourcePath);
 
             copyFile(placeholderPicSourcePath, placeholderPicDestPath);
+        } else {
+            firstUploadFileName = (String) req.getSession(true).getAttribute(UploadServlet.SESSION_KEY_FIRST_UPLOAD_FILE_NAME);
+            if (firstUploadFileName != null) {
+                req.getSession(true).removeAttribute(UploadServlet.SESSION_KEY_FIRST_UPLOAD_FILE_NAME);
+            }
+        }
+
+        if (firstUploadFileName == null) {
+            LogManager.getLogger(getClass()).error("name of first upload file could not be determined");
         }
 
         String blogText = req.getParameter("blogText");
