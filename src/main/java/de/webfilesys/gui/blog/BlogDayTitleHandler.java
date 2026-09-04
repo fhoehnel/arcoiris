@@ -4,12 +4,13 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.daytitle.DayTitleManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -32,7 +33,7 @@ public class BlogDayTitleHandler extends XmlRequestHandlerBase {
         try {
             dayDate = dateFormat.parse(day);
         } catch (Exception ex) {
-            Logger.getLogger(BlogDayTitleHandler.class).error("invalid date: " + day, ex);
+            LogManager.getLogger(BlogDayTitleHandler.class).error("invalid date: " + day, ex);
             return;
         }
         

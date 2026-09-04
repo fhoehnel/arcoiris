@@ -5,7 +5,6 @@
 
 <xsl:strip-space elements="blog" />
 
-<!-- root node-->
 <xsl:template match="/">
 
   <html class="blog">
@@ -19,7 +18,7 @@
       -->
       <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
-      <title>arcoiris blog</title>
+      <title>arcoiris blog version <xsl:value-of select="/blog/version" /></title>
 
       <link rel="shortcut icon">
         <xsl:attribute name="href"><xsl:value-of select="//contextRoot" />/images/arcoiris-icon.png</xsl:attribute>
@@ -48,6 +47,9 @@
       <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/geoTag">
         <script type="text/javascript">
           <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers-2.13.1.js</xsl:attribute>
+        </script>
+        <script type="text/javascript">
+          <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/osmCommon.js</xsl:attribute>
         </script>
       </xsl:if>
 

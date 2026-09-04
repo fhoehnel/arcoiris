@@ -8,13 +8,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Base64;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.InvitationManager;
@@ -31,7 +32,7 @@ import de.webfilesys.util.UTF8URLDecoder;
 public class BlogAppServlet extends BlogWebServlet {
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOG = Logger.getLogger(BlogAppServlet.class);
+    private static final Logger LOG = LogManager.getLogger(BlogAppServlet.class);
 
     private static final String BASIC_HTTP_AUTH_HEADER = "Authorization";
 
@@ -134,7 +135,7 @@ public class BlogAppServlet extends BlogWebServlet {
                 if (accessCode != null) {
                     InvitationManager.getInstance().notifySubscribers(accessCode);
                 } else {
-                    Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
+                    LogManager.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
                 }
             }
         } else if (command.equals("publish")) {
@@ -147,7 +148,7 @@ public class BlogAppServlet extends BlogWebServlet {
                 if (accessCode != null) {
                     InvitationManager.getInstance().notifySubscribers(accessCode);
                 } else {
-                    Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
+                    LogManager.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + userid + " docRoot=" + path);
                 }
             }
         } else if (command.equals("cancel")) {
@@ -277,7 +278,7 @@ public class BlogAppServlet extends BlogWebServlet {
             while ((bytesRead = input.read(buff)) > 0) {
                 uploadSize += bytesRead;
                 if (uploadSize > uploadLimit) {
-                    Logger.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
+                    LogManager.getLogger(getClass()).warn("upload limit of " + uploadLimit + " bytes exceeded for file " + outFile.getAbsolutePath());
                     uploadOut.flush();
                     uploadOut.close();
                     outFile.delete();
@@ -290,7 +291,7 @@ public class BlogAppServlet extends BlogWebServlet {
             uploadOut.flush();
 
         } catch (IOException ex) {
-            Logger.getLogger(getClass()).error("error in ajax binary upload", ex);
+            LogManager.getLogger(getClass()).error("error in ajax binary upload", ex);
             error = true;
         } finally {
             if (uploadOut != null) {
@@ -304,9 +305,9 @@ public class BlogAppServlet extends BlogWebServlet {
         if (error) {
             if (outFile.exists()) {
                 if (outFile.delete()) {
-                    Logger.getLogger(getClass()).debug("deleted incompletely uploaded picture file " + fileName);
+                    LogManager.getLogger(getClass()).debug("deleted incompletely uploaded picture file " + fileName);
                 } else {
-                    Logger.getLogger(getClass()).warn("failed to delete incompletely uploaded picture file " + fileName);
+                    LogManager.getLogger(getClass()).warn("failed to delete incompletely uploaded picture file " + fileName);
                 }
             }
             throw new IOException("Failed to receive blog picture " + fileName);
@@ -350,11 +351,11 @@ public class BlogAppServlet extends BlogWebServlet {
         if (ImageTransformUtil.createScaledImage(origImgPath, scaledImgPath, 1280, 1280)) {
             File origImgFile = new File(origImgPath);
             if (!origImgFile.delete()) {
-                Logger.getLogger(getClass()).error("failed to delete original image after scaling: " + origImgPath);
+                LogManager.getLogger(getClass()).error("failed to delete original image after scaling: " + origImgPath);
             } else {
                 File scaledImgFile = new File(scaledImgPath);
                 if (!scaledImgFile.renameTo(origImgFile)) {
-                    Logger.getLogger(getClass()).error("failed to rename scaled image file " + scaledImgPath + " to " + origImgPath);
+                    LogManager.getLogger(getClass()).error("failed to rename scaled image file " + scaledImgPath + " to " + origImgPath);
                 }
             }
         }

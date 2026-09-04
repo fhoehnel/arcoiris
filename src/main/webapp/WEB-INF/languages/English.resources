@@ -176,6 +176,7 @@ blog.sendPostButton=Send
 blog.cancelButton=Cancel
 blog.calendarTitle=select date from calendar
 blog.selectDate=date
+blog.forceDate=override date from picture file
 blog.dateInFuture=The selected day is in the future!
 blog.uploadFileTooLarge=The selected file is too large for upload!
 blog.emptyPost=Select a picture for upload and/or enter any text!

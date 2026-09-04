@@ -24,11 +24,12 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class LdapJndiUserMgr extends UserManagerBase {
 
-    private static Logger LOG = Logger.getLogger(LdapJndiUserMgr.class);
+    private static Logger LOG = LogManager.getLogger(LdapJndiUserMgr.class);
 
     // TODO: use the WEB-INF dir of the wepapp
     private static final String CONFIG_PATH = "C:/Projekte/webfilesys/maven-project/webfilesys/src/main/webapp/WEB-INF";
@@ -113,7 +114,7 @@ public class LdapJndiUserMgr extends UserManagerBase {
                 try {
                     ctx = new InitialDirContext(env);
                 } catch (NamingException ex) {
-                    Logger.getLogger(getClass()).warn("failed to get initial context for LDAP access", ex);
+                    LogManager.getLogger(getClass()).warn("failed to get initial context for LDAP access", ex);
                     ex.printStackTrace();
                 }
 
@@ -137,7 +138,7 @@ public class LdapJndiUserMgr extends UserManagerBase {
          * "234567"); try {
          * ctx.bind("uid=BieneMaja,ou=webfilesys,dc=maxcrc,dc=com", newUser); }
          * catch (NamingException ex) {
-         * Logger.getLogger(getClass()).warn("failed to create new LDAP object",
+         * LogManager.getLogger(getClass()).warn("failed to create new LDAP object",
          * ex); ex.printStackTrace(); }
          */
 
@@ -533,7 +534,7 @@ public class LdapJndiUserMgr extends UserManagerBase {
      * String encodedPassword = encoder.encodeBuffer(encryptedPassword).trim();
      * 
      * return encodedPassword; } catch (java.security.NoSuchAlgorithmException
-     * nsaEx) { Logger.getLogger(getClass()).error(nsaEx); }
+     * nsaEx) { LogManager.getLogger(getClass()).error(nsaEx); }
      * 
      * return ""; }
      */
@@ -544,7 +545,7 @@ public class LdapJndiUserMgr extends UserManagerBase {
 
             return md.digest(password.getBytes());
         } catch (java.security.NoSuchAlgorithmException nsaEx) {
-            Logger.getLogger(getClass()).error(nsaEx);
+            LogManager.getLogger(getClass()).error(nsaEx);
         }
 
         return null;

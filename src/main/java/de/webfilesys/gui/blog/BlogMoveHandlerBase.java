@@ -5,14 +5,15 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.FileComparator;
 import de.webfilesys.graphics.BlogThumbnailHandler;
@@ -103,7 +104,7 @@ public abstract class BlogMoveHandlerBase extends XmlRequestHandlerBase {
         File destFile = new File(currentPath, newFileName);
 
         if (!sourceFile.renameTo(destFile)) {
-            Logger.getLogger(getClass()).error("failed to rename file " + fileToMove + " to : " + newFileName);
+            LogManager.getLogger(getClass()).error("failed to rename file " + fileToMove + " to : " + newFileName);
             return false;
         }
 

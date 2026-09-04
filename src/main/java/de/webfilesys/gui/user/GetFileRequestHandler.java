@@ -7,11 +7,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ViewHandlerConfig;
 import de.webfilesys.ViewHandlerManager;
@@ -48,7 +49,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
         }
 
         if (!this.checkAccess(filePath)) {
-            Logger.getLogger(getClass()).warn("unauthorized access to " + filePath);
+            LogManager.getLogger(getClass()).warn("unauthorized access to " + filePath);
             return;
         }
 
@@ -57,11 +58,11 @@ public class GetFileRequestHandler extends UserRequestHandler {
         File fileToSend = new File(filePath);
 
         if (!fileToSend.exists()) {
-            Logger.getLogger(getClass()).warn("requested file does not exist: " + filePath);
+            LogManager.getLogger(getClass()).warn("requested file does not exist: " + filePath);
 
             error = true;
         } else if ((!fileToSend.isFile()) || (!fileToSend.canRead())) {
-            Logger.getLogger(getClass()).warn("requested file is not a readable file: " + filePath);
+            LogManager.getLogger(getClass()).warn("requested file is not a readable file: " + filePath);
 
             error = true;
         }
@@ -75,7 +76,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
                 output.flush();
                 return;
             } catch (IOException ioEx) {
-                Logger.getLogger(getClass()).warn(ioEx);
+                LogManager.getLogger(getClass()).warn(ioEx);
             }
         }
 
@@ -151,7 +152,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
             }
 
             if (bytesWritten != fileSize) {
-                Logger.getLogger(getClass()).warn("only " + bytesWritten + " bytes of " + fileSize + " have been written to output");
+                LogManager.getLogger(getClass()).warn("only " + bytesWritten + " bytes of " + fileSize + " have been written to output");
             }
 
             byteOut.flush();
@@ -163,7 +164,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
              * MetaInfManager.getInstance().incrementDownloads(filePath); }
              */
         } catch (IOException ioEx) {
-            Logger.getLogger(getClass()).warn(ioEx);
+            LogManager.getLogger(getClass()).warn(ioEx);
         } finally {
             if (fileInput != null) {
                 try {
@@ -180,7 +181,7 @@ public class GetFileRequestHandler extends UserRequestHandler {
         try {
             ViewHandler viewHandler = (ViewHandler) (Class.forName(viewHandlerClassName).newInstance());
 
-            Logger.getLogger(getClass()).debug("ViewHandler instantiated: " + viewHandler.getClass().getName());
+            LogManager.getLogger(getClass()).debug("ViewHandler instantiated: " + viewHandler.getClass().getName());
 
             if (zipIn == null) {
                 viewHandler.process(filePath, viewHandlerConfig, req, resp);
@@ -195,13 +196,13 @@ public class GetFileRequestHandler extends UserRequestHandler {
 
             return (true);
         } catch (ClassNotFoundException cnfex) {
-            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be found: " + cnfex);
+            LogManager.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be found: " + cnfex);
         } catch (InstantiationException instEx) {
-            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + instEx);
+            LogManager.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + instEx);
         } catch (IllegalAccessException iaEx) {
-            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + iaEx);
+            LogManager.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " cannot be instantiated: " + iaEx);
         } catch (ClassCastException cex) {
-            Logger.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " does not implement the ViewHandler interface: " + cex);
+            LogManager.getLogger(getClass()).error("Viewhandler class " + viewHandlerClassName + " does not implement the ViewHandler interface: " + cex);
         }
 
         return (false);

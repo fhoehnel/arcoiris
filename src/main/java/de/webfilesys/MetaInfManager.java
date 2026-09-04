@@ -17,7 +17,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -55,7 +56,7 @@ public class MetaInfManager extends Thread {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException pcex) {
-            Logger.getLogger(getClass()).error(pcex);
+            LogManager.getLogger(getClass()).error(pcex);
         }
 
         dirList = new Hashtable<String, Element>();
@@ -95,8 +96,8 @@ public class MetaInfManager extends Thread {
                 File metaInfFile = new File(metaInfFilePath);
 
                 if (metaInfFile.exists() && metaInfFile.canWrite()) {
-                    if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                        Logger.getLogger(getClass()).debug("removing empty meta inf file " + metaInfFilePath);
+                    if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                        LogManager.getLogger(getClass()).debug("removing empty meta inf file " + metaInfFilePath);
                     }
 
                     metaInfFile.delete();
@@ -105,8 +106,8 @@ public class MetaInfManager extends Thread {
                 return;
             }
 
-            if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                Logger.getLogger(getClass()).debug("saving meta info to file: " + metaInfFilePath);
+            if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                LogManager.getLogger(getClass()).debug("saving meta info to file: " + metaInfFilePath);
             }
 
             String newMetaInfFilePath = metaInfFilePath + ".new";
@@ -122,7 +123,7 @@ public class MetaInfManager extends Thread {
 
                 xmlOutFile.flush();
             } catch (IOException ioex) {
-                Logger.getLogger(getClass()).error("error saving metainf file : " + metaInfFilePath, ioex);
+                LogManager.getLogger(getClass()).error("error saving metainf file : " + metaInfFilePath, ioex);
             } finally {
                 if (xmlOutFile != null) {
                     try {
@@ -134,10 +135,10 @@ public class MetaInfManager extends Thread {
                         if (oldMetaInfFile.exists()) {
                             if (!oldMetaInfFile.delete()) {
                                 deleteOldFailed = true;
-                                Logger.getLogger(getClass()).error("failed to delete old metainf file " + metaInfFilePath);
+                                LogManager.getLogger(getClass()).error("failed to delete old metainf file " + metaInfFilePath);
                             }
                         } else {
-                            Logger.getLogger(getClass()).debug("creating new metainf file " + metaInfFilePath);
+                            LogManager.getLogger(getClass()).debug("creating new metainf file " + metaInfFilePath);
                         }
                         
                         if (!deleteOldFailed) {
@@ -145,14 +146,14 @@ public class MetaInfManager extends Thread {
                             if (newMetaInfFile.exists() && newMetaInfFile.isFile() && newMetaInfFile.canRead()) {
                                 File targetFile = new File(metaInfFilePath);
                                 if (!newMetaInfFile.renameTo(targetFile)) {
-                                    Logger.getLogger(getClass()).error("failed to rename new metainf file " + newMetaInfFile + " to " + metaInfFilePath);
+                                    LogManager.getLogger(getClass()).error("failed to rename new metainf file " + newMetaInfFile + " to " + metaInfFilePath);
                                 }
                             } else {
-                                Logger.getLogger(getClass()).error("new metainf file missing: " + newMetaInfFile);
+                                LogManager.getLogger(getClass()).error("new metainf file missing: " + newMetaInfFile);
                             }
                         }
                     } catch (Exception ex) {
-                        Logger.getLogger(getClass()).error("failed to close new metainf file " + newMetaInfFilePath);
+                        LogManager.getLogger(getClass()).error("failed to close new metainf file " + newMetaInfFilePath);
                     }
                 }
             }
@@ -171,10 +172,10 @@ public class MetaInfManager extends Thread {
             File historicMetaInfFile = new File(historicMetaInfFilePath);
             if (historicMetaInfFile.exists()) {
                 if (historicMetaInfFile.renameTo(metaInfFile)) {
-                    Logger.getLogger(getClass()).debug("metainf file migration succeeded for historic file: " + historicMetaInfFilePath);
+                    LogManager.getLogger(getClass()).debug("metainf file migration succeeded for historic file: " + historicMetaInfFilePath);
                     metaInfFile = new File(metaInfFilePath);
                 } else {
-                    Logger.getLogger(getClass()).warn("metainf file migration failed for historic file: " + historicMetaInfFilePath);
+                    LogManager.getLogger(getClass()).warn("metainf file migration failed for historic file: " + historicMetaInfFilePath);
                     return null;
                 }
             } else {
@@ -182,7 +183,7 @@ public class MetaInfManager extends Thread {
             }
         } else {
             if (!metaInfFile.canRead()) {
-                Logger.getLogger(getClass()).warn("metainf file not readable: " + metaInfFile);
+                LogManager.getLogger(getClass()).warn("metainf file not readable: " + metaInfFile);
                 return (null);
             }
         }
@@ -199,15 +200,15 @@ public class MetaInfManager extends Thread {
 
                 inputSource.setEncoding("UTF-8");
 
-                if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                    Logger.getLogger(getClass()).debug("reading meta info from " + metaInfFilePath);
+                if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                    LogManager.getLogger(getClass()).debug("reading meta info from " + metaInfFilePath);
                 }
 
                 doc = builder.parse(inputSource);
             } catch (SAXException saxex) {
-                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, saxex);
+                LogManager.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, saxex);
             } catch (IOException ioex) {
-                Logger.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, ioex);
+                LogManager.getLogger(getClass()).error("Failed to load metainf file : " + metaInfFilePath, ioex);
             } finally {
                 if (fis != null) {
                     try {
@@ -861,7 +862,7 @@ public class MetaInfManager extends Thread {
             try {
                 creationTime = Long.parseLong(tmp);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid creation time: " + tmp);
+                LogManager.getLogger(getClass()).warn("invalid creation time: " + tmp);
             }
 
             Comment comment = new Comment(user, new Date(creationTime), message);
@@ -1063,7 +1064,7 @@ public class MetaInfManager extends Thread {
         try {
             return Integer.parseInt(voteVal);
         } catch (Exception ex) {
-            Logger.getLogger(getClass()).error("failed to get identified visitor rating for visitor " + visitorId, ex);
+            LogManager.getLogger(getClass()).error("failed to get identified visitor rating for visitor " + visitorId, ex);
         }
 
         return (-1);
@@ -1159,7 +1160,7 @@ public class MetaInfManager extends Thread {
                 pictureRating = new PictureRating();
                 pictureRating.setOwnerRating(rating);
             } catch (NumberFormatException nfe) {
-                Logger.getLogger(getClass()).error("invalid owner rating value: " + ownerRating, nfe);
+                LogManager.getLogger(getClass()).error("invalid owner rating value: " + ownerRating, nfe);
             }
         }
 
@@ -1188,7 +1189,7 @@ public class MetaInfManager extends Thread {
                         voteSum += voteVal;
                         voteCount++;
                     } catch (NumberFormatException nfe) {
-                        Logger.getLogger(getClass()).error("invalid vote value: " + vote);
+                        LogManager.getLogger(getClass()).error("invalid vote value: " + vote);
                     }
                 }
             }
@@ -1208,7 +1209,7 @@ public class MetaInfManager extends Thread {
                     voteSum += voteVal;
                     voteCount++;
                 } catch (NumberFormatException nfe) {
-                    Logger.getLogger(getClass()).error("invalid vote value: " + vote);
+                    LogManager.getLogger(getClass()).error("invalid vote value: " + vote);
                 }
             }
         }
@@ -1298,7 +1299,7 @@ public class MetaInfManager extends Thread {
                     try {
                         starSum += Integer.parseInt(vote);
                     } catch (Exception ex) {
-                        Logger.getLogger(getClass()).error("invalid vote value: " + vote);
+                        LogManager.getLogger(getClass()).error("invalid vote value: " + vote);
                     }
                 }
             }
@@ -1316,7 +1317,7 @@ public class MetaInfManager extends Thread {
                 try {
                     starSum += Integer.parseInt(vote);
                 } catch (Exception ex) {
-                    Logger.getLogger(getClass()).error("invalid vote value: " + vote);
+                    LogManager.getLogger(getClass()).error("invalid vote value: " + vote);
                 }
             }
         }
@@ -1644,7 +1645,7 @@ public class MetaInfManager extends Thread {
             try {
                 creationTime = Long.parseLong(tmp);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid creation time: " + tmp);
+                LogManager.getLogger(getClass()).warn("invalid creation time: " + tmp);
             }
 
             FileLink link = new FileLink(name, destPath, creator, new Date(creationTime));
@@ -2066,7 +2067,7 @@ public class MetaInfManager extends Thread {
 
                     if (dirList.size() > 0) {
                         synchronized (dirList) {
-                            Logger.getLogger(getClass()).debug("removing " + dirList.size() + " elements from metainf cache");
+                            LogManager.getLogger(getClass()).debug("removing " + dirList.size() + " elements from metainf cache");
 
                             dirList.clear();
                         }
@@ -2083,7 +2084,7 @@ public class MetaInfManager extends Thread {
                     saveMetaInfFile(path);
                 }
 
-                Logger.getLogger(getClass()).debug("MetaInfmanager ready for shutdown");
+                LogManager.getLogger(getClass()).debug("MetaInfmanager ready for shutdown");
 
                 stop = true;
             }

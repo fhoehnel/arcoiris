@@ -2,11 +2,12 @@ package de.webfilesys.gui.blog;
 
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
@@ -29,16 +30,16 @@ public class BlogSubscribeHandler extends XmlRequestHandlerBase {
         String subscriberEmail = getParameter("subscriberEmail");
 
         if (CommonUtils.isEmpty(subscriberEmail)) {
-            Logger.getLogger(getClass()).error("missing parameter subscriberEmail");
+            LogManager.getLogger(getClass()).error("missing parameter subscriberEmail");
             return;
         }
 
         boolean success = InvitationManager.getInstance().addSubscriber(uid, subscriberEmail);
 
         if (success) {
-            Logger.getLogger(getClass()).info("blog subscriber added, virtualUser=" + uid + " email=" + subscriberEmail);
+            LogManager.getLogger(getClass()).info("blog subscriber added, virtualUser=" + uid + " email=" + subscriberEmail);
         } else {
-            Logger.getLogger(getClass()).warn("failed to add blog subscriber, virtualUser=" + uid + " email=" + subscriberEmail);
+            LogManager.getLogger(getClass()).warn("failed to add blog subscriber, virtualUser=" + uid + " email=" + subscriberEmail);
         }
 
         Element resultElement = doc.createElement("result");

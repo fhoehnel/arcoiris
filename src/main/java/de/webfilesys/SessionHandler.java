@@ -3,14 +3,15 @@ package de.webfilesys;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.user.UserManager;
 import de.webfilesys.user.UserManagerBase;
@@ -21,7 +22,7 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
     private static Hashtable sessionList = new Hashtable();
 
     /**
-     * @see javax.servlet.http.HttpSessionListener#sessionCreated(HttpSessionEvent)
+     * @see jakarta.servlet.http.HttpSessionListener#sessionCreated(HttpSessionEvent)
      */
     public void sessionCreated(HttpSessionEvent sessionEvent) {
         HttpSession session = sessionEvent.getSession();
@@ -35,13 +36,13 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
         if (activeSessions >= 0) // this value can be negative because of
                                  // sessions that survived tomcat restart
         {
-            // Logger.getLogger(getClass()).debug("active sessions: " +
+            // LogManager.getLogger(getClass()).debug("active sessions: " +
             // activeSessions);
         }
     }
 
     /**
-     * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(HttpSessionEvent)
+     * @see jakarta.servlet.http.HttpSessionListener#sessionDestroyed(HttpSessionEvent)
      */
     public void sessionDestroyed(HttpSessionEvent sessionEvent) {
         HttpSession session = sessionEvent.getSession();
@@ -56,12 +57,12 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
             String userid = (String) session.getAttribute("userid");
 
             if (userid == null) {
-                Logger.getLogger(getClass()).info("session expired/destroyed with id " + sessionId);
+                LogManager.getLogger(getClass()).info("session expired/destroyed with id " + sessionId);
             } else {
-                Logger.getLogger(getClass()).info("session expired/destroyed for user: " + userid + " sessionId: " + sessionId);
+                LogManager.getLogger(getClass()).info("session expired/destroyed for user: " + userid + " sessionId: " + sessionId);
             }
         } catch (IllegalStateException iex) {
-            Logger.getLogger(getClass()).info("session expired/destroyed with id " + sessionId);
+            LogManager.getLogger(getClass()).info("session expired/destroyed with id " + sessionId);
 
             // In tomcat version 4 the session has already been invalidated when
             // sessionDestroyed()
@@ -70,12 +71,12 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
             // In tomcat version 5 sessionDestroyed() is called before the
             // session is being invalidated.
 
-            Logger.getLogger(getClass()).debug(iex);
+            LogManager.getLogger(getClass()).debug(iex);
         }
 
         activeSessions--;
 
-        Logger.getLogger(getClass()).debug("active sessions: " + activeSessions);
+        LogManager.getLogger(getClass()).debug("active sessions: " + activeSessions);
     }
 
     public static Enumeration getSessions() {
@@ -91,7 +92,7 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
         // ServletContext servletContext = servletContextEvent.getServletContext
         // ();
 
-        Logger.getLogger(getClass()).info("saving and cleaning up on context shutdown");
+        LogManager.getLogger(getClass()).info("saving and cleaning up on context shutdown");
 
         UserManager userMgr = ArcoirisBlog.getInstance().getUserMgr();
 
@@ -115,7 +116,7 @@ public class SessionHandler implements HttpSessionListener, ServletContextListen
             }
         } while (!userMgr.isReadyForShutdown());
 
-        Logger.getLogger(getClass()).info("arcoiris blog server ready for shutdown");
+        LogManager.getLogger(getClass()).info("arcoiris blog server ready for shutdown");
     }
 
 }

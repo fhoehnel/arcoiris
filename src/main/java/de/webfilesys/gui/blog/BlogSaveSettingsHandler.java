@@ -3,14 +3,15 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfig;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
@@ -67,10 +68,10 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
                 }
 
             } catch (NumberFormatException numEx) {
-                Logger.getLogger(getClass()).error("invalid blog page size: " + daysPerPage);
+                LogManager.getLogger(getClass()).error("invalid blog page size: " + daysPerPage);
             }
         } else {
-            Logger.getLogger(getClass()).warn("missing parameter blog page size");
+            LogManager.getLogger(getClass()).warn("missing parameter blog page size");
         }
 
         String stagedPublication = req.getParameter("stagedPublication");
@@ -152,7 +153,7 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
                         virtualUser.setCss(skin);
                     }
                 } catch (UserMgmtException ex) {
-                    Logger.getLogger(getClass()).error("failed to update skin for user " + uid, ex);
+                    LogManager.getLogger(getClass()).error("failed to update skin for user " + uid, ex);
                 }
             }
         }
@@ -176,7 +177,7 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
                         virtualUser.setLanguage(newLanguage);
                     }
                 } catch (UserMgmtException ex) {
-                    Logger.getLogger(getClass()).error("failed to update language for user " + uid, ex);
+                    LogManager.getLogger(getClass()).error("failed to update language for user " + uid, ex);
                 }
             }
         }
@@ -206,7 +207,7 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             try {
                 userMgr.updateUser(virtualUser);
             } catch (UserMgmtException ex) {
-                Logger.getLogger(getClass()).error("failed to update virtual user " + virtualUser.getUserid(), ex);
+                LogManager.getLogger(getClass()).error("failed to update virtual user " + virtualUser.getUserid(), ex);
             }
         }
 
@@ -250,7 +251,7 @@ public class BlogSaveSettingsHandler extends XmlRequestHandlerBase {
             }
         }
 
-        Logger.getLogger(getClass()).error("virtual user for blog visitors not found for user " + uid);
+        LogManager.getLogger(getClass()).error("virtual user for blog visitors not found for user " + uid);
 
         return null;
     }

@@ -1,7 +1,8 @@
 package de.webfilesys.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 
 public class BlogConfigManager {
 
-    private static final Logger LOG = Logger.getLogger(BlogConfigManager.class);
+    private static final Logger LOG = LogManager.getLogger(BlogConfigManager.class);
 
     public static final String BLOG_CONFIG_JSON_FILE_NAME = "blogConfig.json";
     public static final String BLOG_CONFIG_JSON_NEW_FILE_NAME = "blogConfig-new.json";

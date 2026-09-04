@@ -35,6 +35,9 @@
     <script type="text/javascript">
       <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/openStreetMaps/OpenLayers-2.13.1.js</xsl:attribute>
     </script>
+    <script type="text/javascript">
+      <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/osmCommon.js</xsl:attribute>
+    </script>
 
     <script type="text/javascript">
       <xsl:attribute name="src"><xsl:value-of select="//contextRoot" />/javascript/resourceBundle.js</xsl:attribute>

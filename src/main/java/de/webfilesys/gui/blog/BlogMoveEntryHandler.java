@@ -5,11 +5,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.util.CommonUtils;
@@ -31,18 +32,18 @@ public class BlogMoveEntryHandler extends BlogMoveHandlerBase {
         String fileToMove = getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileToMove)) {
-            Logger.getLogger(getClass()).error("missing parameter fileName");
+            LogManager.getLogger(getClass()).error("missing parameter fileName");
             return;
         }
 
         String direction = getParameter("direction");
         if (CommonUtils.isEmpty(direction)) {
-            Logger.getLogger(getClass()).error("missing parameter direction");
+            LogManager.getLogger(getClass()).error("missing parameter direction");
             return;
         }
 
         if ((!direction.equals("up")) && (!direction.equals("down"))) {
-            Logger.getLogger(getClass()).error("invalid parameter direction");
+            LogManager.getLogger(getClass()).error("invalid parameter direction");
             return;
         }
 

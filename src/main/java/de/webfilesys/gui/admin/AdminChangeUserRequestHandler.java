@@ -3,11 +3,12 @@ package de.webfilesys.gui.admin;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.mail.EmailUtils;
 import de.webfilesys.user.TransientUser;
@@ -89,7 +90,7 @@ public class AdminChangeUserRequestHandler extends AdminRequestHandler {
         TransientUser changedUser = userMgr.getUser(login);
 
         if (changedUser == null) {
-            Logger.getLogger(getClass()).error("user for update not found: " + login);
+            LogManager.getLogger(getClass()).error("user for update not found: " + login);
             errorMsgs.add("user for update not found: " + login);
             (new AdminEditUserRequestHandler(req, resp, session, output, uid, errorMsgs)).handleRequest();
             return;
@@ -149,7 +150,7 @@ public class AdminChangeUserRequestHandler extends AdminRequestHandler {
         try {
             userMgr.updateUser(changedUser);
         } catch (UserMgmtException ex) {
-            Logger.getLogger(getClass()).error("failed to update user " + login, ex);
+            LogManager.getLogger(getClass()).error("failed to update user " + login, ex);
             errorMsgs.add("failed to update user " + login);
             (new AdminEditUserRequestHandler(req, resp, session, output, uid, errorMsgs)).handleRequest();
             return;

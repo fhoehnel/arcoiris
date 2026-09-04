@@ -27,18 +27,19 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.gui.admin.*;
 import de.webfilesys.gui.blog.*;
 import de.webfilesys.gui.user.*;
 import de.webfilesys.gui.xsl.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.ResourceBundleHandler;
@@ -82,14 +83,14 @@ public class BlogWebServlet extends ServletBase {
         String configFileName = config.getInitParameter("config");
 
         if ((configFileName == null) || (configFileName.trim().length() == 0)) {
-            Logger.getLogger(getClass()).fatal("config file not specified in web.xml");
+            LogManager.getLogger(getClass()).fatal("config file not specified in web.xml");
             throw new ServletException("config file not specified in web.xml");
         }
 
         String configPath = context.getRealPath(configFileName);
 
         if ((configPath == null) || (configPath.length() == 0)) {
-            Logger.getLogger(getClass()).fatal("cannot determine real path of config file " + configFileName);
+            LogManager.getLogger(getClass()).fatal("cannot determine real path of config file " + configFileName);
             throw new ServletException("cannot determine real path of config file " + configFileName);
         }
 
@@ -100,7 +101,7 @@ public class BlogWebServlet extends ServletBase {
         }
 
         if ((!configFile.isFile()) || (!configFile.canRead())) {
-            Logger.getLogger(getClass()).fatal(configPath + " is not a readable file");
+            LogManager.getLogger(getClass()).fatal(configPath + " is not a readable file");
             throw new ServletException(configPath + " is not a readable file");
         }
 
@@ -113,9 +114,9 @@ public class BlogWebServlet extends ServletBase {
 
             configProperties.load(propFile);
 
-            Logger.getLogger(getClass()).info("properties loaded from " + configFile);
+            LogManager.getLogger(getClass()).info("properties loaded from " + configFile);
         } catch (IOException ioEx) {
-            Logger.getLogger(getClass()).fatal("error reading config file: " + ioEx);
+            LogManager.getLogger(getClass()).fatal("error reading config file: " + ioEx);
             throw new ServletException("error reading config file: " + ioEx);
         } finally {
             if (propFile != null) {
@@ -168,7 +169,7 @@ public class BlogWebServlet extends ServletBase {
                 if (requestPath.length() > servletPathLength + 1) {
                     req.setAttribute("filePath", UTF8URLDecoder.decode(requestPath.substring(servletPathLength + 1)));
                 } else {
-                    Logger.getLogger(getClass()).warn("invalid request path: " + requestPath);
+                    LogManager.getLogger(getClass()).warn("invalid request path: " + requestPath);
                 }
             } else {
                 req.setAttribute("filePath", UTF8URLDecoder.decode(requestPath.substring(servletPathLength)));
@@ -207,7 +208,7 @@ public class BlogWebServlet extends ServletBase {
         logEntry.append(req.getProtocol());
         logEntry.append(')');
 
-        Logger.getLogger(getClass()).info(logEntry.toString());
+        LogManager.getLogger(getClass()).info(logEntry.toString());
 
         String localIP = ArcoirisBlog.getInstance().getLocalIPAddress();
 
@@ -404,7 +405,7 @@ public class BlogWebServlet extends ServletBase {
                 return true;
             }
             
-            Logger.getLogger(getClass()).info("unknown admin comamnd: " + cmd);
+            LogManager.getLogger(getClass()).info("unknown admin comamnd: " + cmd);
             return true;
         }
 
@@ -545,7 +546,7 @@ public class BlogWebServlet extends ServletBase {
                 (new BlogShareSinglePicHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
             } else {
-                Logger.getLogger(getClass()).info("unknown blog comamnd: " + cmd);
+                LogManager.getLogger(getClass()).info("unknown blog comamnd: " + cmd);
                 return true;
             }
         }
@@ -658,12 +659,12 @@ public class BlogWebServlet extends ServletBase {
             logoutPage = ArcoirisBlog.getInstance().getLogoutURL();
         }
 
-        Logger.getLogger(getClass()).info(req.getRemoteAddr() + ": logout user " + userid);
+        LogManager.getLogger(getClass()).info(req.getRemoteAddr() + ": logout user " + userid);
 
         try {
             resp.sendRedirect(logoutPage);
         } catch (IOException ioex) {
-            Logger.getLogger(getClass()).warn(ioex);
+            LogManager.getLogger(getClass()).warn(ioex);
         }
     }
 
@@ -683,7 +684,7 @@ public class BlogWebServlet extends ServletBase {
             if (userMgr.checkPassword(userid, password)) {
                 session = req.getSession(false);
                 if (session != null) {
-                    Logger.getLogger(getClass()).debug("destroying existing session");
+                    LogManager.getLogger(getClass()).debug("destroying existing session");
                     session.invalidate();
                 }
 
@@ -705,7 +706,7 @@ public class BlogWebServlet extends ServletBase {
                     logEntry = logEntry + " [" + browserType + "]";
                 }
 
-                Logger.getLogger(getClass()).info(logEntry);
+                LogManager.getLogger(getClass()).info(logEntry);
 
                 if ((ArcoirisBlog.getInstance().getMailHost() != null) && ArcoirisBlog.getInstance().isMailNotifyLogin()) {
                     ArrayList<String> adminUserEmailList = userMgr.getAdminUserEmails();
@@ -726,7 +727,7 @@ public class BlogWebServlet extends ServletBase {
                             resp.sendRedirect(req.getContextPath() + "/servlet?command=blog");
                             return;
                         } catch (IOException ex) {
-                            Logger.getLogger(getClass()).warn("failed to redirect to blog handler", ex);
+                            LogManager.getLogger(getClass()).warn("failed to redirect to blog handler", ex);
                         }
                     }
                 }
@@ -734,7 +735,7 @@ public class BlogWebServlet extends ServletBase {
         }
 
         logEntry = clientIP + ": login failed for user " + userid;
-        Logger.getLogger(getClass()).warn(logEntry);
+        LogManager.getLogger(getClass()).warn(logEntry);
 
         if ((ArcoirisBlog.getInstance().getMailHost() != null) && ArcoirisBlog.getInstance().isMailNotifyLogin()) {
             ArrayList<String> adminUserEmailList = userMgr.getAdminUserEmails();
@@ -746,7 +747,7 @@ public class BlogWebServlet extends ServletBase {
             try {
                 resp.sendRedirect(ArcoirisBlog.getInstance().getLoginErrorPage());
             } catch (IOException ioex) {
-                Logger.getLogger(getClass()).warn(ioex);
+                LogManager.getLogger(getClass()).warn(ioex);
             }
 
             return;
@@ -761,7 +762,7 @@ public class BlogWebServlet extends ServletBase {
         try {
             resp.sendRedirect(redirectUrl);
         } catch (IOException ex) {
-            Logger.getLogger(getClass()).warn("redirect failed", ex);
+            LogManager.getLogger(getClass()).warn("redirect failed", ex);
         }
     }
 }

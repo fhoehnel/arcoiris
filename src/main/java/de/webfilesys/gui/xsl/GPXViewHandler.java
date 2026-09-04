@@ -6,15 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.ctc.wstx.exc.WstxParsingException;
 
@@ -119,15 +120,15 @@ public class GPXViewHandler extends XslRequestHandlerBase  {
 						break;
 					}
 				} catch (WstxParsingException epex) {
-					Logger.getLogger(getClass()).warn("GPX parsing error", epex);
+					LogManager.getLogger(getClass()).warn("GPX parsing error", epex);
 				}
 			}
 		} catch (IOException e) {
-			Logger.getLogger(getClass()).error("failed to read GPX file", e);
+			LogManager.getLogger(getClass()).error("failed to read GPX file", e);
 		} catch (XMLStreamException xmlEx) {
-			Logger.getLogger(getClass()).error("error parsing XML stream", xmlEx);
+			LogManager.getLogger(getClass()).error("error parsing XML stream", xmlEx);
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("failed to transform GPX file", e);
+			LogManager.getLogger(getClass()).error("failed to transform GPX file", e);
 		} finally {
 			if (gpxReader != null) {
 				try {

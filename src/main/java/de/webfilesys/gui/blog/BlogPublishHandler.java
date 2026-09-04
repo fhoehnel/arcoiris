@@ -3,11 +3,12 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
@@ -54,7 +55,7 @@ public class BlogPublishHandler extends XmlRequestHandlerBase {
             try {
                 expDays = Integer.parseInt(expiration);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).error("invalid parameter value for expirationDays", nfex);
+                LogManager.getLogger(getClass()).error("invalid parameter value for expirationDays", nfex);
             }
         }
 
@@ -64,7 +65,7 @@ public class BlogPublishHandler extends XmlRequestHandlerBase {
             try {
                 pageSize = Integer.parseInt(pageSizeParm);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).error("invalid parameter value for daysPerPage", nfex);
+                LogManager.getLogger(getClass()).error("invalid parameter value for daysPerPage", nfex);
             }
         }
 

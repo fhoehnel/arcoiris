@@ -13,7 +13,8 @@ import de.webfilesys.state.BlogStateManager;
 import de.webfilesys.user.TransientUser;
 import de.webfilesys.user.UserManager;
 import de.webfilesys.user.XmlUserManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class UserMigrator {
-    private static final Logger LOG = Logger.getLogger(UserMigrator.class);
+    private static final Logger LOG = LogManager.getLogger(UserMigrator.class);
 
     private static UserMigrator instance;
 

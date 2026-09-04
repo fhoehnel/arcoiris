@@ -1,15 +1,15 @@
 package de.webfilesys.gui.admin;
 
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.appender.FileAppender;
 
 /**
  * @author Frank Hoehnel
@@ -29,14 +29,16 @@ public abstract class LogRequestHandlerBase extends AdminRequestHandler {
     }
 
     protected String getSystemLogFilePath() {
-        Enumeration allAppenders = Logger.getLogger(WEBFILESYS_LOGGER_NAME).getAllAppenders();
+        org.apache.logging.log4j.core.Logger logger =
+                (org.apache.logging.log4j.core.Logger) LogManager.getLogger(WEBFILESYS_LOGGER_NAME);
 
-        while (allAppenders.hasMoreElements()) {
-            Appender appender = (Appender) allAppenders.nextElement();
-
-            if (appender.getName().equals(APPENDER_NAME)) {
-                if (appender instanceof org.apache.log4j.FileAppender) {
-                    return ((FileAppender) appender).getFile();
+        for (Appender appender : logger.getContext().getConfiguration()
+                .getLoggerConfig(WEBFILESYS_LOGGER_NAME)
+                .getAppenders()
+                .values()) {
+            if (APPENDER_NAME.equals(appender.getName())) {
+                if (appender instanceof FileAppender) {
+                    return ((FileAppender) appender).getFileName();
                 }
             }
         }

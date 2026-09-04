@@ -27,7 +27,8 @@ import java.util.Properties;
 import jakarta.mail.Session;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.user.UserManager;
 import de.webfilesys.user.XmlUserManager;
@@ -39,7 +40,7 @@ import de.webfilesys.util.CommonUtils;
 public class ArcoirisBlog {
     private static ArcoirisBlog instance = null;
 
-    public static final String VERSION = "Version 3.1.0-beta11 (29 Apr 2026)";
+    public static final String VERSION = "Version 3.2.0-beta1 (21 Aug 2026)";
 
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
@@ -154,7 +155,7 @@ public class ArcoirisBlog {
     }
 
     private ArcoirisBlog(Properties config, String webAppRootDir) {
-        Logger.getLogger(getClass()).info("starting arcoiris blog server " + VERSION);
+        LogManager.getLogger(getClass()).info("starting arcoiris blog server " + VERSION);
 
         this.webAppRootDir = webAppRootDir;
 
@@ -164,11 +165,11 @@ public class ArcoirisBlog {
             configBaseDir = webAppRootDir + "/WEB-INF";
         }
 
-        Logger.getLogger(getClass()).info("java version : " + System.getProperty("java.version"));
+        LogManager.getLogger(getClass()).info("java version : " + System.getProperty("java.version"));
 
         String opSysName = System.getProperty("os.name");
 
-        Logger.getLogger(getClass()).info("operating system : " + opSysName);
+        LogManager.getLogger(getClass()).info("operating system : " + opSysName);
 
         docFactory = DocumentBuilderFactory.newInstance();
 
@@ -176,9 +177,9 @@ public class ArcoirisBlog {
         String temp = config.getProperty("RegistrationType", "closed");
         if (temp.equalsIgnoreCase("open")) {
             openRegistration = true;
-            Logger.getLogger(getClass()).info("registration: open");
+            LogManager.getLogger(getClass()).info("registration: open");
         } else {
-            Logger.getLogger(getClass()).info("registration: closed");
+            LogManager.getLogger(getClass()).info("registration: closed");
         }
 
         userMgrClass = config.getProperty("UserManagerClass");
@@ -190,7 +191,7 @@ public class ArcoirisBlog {
                 File docRootFile = new File(userDocRoot);
 
                 if ((!docRootFile.exists()) || (!docRootFile.isDirectory()) || (!docRootFile.canWrite())) {
-                    Logger.getLogger(getClass()).error("UserDocumentRoot is not a writable directory: " + userDocRoot);
+                    LogManager.getLogger(getClass()).error("UserDocumentRoot is not a writable directory: " + userDocRoot);
                     userDocRoot = null;
                 } else {
                     if ((File.separatorChar == '\\') && (userDocRoot.length() > 2)) {
@@ -199,7 +200,7 @@ public class ArcoirisBlog {
                             String absoluteRoot = docRootFile.getAbsolutePath().substring(2);
 
                             if (!canonicalRoot.equals(absoluteRoot)) {
-                                Logger.getLogger(getClass()).error("UserDocumentRoot is not a writable directory (check uppercase/lowercase!): " + userDocRoot);
+                                LogManager.getLogger(getClass()).error("UserDocumentRoot is not a writable directory (check uppercase/lowercase!): " + userDocRoot);
                                 userDocRoot = null;
                             }
                         } catch (IOException ioex) {
@@ -209,12 +210,12 @@ public class ArcoirisBlog {
                 }
 
                 if (userDocRoot != null) {
-                    Logger.getLogger(getClass()).info("User Document Root: " + userDocRoot);
+                    LogManager.getLogger(getClass()).info("User Document Root: " + userDocRoot);
                 }
             } else {
                 userDocRoot = configBaseDir + File.separator + "userhome";
 
-                Logger.getLogger(getClass()).info("using default UserDocumentRoot for open registration: " + userDocRoot);
+                LogManager.getLogger(getClass()).info("using default UserDocumentRoot for open registration: " + userDocRoot);
             }
         }
 
@@ -224,7 +225,7 @@ public class ArcoirisBlog {
             try {
                 uploadLimit = Long.parseLong(temp);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid upload limit ignored: " + temp);
+                LogManager.getLogger(getClass()).warn("invalid upload limit ignored: " + temp);
             }
         }
 
@@ -236,10 +237,10 @@ public class ArcoirisBlog {
                 
                 if (attachmentMaxSize > uploadLimit) {
                     attachmentMaxSize = uploadLimit;
-                    Logger.getLogger(getClass()).warn("max attachment size may not be larger than the upload limit of " + uploadLimit);
+                    LogManager.getLogger(getClass()).warn("max attachment size may not be larger than the upload limit of " + uploadLimit);
                 }
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).warn("invalid value for max attachment size ignored: " + temp);
+                LogManager.getLogger(getClass()).warn("invalid value for max attachment size ignored: " + temp);
             }
         }
 
@@ -251,7 +252,7 @@ public class ArcoirisBlog {
 
                 defaultDiskQuota = ((long) diskQuotaMB) * 1024l * 1024l;
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).error("invalid default disk quota value: " + temp + " - using default value " + DEFAULT_DISK_QUOTA);
+                LogManager.getLogger(getClass()).error("invalid default disk quota value: " + temp + " - using default value " + DEFAULT_DISK_QUOTA);
             }
         }
 
@@ -268,7 +269,7 @@ public class ArcoirisBlog {
         mailPort = config.getProperty("SmtpMailPort");
 
         if ((mailHost != null) && (mailHost.trim().length() > 0)) {
-            Logger.getLogger(getClass()).info("SMTP mail host: " + mailHost);
+            LogManager.getLogger(getClass()).info("SMTP mail host: " + mailHost);
 
             temp = config.getProperty("SmtpAuth");
 
@@ -277,13 +278,13 @@ public class ArcoirisBlog {
             if (smtpAuth) {
                 smtpUser = config.getProperty("SmtpUser");
                 if (CommonUtils.isEmpty(smtpUser)) {
-                    Logger.getLogger(getClass()).error("SmtpUser property is required if SmtpAuth=true");
+                    LogManager.getLogger(getClass()).error("SmtpUser property is required if SmtpAuth=true");
                 }
 
                 smtpPassword = config.getProperty("SmtpPassword");
 
                 if (CommonUtils.isEmpty(smtpPassword)) {
-                    Logger.getLogger(getClass()).error("smtpPassword property is required if SmtpAuth=true");
+                    LogManager.getLogger(getClass()).error("smtpPassword property is required if SmtpAuth=true");
                 }
             }
 
@@ -324,7 +325,7 @@ public class ArcoirisBlog {
         if (temp.equalsIgnoreCase("true")) {
             enableDiskQuota = true;
 
-            Logger.getLogger(getClass()).info("disk quota enabled");
+            LogManager.getLogger(getClass()).info("disk quota enabled");
 
             diskQuotaCheckHour = 3;
 
@@ -333,7 +334,7 @@ public class ArcoirisBlog {
             try {
                 diskQuotaCheckHour = Integer.parseInt(temp);
             } catch (NumberFormatException nfex) {
-                Logger.getLogger(getClass()).error("invalid DiskQuotaCheckHour: " + temp);
+                LogManager.getLogger(getClass()).error("invalid DiskQuotaCheckHour: " + temp);
             }
 
             mailNotifyQuotaAdmin = false;
@@ -352,7 +353,7 @@ public class ArcoirisBlog {
                 mailNotifyQuotaUser = true;
             }
         } else {
-            Logger.getLogger(getClass()).info("disk quota disabled");
+            LogManager.getLogger(getClass()).info("disk quota disabled");
         }
 
         temp = config.getProperty("DebugMail", "false");
@@ -364,32 +365,32 @@ public class ArcoirisBlog {
             InetAddress localHost = InetAddress.getLocalHost();
             localIPAddress = localHost.getHostAddress();
             localHostName = localHost.getHostName();
-            Logger.getLogger(getClass()).info("local hostname: " + localHostName + "; local ip address : " + localIPAddress);
+            LogManager.getLogger(getClass()).info("local hostname: " + localHostName + "; local ip address : " + localIPAddress);
         } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e);
+            LogManager.getLogger(getClass()).error(e);
             try {
                 localHostName = InetAddress.getLocalHost().toString();
             } catch (Exception o) {
-                Logger.getLogger(getClass()).error(o);
+                LogManager.getLogger(getClass()).error(o);
                 localHostName = "cannot query host name";
             }
         }
 
         googleMapsAPIKeyHTTP = config.getProperty("GoogleMapsAPIKeyHTTP");
         if (CommonUtils.isEmpty(googleMapsAPIKeyHTTP)) {
-            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTP (missing config property GoogleMapsAPIKeyHTTP)");
+            LogManager.getLogger(getClass()).warn("no google maps API key configured for HTTP (missing config property GoogleMapsAPIKeyHTTP)");
         }
         
         googleMapsAPIKeyHTTPS = config.getProperty("GoogleMapsAPIKeyHTTPS");
         if (CommonUtils.isEmpty(googleMapsAPIKeyHTTPS)) {
-            Logger.getLogger(getClass()).warn("no google maps API key configured for HTTPS (missing config property GoogleMapsAPIKeyHTTPS)");
+            LogManager.getLogger(getClass()).warn("no google maps API key configured for HTTPS (missing config property GoogleMapsAPIKeyHTTPS)");
         }
         
         primaryLanguage = config.getProperty("primaryLanguage", LanguageManager.DEFAULT_LANGUAGE);
 
         contextRoot = config.getProperty("contextRoot", "/blog");
 
-        Logger.getLogger(getClass()).info("primary language: " + primaryLanguage);
+        LogManager.getLogger(getClass()).info("primary language: " + primaryLanguage);
     }
 
     public void initialize(Properties config) {
@@ -399,15 +400,15 @@ public class ArcoirisBlog {
             try {
                 userMgr = (UserManager) Class.forName(this.userMgrClass).newInstance();
 
-                Logger.getLogger(getClass()).info("User Manager class: " + this.userMgrClass);
+                LogManager.getLogger(getClass()).info("User Manager class: " + this.userMgrClass);
             } catch (ClassNotFoundException cnfex) {
-                Logger.getLogger(getClass()).error("the user manager class " + userMgrClass + " cannot be found: " + cnfex);
+                LogManager.getLogger(getClass()).error("the user manager class " + userMgrClass + " cannot be found: " + cnfex);
             } catch (InstantiationException instEx) {
-                Logger.getLogger(getClass()).error("the user manager cannot be instantiated: " + instEx);
+                LogManager.getLogger(getClass()).error("the user manager cannot be instantiated: " + instEx);
             } catch (IllegalAccessException iaEx) {
-                Logger.getLogger(getClass()).error("the user manager cannot be instantiated: " + iaEx);
+                LogManager.getLogger(getClass()).error("the user manager cannot be instantiated: " + iaEx);
             } catch (ClassCastException cex) {
-                Logger.getLogger(getClass()).error("the class " + userMgrClass + " does not implement the UserManager interface: " + cex);
+                LogManager.getLogger(getClass()).error("the class " + userMgrClass + " does not implement the UserManager interface: " + cex);
             }
         }
 
@@ -476,7 +477,7 @@ public class ArcoirisBlog {
 
                     LanguageManager.getInstance().addDateFormat(lang, dateFormatString);
                 } catch (IndexOutOfBoundsException iex) {
-                    Logger.getLogger(getClass()).warn("invalid date format: " + iex);
+                    LogManager.getLogger(getClass()).warn("invalid date format: " + iex);
                 }
             }
         }

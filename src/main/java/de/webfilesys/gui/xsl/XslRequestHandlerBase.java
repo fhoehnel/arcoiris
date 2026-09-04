@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -17,7 +17,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,7 +32,7 @@ import de.webfilesys.util.XmlUtil;
  * 
  */
 public class XslRequestHandlerBase extends UserRequestHandler {
-    private static final Logger LOG = Logger.getLogger(XslRequestHandlerBase.class);
+    private static final Logger LOG = LogManager.getLogger(XslRequestHandlerBase.class);
 
     protected Document doc;
 

@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 import de.webfilesys.LanguageManager;
 import de.webfilesys.ArcoirisBlog;
@@ -100,7 +101,7 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
 
         if (docRootFile.exists()) {
             if (!docRootFile.isDirectory() || (!docRootFile.canWrite())) {
-                Logger.getLogger(getClass()).error("home directory for new user " + login + " is not a writable directory: " + docRoot);
+                LogManager.getLogger(getClass()).error("home directory for new user " + login + " is not a writable directory: " + docRoot);
 
                 addValidationError("username", langMgr.getResource(primaryLanguage, "error.createHomeDir", "failed to create home directory"));
                 selfRegistrationForm(req, session);
@@ -108,7 +109,7 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
             }
         } else {
             if (!docRootFile.mkdir()) {
-                Logger.getLogger(getClass()).error("cannot create home directory for new user " + login + ": " + docRoot);
+                LogManager.getLogger(getClass()).error("cannot create home directory for new user " + login + ": " + docRoot);
 
                 addValidationError("username", langMgr.getResource(primaryLanguage, "error.createHomeDir", "failed to create home directory"));
                 selfRegistrationForm(req, session);
@@ -138,13 +139,13 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
         try {
             userMgr.createUser(newUser);
         } catch (UserMgmtException ex) {
-            Logger.getLogger(getClass()).warn("failed to create new user " + login, ex);
+            LogManager.getLogger(getClass()).warn("failed to create new user " + login, ex);
             addValidationError("username", langMgr.getResource(primaryLanguage, "error.createUser", "failed to create new user"));
             selfRegistrationForm(req, session);
             return;
         }
 
-        Logger.getLogger(getClass()).info(req.getRemoteAddr() + ": new user " + login + " registered");
+        LogManager.getLogger(getClass()).info(req.getRemoteAddr() + ": new user " + login + " registered");
 
         if ((ArcoirisBlog.getInstance().getMailHost() != null) && ArcoirisBlog.getInstance().isMailNotifyRegister()) {
             ArrayList<String> adminUserEmailList = userMgr.getAdminUserEmails();

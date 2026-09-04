@@ -3,13 +3,14 @@ package de.webfilesys.gui.admin;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.attachment.AttachmentManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.util.CommonUtils;
 
@@ -27,7 +28,7 @@ public class DeleteUserRequestHandler extends AdminRequestHandler {
         if (!CommonUtils.isEmpty(userToBeDeleted)) {
             String userHomeDir = userMgr.getDocumentRoot(userToBeDeleted);
             if (!delDirTree(userHomeDir)) {
-                Logger.getLogger(getClass()).error("failed to delete home directory of user " + userToBeDeleted + ": " + userMgr.getDocumentRoot(userToBeDeleted));
+                LogManager.getLogger(getClass()).error("failed to delete home directory of user " + userToBeDeleted + ": " + userMgr.getDocumentRoot(userToBeDeleted));
             } else {
                 String path = userHomeDir.replace('/', File.separatorChar);
                 BlogMetaInfManager.getInstance().removeAllMetaInfOfUserFromCache(path);
@@ -60,7 +61,7 @@ public class DeleteUserRequestHandler extends AdminRequestHandler {
 
                     if (!file.delete()) {
                         deleteError = true;
-                        Logger.getLogger(getClass()).error("cannot delete " + file.getAbsolutePath());
+                        LogManager.getLogger(getClass()).error("cannot delete " + file.getAbsolutePath());
                     }
                 }
             }

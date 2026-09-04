@@ -3,9 +3,9 @@ package de.webfilesys.gui.xsl;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -15,7 +15,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 import de.webfilesys.GeoTag;
 import de.webfilesys.ArcoirisBlog;
@@ -35,7 +36,7 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
         String fileName = getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).warn("fileName parameter missing");
+            LogManager.getLogger(getClass()).warn("fileName parameter missing");
             return;
         }
 
@@ -49,7 +50,7 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            Logger.getLogger(getClass()).error("file not found: " + filePath);
+            LogManager.getLogger(getClass()).error("file not found: " + filePath);
             return;
         }
 
@@ -114,7 +115,7 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
         }
 
         if (!geoLocationDefined) {
-            Logger.getLogger(getClass()).error("No Geo Tag / GPS Exif data exists for file/folder " + filePath);
+            LogManager.getLogger(getClass()).error("No Geo Tag / GPS Exif data exists for file/folder " + filePath);
 
             return;
         }
@@ -162,11 +163,11 @@ public class XslGoogleMapHandler extends XslRequestHandlerBase {
 
             long end = System.currentTimeMillis();
 
-            Logger.getLogger(getClass()).debug("XSLTC transformation in " + (end - start) + " ms");
+            LogManager.getLogger(getClass()).debug("XSLTC transformation in " + (end - start) + " ms");
         } catch (TransformerConfigurationException tex) {
-            Logger.getLogger(getClass()).warn(tex);
+            LogManager.getLogger(getClass()).warn(tex);
         } catch (TransformerException tex) {
-            Logger.getLogger(getClass()).warn(tex);
+            LogManager.getLogger(getClass()).warn(tex);
         }
 
         output.flush();

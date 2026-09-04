@@ -1,7 +1,8 @@
 package de.webfilesys.state;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 
 public class BlogStateManager {
 
-    private static final Logger LOG = Logger.getLogger(BlogStateManager.class);
+    private static final Logger LOG = LogManager.getLogger(BlogStateManager.class);
 
     public static final String BLOG_STATE_JSON_FILE_NAME = "blogState.json";
     public static final String BLOG_STATE_JSON_NEW_FILE_NAME = "blogState-new.json";

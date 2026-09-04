@@ -5,13 +5,14 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.LanguageManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.GeoTag;
 import de.webfilesys.graphics.CameraExifData;
@@ -31,7 +32,7 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
         String fileName = getParameter("fileName");
 
         if (CommonUtils.isEmpty(fileName)) {
-            Logger.getLogger(getClass()).warn("fileName parameter missing");
+            LogManager.getLogger(getClass()).warn("fileName parameter missing");
             return;
         }
 
@@ -45,7 +46,7 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            Logger.getLogger(getClass()).error("file not found: " + filePath);
+            LogManager.getLogger(getClass()).error("file not found: " + filePath);
             return;
         }
 
@@ -98,7 +99,7 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
         }
 
         if ((longitude == Float.NEGATIVE_INFINITY) || (latitude == Float.NEGATIVE_INFINITY)) {
-            Logger.getLogger(getClass()).error("No Geo Tag / GPS Exif data exists for file/folder " + filePath);
+            LogManager.getLogger(getClass()).error("No Geo Tag / GPS Exif data exists for file/folder " + filePath);
 
             return;
         }
@@ -128,7 +129,7 @@ public class OpenStreetMapPOIHandler extends UserRequestHandler {
             Date day = dateFormat.parse(datePartOfFileName);
             return LanguageManager.getInstance().getDateFormat(language).format(day).substring(0, 10);
         } catch (Exception ex) {
-            Logger.getLogger(getClass()).warn("invalid date format", ex);
+            LogManager.getLogger(getClass()).warn("invalid date format", ex);
             return "";
         }
     }

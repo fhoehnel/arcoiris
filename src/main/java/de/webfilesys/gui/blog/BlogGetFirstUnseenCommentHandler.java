@@ -5,14 +5,15 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfig;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.gui.ajax.XmlRequestHandlerBase;
@@ -24,7 +25,7 @@ import de.webfilesys.util.XmlUtil;
  */
 public class BlogGetFirstUnseenCommentHandler extends XmlRequestHandlerBase {
 
-    private static final Logger LOG = Logger.getLogger(BlogGetFirstUnseenCommentHandler.class);
+    private static final Logger LOG = LogManager.getLogger(BlogGetFirstUnseenCommentHandler.class);
     private static final long MILLIS_ONE_DAY = 25l * 60l * 60l * 1000l; // 25 hours for daylight saving time period switch
     
     public BlogGetFirstUnseenCommentHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
@@ -99,7 +100,7 @@ public class BlogGetFirstUnseenCommentHandler extends XmlRequestHandlerBase {
 
             formattedLinkDate = linkDateFormat.format(linkDate);
         } catch (Exception ex) {
-            Logger.getLogger(getClass()).error("failed to calculate date link", ex);
+            LogManager.getLogger(getClass()).error("failed to calculate date link", ex);
         }
         
         Element resultElement = doc.createElement("result");

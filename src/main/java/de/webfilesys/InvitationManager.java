@@ -14,7 +14,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
 import de.webfilesys.state.BlogStateManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -76,7 +77,7 @@ public class InvitationManager extends Thread {
                 invitationRoot = doc.createElement("invitations");
             }
         } catch (ParserConfigurationException pcex) {
-            Logger.getLogger(getClass()).error(pcex.toString());
+            LogManager.getLogger(getClass()).error(pcex.toString());
         }
 
         changed = false;
@@ -102,7 +103,7 @@ public class InvitationManager extends Thread {
         File invitationFile = new File(invitationFilePath);
 
         if (invitationFile.exists() && (!invitationFile.canWrite())) {
-            Logger.getLogger(getClass()).error("InvitationManager.saveToFile: cannot write to invitation file " + invitationFile.getAbsolutePath());
+            LogManager.getLogger(getClass()).error("InvitationManager.saveToFile: cannot write to invitation file " + invitationFile.getAbsolutePath());
             return;
         }
 
@@ -114,8 +115,8 @@ public class InvitationManager extends Thread {
 
                 xmlOutFile = new OutputStreamWriter(fos, "UTF-8");
 
-                if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                    Logger.getLogger(getClass()).debug("Saving invitations to file " + invitationFile.getAbsolutePath());
+                if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                    LogManager.getLogger(getClass()).debug("Saving invitations to file " + invitationFile.getAbsolutePath());
                 }
 
                 XmlUtil.writeToStream(invitationRoot, xmlOutFile);
@@ -124,7 +125,7 @@ public class InvitationManager extends Thread {
 
                 changed = false;
             } catch (IOException io1) {
-                Logger.getLogger(getClass()).error("error saving invitation registry file " + invitationFile.getAbsolutePath(), io1);
+                LogManager.getLogger(getClass()).error("error saving invitation registry file " + invitationFile.getAbsolutePath(), io1);
             } finally {
                 if (xmlOutFile != null) {
                     try {
@@ -143,7 +144,7 @@ public class InvitationManager extends Thread {
             return (null);
         }
 
-        Logger.getLogger(getClass()).info("reading invitation registry from " + invitationFile.getAbsolutePath());
+        LogManager.getLogger(getClass()).info("reading invitation registry from " + invitationFile.getAbsolutePath());
 
         doc = null;
 
@@ -158,7 +159,7 @@ public class InvitationManager extends Thread {
 
             doc = builder.parse(inputSource);
         } catch (SAXException | IOException ex) {
-            Logger.getLogger(getClass()).error("failed to load invitation registry file : " + invitationFile.getAbsolutePath(), ex);
+            LogManager.getLogger(getClass()).error("failed to load invitation registry file : " + invitationFile.getAbsolutePath(), ex);
         } finally {
             if (fis != null) {
                 try {
@@ -678,7 +679,7 @@ public class InvitationManager extends Thread {
                         changed = true;
                         return true;
                     } else {
-                        Logger.getLogger(getClass()).warn("unsubscribe attempt with invalid code, virtualUser=" + virtualUser + " email=" + subscriberEmail + " code=" + code);
+                        LogManager.getLogger(getClass()).warn("unsubscribe attempt with invalid code, virtualUser=" + virtualUser + " email=" + subscriberEmail + " code=" + code);
                     }
                 }
             }
@@ -690,7 +691,7 @@ public class InvitationManager extends Thread {
         Element invitationElem = getInvitationElement(accessCode);
 
         if (invitationElem == null) {
-            Logger.getLogger(getClass()).warn("invitation for subscription notification not found: " + accessCode);
+            LogManager.getLogger(getClass()).warn("invitation for subscription notification not found: " + accessCode);
             return;
         }
 
@@ -789,10 +790,10 @@ public class InvitationManager extends Thread {
 
             (new SmtpEmail(user.getEmail(), subject, mailText)).send();
 
-            Logger.getLogger(getClass()).info("new comment notification mail sent to " + user.getEmail() + " for blog " + blogTitle);
+            LogManager.getLogger(getClass()).info("new comment notification mail sent to " + user.getEmail() + " for blog " + blogTitle);
 
         } catch (IllegalArgumentException iaex) {
-            Logger.getLogger(getClass()).error("failed to send new comment notification e-mail", iaex);
+            LogManager.getLogger(getClass()).error("failed to send new comment notification e-mail", iaex);
         }
     }
 
@@ -824,10 +825,10 @@ public class InvitationManager extends Thread {
             String subject = LanguageManager.getInstance().getResource(user.getLanguage(), "blog.subjectCommentAnswerNotification", "New answers to your comment in the Blog");
             (new SmtpEmail(notifyOnAnswerEmail, subject, mailText)).send();
 
-            Logger.getLogger(getClass()).info("comment answer notification mail sent to " + notifyOnAnswerEmail + " for blog " + blogTitle);
+            LogManager.getLogger(getClass()).info("comment answer notification mail sent to " + notifyOnAnswerEmail + " for blog " + blogTitle);
 
         } catch (IllegalArgumentException iaex) {
-            Logger.getLogger(getClass()).error("failed to send comment answer notification e-mail", iaex);
+            LogManager.getLogger(getClass()).error("failed to send comment answer notification e-mail", iaex);
         }
     }
     
@@ -844,8 +845,8 @@ public class InvitationManager extends Thread {
     }
     
     private void checkSubscriberNotifications() {
-        if (Logger.getLogger(getClass()).isDebugEnabled()) {
-            Logger.getLogger(getClass()).debug("checking subscriber notifications");
+        if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+            LogManager.getLogger(getClass()).debug("checking subscriber notifications");
         }
 
         NodeList invitationList = invitationRoot.getElementsByTagName("invitation");
@@ -868,7 +869,7 @@ public class InvitationManager extends Thread {
                     try {
                         lastChangeTime = Long.parseLong(XmlUtil.getElementText(changedElem));
                     } catch (NumberFormatException numEx) {
-                        Logger.getLogger(getClass()).error("invalid change time", numEx);
+                        LogManager.getLogger(getClass()).error("invalid change time", numEx);
                     }
 
                     if (System.currentTimeMillis() - lastChangeTime > NOTIFIY_DELAY_AFTER_CHANGE) {
@@ -881,7 +882,7 @@ public class InvitationManager extends Thread {
                             try {
                                 lastNotified = Long.parseLong(lastNotificationTime);
                             } catch (NumberFormatException numEx) {
-                                Logger.getLogger(getClass()).error("invalid lastNotified time: " + lastNotificationTime);
+                                LogManager.getLogger(getClass()).error("invalid lastNotified time: " + lastNotificationTime);
                             }
                         }
 
@@ -953,10 +954,10 @@ public class InvitationManager extends Thread {
 
             (new SmtpEmail(email, subject, mailText)).send();
 
-            Logger.getLogger(getClass()).info("blog subscriber notification mail sent to " + email + " for blog " + blogTitle);
+            LogManager.getLogger(getClass()).info("blog subscriber notification mail sent to " + email + " for blog " + blogTitle);
 
         } catch (IllegalArgumentException iaex) {
-            Logger.getLogger(getClass()).error("failed to send subscriber notification e-mail", iaex);
+            LogManager.getLogger(getClass()).error("failed to send subscriber notification e-mail", iaex);
         }
     }
 
@@ -1024,7 +1025,7 @@ public class InvitationManager extends Thread {
 
                 if ((virtualUser != null) && (virtualUser.trim().length() > 0)) {
                     ArcoirisBlog.getInstance().getUserMgr().removeUser(virtualUser);
-                    Logger.getLogger(getClass()).debug("expired virtual user " + virtualUser + " removed");
+                    LogManager.getLogger(getClass()).debug("expired virtual user " + virtualUser + " removed");
                 }
             }
 
@@ -1035,8 +1036,8 @@ public class InvitationManager extends Thread {
             changed = true;
         }
 
-        Logger.getLogger(getClass()).info(expiredNum + " expired invitations removed");
-        Logger.getLogger(getClass()).info(expiredNum + " expired invitations removed");
+        LogManager.getLogger(getClass()).info(expiredNum + " expired invitations removed");
+        LogManager.getLogger(getClass()).info(expiredNum + " expired invitations removed");
     }
 
     public synchronized void run() {
@@ -1073,8 +1074,8 @@ public class InvitationManager extends Thread {
                 }
             } catch (InterruptedException e) {
                 shutdownFlag = true;
-                if (Logger.getLogger(getClass()).isDebugEnabled()) {
-                    Logger.getLogger(getClass()).debug("shutting down InvitationManager");
+                if (LogManager.getLogger(getClass()).isDebugEnabled()) {
+                    LogManager.getLogger(getClass()).debug("shutting down InvitationManager");
                 }
             }
         }

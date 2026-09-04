@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 
@@ -39,7 +40,7 @@ public class CSSManager {
         File cssDir = new File(cssPath);
 
         if ((!cssDir.exists()) || (!cssDir.isDirectory()) || (!cssDir.canRead())) {
-            Logger.getLogger(getClass()).error("CSS directory not found or not readable: " + cssPath);
+            LogManager.getLogger(getClass()).error("CSS directory not found or not readable: " + cssPath);
 
             return;
         }

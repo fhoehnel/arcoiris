@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class EmojiManager {
     public static final String EMOJI_DIR = "emoticons";
@@ -33,7 +34,7 @@ public class EmojiManager {
         File emojiFolder = new File(emojiFolderPath);
 
         if ((!emojiFolder.exists()) || (!emojiFolder.isDirectory()) || (!emojiFolder.canRead())) {
-            Logger.getLogger(getClass()).error("emoticons folder is not e readable directory: " + emojiFolderPath);
+            LogManager.getLogger(getClass()).error("emoticons folder is not e readable directory: " + emojiFolderPath);
             return;
         }
 

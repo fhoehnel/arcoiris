@@ -7,11 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.user.UserManager;
@@ -21,7 +22,7 @@ import de.webfilesys.util.HTTPUtils;
  * @author Frank Hoehnel
  */
 public class ProtectedRequestHandler extends RequestHandler {
-    private static final Logger LOG = Logger.getLogger(ProtectedRequestHandler.class);
+    private static final Logger LOG = LogManager.getLogger(ProtectedRequestHandler.class);
 
     public String uid = null;
 

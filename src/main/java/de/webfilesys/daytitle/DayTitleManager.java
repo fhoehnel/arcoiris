@@ -2,7 +2,8 @@ package de.webfilesys.daytitle;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 
 public class DayTitleManager {
 
-    private static final Logger LOG = Logger.getLogger(DayTitleManager.class);
+    private static final Logger LOG = LogManager.getLogger(DayTitleManager.class);
     public static final String DAY_TITLES_JSON_FILE_NAME = "dayTitles.json";
     public static final String DAY_TITLES_JSON_NEW_FILE_NAME = "dayTitles-new.json";
 

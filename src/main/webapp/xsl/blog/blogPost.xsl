@@ -154,7 +154,7 @@
       
           <input type="hidden" name="command" value="blog" />
           <input type="hidden" name="cmd" value="setDescr" />
-          <input type="hidden" id="firstUploadFileName" name="firstUploadFileName" value="" />
+          <input type="hidden" id="firstUploadFileId" name="firstUploadFileId" value="" />
           
           <!-- 
           <xsl:if test="/blog/errorMsg">
@@ -177,6 +177,10 @@
             <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
               <xsl:attribute name="onClick">selectDate(cal1x, "blogDate", "anchorDate", true)</xsl:attribute>
             </a>
+
+            &#160;
+            <input type="checkbox" id="forceDate" name="forceDate" />
+            <label for="forceDate" resource="blog.forceDate"></label>
           </div>
           
           <div class="blogTextSection">

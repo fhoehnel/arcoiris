@@ -177,6 +177,7 @@ blog.sendPostButton=Enviar
 blog.cancelButton=Cancelar
 blog.calendarTitle=seleccione la fecha del calendario
 blog.selectDate=fecha
+blog.forceDate=sobrescribir fecha del archivo de imagen
 blog.dateInFuture=¡El día seleccionado está en el futuro!
 blog.uploadFileTooLarge=¡El archivo seleccionado es demasiado grande para la carga!
 blog.emptyPost=Seleccione una imagen para carga o introduzca un texto!

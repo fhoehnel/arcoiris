@@ -3,13 +3,14 @@ package de.webfilesys.gui.blog;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
 import de.webfilesys.InvitationManager;
@@ -59,7 +60,7 @@ public class BlogPublishNewEntriesHandler extends XmlRequestHandlerBase {
                 if (accessCode != null) {
                     InvitationManager.getInstance().notifySubscribers(accessCode);
                 } else {
-                    Logger.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + uid + " docRoot=" + currentPath);
+                    LogManager.getLogger(getClass()).warn("could not determine invitation code for subscription notification, uid=" + uid + " docRoot=" + currentPath);
                 }
             }
         }

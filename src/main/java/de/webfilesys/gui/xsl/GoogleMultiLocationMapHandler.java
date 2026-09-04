@@ -3,12 +3,13 @@ package de.webfilesys.gui.xsl;
 import java.io.File;
 import java.io.PrintWriter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.metainf.BlogMetaInfManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 import de.webfilesys.GeoTag;
 import de.webfilesys.ArcoirisBlog;
@@ -20,7 +21,7 @@ import de.webfilesys.util.XmlUtil;
  * @author Frank Hoehnel
  */
 public class GoogleMultiLocationMapHandler extends XslRequestHandlerBase {
-    private static final Logger LOG = Logger.getLogger(GoogleMultiLocationMapHandler.class);
+    private static final Logger LOG = LogManager.getLogger(GoogleMultiLocationMapHandler.class);
 
     public GoogleMultiLocationMapHandler(HttpServletRequest req, HttpServletResponse resp, HttpSession session, PrintWriter output, String uid) {
         super(req, resp, session, output, uid);
