@@ -203,7 +203,9 @@
         </xsl:if>
 
         <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
-        
+
+        <a id="gpxOSMAllLocationsLink" href="javascript:showAllOSMLocations()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGeoLocationOSM" />
+
         <div class="blogCalenderCont">
           <a href="javascript:void(0)" name="anchorDate" id="anchorDate" class="icon-font icon-calender blogCalender" titleResource="blog.calendarTitle">
             <xsl:attribute name="onClick">selectDate(cal1x, "blogDate", "anchorDate", true)</xsl:attribute>
