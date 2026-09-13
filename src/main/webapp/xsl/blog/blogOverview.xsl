@@ -204,6 +204,8 @@
 
         <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
 
+        <a id="gpxOSMAllTracksLink" href="javascript:showAllOSMTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracksOSM" />
+
         <a id="gpxOSMAllLocationsLink" href="javascript:showAllOSMLocations()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGeoLocationOSM" />
 
         <div class="blogCalenderCont">

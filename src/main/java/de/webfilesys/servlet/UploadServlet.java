@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import de.webfilesys.util.CommonUtils;
 import jakarta.servlet.ServletException;
@@ -259,13 +262,16 @@ public class UploadServlet extends BlogWebServlet {
     private String renameFileToExposureDate(String origImgPath, Date exposureDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
+        TimeZone tz = Calendar.getInstance().getTimeZone();
+        long timeZoneOffset = tz.getOffset(exposureDate.getTime());
+
         File origImgFile = new File(origImgPath);
         String parentFolderPath = origImgFile.getParentFile().getAbsolutePath();
 
         String fileExt = CommonUtils.getFileExtension(origImgPath);
 
         String targetFilePath;
-        String targetFilePathBase = CommonUtils.joinFilesysPath(parentFolderPath, dateFormat.format(exposureDate) + "-" + exposureDate.getTime() + "-");
+        String targetFilePathBase = CommonUtils.joinFilesysPath(parentFolderPath, dateFormat.format(exposureDate) + "-" + (exposureDate.getTime() - timeZoneOffset) + "-");
         int appendix = 0;
         do {
             targetFilePath = targetFilePathBase + appendix + fileExt;
