@@ -183,17 +183,23 @@
               document.getElementById('entry-<xsl:value-of select="/blog/posInPage" />').scrollIntoView();
             </xsl:if>
         }
-     
+
+        function queryGeoDataForDays() {
+          <xsl:for-each select="/blog/blogEntries/blogDate">
+            queryDayGeoData('<xsl:value-of select="plainDate" />');
+          </xsl:for-each>
+        }
+
       </script>
       
     </head>
 
     <body class="blog">
       <xsl:if test="not(/blog/readonly)">
-        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryGeoDataForDays();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryGeoDataForDays();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       
       <div id="blogCont" class="blogCont">
@@ -328,7 +334,7 @@
         
           <div class="blogDate">
             <xsl:value-of select="formattedDate" />
-            
+
             <xsl:if test="not(position() = last())">
               <a class="linkToNextDay icon-font icon-next" titleResource="blog.linkToNextDay">
                 <xsl:attribute name="onclick">gotoNextDay(this)</xsl:attribute>    
@@ -352,7 +358,12 @@
                 <xsl:attribute name="href">javascript:dayTitle('<xsl:value-of select="plainDate" />')</xsl:attribute>
               </a>
             </xsl:if>
-                        
+
+            <a class="linkToOSMDayMap icon-font icon-map-marker" titleResource="blog.linkToOSMDayMap">
+              <xsl:attribute name="id">dayMapLink-<xsl:value-of select="plainDate" /></xsl:attribute>
+              <xsl:attribute name="onclick">gotoOSMDayMap('<xsl:value-of select="plainDate" />')</xsl:attribute>
+            </a>
+
             <div class="blogListDayTitle">
               <xsl:attribute name="id">dayTitle-<xsl:value-of select="plainDate" /></xsl:attribute>
               <xsl:if test="dayTitle">

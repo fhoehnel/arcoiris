@@ -1806,20 +1806,28 @@ button.alertConfirmButton {
 
 a.publishDayLink,
 a.linkToNextDay,
-a.linkToPrevDay {
+a.linkToPrevDay,
+a.linkToOSMDayMap {
 	float: right;
 	margin-right: 8px;
 	font-size: 24px;
 }
 
+a.publishDayLink,
 a.linkToNextDay,
-a.linkToPrevDay {
+a.linkToPrevDay,
+a.linkToOSMDayMap {
 	cursor: pointer;
 }
 
 a.linkToNextDay,
+a.linkToPrevDay,
 a.publishDayLink {
     margin-left: 20px;	
+}
+
+a.linkToOSMDayMap {
+    display: none;
 }
 
 a.unseenComments {

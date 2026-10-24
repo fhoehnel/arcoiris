@@ -16,7 +16,10 @@ span.descrText a {
     color: navy;
 }
 
-a.publishDayLink {
+a.publishDayLink,
+a.linkToNextDay,
+a.linkToPrevDay,
+a.linkToOSMDayMap {
 	color: #800000;
 }
 

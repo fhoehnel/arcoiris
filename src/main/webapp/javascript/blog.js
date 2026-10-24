@@ -1924,6 +1924,20 @@ function queryGeoData() {
 	    }, 500);
 }
 
+function queryDayGeoData(day) {
+    setTimeout(function() {
+        xmlGetRequest("ajaxRPC", { method: "checkForDayGeoData", day }, responseXml => {
+            const resultItem = responseXml.getElementsByTagName("result")[0];
+            const result = resultItem.firstChild.nodeValue;
+            if (result && result === "true") {
+                document.getElementById("dayMapLink-" + day).style.display = "inline";
+            }
+        });
+
+    }, 500);
+}
+
+
 function queryGPXTracks() {
 	xmlGetRequest("ajaxRPC", { method: "checkForGPXTracks" }, responseXml => {
 	    const resultItem = responseXml.getElementsByTagName("result")[0];
@@ -2346,6 +2360,11 @@ function gotoNextDay(clickTarget) {
 		}
 		nextSibling = nextSibling.nextSibling;
 	}
+}
+
+function gotoOSMDayMap(day) {
+    const locationWin = window.open(getContextRoot() + "/html/osmDayMap.html?day=" + encodeURIComponent(day), "geoLocationWin");
+    locationWin.focus();
 }
 
 function gotoPrevDay(clickTarget) {

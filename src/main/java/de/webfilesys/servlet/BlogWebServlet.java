@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import de.webfilesys.gui.ajax.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -43,11 +44,6 @@ import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.ResourceBundleHandler;
-import de.webfilesys.gui.ajax.AjaxCheckFileExistHandler;
-import de.webfilesys.gui.ajax.AjaxCheckForGeoDataHandler;
-import de.webfilesys.gui.ajax.AjaxCheckForUnseenCommentsHandler;
-import de.webfilesys.gui.ajax.CheckForGPXTrackHandler;
-import de.webfilesys.gui.ajax.GetFileDescriptionHandler;
 import de.webfilesys.gui.anonymous.VersionInfoRequestHandler;
 import de.webfilesys.gui.google.GoogleEarthSinglePlacemarkHandler;
 import de.webfilesys.mail.SmtpEmail;
@@ -556,6 +552,8 @@ public class BlogWebServlet extends ServletBase {
 
             if (method.equals("checkForGeoData")) {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
+            } else if (method.equals("checkForDayGeoData")) {
+                (new AjaxCheckForDayGeoDataHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("checkForUnseenComments")) {
                 (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("getFirstUnseenComment")) {

@@ -182,7 +182,8 @@ div.statisticList table tr.statisticDateRange td {
 
 a.publishDayLink,
 a.linkToNextDay,
-a.linkToPrevDay {
+a.linkToPrevDay,
+a.linkToOSMDayMap {
 	color: #ffff80;
 }
 

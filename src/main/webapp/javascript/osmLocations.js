@@ -1,8 +1,12 @@
-function showLocationsOSM() {
+function showLocationsOSM(day) {
+    let dayParam = "";
+    if (day) {
+        dayParam = "&day=" + day;
+    }
     osmMap = new OpenLayers.Map("mapDiv");
     osmMap.addLayer(createOSMBaseLayer());
     const pois = new OpenLayers.Layer.Text("My Points", {
-        location: contextRoot + "/servlet?command=osmMultiPOIList",
+        location: contextRoot + "/servlet?command=osmMultiPOIList" + dayParam,
         projection: osmMap.displayProjection
     });
     osmMap.addLayer(pois);

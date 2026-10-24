@@ -30,50 +30,67 @@ public class OpenStreetMapMultiPOIHandler extends UserRequestHandler {
         output.println("lat\tlon\ttitle\tdescription\ticon\ticonSize\ticonOffset");
 
         String path = getCwd();
+
+        String day = getParameter("day");
+
         File folderFile = new File(path);
 
         File[] fileList = folderFile.listFiles();
         if (fileList != null) {
             for (File file : fileList) {
                 if (CommonUtils.isPictureFile(file)) {
-                    GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(file.getAbsolutePath());
-                    if (geoTag != null) {
-                        String infoText = geoTag.getInfoText();
-                        if (infoText == null || infoText.isEmpty()) {
-                            infoText = BlogMetaInfManager.getInstance().getDescription(file.getAbsolutePath());
-                        }
-                        if (infoText == null) {
-                            infoText = "";
-                        }
-                        infoText = removeEmojis(infoText);
-                        infoText = CommonUtils.truncate(infoText,30);
-                        addMarker(geoTag.getLatitude(), geoTag.getLongitude(), infoText, file.getName());
-                    } else {
-                        String fileExt = CommonUtils.getFileExtension(file.getName());
-                        if (fileExt.equals(".jpg") || fileExt.equals(".jpeg")) {
-                            // use GPS coordinates from Exif data if present in the JPEG file
-                            CameraExifData exifData = new CameraExifData(path);
-                            if (exifData.hasExifData()) {
-                                float gpsLatitude = exifData.getGpsLatitude();
-                                float gpsLongitude = exifData.getGpsLongitude();
-                                if ((gpsLatitude >= 0.0f) && (gpsLongitude >= 0.0f)) {
-                                    String latitudeRef = exifData.getGpsLatitudeRef();
-                                    if ((latitudeRef != null) && latitudeRef.equalsIgnoreCase("S")) {
-                                        gpsLatitude = (-gpsLatitude);
+                    if (day == null || dayMatch(file, day)) {
+                        GeoTag geoTag = BlogMetaInfManager.getInstance().getGeoTag(file.getAbsolutePath());
+                        if (geoTag != null) {
+                            String infoText = geoTag.getInfoText();
+                            if (infoText == null || infoText.isEmpty()) {
+                                infoText = BlogMetaInfManager.getInstance().getDescription(file.getAbsolutePath());
+                            }
+                            if (infoText == null) {
+                                infoText = "";
+                            }
+                            infoText = removeEmojis(infoText);
+                            infoText = CommonUtils.truncate(infoText,30);
+                            addMarker(geoTag.getLatitude(), geoTag.getLongitude(), infoText, file.getName());
+                        } else {
+                            String fileExt = CommonUtils.getFileExtension(file.getName());
+                            if (fileExt.equals(".jpg") || fileExt.equals(".jpeg")) {
+                                // use GPS coordinates from Exif data if present in the JPEG file
+                                CameraExifData exifData = new CameraExifData(path);
+                                if (exifData.hasExifData()) {
+                                    float gpsLatitude = exifData.getGpsLatitude();
+                                    float gpsLongitude = exifData.getGpsLongitude();
+                                    if ((gpsLatitude >= 0.0f) && (gpsLongitude >= 0.0f)) {
+                                        String latitudeRef = exifData.getGpsLatitudeRef();
+                                        if ((latitudeRef != null) && latitudeRef.equalsIgnoreCase("S")) {
+                                            gpsLatitude = (-gpsLatitude);
+                                        }
+                                        String longitudeRef = exifData.getGpsLongitudeRef();
+                                        if ((longitudeRef != null) && longitudeRef.equalsIgnoreCase("W")) {
+                                            gpsLongitude = (-gpsLongitude);
+                                        }
+                                        addMarker(gpsLatitude, gpsLongitude, "", file.getName());
                                     }
-                                    String longitudeRef = exifData.getGpsLongitudeRef();
-                                    if ((longitudeRef != null) && longitudeRef.equalsIgnoreCase("W")) {
-                                        gpsLongitude = (-gpsLongitude);
-                                    }
-                                    addMarker(gpsLatitude, gpsLongitude, "", file.getName());
                                 }
                             }
                         }
+
                     }
                 }
             }
         }
         output.flush();
+    }
+
+    private boolean dayMatch(File file, String day) {
+        String fileName = file.getName();
+        if (fileName.length() >= 10) {
+            String blogDate = fileName.substring(0, 10);
+            if (blogDate.equals(day)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addMarker(float latitude, float longitude, String infoText, String fileName) {

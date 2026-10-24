@@ -297,6 +297,7 @@ blog.gotoTopOfPage=zum Seitenanfang
 blog.gotoBottomOfPage=zum Seitenende
 blog.linkToNextDay=zum nächsten Tag
 blog.linkToPrevDay=zum vorherigen Tag
+blog.linkToOSMDayMap=zur Open Street Map dieses Tages
 blog.multiGPXTracks=alle GPS-Tracks auf Google Maps Karte anzeigen
 blog.multiGPXTracksOSM=alle GPS-Tracks auf Open Street Maps Karte anzeigen
 blog.multiGeoLocationOSM=alle Geo-Lokationen auf Open Street Maps Karte anzeigen

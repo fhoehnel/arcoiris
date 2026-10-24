@@ -1,0 +1,40 @@
+<html>
+  <head>
+
+    <link rel="stylesheet" type="text/css" href="../styles/common.css">
+    <link rel="stylesheet" type="text/css" href="../styles/icons.css">
+    <link rel="stylesheet" type="text/css" href="../styles/osmap.css">
+    <link rel="stylesheet" type="text/css" href="../styles/blogskins/default.css">
+
+    <script type="text/javascript" src="../javascript/browserCheck.js"></script>
+    <script type="text/javascript" src="../javascript/util.js"></script>
+    <script type="text/javascript" src="../javascript/osmLocations.js"></script>
+    <script type="text/javascript" src="../javascript/openStreetMaps/OpenLayers-2.13.1.js"></script>
+    <script type="text/javascript" src="../javascript/osmCommon.js"></script>
+    <script type="text/javascript" src="../javascript/resourceBundle.js"></script>
+    <script type="text/javascript" src="../servlet?command=getResourceBundle&lang=English"></script>
+
+    <script type="text/javascript">
+      const  urlPath =  window.location.pathname;
+      const contextRoot = urlPath.substring(0, urlPath.indexOf("/", 1));
+
+      function showDayLocations() {
+        const search = window.location.search;
+        console.log("search: " + search);
+        const dayParam = search.substring(search.indexOf("day=") + 4);
+        console.log("dayParam: " + dayParam);
+        showLocationsOSM(dayParam);
+      }
+    </script>
+
+  </head>
+  <body onload="showDayLocations()" class="multiLocation" style="margin:0px;height:100%">
+
+    <div id="mapDiv" class="gpsTrackMapCont"></div>
+
+    <script type="text/javascript">
+      setBundleResources();
+    </script>
+
+  </body>
+</html>
