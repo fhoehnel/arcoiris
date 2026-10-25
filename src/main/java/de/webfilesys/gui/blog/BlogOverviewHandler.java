@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
 
+import de.webfilesys.graphics.BlogThumbnailHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -185,10 +186,14 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
                             String srcPathForScript = req.getContextPath() + "/servlet?command=getFile&fileName=" + UTF8URLEncoder.encode(file.getName()) + "&cached=true";
 
                             XmlUtil.setChildText(fileElement, "imgPathForScript", srcPathForScript);
-                            
-                            String thumbSrcUrl = srcPathForScript + "&thumb=true";                                            
-                            
-                            XmlUtil.setChildText(fileElement, "imgPath", thumbSrcUrl);
+
+                            String thumbPath = BlogThumbnailHandler.getInstance().getPathOfExistingThumbnail(file.getAbsolutePath());
+                            if (thumbPath != null) {
+                                String thumbSrcUrl = srcPathForScript + "&thumb=true";
+                                XmlUtil.setChildText(fileElement, "imgPath", thumbSrcUrl);
+                            } else {
+                                XmlUtil.setChildText(fileElement, "imgPath", srcPathForScript);
+                            }
 
                             if (stagedPublication && (!readonly) && (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) == BlogMetaInfManager.STATUS_BLOG_EDIT)) {
                                 XmlUtil.setChildText(fileElement, "staged", "true");
