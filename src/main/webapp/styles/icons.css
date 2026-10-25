@@ -80,8 +80,16 @@ a.icon-font {
 	content: '\f041';
 }
 
+.icon-map-arrow:before {
+	content: '\f124';
+}
+
 .icon-globe:before {
 	content: '\f0ac';
+}
+
+.icon-google:before {
+	content: '\f1a0';
 }
 
 .icon-mail:before {

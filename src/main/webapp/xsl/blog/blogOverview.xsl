@@ -207,9 +207,13 @@
 
         </xsl:if>
 
-        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
+        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-google blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
 
         <a id="gpxOSMAllTracksLink" href="javascript:showAllOSMTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracksOSM" />
+
+        <xsl:if test="/blog/readonly">
+          <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-arrow blogMenu blogMapAll" style="display:none;" titleResource="blog.mapAll" />
+        </xsl:if>
 
         <a id="gpxOSMAllLocationsLink" href="javascript:showAllOSMLocations()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGeoLocationOSM" />
 
@@ -257,7 +261,6 @@
             </input>
           </xsl:if>
           <xsl:if test="/blog/readonly">
-            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMapAll" style="display:none;" titleResource="blog.mapAll" />
             <a href="javascript:showSubscribeForm()" class="icon-font icon-watch blogSubscribe" titleResource="blog.subscribe" />
             <a href="javascript:showSearchForm()" class="icon-font icon-search blogSearch" titleResource="blog.search" />
             <a class="icon-font icon-exit blogExit" titleResource="blog.buttonlogout">
