@@ -248,6 +248,10 @@
 
         <a id="gpxOSMAllTracksLink" href="javascript:showAllOSMTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracksOSM" />
 
+        <xsl:if test="/blog/readonly">
+          <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMenu blogMapAll" style="display:none;" titleResource="blog.mapAll" />
+        </xsl:if>
+
         <a id="gpxOSMAllLocationsLink" href="javascript:showAllOSMLocations()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGeoLocationOSM" />
 
         <a id="overviewLink" href="javascript:allDayOverview()" class="icon-font icon-overview blogMenu blogOverview" titleResource="blog.linkToOverview" />
@@ -273,11 +277,13 @@
           <xsl:if test="/blog/dateRangeFrom">
             <span><xsl:value-of select="/blog/dateRangeFrom" /></span>
           </xsl:if>
-          <xsl:if test="/blog/dateRangeFrom or /blog/dateRangeUntil">
-            ...
-          </xsl:if>
-          <xsl:if test="/blog/dateRangeUntil">
-            <span><xsl:value-of select="/blog/dateRangeUntil" /></span>
+          <xsl:if test="/blog/dateRangeFrom != /blog/dateRangeUntil">
+            <xsl:if test="/blog/dateRangeFrom and /blog/dateRangeUntil">
+              ...
+            </xsl:if>
+            <xsl:if test="/blog/dateRangeUntil">
+              <span><xsl:value-of select="/blog/dateRangeUntil" /></span>
+            </xsl:if>
           </xsl:if>
         </div>
       
@@ -308,7 +314,6 @@
             </input>
           </xsl:if>
           <xsl:if test="/blog/readonly">
-            <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-marker blogMapAll" style="display:none;" titleResource="blog.mapAll" />
             <a href="javascript:showSubscribeForm()" class="icon-font icon-watch blogSubscribe" titleResource="blog.subscribe" />
             <a href="javascript:showSearchForm()" class="icon-font icon-search blogSearch" titleResource="blog.search" />
             <a class="icon-font icon-exit blogExit" titleResource="blog.buttonlogout">
