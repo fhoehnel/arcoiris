@@ -1925,18 +1925,23 @@ function queryGeoData() {
 }
 
 function queryDayGeoData(day) {
-    setTimeout(function() {
-        xmlGetRequest("ajaxRPC", { method: "checkForDayGeoData", day }, responseXml => {
-            const resultItem = responseXml.getElementsByTagName("result")[0];
-            const result = resultItem.firstChild.nodeValue;
-            if (result && result === "true") {
-                document.getElementById("dayMapLink-" + day).style.display = "inline";
-            }
-        });
-
-    }, 500);
+    xmlGetRequest("ajaxRPC", { method: "checkForGeoData", day }, responseXml => {
+        const resultItem = responseXml.getElementsByTagName("result")[0];
+        const result = resultItem.firstChild.nodeValue;
+        if (result && result === "true") {
+            document.getElementById("dayMapLink-" + day).style.display = "inline";
+        }
+        queryGeoDataForDays();
+    });
 }
 
+function queryGeoDataForDays() {
+    if (!geoDataDays || geoDataDays.length === 0) {
+        return;
+    }
+    const day = geoDataDays.pop();
+    queryDayGeoData(day);
+}
 
 function queryGPXTracks() {
 	xmlGetRequest("ajaxRPC", { method: "checkForGPXTracks" }, responseXml => {
@@ -1947,6 +1952,7 @@ function queryGPXTracks() {
             document.getElementById("gpxOSMAllTracksLink").style.display = "inline";
 	    }
         // cascading ajax calls for performance reasons
+        queryGeoDataForDays();
         if (document.getElementById("unseenCommentLink")) {
             queryUnseenComments();
         }

@@ -150,6 +150,11 @@
             window.location.href = "<xsl:value-of select="//contextRoot" />/servlet?command=blog&amp;" + dayParamName + "=" + dayParamVal;
         }
 
+        const geoDataDays = [];
+        <xsl:for-each select="/blog/blogEntries/blogDate">
+          geoDataDays.push('<xsl:value-of select="plainDate" />');
+        </xsl:for-each>
+
       </script>
       
     </head>
@@ -291,6 +296,12 @@
                     <xsl:attribute name="href">javascript:dayTitle('<xsl:value-of select="plainDate" />')</xsl:attribute>
                   </a>
                 </xsl:if>
+
+                <a class="linkToOSMDayMap icon-font icon-map-marker" titleResource="blog.linkToOSMDayMap">
+                  <xsl:attribute name="id">dayMapLink-<xsl:value-of select="plainDate" /></xsl:attribute>
+                  <xsl:attribute name="onclick">gotoOSMDayMap('<xsl:value-of select="plainDate" />')</xsl:attribute>
+                </a>
+
               </div>
 
               <div class="blogOverviewDayTitle">

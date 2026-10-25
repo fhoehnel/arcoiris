@@ -552,8 +552,6 @@ public class BlogWebServlet extends ServletBase {
 
             if (method.equals("checkForGeoData")) {
                 (new AjaxCheckForGeoDataHandler(req, resp, session, output, userid)).handleRequest();
-            } else if (method.equals("checkForDayGeoData")) {
-                (new AjaxCheckForDayGeoDataHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("checkForUnseenComments")) {
                 (new AjaxCheckForUnseenCommentsHandler(req, resp, session, output, userid)).handleRequest();
             } else if (method.equals("getFirstUnseenComment")) {

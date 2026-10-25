@@ -27,6 +27,8 @@ public class AjaxCheckForGeoDataHandler extends XmlRequestHandlerBase {
 
         String path = getCwd();
 
+        String day = getParameter("day");
+
         boolean stagedPublication = BlogConfigManager.getInstance().isStagedPublication(path);
 
         File dirFile = new File(path);
@@ -37,10 +39,12 @@ public class AjaxCheckForGeoDataHandler extends XmlRequestHandlerBase {
             for (File file : fileList) {
                 if (file.isFile() && file.canRead()) {
                     if (CommonUtils.isPictureFile(file)) {
-                        if ((!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
-                            if (hasGeoData(file.getAbsolutePath())) {
-                                geoDataExist = true;
-                                break;
+                        if (day == null || dayMatch(file, day)) {
+                            if ((!stagedPublication) || (BlogMetaInfManager.getInstance().getStatus(file.getAbsolutePath()) != BlogMetaInfManager.STATUS_BLOG_EDIT)) {
+                                if (hasGeoData(file.getAbsolutePath())) {
+                                    geoDataExist = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -55,6 +59,17 @@ public class AjaxCheckForGeoDataHandler extends XmlRequestHandlerBase {
         doc.appendChild(resultElement);
 
         processResponse();
+    }
+
+    private boolean dayMatch(File file, String day) {
+        String fileName = file.getName();
+        if (fileName.length() >= 10) {
+            String blogDate = fileName.substring(0, 10);
+            if (blogDate.equals(day)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hasGeoData(String imgPath) {

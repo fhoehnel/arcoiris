@@ -184,11 +184,10 @@
             </xsl:if>
         }
 
-        function queryGeoDataForDays() {
-          <xsl:for-each select="/blog/blogEntries/blogDate">
-            queryDayGeoData('<xsl:value-of select="plainDate" />');
-          </xsl:for-each>
-        }
+        const geoDataDays = [];
+        <xsl:for-each select="/blog/blogEntries/blogDate">
+          geoDataDays.push('<xsl:value-of select="plainDate" />');
+        </xsl:for-each>
 
       </script>
       
@@ -196,10 +195,10 @@
 
     <body class="blog">
       <xsl:if test="not(/blog/readonly)">
-        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryGeoDataForDays();attachScrollHandler();fillSideCont()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       <xsl:if test="/blog/readonly">
-        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();queryGeoDataForDays();attachScrollHandler();fillSideCont()</xsl:attribute>
+        <xsl:attribute name="onload">prepareCalenderPopup();firefoxJumpToIdWorkaround();scrollToCurrentEntry();queryGeoData();attachScrollHandler();fillSideCont()</xsl:attribute>
       </xsl:if>
       
       <div id="blogCont" class="blogCont">
