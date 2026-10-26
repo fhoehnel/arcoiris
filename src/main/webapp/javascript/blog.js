@@ -1914,8 +1914,7 @@ function queryGeoData() {
 	            const resultItem = responseXml.getElementsByTagName("result")[0];
 	            const result = resultItem.firstChild.nodeValue;
 	            if (result && result === "true") {
-	                document.getElementById("mapAllLink").style.display = "inline";
-	                document.getElementById("gpxOSMAllLocationsLink").style.display = "inline";
+	                document.getElementById("mapActionsLink").style.display = "inline";
 	            }
 	            // cascading ajax calls for performance reasons
 	            queryGPXTracks();
@@ -1948,8 +1947,7 @@ function queryGPXTracks() {
 	    const resultItem = responseXml.getElementsByTagName("result")[0];
 	    const result = resultItem.firstChild.nodeValue;
 	    if (result && result == "true") {
-	        document.getElementById("gpxAllTracksLink").style.display = "inline";
-            document.getElementById("gpxOSMAllTracksLink").style.display = "inline";
+	        document.getElementById("mapActionsLink").style.display = "inline";
 	    }
         // cascading ajax calls for performance reasons
         queryGeoDataForDays();

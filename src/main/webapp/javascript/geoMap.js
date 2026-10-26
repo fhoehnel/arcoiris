@@ -251,3 +251,31 @@
         	picContElem.parentNode.removeChild(picContElem);
     	}
     }
+
+    function showMapActionsMenu() {
+        const mapActionSelector = document.getElementById("geoMapActionSelector");
+        if (mapActionSelector.style.display === "inline") {
+            mapActionSelector.style.display = "none";
+        } else {
+            document.getElementById("geoMapActionSelector").style.display = "inline";
+        }
+    }
+
+    function geoMapActionSelected() {
+        const mapActionSelector = document.getElementById("geoMapActionSelector");
+        const selectedIdx = mapActionSelector.selectedIndex;
+        const mapAction = mapActionSelector.options[selectedIdx].value;
+        mapActionSelector.selectedIndex = 0;
+
+        mapActionSelector.style.display = "none";
+
+        if (mapAction === "1") {
+            showAllOSMLocations();
+        } else if (mapAction == "2") {
+            googleMapAll();
+        } else if (mapAction == "3") {
+            showAllOSMTracks();
+        } else if (mapAction == "4") {
+            showAllGPXTracks();
+        }
+    }

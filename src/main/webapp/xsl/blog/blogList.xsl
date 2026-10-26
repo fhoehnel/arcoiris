@@ -244,15 +244,14 @@
 
         </xsl:if>
 
-        <a id="gpxAllTracksLink" href="javascript:showAllGPXTracks()" class="icon-font icon-google blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracks" />
-
-        <a id="gpxOSMAllTracksLink" href="javascript:showAllOSMTracks()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.multiGPXTracksOSM" />
-
-        <xsl:if test="/blog/readonly">
-          <a href="javascript:googleMapAll()" id="mapAllLink" class="icon-font icon-map-arrow blogMenu blogMapAll" style="display:none;" titleResource="blog.mapAll" />
-        </xsl:if>
-
-        <a id="gpxOSMAllLocationsLink" href="javascript:showAllOSMLocations()" class="icon-font icon-map-marker blogMenu gpxAllTracksLink" titleResource="blog.multiGeoLocationOSM" />
+        <a id="mapActionsLink" href="javascript:showMapActionsMenu()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.mapActionLinkTitle" />
+        <select id="geoMapActionSelector" class="geoMapActionSelector" onchange="geoMapActionSelected()">
+            <option value="0" resource="blog.selectMapAction" />
+            <option value="1" resource="blog.multiGeoLocationOSM" />
+            <option value="2" resource="blog.mapAll" />
+            <option value="3" resource="blog.multiGPXTracksOSM" />
+            <option value="4" resource="blog.multiGPXTracks" />
+        </select>
 
         <a id="overviewLink" href="javascript:allDayOverview()" class="icon-font icon-overview blogMenu blogOverview" titleResource="blog.linkToOverview" />
 

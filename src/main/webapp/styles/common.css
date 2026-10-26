@@ -1889,8 +1889,16 @@ div.gotoBottomOfPage a {
     font-weight: bold;
 }
 
-.gpxAllTracksLink {
+.gpxAllTracksLink,
+.geoMapActionSelector {
 	display: none;
+}
+
+select.geoMapActionSelector {
+    float: left;
+    position: relative;
+    top: 18px;
+    left: -16px;
 }
 
 #OpenLayers_Control_Attribution_7 {
