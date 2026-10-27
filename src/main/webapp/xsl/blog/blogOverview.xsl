@@ -209,11 +209,11 @@
 
         <a id="mapActionsLink" href="javascript:showMapActionsMenu()" class="icon-font icon-globe blogMenu gpxAllTracksLink" titleResource="blog.mapActionLinkTitle" />
         <select id="geoMapActionSelector" class="geoMapActionSelector" onchange="geoMapActionSelected()">
-            <option value="0" resource="blog.selectMapAction" />
-            <option value="1" resource="blog.multiGeoLocationOSM" />
-            <option value="2" resource="blog.mapAll" />
-            <option value="3" resource="blog.multiGPXTracksOSM" />
-            <option value="4" resource="blog.multiGPXTracks" />
+          <option value="0" resource="blog.selectMapAction" />
+          <option value="1" resource="blog.multiGeoLocationOSM" id="osmLocationsOption"/>
+          <option value="2" resource="blog.mapAll" id="googleLocationsOption"/>
+          <option value="3" resource="blog.multiGPXTracksOSM" id="osmTracksOption"/>
+          <option value="4" resource="blog.multiGPXTracks" id="googleTracksOption"/>
         </select>
 
         <div class="blogCalenderCont">

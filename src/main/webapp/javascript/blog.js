@@ -1915,7 +1915,10 @@ function queryGeoData() {
 	            const result = resultItem.firstChild.nodeValue;
 	            if (result && result === "true") {
 	                document.getElementById("mapActionsLink").style.display = "inline";
-	            }
+	            } else {
+                    document.getElementById("googleLocationsOption").disabled = true;
+                    document.getElementById("osmLocationsOption").disabled = true;
+                }
 	            // cascading ajax calls for performance reasons
 	            queryGPXTracks();
 	        });
@@ -1946,9 +1949,12 @@ function queryGPXTracks() {
 	xmlGetRequest("ajaxRPC", { method: "checkForGPXTracks" }, responseXml => {
 	    const resultItem = responseXml.getElementsByTagName("result")[0];
 	    const result = resultItem.firstChild.nodeValue;
-	    if (result && result == "true") {
+	    if (result && result === "true") {
 	        document.getElementById("mapActionsLink").style.display = "inline";
-	    }
+	    } else {
+            document.getElementById("googleTracksOption").disabled = true;
+            document.getElementById("osmTracksOption").disabled = true;
+        }
         // cascading ajax calls for performance reasons
         queryGeoDataForDays();
         if (document.getElementById("unseenCommentLink")) {
