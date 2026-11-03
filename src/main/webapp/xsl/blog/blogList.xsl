@@ -136,6 +136,11 @@
 
         var geoCoordinates = [];
 
+        var TITLE_PIC_POSITION_STEP = 5;
+
+        var titlePicPosition = <xsl:value-of select="/blog/titlePicPosition" />;
+        var initialTitlePicPosition = titlePicPosition;
+
         <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/geoTag">
             <xsl:for-each select="/blog/blogEntries/blogDate">
                 <xsl:for-each select="dayEntries/file">
@@ -204,23 +209,20 @@
       <div id="blogCont" class="blogCont">
       
         <xsl:if test="/blog/blogTitlePic">
-          <div>
-            <xsl:attribute name="style">background-image:url('<xsl:value-of select="/blog/blogTitlePic" />');background-size:100%;</xsl:attribute>
+          <div id="titlePicCont">
+            <xsl:attribute name="style">background-image:url('<xsl:value-of select="/blog/blogTitlePic" />');background-size:100%;background-position:0 <xsl:value-of select="/blog/titlePicPosition" />%</xsl:attribute>
             <xsl:if test="/blog/readonly">
               <xsl:attribute name="class">blogTitlePic</xsl:attribute>
             </xsl:if>
             <xsl:if test="not(/blog/readonly)">
               <xsl:attribute name="class">blogTitlePic blogTitlePointer</xsl:attribute>
-              <xsl:attribute name="onclick">unsetTitlePic()</xsl:attribute>
-              <xsl:attribute name="titleResource">blog.unsetTitlePic</xsl:attribute>
+              <xsl:attribute name="onclick">toggleTitlePicMenu()</xsl:attribute>
+              <xsl:attribute name="titleResource">blog.manageTitlePic</xsl:attribute>
             </xsl:if>
           </div>
         </xsl:if>
-      
+
         <div class="blogHeadline">
-          <!-- 
-          <span resource="blog.listHeadline"></span>: 
-          -->
           <xsl:value-of select="/blog/blogTitle" />
         </div> 
       

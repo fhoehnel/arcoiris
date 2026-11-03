@@ -31,6 +31,7 @@ public class BlogUnsetTitlePicHandler extends XmlRequestHandlerBase {
         String currentPath = userMgr.getDocumentRoot(uid).replace('/', File.separatorChar);
 
         BlogConfigManager.getInstance().unsetTitlePic(currentPath);
+        BlogConfigManager.getInstance().unsetTitlePicPosition(currentPath);
 
         boolean success = true;
 

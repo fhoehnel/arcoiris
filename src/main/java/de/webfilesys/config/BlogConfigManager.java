@@ -73,6 +73,23 @@ public class BlogConfigManager {
         saveBlogConfig(path, config);
     }
 
+    public void setTitlePicPosition(String path, int titlePicPosition) {
+        BlogConfig config = getOrLoadBlogConfig(path);
+        config.setTitlePicPosition(titlePicPosition);
+        saveBlogConfig(path, config);
+    }
+
+    public void unsetTitlePicPosition(String path) {
+        BlogConfig config = getOrLoadBlogConfig(path);
+        config.unsetTitlePicPosition();
+        saveBlogConfig(path, config);
+    }
+
+    public int getTitlePicPosition(String path) {
+        BlogConfig config = getOrLoadBlogConfig(path);
+        return config.getTitlePicPosition();
+    }
+
     public boolean isStagedPublication(String path) {
         BlogConfig config = getOrLoadBlogConfig(path);
         return config.isStagedPublication();

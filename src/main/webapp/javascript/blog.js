@@ -2411,3 +2411,89 @@ function showAllOSMLocations() {
 function allDayOverview() {
 	window.location.href = getContextRoot() + "/servlet?command=blog&cmd=overview";
 }
+
+function toggleTitlePicMenu() {
+    let titlePicMenuCont = document.getElementById("titlePicMenu");
+    if (titlePicMenuCont) {
+        titlePicMenuCont.parentNode.removeChild(titlePicMenuCont);
+        return;
+    }
+
+    titlePicMenuCont = document.createElement("div");
+    titlePicMenuCont.id = "titlePicMenu";
+    titlePicMenuCont.setAttribute("class", "titlePicMenu");
+    document.getElementById("titlePicCont").appendChild(titlePicMenuCont);
+
+    const moveUpLink = document.createElement("a");
+    moveUpLink.setAttribute("class", "icon-font icon-arrow-up titlePicMenuItem");
+    moveUpLink.setAttribute("onclick", "moveTitlePicAreaUp()");
+    moveUpLink.setAttribute("title", resourceBundle["blog.moveTitlePicAreaUp"]);
+    titlePicMenuCont.appendChild(moveUpLink);
+
+    const deleteLink = document.createElement("a");
+    deleteLink.setAttribute("class", "icon-font icon-delete titlePicMenuItem");
+    deleteLink.setAttribute("onclick", "unsetTitlePic()");
+    deleteLink.setAttribute("title", resourceBundle["blog.unsetTitlePic"]);
+    titlePicMenuCont.appendChild(deleteLink);
+
+    const moveDownLink = document.createElement("a");
+    moveDownLink.setAttribute("class", "icon-font icon-arrow-down titlePicMenuItem");
+    moveDownLink.setAttribute("onclick", "moveTitlePicAreaDown()");
+    moveDownLink.setAttribute("title", resourceBundle["blog.moveTitlePicAreaDown"]);
+    titlePicMenuCont.appendChild(moveDownLink);
+
+    const okLink = document.createElement("a");
+    okLink.setAttribute("class", "icon-font icon-check titlePicMenuItem");
+    okLink.setAttribute("onclick", "saveTitlePicPosition()");
+    okLink.setAttribute("title", resourceBundle["blog.saveTitlePicPosition"]);
+    titlePicMenuCont.appendChild(okLink);
+
+    const cancelLink = document.createElement("a");
+    cancelLink.setAttribute("class", "icon-font icon-close titlePicMenuItem");
+    cancelLink.setAttribute("onclick", "cancelTitlePicPosition()");
+    cancelLink.setAttribute("title", resourceBundle["blog.cancelTitlePicPosition"]);
+    titlePicMenuCont.appendChild(cancelLink);
+}
+
+function cancelTitlePicPosition() {
+    // close of menu is handled by onclick handler of title pic
+    titlePicPosition = initialTitlePicPosition;
+    const titlePicCont = document.getElementById("titlePicCont");
+    if (titlePicCont) {
+        titlePicCont.style.backgroundPosition = "0 " + titlePicPosition + "%";
+    }
+}
+
+function moveTitlePicAreaUp() {
+    if (titlePicPosition - TITLE_PIC_POSITION_STEP >= 0) {
+        titlePicPosition -= TITLE_PIC_POSITION_STEP;
+    }
+    const titlePicCont = document.getElementById("titlePicCont");
+    if (titlePicCont) {
+        titlePicCont.style.backgroundPosition = "0 " + titlePicPosition + "%";
+    }
+    toggleTitlePicMenu();
+}
+
+function moveTitlePicAreaDown() {
+    if (titlePicPosition + TITLE_PIC_POSITION_STEP <= 100) {
+        titlePicPosition += TITLE_PIC_POSITION_STEP;
+    }
+    const titlePicCont = document.getElementById("titlePicCont");
+    if (titlePicCont) {
+        titlePicCont.style.backgroundPosition = "0 " + titlePicPosition + "%";
+    }
+    toggleTitlePicMenu();
+}
+
+function saveTitlePicPosition() {
+    xmlPostRequest("blog", { cmd: "saveTitlePicPosition", position: titlePicPosition }, responseXml => {
+        const resultElem = responseXml.getElementsByTagName("result")[0];
+        const success = resultElem.getElementsByTagName("success")[0].firstChild.nodeValue;
+        if (success === 'true') {
+            window.location.href = getContextRoot() + "/servlet?command=blog";
+        } else {
+            alert(resourceBundle["blog.saveTitlePicPositionError"]);
+        }
+    });
+}

@@ -1122,6 +1122,27 @@ i.fullScreenIcon:before {
     font-size: 1.5rem;
 }
 
+div.titlePicMenu {
+    display: inline;
+    position: relative;
+    top: 180px;
+    left: 10px;
+    z-index: 20;
+    border: 1px ridge #a0a0a0;
+    background-color: ivory;
+    padding: 16px;
+}
+
+a.titlePicMenuItem {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+a.titlePicMenuItem:before {
+    font-size: 1.8rem;
+    color: #606060;
+}
+
 @media (max-width: 500px) {
     div.blogEntry.storyPictureRight {
         float: left;

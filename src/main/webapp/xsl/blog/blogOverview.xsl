@@ -171,7 +171,7 @@
       
         <xsl:if test="/blog/blogTitlePic">
           <div>
-            <xsl:attribute name="style">background-image:url('<xsl:value-of select="/blog/blogTitlePic" />');background-size:100%;</xsl:attribute>
+            <xsl:attribute name="style">background-image:url('<xsl:value-of select="/blog/blogTitlePic" />');background-size:100%;background-position:0 <xsl:value-of select="/blog/titlePicPosition" />%</xsl:attribute>
             <xsl:if test="/blog/readonly">
               <xsl:attribute name="class">blogTitlePic</xsl:attribute>
             </xsl:if>

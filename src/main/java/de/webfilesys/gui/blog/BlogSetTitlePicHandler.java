@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import de.webfilesys.config.BlogConfigManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Element;
 
@@ -47,6 +46,7 @@ public class BlogSetTitlePicHandler extends XmlRequestHandlerBase {
         }
 
         BlogConfigManager.getInstance().setTitlePic(currentPath, imgName);
+        BlogConfigManager.getInstance().unsetTitlePicPosition(currentPath);
 
         boolean success = true;
 

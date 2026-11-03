@@ -7,12 +7,15 @@ public class BlogConfig {
         DIARY;
     }
 
+    private static final int DEFAULT_TITLE_PIC_POSITION = 50;
+
     private boolean stagedPublication = false;
     private boolean notifyOnNewComment = false;
     private boolean showSideCont = true;
     private SortOrder sortOrder = SortOrder.BLOG;
     private String titlePic = null;
     private String titleText = null;
+    private int titlePicPosition = DEFAULT_TITLE_PIC_POSITION;
 
     public boolean isStagedPublication() {
         return stagedPublication;
@@ -60,6 +63,18 @@ public class BlogConfig {
 
     public void setTitleText(String titleText) {
         this.titleText = titleText;
+    }
+
+    public int getTitlePicPosition() {
+        return titlePicPosition;
+    }
+
+    public void setTitlePicPosition(int titlePicPosition) {
+        this.titlePicPosition = titlePicPosition;
+    }
+
+    public void unsetTitlePicPosition() {
+        titlePicPosition = DEFAULT_TITLE_PIC_POSITION;
     }
 
 }

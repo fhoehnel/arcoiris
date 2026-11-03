@@ -118,6 +118,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
             String titlePicSrc = req.getContextPath() + "/servlet?command=getFile&filePath=" + UTF8URLEncoder.encode(titlePicPath) + "&cached=true";
 
             XmlUtil.setChildText(blogElement, "blogTitlePic", titlePicSrc, false);
+
+            XmlUtil.setChildText(blogElement, "titlePicPosition", Integer.toString(BlogConfigManager.getInstance().getTitlePicPosition(currentPath)), false);
         }
 
         Element blogEntriesElement = doc.createElement("blogEntries");

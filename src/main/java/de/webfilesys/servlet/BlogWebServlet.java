@@ -541,6 +541,9 @@ public class BlogWebServlet extends ServletBase {
             } else if (cmd.equals("shareSinglePic")) {
                 (new BlogShareSinglePicHandler(req, resp, session, output, userid)).handleRequest();
                 return true;
+            } else if (cmd.equals("saveTitlePicPosition")) {
+                (new BlogSaveTitlePicPositionHandler(req, resp, session, output, userid)).handleRequest();
+                return(true);
             } else {
                 LogManager.getLogger(getClass()).info("unknown blog comamnd: " + cmd);
                 return true;
