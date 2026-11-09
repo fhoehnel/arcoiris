@@ -23,3 +23,14 @@ in the development servlet container.
 
 If you have problems getting the project to run please contact the author at
 frank_hoehnel@hotmail.com !
+
+Docker (Tomcat 10 + Java 17)
+---------------------------
+Build image:
+docker build -t arcoiris-blog:java17-tomcat10 .
+
+Run container:
+docker run --rm -p 9753:8080 --name arcoiris-blog arcoiris-blog:java17-tomcat10
+
+Export the docker image:
+docker save -o arcoiris-blog-java17-tomcat10.tar arcoiris-blog:java17-tomcat10

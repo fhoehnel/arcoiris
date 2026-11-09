@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+  <user id="admin">
+    <role>admin</role>
+    <email>nobody@nowhere.com</email>
+    <language>English</language>
+    <css>default</css>
+    <pageSize>12</pageSize>
+    <password encryption="SHA-256">UzNqZ2xkwTllU7K3yS84EmdognyTtk2RQgacEO2npyE=</password>
+  <lastLogin>1794173888876</lastLogin></user>
+<user id="testblog"><role>blog</role><email>frank_hoehnel@hotmail.com</email><language>German</language><css>bluemoon</css><documentRoot>/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome/testblog</documentRoot><readonly>false</readonly><pageSize>12</pageSize><password encryption="SHA-256">rdsPXngmyFfXN20b2bwzwMVEeQourJYUSoryKxKYyUA=</password><lastLogin>1794173918589</lastLogin></user></users>
