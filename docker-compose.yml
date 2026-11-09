@@ -14,9 +14,11 @@ services:
       - ./docker/config/users.xml:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/users.xml
       - ./docker/config/invitations.xml:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/invitations.xml
       # Persists self-registered user home folders (default UserDocumentRoot).
-      - type: bind
-        source: C:/projekte/arcoiris/docker-user-home
-        target: /usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
+      # - user_home:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
+
+      # - type: bind
+      #   source: C:/projekte/arcoiris/docker-user-home
+      #   target: /usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
 
 volumes:
   arcoiris_blog_bookmarks:

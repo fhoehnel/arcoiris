@@ -32,7 +32,7 @@ public class VersionInfoRequestHandler {
         output.println("<table border=\"0\" width=\"100%\" cellpadding=\"14\">");
         output.println("<tr><td class=\"story\" style=\"text-align:center\"> arcoiris blog</td></tr>");
         output.println("<tr><td class=\"value\" style=\"text-align:center\">" + ArcoirisBlog.VERSION + "</td></tr>");
-        output.println("<tr><td style=\"text-align:center\"><a class=\"fn\" href=\"http://www.webfilesys.de/arcoiris\" target=\"_blank\">www.webfilesys.de/arcoiris</a></td></tr>");
+        output.println("<tr><td style=\"text-align:center\"><a class=\"fn\" href=\"https://github.com/fhoehnel/arcoiris\" target=\"_blank\">https://github.com/fhoehnel/arcoiris</a></td></tr>");
         output.println("<tr><td style=\"text-align:center\"><form><input type=\"button\" value=\"Close\" onClick=\"self.close()\" /></form></td></tr>");
         output.println("</table>");
         output.println("</body></html>");
