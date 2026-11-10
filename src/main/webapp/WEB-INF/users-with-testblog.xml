@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+  <user id="admin">
+    <role>admin</role>
+    <email>nobody@nowhere.com</email>
+    <language>English</language>
+    <css>bluemoon</css>
+    <pageSize>12</pageSize>
+    <password encryption="SHA-256">K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</password>
+    <lastLogin>1794344314737</lastLogin>
+    <firstName>Admi</firstName>
+    <lastName>Nistrator</lastName>
+    <phone>1234567</phone>
+    <diskQuota>-1</diskQuota>
+    <documentRoot>/tmp</documentRoot>
+    <readonly>false</readonly>
+    <activated>true</activated>
+  </user>
+  <user id="testblog">
+    <role>blog</role>
+    <firstName>Test</firstName>
+    <lastName>Blog</lastName>
+    <email>testblog@nowhere.com</email>
+    <phone>12345678</phone>
+    <diskQuota>16777216</diskQuota>
+    <language>English</language>
+    <css>bluemoon</css>
+    <documentRoot>/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome/testblog</documentRoot>
+    <readonly>false</readonly>
+    <pageSize>12</pageSize>
+    <password encryption="SHA-256">K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</password>
+    <lastLogin>1794344761562</lastLogin>
+  </user>
+</users>

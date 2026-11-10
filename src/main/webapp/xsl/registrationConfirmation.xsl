@@ -52,8 +52,13 @@
         </td>
         
         <td width="65%" class="registrationConfirmation">
-          <span resource="registrationConfirmation"></span>
-          
+          <xsl:if test="/registration/singleStepRegistration">
+            <span resource="registrationConfirmationSingleStep"></span>
+          </xsl:if>
+          <xsl:if test="not(/registration/singleStepRegistration)">
+            <span resource="registrationConfirmation"></span>
+          </xsl:if>
+
           <br/><br/>
 
           <input type="button" resource="button.registrationToLogin">

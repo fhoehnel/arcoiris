@@ -660,7 +660,7 @@
       
       <div class="poweredBy">
         powered by arcoiris blog
-        <a href="http://www.webfilesys.de/arcoiris" target="_blank"> (www.webfilesys.de/arcoiris)</a>
+        <a href="https://github.com/fhoehnel/arcoiris" target="_blank"> (github.com/fhoehnel/arcoiris)</a>
       </div>
 
       <div id="sideCont" class="sideCont">

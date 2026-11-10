@@ -133,8 +133,10 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
 
         newUser.setDiskQuota(ArcoirisBlog.getInstance().getDefaultDiskQuota());
 
-        newUser.setActivationCode(CommonUtils.generateAccessCode());
-        newUser.setActivationCodeExpiration(System.currentTimeMillis() + UserManager.ACTIVATION_CODE_EXPIRATION);
+        if (ArcoirisBlog.getInstance().getMailHost() != null) {
+            newUser.setActivationCode(CommonUtils.generateAccessCode());
+            newUser.setActivationCodeExpiration(System.currentTimeMillis() + UserManager.ACTIVATION_CODE_EXPIRATION);
+        }
 
         try {
             userMgr.createUser(newUser);
@@ -203,6 +205,10 @@ public class XslSelfRegistrationHandler extends XslRequestHandlerBase {
         doc.appendChild(rootElement);
 
         XmlUtil.setChildText(rootElement, "language", language, false);
+
+        if (ArcoirisBlog.getInstance().getMailHost() == null) {
+            XmlUtil.setChildText(rootElement, "singleStepRegistration", "true", false);
+        }
 
         processResponse("registrationConfirmation.xsl", req);
     }

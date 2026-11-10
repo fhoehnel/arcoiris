@@ -100,6 +100,7 @@ label.selectLanguage=- bitte auswählen -
 label.userRole=Nutzer-Rolle
 button.register=Anmelden
 registrationConfirmation=Der erste Schritt der Registrierung war erfolgreich. Eine e-mail mit Informationen zum Beenden des Registrierungsvorganges wurde an die angegebene Adresse gesendet.
+registrationConfirmationSingleStep=Die Registrierung war erfolgreich. Sie können sich nun mit Ihrem Nutzernamen und Passwort anmelden.
 button.registrationToLogin=Zum Login
 activationSuccessful=Die Aktivierung des Nutzerkontos war erfolgreich.
 error.missinglogin=Der Login-Name muss mindestens 3 Zeichen lang sein

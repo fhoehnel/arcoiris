@@ -101,6 +101,7 @@ label.selectLanguage=- seleccionar lengua -
 label.userRole=rol del usuario
 button.register=Registrar
 registrationConfirmation=El primer paso del proceso de registro fue exitoso. Se ha enviado un correo electrónico con información sobre cómo completar el registro a la dirección de correo electrónico introducido.
+registrationConfirmationSingleStep=La registración fue exitosa. Ahora puede iniciar sesión con su nombre de usuario y contraseña.
 button.registrationToLogin=Acceso a arcoíris blog
 activationSuccessful=El registro de nuevo usario ha completado exitoso.
 error.missinglogin=nombre de usuario, mínimo 3 caracteres
