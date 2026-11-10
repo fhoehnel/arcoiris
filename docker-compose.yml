@@ -11,8 +11,6 @@ services:
     volumes:
       # Persist mutable WEB-INF config files on the host.
       - ./docker/config/blog.conf:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/blog.conf
-      - ./docker/config/users.xml:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome/users.xml
-      - ./docker/config/invitations.xml:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome/invitations.xml
       # Persists self-registered user home folders (default UserDocumentRoot).
       # - user_home:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
 
