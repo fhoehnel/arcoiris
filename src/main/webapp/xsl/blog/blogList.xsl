@@ -138,8 +138,10 @@
 
         var TITLE_PIC_POSITION_STEP = 5;
 
-        var titlePicPosition = <xsl:value-of select="/blog/titlePicPosition" />;
-        var initialTitlePicPosition = titlePicPosition;
+        <xsl:if test="/blog/titlePicPosition">
+          var titlePicPosition = <xsl:value-of select="/blog/titlePicPosition" />;
+          var initialTitlePicPosition = titlePicPosition;
+        </xsl:if>
 
         <xsl:if test="/blog/blogEntries/blogDate/dayEntries/file/geoTag">
             <xsl:for-each select="/blog/blogEntries/blogDate">

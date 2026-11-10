@@ -55,7 +55,7 @@ public class StatisticManager extends Thread {
     private StatisticManager() {
         shutdownFlag = false;
         
-        statisticFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + STATISTIC_FILE_NAME;
+        statisticFilePath = ArcoirisBlog.getInstance().getUserDocRoot() + "/" + STATISTIC_FILE_NAME;
 
         builder = null;
 

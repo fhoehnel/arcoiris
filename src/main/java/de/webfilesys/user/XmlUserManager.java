@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.*;
 
@@ -53,7 +56,23 @@ public class XmlUserManager extends UserManagerBase {
             LogManager.getLogger(getClass()).error(pcex.toString());
         }
 
-        userFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + USER_FILE_NAME;
+        userFilePath = ArcoirisBlog.getInstance().getUserDocRoot() + "/" + USER_FILE_NAME;
+        File userFile = new File(userFilePath);
+        if (!userFile.exists()) {
+            String initialUserFile = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + USER_FILE_NAME;
+            if (new File(initialUserFile).exists()) {
+                LogManager.getLogger(getClass()).info("copying initial user database from " + initialUserFile + " to " + userFilePath);
+                try {
+                    Files.copy(Paths.get(initialUserFile), Paths.get(userFilePath),
+                            StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.COPY_ATTRIBUTES);
+                } catch (Exception e) {
+                    LogManager.getLogger(getClass()).error("failed to copy initial user database from " + initialUserFile + " to " + userFilePath, e);
+                }
+            } else {
+                LogManager.getLogger(getClass()).error("initial user database file is missing: " + initialUserFile);
+            }
+        }
 
         userCache = new Hashtable(10);
 

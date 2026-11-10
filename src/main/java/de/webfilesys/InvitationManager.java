@@ -61,7 +61,7 @@ public class InvitationManager extends Thread {
     ArrayList<CommentAnswerQueueElem> commentAnswerQueue = null;
 
     private InvitationManager() {
-        invitationFilePath = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + INVITATION_FILE_NAME;
+        invitationFilePath = ArcoirisBlog.getInstance().getUserDocRoot() + "/" + INVITATION_FILE_NAME;
 
         builder = null;
 
