@@ -2457,6 +2457,10 @@ function toggleTitlePicMenu() {
 
 function cancelTitlePicPosition() {
     // close of menu is handled by onclick handler of title pic
+    if (!initialTitlePicPosition) {
+        return;
+    }
+
     titlePicPosition = initialTitlePicPosition;
     const titlePicCont = document.getElementById("titlePicCont");
     if (titlePicCont) {
