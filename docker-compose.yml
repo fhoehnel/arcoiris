@@ -9,14 +9,8 @@ services:
     ports:
       - "9753:8080"
     volumes:
-      # Persist mutable WEB-INF config files on the host.
-      - ./docker/config/blog.conf:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/blog.conf
-      # Persists self-registered user home folders (default UserDocumentRoot).
-      # - user_home:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
-
-      # - type: bind
-      #   source: C:/projekte/arcoiris/docker-user-home
-      #   target: /usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
+      # Persists user data (user database, invitation database, user blog data)
+      # - arcoiris_blog_data:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
 
 volumes:
   arcoiris_blog_bookmarks:

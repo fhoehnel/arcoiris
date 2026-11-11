@@ -27,10 +27,13 @@ frank_hoehnel@hotmail.com !
 Docker (Tomcat 10 + Java 17)
 ---------------------------
 Build image:
-docker build -t arcoiris-blog:java17-tomcat10 .
+docker build --no-cache -t arcoiris-blog:java17-tomcat10 .
+
+Create Volume for user data:
+docker volume create arcoiris-blog-data
 
 Run container:
-docker run -p 9753:8080 --name arcoiris-blog -v C:\projekte\arcoiris\docker-user-home:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome arcoiris-blog:java17-tomcat10
+docker run -p 9753:8080 -d --name arcoiris-blog -v arcoiris-blog-data:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome -v c:\Projekte\arcoiris\docker-config:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/config arcoiris-blog:java17-tomcat10
 
 Export the docker image:
 docker save -o arcoiris-blog-java17-tomcat10.tar arcoiris-blog:java17-tomcat10
@@ -40,11 +43,12 @@ Podman (Tomcat 10 + Java 17)
 
 Podman build -t arcoiris-blog:java17-tomcat10 .
 
-Podman run -p 9753:8080 --name arcoiris-blog -v C:\projekte\arcoiris\docker-user-home:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome arcoiris-blog:java17-tomcat10
+Podman run -p 9753:8080 -d --name arcoiris-blog -v arcoiris-blog-data:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome -v c:\Projekte\arcoiris\docker-config:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/config arcoiris-blog:java17-tomcat10
 
 Podman stop arcoiris-blog
 
 Podman restart arcoiris-blog
+
 
 
 

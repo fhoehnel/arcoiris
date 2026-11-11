@@ -34,7 +34,7 @@
     <servlet-class>de.webfilesys.servlet.BlogWebServlet</servlet-class>
     <init-param>
       <param-name>config</param-name>
-      <param-value>/WEB-INF/blog.conf</param-value>
+      <param-value>/WEB-INF/config/blog.conf</param-value>
     </init-param>
     <init-param>
       <param-name>log4jConfig</param-name>
