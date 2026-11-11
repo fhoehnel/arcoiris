@@ -22,6 +22,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
@@ -59,6 +62,8 @@ import de.webfilesys.util.UTF8URLDecoder;
 public class BlogWebServlet extends ServletBase {
     private static final long serialVersionUID = 1L;
 
+    private static final String INITIAL_CONFIG_FILE_PATH = "/WEB-INF/blog.conf.initial";
+
     private Properties configProperties = null;
 
     static boolean initialized = false;
@@ -93,7 +98,16 @@ public class BlogWebServlet extends ServletBase {
         File configFile = new File(configPath);
 
         if (!configFile.exists()) {
-            throw new ServletException("config file does not exist: " + configPath);
+            String initialConfigPath = context.getRealPath(INITIAL_CONFIG_FILE_PATH);
+            try {
+                Files.copy(Paths.get(initialConfigPath), Paths.get(configPath),
+                        StandardCopyOption.REPLACE_EXISTING,
+                        StandardCopyOption.COPY_ATTRIBUTES);
+                LogManager.getLogger(getClass()).info("copied initial config file " + initialConfigPath);
+            } catch (Exception e) {
+                LogManager.getLogger(getClass()).error("failed to copy initial config file from " + initialConfigPath + " to " + configPath, e);
+                throw new ServletException("failed to copy initial config file from " + initialConfigPath + " to " + configPath);
+            }
         }
 
         if ((!configFile.isFile()) || (!configFile.canRead())) {
