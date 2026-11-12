@@ -18,16 +18,21 @@
 package de.webfilesys;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import jakarta.mail.Session;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import de.webfilesys.user.UserManager;
@@ -41,6 +46,8 @@ public class ArcoirisBlog {
     private static ArcoirisBlog instance = null;
 
     public static final String VERSION = "Version 3.2.1-beta5 (09 Nov 2026)";
+
+    private static final String INITIAL_DATA_FILE_PATH = "initialData" + File.separator + "initialData.zip";
 
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
@@ -186,37 +193,22 @@ public class ArcoirisBlog {
 
         userDocRoot = config.getProperty("UserDocumentRoot");
 
-        if (openRegistration) {
-            if (userDocRoot != null) {
-                File docRootFile = new File(userDocRoot);
+        if (userDocRoot == null || userDocRoot.trim().isEmpty()) {
+            userDocRoot = configBaseDir + File.separator + "userhome";
+        }
 
-                if ((!docRootFile.exists()) || (!docRootFile.isDirectory()) || (!docRootFile.canWrite())) {
-                    LogManager.getLogger(getClass()).error("UserDocumentRoot is not a writable directory: " + userDocRoot);
-                    userDocRoot = null;
-                } else {
-                    if ((File.separatorChar == '\\') && (userDocRoot.length() > 2)) {
-                        try {
-                            String canonicalRoot = docRootFile.getCanonicalPath().substring(2);
-                            String absoluteRoot = docRootFile.getAbsolutePath().substring(2);
+        File docRootFile = new File(userDocRoot);
 
-                            if (!canonicalRoot.equals(absoluteRoot)) {
-                                LogManager.getLogger(getClass()).error("UserDocumentRoot is not a writable directory (check uppercase/lowercase!): " + userDocRoot);
-                                userDocRoot = null;
-                            }
-                        } catch (IOException ioex) {
-                        }
+        if ((!docRootFile.exists()) || (!docRootFile.isDirectory()) || (!docRootFile.canWrite())) {
+            LogManager.getLogger(getClass()).error("UserDocumentRoot is not a writable directory: " + userDocRoot);
+            throw new IllegalArgumentException("UserDocumentRoot is not a writable directory: " + userDocRoot);
+        }
 
-                    }
-                }
+        LogManager.getLogger(getClass()).info("User Document Root: " + userDocRoot);
 
-                if (userDocRoot != null) {
-                    LogManager.getLogger(getClass()).info("User Document Root: " + userDocRoot);
-                }
-            } else {
-                userDocRoot = configBaseDir + File.separator + "userhome";
-
-                LogManager.getLogger(getClass()).info("using default UserDocumentRoot for open registration: " + userDocRoot);
-            }
+        if (!new File(docRootFile, XmlUserManager.USER_FILE_NAME).isFile()) {
+            // TODO: does only work with XmlUserManager
+            initUserData();
         }
 
         temp = config.getProperty("UploadLimit");
@@ -481,6 +473,61 @@ public class ArcoirisBlog {
                 }
             }
         }
+    }
+
+    private void initUserData() {
+        String initialDataPath = configBaseDir + File.separator + INITIAL_DATA_FILE_PATH;
+        File initialDataFile = new File(initialDataPath);
+        if (!initialDataFile.isFile() || !initialDataFile.canRead()) {
+            LogManager.getLogger(getClass()).error("initial data file not found or not readable: " + initialDataPath);
+            return;
+        }
+        File userDocRootFile = new File(userDocRoot);
+        try {
+            Path rootPath = userDocRootFile.getCanonicalFile().toPath();
+            try (ZipInputStream zipInput = new ZipInputStream(new FileInputStream(initialDataFile))) {
+                ZipEntry entry;
+                byte[] buffer = new byte[8192];
+
+                while ((entry = zipInput.getNextEntry()) != null) {
+                    Path targetPath = rootPath.resolve(entry.getName()).normalize();
+                    if (!targetPath.startsWith(rootPath)
+                            || (targetPath.equals(rootPath) && !entry.isDirectory())) {
+                        throw new IOException("invalid path in initial data archive: " + entry.getName());
+                    }
+
+                    Path canonicalTargetPath = targetPath.toFile().getCanonicalFile().toPath();
+                    if (!canonicalTargetPath.startsWith(rootPath)
+                            || (canonicalTargetPath.equals(rootPath) && !entry.isDirectory())) {
+                        throw new IOException("initial data archive entry escapes user document root: " + entry.getName());
+                    }
+
+                    if (entry.isDirectory()) {
+                        Files.createDirectories(targetPath);
+                    } else {
+                        Path parent = targetPath.getParent();
+                        if (parent != null) {
+                            Files.createDirectories(parent);
+                        }
+                        try (FileOutputStream output = new FileOutputStream(targetPath.toFile())) {
+                            int bytesRead;
+                            while ((bytesRead = zipInput.read(buffer)) != -1) {
+                                output.write(buffer, 0, bytesRead);
+                            }
+                        }
+                    }
+                    zipInput.closeEntry();
+                }
+            }
+        } catch (IOException ioex) {
+            LogManager.getLogger(getClass()).error("failed to extract initial data file: " + initialDataPath, ioex);
+            return;
+        }
+
+        if (!initialDataFile.delete()) {
+            LogManager.getLogger(getClass()).error("failed to delete initial data file after extraction: " + initialDataPath);
+        }
+        LogManager.getLogger(getClass()).info("initial user data created");
     }
 
     public int getDiskQuotaCheckHour() {

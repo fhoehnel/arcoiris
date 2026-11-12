@@ -29,6 +29,7 @@ import de.webfilesys.util.XmlUtil;
 
 public class XmlUserManager extends UserManagerBase {
     public static final String USER_FILE_NAME = "users.xml";
+    public static final String INITIAL_USER_FILE_NAME = "users-initial.xml";
 
     private static final String ENCRYPTION_METHOD_SHA256 = "SHA-256";
 
@@ -59,7 +60,8 @@ public class XmlUserManager extends UserManagerBase {
         userFilePath = ArcoirisBlog.getInstance().getUserDocRoot() + "/" + USER_FILE_NAME;
         File userFile = new File(userFilePath);
         if (!userFile.exists()) {
-            String initialUserFile = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + USER_FILE_NAME;
+            // not needed if initial user data have already been copied from initial data ZIP file (contains users.xml), see ArcoirisBlog.extractInitialData()
+            String initialUserFile = ArcoirisBlog.getInstance().getConfigBaseDir() + "/" + INITIAL_USER_FILE_NAME;
             if (new File(initialUserFile).exists()) {
                 LogManager.getLogger(getClass()).info("copying initial user database from " + initialUserFile + " to " + userFilePath);
                 try {

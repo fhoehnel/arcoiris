@@ -3,7 +3,7 @@
 <Configuration name="WebFileSysDefaultConfig" status="INFO" monitorInterval="5">
   
   <Appenders>
-    <File name="WebFileSysLogAppender" fileName="${arcoiris-blog-webapp}/WEB-INF/log/system.log">
+    <File name="WebFileSysLogAppender" fileName="/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/log/system.log">
       <PatternLayout>
         <Pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5p - %m%n</Pattern>
       </PatternLayout>
