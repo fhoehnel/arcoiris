@@ -3,18 +3,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: arcoiris-blog:java17-tomcat10
+    image: fhodevelop/arcoiris-blog:3.2.1-beta5
     container_name: arcoiris-blog
     restart: unless-stopped
     ports:
       - "9753:8080"
     volumes:
       # Persists user data (user database, invitation database, user blog data)
-      # - arcoiris_blog_data:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
+      - arcoiris_blog_data:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/userhome
+      # Uses the project configuration, which can be edited on the host.
+      # - ./docker/config/blog.conf:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/config/blog.conf:ro
+      # Persists application logs.
+      - arcoiris_blog_log:/usr/local/tomcat/webapps/arcoiris-blog/WEB-INF/log
 
 volumes:
-  arcoiris_blog_bookmarks:
-  arcoiris_blog_categories:
-  arcoiris_blog_fastpath:
-  arcoiris_blog_userhome:
-
+  arcoiris_blog_data:
+  arcoiris_blog_log:
