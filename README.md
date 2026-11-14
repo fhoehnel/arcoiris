@@ -9,12 +9,15 @@ arcioris depends on are automatically downloaded by maven from
 public repositories.
 
 To install the non-public libraries into your local maven repository use the following commands:
-* mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/com/drew/metadata-extractor/2.3.1/metadata-extractor-2.3.1.jar -DgroupId=com.drew -DartifactId=metadata-extractor -Dversion=2.3.1 -Dpackaging=jar
-* mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/com/keypoint/png-gif/1.0/png-gif-1.0.jar -DgroupId=com.keypoint -DartifactId=png-gif -Dversion=1.0 -Dpackaging=jar
-* mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/mediachest/mediautil/1.0.0/mediautil-1.0.0.jar -DgroupId=mediachest -DartifactId=mediautil -Dversion=1.0.0 -Dpackaging=jar
-
+```
+mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/com/drew/metadata-extractor/2.3.1/metadata-extractor-2.3.1.jar -DgroupId=com.drew -DartifactId=metadata-extractor -Dversion=2.3.1 -Dpackaging=jar
+mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/com/keypoint/png-gif/1.0/png-gif-1.0.jar -DgroupId=com.keypoint -DartifactId=png-gif -Dversion=1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=[your-path-to-project-arcoiris]/maven-repository/mediachest/mediautil/1.0.0/mediautil-1.0.0.jar -DgroupId=mediachest -DartifactId=mediautil -Dversion=1.0.0 -Dpackaging=jar
+```
 Use the command
-* maven install
+```
+maven install
+```
 
 to build the arcoiris-blog.war web application archive which can be deployed
 in any servlet container.
@@ -28,6 +31,7 @@ frank_hoehnel@hotmail.com !
 
 Docker (Tomcat 10 + Java 17)
 
+```
 docker build --no-cache -t arcoiris-blog:3.2.1-beta5 .
-
 docker compose up -d
+```
