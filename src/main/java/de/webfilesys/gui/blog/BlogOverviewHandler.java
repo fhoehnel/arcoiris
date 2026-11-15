@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
 
+import de.webfilesys.ArcoirisBlog;
 import de.webfilesys.graphics.BlogThumbnailHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -211,6 +212,8 @@ public class BlogOverviewHandler extends XslRequestHandlerBase {
         } else {
             XmlUtil.setChildText(blogElement, "empty", "true");
         }
+
+        XmlUtil.setChildText(blogElement, "homepageURL", ArcoirisBlog.HOMEPAGE_URL);
 
         processResponse("blog/blogOverview.xsl", req);
     }

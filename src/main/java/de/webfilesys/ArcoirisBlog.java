@@ -42,6 +42,8 @@ public class ArcoirisBlog {
 
     public static final String VERSION = "Version 3.2.1-beta5 (10 Nov 2026)";
 
+    public static final String HOMEPAGE_URL = "https://fhoehnel.github.io/arcoiris-homepage";
+
     public static final String DEFAULT_MAIL_SENDER_ADDRESS = "arcoirisblog@nowhere.com";
 
     public static final String DEFAULT_MAIL_SENDER_NAME = "arcoiris blog";

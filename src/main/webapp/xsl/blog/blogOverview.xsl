@@ -354,7 +354,10 @@
       
       <div class="poweredBy">
         powered by arcoiris blog
-        <a href="http://www.webfilesys.de/arcoiris" target="_blank"> (www.webfilesys.de/arcoiris)</a>
+        <a target="_blank">
+          <xsl:attribute name="href"><xsl:value-of select="/blog/homepageURL"/></xsl:attribute>
+          <xsl:value-of select="/blog/homepageURL"/>
+        </a>
       </div>
     
       <script type="text/javascript">

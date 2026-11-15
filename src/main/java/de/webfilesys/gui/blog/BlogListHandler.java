@@ -613,6 +613,8 @@ public class BlogListHandler extends XslRequestHandlerBase {
             XmlUtil.setChildText(blogElement, "empty", "true");
         }
 
+        XmlUtil.setChildText(blogElement, "homepageURL", ArcoirisBlog.HOMEPAGE_URL);
+
         processResponse("blog/blogList.xsl", req);
     }
 
