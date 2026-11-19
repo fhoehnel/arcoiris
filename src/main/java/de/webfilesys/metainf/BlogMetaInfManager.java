@@ -27,7 +27,7 @@ public class BlogMetaInfManager extends Thread {
     public static final int STATUS_BLOG_EDIT = 1;
     public static final int STATUS_BLOG_PUBLISHED = 2;
 
-    private static final int MAX_CACHE_SIZE = 500;
+    private static final int MAX_CACHE_SIZE = 1000;
 
     private static BlogMetaInfManager instance;
 
@@ -319,7 +319,7 @@ public class BlogMetaInfManager extends Thread {
     private void limitCacheSize() {
         if (metaInfCache.size() > MAX_CACHE_SIZE) {
             String randomKey = metaInfCache.keySet().iterator().next();
-            LOG.info("max cache size exceeded - removing random entry " + randomKey);
+            LOG.debug("max cache size exceeded - removing random entry " + randomKey);
             if (cacheDirty.get(randomKey) != null) {
                 saveMetaInfToFile(randomKey);
             }
