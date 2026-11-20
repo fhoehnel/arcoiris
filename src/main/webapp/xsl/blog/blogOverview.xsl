@@ -159,7 +159,7 @@
       
     </head>
 
-    <body class="blog">
+    <body class="blog" id="blogOverviewBody">
       <xsl:if test="not(/blog/readonly)">
         <xsl:attribute name="onload">prepareCalenderPopup();queryPublicLink();queryGeoData();attachOverviewScrollHandler();addPreviewHandler()</xsl:attribute>
       </xsl:if>
@@ -302,6 +302,8 @@
                 <a class="linkToOSMDayMap icon-font icon-map-marker" titleResource="blog.linkToOSMDayMap">
                   <xsl:attribute name="id">dayMapLink-<xsl:value-of select="plainDate" /></xsl:attribute>
                   <xsl:attribute name="onclick">gotoOSMDayMap('<xsl:value-of select="plainDate" />')</xsl:attribute>
+                  <xsl:attribute name="plainDate"><xsl:value-of select="plainDate" /></xsl:attribute>
+                  <xsl:attribute name="gpsDataChecked">false</xsl:attribute>
                 </a>
 
               </div>

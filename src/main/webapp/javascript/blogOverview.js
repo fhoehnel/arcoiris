@@ -1,11 +1,8 @@
 function isPartiallyScrolledIntoView(el) {
-    var elemTop = el.getBoundingClientRect().top;
-    var elemBottom = el.getBoundingClientRect().bottom;
-
-    var isVisible = (elemBottom >= 0) && (elemTop <= window.innerHeight);
-    return isVisible;
+    const elemTop = el.getBoundingClientRect().top;
+    const elemBottom = el.getBoundingClientRect().bottom;
+    return (elemBottom >= 0) && (elemTop <= window.innerHeight);
 }
-
 
 function attachOverviewScrollHandler() {
     window.onscroll = function() {
@@ -13,6 +10,10 @@ function attachOverviewScrollHandler() {
 		if ((scrollPosDiff > 20) || (scrollPosDiff < (-20))) {
 			lastScrollPos = window.pageYOffset;
 			checkThumbnailsToLoad();
+
+			if (geoDataDays && geoDataDays.length > 0) {
+			    checkGPSDataToQuery();
+            }
 		}
 	};
 	
@@ -61,3 +62,17 @@ function loadTumbnail(pic, imgSrc) {
 	
 	prefetchImg.src = imgSrc;
 }
+
+function checkGPSDataToQuery() {
+    $(".linkToOSMDayMap").each(function() {
+        const geoMapLink = $(this)[0];
+        if (geoMapLink.getAttribute("gpsDataChecked") !== "true") {
+            if (isPartiallyScrolledIntoView(geoMapLink.parentNode)) {
+                const plainDate = geoMapLink.getAttribute("plainDate");
+                queryDayGeoData(plainDate);
+                geoMapLink.setAttribute("gpsDataChecked", "true");
+            }
+        }
+    });
+}
+

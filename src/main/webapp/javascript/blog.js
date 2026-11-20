@@ -1933,7 +1933,9 @@ function queryDayGeoData(day) {
         if (result && result === "true") {
             document.getElementById("dayMapLink-" + day).style.display = "inline";
         }
-        queryGeoDataForDays();
+        if (!document.getElementById("blogOverviewBody")) {
+            queryGeoDataForDays();
+        }
     });
 }
 
@@ -1956,7 +1958,11 @@ function queryGPXTracks() {
             document.getElementById("osmTracksOption").disabled = true;
         }
         // cascading ajax calls for performance reasons
-        queryGeoDataForDays();
+        if (document.getElementById("blogOverviewBody")) {
+            checkGPSDataToQuery();
+        } else {
+            queryGeoDataForDays();
+        }
         if (document.getElementById("unseenCommentLink")) {
             queryUnseenComments();
         }
